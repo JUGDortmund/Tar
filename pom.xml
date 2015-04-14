@@ -9,12 +9,8 @@
 	<url>http://www.maredit.de</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<springboot.version>1.2.3.RELEASE</springboot.version>
 	</properties>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.2.3.RELEASE</version>
-	</parent>
 	<build>
 		<plugins>
 			<plugin>
@@ -35,7 +31,7 @@
 					<dependency>
 						<groupId>org.springframework</groupId>
 						<artifactId>springloaded</artifactId>
-						<version>1.2.3.RELEASE</version>
+						<version>${springboot.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -49,7 +45,24 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${springboot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<version>${springboot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb.morphia</groupId>
