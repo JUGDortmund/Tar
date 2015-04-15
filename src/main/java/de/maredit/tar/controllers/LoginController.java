@@ -15,6 +15,6 @@ public class LoginController {
     @RequestMapping("/login")
     public String login() {
         System.out.println(authenticationService.authenticated("foo", "bar"));
-        return "login";
+        return "authentication/login";
     }
 }
