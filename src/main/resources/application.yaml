@@ -1,0 +1,7 @@
+spring:
+  profiles: dev
+  url: jdbc:mysql://localhost:3306/myappdb?autoReconnect=true
+---
+spring:
+  profiles: prod
+  url: jdbc:mysql://qa.myapp.com:3306/myappdb?autoReconnect=true
