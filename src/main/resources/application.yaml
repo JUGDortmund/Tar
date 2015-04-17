@@ -1,19 +1,32 @@
 spring:
+  profiles:
+    active: dev 
+---
+##### Development configuration #####
+spring:
   profiles: dev
+  thymeleaf:
+    cache: false
   data:
     mongodb:
       host: localhost
       port: 28018
       database: tar
+      embedded: true
 ---
+##### Test configuration #####
 spring:
   profiles: test
+  thymeleaf:
+    cache: false  
   data:
     mongodb:
       host: localhost
       port: 28018
       database: tar
+      embedded: false
 ---
+##### Production configuration #####
 spring:
   profiles: prod
   data:
@@ -21,3 +34,4 @@ spring:
       host: localhost
       port: 27017
       database: tar
+      embedded: false      
