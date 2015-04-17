@@ -1,4 +1,4 @@
-package de.maredit.tar;
+package de.maredit.tar.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -7,9 +7,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import de.maredit.tar.providers.ApplicationAuthenticationProvider;
+
 @Configuration
 @EnableWebSecurity
-public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
+public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
@@ -23,9 +25,6 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		// A wrong configuration throws a "AlreadyBuiltException" - god knows why
-		auth.ldapAuthentication()
-				.userDnPatterns("uid={0},ou=users,o=maredit,dc=de").contextSource().url("ldaps://172.30.10.72:636");
+	    auth.authenticationProvider(new ApplicationAuthenticationProvider());
 	}
-
 }
