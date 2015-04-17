@@ -1,0 +1,56 @@
+.actionIcon {
+  position: absolute;
+  display: block;
+  z-index: 1000;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  width: 30px;
+  color: $white;
+  text-align: center;
+  line-height: 30px;
+  @include border-radius(100%);
+  
+  &.hidden {
+    display: none;
+  }
+
+  &.add-row-top {
+  	background-color: $siijoo-light-green;
+  	@extend %icon_arrow-up;
+  }
+
+  &.move-col {
+    background-color: $siijoo-light-green;
+    @extend %icon_move-horizontal;
+  }
+
+  &.resize-col {
+    background-color: $siijoo-light-green;
+    @extend %icon_move-horizontal;
+  }
+
+  &.add-row-bottom {
+  	background-color: $siijoo-light-green;
+  	@extend %icon_arrow-down;
+  }
+
+  &.remove-row {
+  	background-color: $siijoo-light-green;
+  	@extend %icon_minus-circle;
+  }
+
+   &.add-col-left {
+  	background-color: $siijoo-light-green;
+  	@extend %icon_arrow-left;
+  }
+
+  &.add-col-right {
+  	background-color: $siijoo-light-green;
+  	@extend %icon_arrow-right;
+  }
+
+  &.move-row {
+  	background-color: $siijoo-light-green;
+  	@extend %icon_arrows-v;
+  }
+}

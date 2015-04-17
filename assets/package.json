@@ -1,0 +1,16 @@
+{
+  "name": "sass-base",
+  "version": "0.0.0",
+  "description": "setup a basic sass framework",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-browser-sync": "^1.5.3",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-sass": "^0.7.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-webfont": "^0.5.0"
+  }
+}

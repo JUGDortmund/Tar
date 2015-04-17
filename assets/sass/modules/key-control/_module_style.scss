@@ -1,0 +1,45 @@
+.key-control {
+  position: absolute;
+  display: none;
+  margin-top: -160px;
+  height: 140px;
+  &.visible {
+    display: block;
+  }
+  &.siijoo-light-green {
+    > div {
+      background-color: $siijoo-light-green;
+      color: $white;
+      border: 1px solid $white;
+      &.active {
+        background-color: $white;
+        color: $siijoo-light-green;
+        border-color: $siijoo-light-green;
+      }
+    }
+  }
+  .key-w,
+  .key-a,
+  .key-s,
+  .key-d {
+    display: block;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+  }
+  .key-w {
+    left: 64px;
+  }
+  .key-a {
+    left: 0;
+    top: 64px;
+  }
+  .key-s {
+    left: 64px;
+    top: 64px;
+  }
+  .key-d {
+    left: 128px;
+    top: 64px;
+  }
+}
