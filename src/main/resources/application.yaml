@@ -1,7 +1,23 @@
 spring:
   profiles: dev
-  url: jdbc:mysql://localhost:3306/myappdb?autoReconnect=true
+  data:
+    mongodb:
+      host: localhost
+      port: 28018
+      database: tar
+---
+spring:
+  profiles: test
+  data:
+    mongodb:
+      host: localhost
+      port: 28018
+      database: tar
 ---
 spring:
   profiles: prod
-  url: jdbc:mysql://qa.myapp.com:3306/myappdb?autoReconnect=true
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: tar
