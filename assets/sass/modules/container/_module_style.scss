@@ -1,0 +1,98 @@
+.container-fluid {
+  position: relative;
+  overflow: hidden;
+  .row {
+    position: relative;
+    min-height: 80px;
+    display: flex;
+    &.spacerRow {
+      margin-bottom: 100px;
+    }
+    > div {
+      min-height: 80px;
+    }
+  }
+  div[class^="col"] {
+    position: relative;
+    border: 1px solid transparent;
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0);
+      @include transition(background-color, 0.2s, ease-in);
+    }
+  }
+  &.gridControl {
+    .row {
+      div[class^="col"] {
+        border-color: $siijoo-light-green-opacity;
+      }
+    }
+  }
+  &.rowType {
+    .row:hover {
+      div[class^="col"] {
+        border-color: $siijoo-light-green;
+        &:after {
+          background-color: $siijoo-light-green-opacity;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+      }
+    }
+  }
+  &.colType {
+    div[class^="col"]:hover {
+      border-color: $siijoo-light-green;
+      &:after {
+        background-color: $siijoo-light-green-opacity;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+  &.componentControl {
+    .row {
+      div[class^="col"] {
+        border-color: $siijoo-blue-opacity;
+      }
+    }
+  }
+  &.screenControl {
+    .row {
+      div[class^="col"] {
+        border-color: $siijoo-orange-opacity;
+      }
+    }
+  }
+}
+
+.colDragger {
+  top: 0;
+  display: block;
+  height: 100%;
+  width: 1px;
+  border-left: 3px solid $siijoo-light-green-opacity;
+  position: absolute;
+}
+
+.rowDragger {
+  left: 0;
+  right: 0;
+  display: block;
+  widtht: 100%;
+  height: 1px;
+  border-bottom: 3px solid $siijoo-light-green-opacity;
+  position: absolute;
+}
+
+#viewport {
+  width: auto;
+  height: auot;
+   @include transition(all, 0.2s, ease-in);
+}
