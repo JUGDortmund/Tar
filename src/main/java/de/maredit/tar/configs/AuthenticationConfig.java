@@ -16,15 +16,23 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http
-				.authorizeRequests()
-				.antMatchers("/css/**").permitAll()
-				.antMatchers("/js/**").permitAll()
-				.antMatchers("/login").permitAll()
-				.antMatchers("/plugins/**").permitAll()
-				.anyRequest().fullyAuthenticated()
-				.and()
-				.formLogin().loginPage("/login")
-				.defaultSuccessUrl("/");
+		        .csrf()
+		        .disable()
+		        .authorizeRequests()
+    				.antMatchers("/css/**").permitAll()
+    				.antMatchers("/js/**").permitAll()
+    				.antMatchers("/fonts/**").permitAll()
+    				.antMatchers("/plugins/**").permitAll()
+    				.antMatchers("/dist/**").permitAll()
+                    .antMatchers("/login").permitAll()
+    				.anyRequest().authenticated()
+    				.and()
+				.formLogin()
+				    .loginPage("/login")
+				    .permitAll()
+				    .and()
+				.logout()                                    
+                    .permitAll();
 	}
 
 	@Autowired

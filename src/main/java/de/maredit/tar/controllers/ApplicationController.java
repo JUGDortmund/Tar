@@ -19,6 +19,6 @@ public class ApplicationController {
     
     @RequestMapping("/login")
     public String login() {
-        return "application/login";
+        return "login";
     }
 }
