@@ -18,9 +18,11 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 		http
 				.authorizeRequests()
 				.antMatchers("/css/**").permitAll()
+				.antMatchers("/js/**").permitAll()
 				.anyRequest().fullyAuthenticated()
 				.and()
-				.formLogin().defaultSuccessUrl("/");
+				.formLogin().loginPage("/login")
+				.defaultSuccessUrl("/");
 	}
 
 	@Autowired
