@@ -1,0 +1,19 @@
+.list-panel {
+
+	.glyphicon {
+		float: right;
+
+		&.pending:before {
+			content:"\231b";
+		}
+
+		&.approved:before {
+			content:"\e013";
+		}
+
+		&.rejected:before {
+			content:"\e014";
+		}
+	}
+
+}
