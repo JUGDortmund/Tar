@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 @EnableWebMvcSecurity
 public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
+  @Autowired
+  private ApplicationAuthenticationProvider applicationAuthenticationProvider;
+
   @Override
   protected void configure(final HttpSecurity http) throws Exception {
     http
@@ -35,6 +38,6 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(new ApplicationAuthenticationProvider());
+    auth.authenticationProvider(applicationAuthenticationProvider);
   }
 }
