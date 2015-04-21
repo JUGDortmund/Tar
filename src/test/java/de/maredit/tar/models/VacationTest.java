@@ -42,7 +42,7 @@ public class VacationTest {
     assertEquals("John", vacation1.getUser().getFirstName());
     assertEquals("John", vacation1.getSubstitute().getFirstName());
     assertEquals(LocalDate.of(2015, Month.JULY, 18), vacation1.getFrom());
-    assertEquals(State.REQUESTED_REPRESENTATION, vacation1.getState());
+    assertEquals(State.REQUESTED_SUBSTITUTE, vacation1.getState());
 
     assertEquals("John", vacation2.getUser().getFirstName());
     assertNull(vacation2.getSubstitute());

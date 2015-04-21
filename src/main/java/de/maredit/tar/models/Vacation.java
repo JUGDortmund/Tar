@@ -1,10 +1,9 @@
 package de.maredit.tar.models;
 
+import java.time.LocalDate;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
@@ -47,7 +46,7 @@ public class Vacation {
     this.daysLeft = daysLeft;
 
     this.state =
-        substitute != null ? State.REQUESTED_REPRESENTATION : State.WAITING_FOR_APPROVEMENT;
+        substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
     this.created = LocalDate.now();
   }
 
@@ -64,7 +63,7 @@ public class Vacation {
   }
 
   public void setDaysLeft(int amountLeft) {
-    this.daysLeft = daysLeft;
+    this.daysLeft = amountLeft;
   }
 
   public int getDays() {
