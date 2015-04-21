@@ -1,9 +1,12 @@
 package de.maredit.tar.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
+@Document
 public class Vacation {
 
   @Id
@@ -13,8 +16,11 @@ public class Vacation {
   private LocalDate to;
   private LocalDate created;
 
+  @DBRef
   private User user;
+  @DBRef
   private User substitute;
+  @DBRef
   private User manager;
 
   private int days;
