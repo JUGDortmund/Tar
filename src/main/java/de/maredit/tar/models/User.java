@@ -7,14 +7,24 @@ public class User {
   @Id
   private String id;
 
+  private String uidNumber;
   private String firstName;
   private String lastName;
+  private String username;
   private Boolean active;
 
   public User() {
   }
 
-  public String getFirstName() {
+  public String getUidNumber() {
+	return uidNumber;
+}
+
+public void setUidNumber(String uidNumber) {
+	this.uidNumber = uidNumber;
+}
+
+public String getFirstName() {
     return firstName;
   }
 
@@ -30,7 +40,15 @@ public class User {
     this.lastName = lastName;
   }
 
-  public Boolean isActive() {
+  public String getUsername() {
+	return username;
+}
+
+public void setUsername(String username) {
+	this.username = username;
+}
+
+public Boolean isActive() {
     return active;
   }
 
