@@ -5,7 +5,7 @@ package de.maredit.tar.models;
  */
 public enum State {
 
-    REQUESTED_REPRESENTATION,
+    REQUESTED_SUBSTITUTE,
     WAITING_FOR_APPROVEMENT,
     APPROVED,
     REJECTED,
