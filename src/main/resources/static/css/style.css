@@ -1,81 +1,42 @@
-@font-face {
-  font-family: "icons";
-  src: url("../fonts/icons.eot?0e43c3555335c113aec07505016ff721");
-  src: url("../fonts/icons.eot?#iefix") format("embedded-opentype"), url("../fonts/icons.woff?0e43c3555335c113aec07505016ff721") format("woff"), url("../fonts/icons.ttf?0e43c3555335c113aec07505016ff721") format("truetype");
-  font-weight: normal;
-  font-style: normal; }
-.icon {
-  font-family: "icons";
-  display: inline-block;
-  vertical-align: middle;
-  line-height: 1;
-  font-weight: normal;
-  font-style: normal;
-  speak: none;
-  text-decoration: inherit;
-  text-transform: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
-
-.icon_arrow-down:before {
-  content: "\f101"; }
-
-.icon_arrow-left:before {
-  content: "\f102"; }
-
-.icon_arrow-right:before {
-  content: "\f103"; }
-
-.icon_arrow-up:before {
-  content: "\f104"; }
-
-.icon_arrows-h:before {
-  content: "\f105"; }
-
-.icon_arrows-v:before {
-  content: "\f106"; }
-
-.icon_col:before {
-  content: "\f107"; }
-
-.icon_device-change:before {
-  content: "\f108"; }
-
-.icon_device-mobile:before {
-  content: "\f109"; }
-
-.icon_device-tablet:before {
-  content: "\f10a"; }
-
-.icon_edit-image:before {
-  content: "\f10b"; }
-
-.icon_edit-text:before {
-  content: "\f10c"; }
-
-.icon_minus-circle:before {
-  content: "\f10d"; }
-
-.icon_move-horizontal:before {
-  content: "\f10e"; }
-
-.icon_plus-circle:before {
-  content: "\f10f"; }
-
-.icon_row:before {
-  content: "\f110"; }
-
 .main-header .sidebar-toggle:before {
   content: ""; }
 
+.list-panel .task-list a.list-group-item:focus,
+.list-panel .task-list a.list-group-item:hover {
+  background-color: #c0f0da; }
+.list-panel .vacation-list a.list-group-item:focus,
+.list-panel .vacation-list a.list-group-item:hover {
+  background-color: #c0e6f0; }
 .list-panel .glyphicon {
   float: right; }
-  .list-panel .glyphicon.pending:before {
-    content: "\231b"; }
-  .list-panel .glyphicon.approved:before {
-    content: "\e013"; }
-  .list-panel .glyphicon.rejected:before {
-    content: "\e014"; }
+  .list-panel .glyphicon.pending {
+    color: #f39c12; }
+    .list-panel .glyphicon.pending:before {
+      content: "\231b"; }
+  .list-panel .glyphicon.approved {
+    color: #008d4c; }
+    .list-panel .glyphicon.approved:before {
+      content: "\e013"; }
+  .list-panel .glyphicon.rejected {
+    color: #dd4b39; }
+    .list-panel .glyphicon.rejected:before {
+      content: "\e014"; }
+
+.vacation-form {
+  -webkit-transition: background-color 0.2s linear;
+  -moz-transition: background-color 0.2s linear;
+  -o-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear; }
+  .vacation-form.edit-vacation {
+    background-color: #c0e6f0; }
+  .vacation-form.approve-vacation {
+    background-color: #c0f0da; }
+  .vacation-form input[readonly],
+  .vacation-form textarea[readonly] {
+    background-color: transparent; }
+  @media (max-width: 760px) {
+    .vacation-form .btn {
+      width: 100%;
+      margin-bottom: 10px; } }
 
 /*# sourceMappingURL=style.css.map */
