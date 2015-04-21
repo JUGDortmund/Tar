@@ -3,6 +3,12 @@
 
   $('.input-group.date').datepicker({});
 
+  $('.panel-default select').select2();
+
+  $('.autosubmit').on('change', function() {
+    $(this).closest('form').submit();
+  });
+
   $('.panel-default').matchHeight();
 
   $('#calendar').fullCalendar({
