@@ -23,92 +23,12 @@
 	            		<!-- TODO: Task-List -->
 	            	</div>
 	            	
-	            	<div class="col-md-4">
-	            		<!-- TODO: Vacation-List, Replacement-List -->
-	            	</div>
+	            	<div class="col-md-4" th:include="components/vacationList :: vacationList">
+						vacationList
+        			</div>
 
-            		<div class="col-md-4">
-
-            		<!-- Possible additional classes for vacation-form:
-						edit-vacation, approve-vacation  --> 
-
-               			<div class="panel panel-default module vacation-form">
-                			<div class="panel-heading">Urlaubsformular</div>
-           					<div class="panel-body">
-                  				<!-- Error-handling: show aler box, when validation fails  -->
-                  				<div class="alert alert-danger" role="alert">
-			                    	<ul>
-			                        	<li>THerE's someThinG wronG</li>
-			                    	</ul>
-			                  	</div>  
-			            
-                  			
-	                  			<form action="#" role="form">
-	                   
-	                    			<div class="row">
-	                      				<div class="col-xs-12 form-group">
-	                        				<label for="employee">Mitarbeiter *</label>
-	                        				<input class="form-control" type="text" name="employee" id="employee" value="Björn Prenger" />
-	                      				</div>
-	                      
-	                   	 			</div>
-
-	                   			 	<div class="row">
-	                      				<div class="col-xs-6 form-group">
-	                        				<label for="dateFrom">von *</label>
-					                        <div class="input-group date">
-					                        	<input type="text" class="form-control" name="dateFrom" id="dateFrom" />
-					                          	<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-					                        </div>
-	                      				</div>
-
-	                      				<div class="col-xs-6 form-group">
-	                        				<label for="dateTo">bis *</label>
-					                        <div class="input-group date">
-					                        	<input type="text" class="form-control" name="dateTo" id="dateTo" />
-					                          	<span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
-					                        </div>
-	                      				</div>
-	                      			</div>
-
-	                      			<div class="row">
-	                      				<div class="col-xs-6 form-group">
-	                      					<label for="vacationDays">Anzahl Urlaubstage *</label>
-					                        <input type="number" class="form-control" name="vacationDays" id="vacationDays" />
-	                      				</div>
-
-	                      				<div class="col-xs-6 form-group">
-	                      					<label for="daysLeft">Verbleibende Urlaubstage *</label>
-					                        <input type="number" class="form-control" name="daysLeft" id="daysLeft" />
-	                      				</div>
-	                   				</div>
-
-		                   			<div class="row">
-				                    	<div class="col-xs-12 form-group">
-				                        	<label for="replacement">Vertreter</label>
-				                        	<input class="form-control" type="text" name="replacement" id="replacement" />
-				                      </div>
-		                    		</div>
-
-		                    		<div class="row">
-		                      			<div class="col-xs-12 form-group has-error">
-		                        			<label for="superior">Zuständiger Vorgesetzter *</label>
-		                       				<input class="form-control" type="text" name="superior" id="superior"/>
-		                      			</div>
-		                    		</div>
-	                     		
-		                     		<div class="row">
-		                        		<div class="col-xs-12 form-group">
-		                        
-			                          		<label for="comment">Kommentar</label>
-			                          		<textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
-			                       		</div>
-			                   	 	</div> 
-
-	                    			<button type="submit" class="btn btn-success pull-right">beantragen</button>
-	                  			</form>
-	                  		</div> <!-- panel-body end -->
-                		</div>
+            		<div class="col-md-4" th:include="components/vacationForm :: vacationForm">
+						vacationForm
               		</div>
         		</div>
         	</div>

@@ -1,5 +1,13 @@
+.main-header .sidebar-toggle .glyphicon {
+  display: block;
+  margin-top: 3px;
+  height: 16px; }
 .main-header .sidebar-toggle:before {
   content: ""; }
+
+.has-error .select2-container--default,
+.has-error .select2-selection--single {
+  border-color: #dd4b39; }
 
 .list-panel .task-list a.list-group-item:focus,
 .list-panel .task-list a.list-group-item:hover {
