@@ -1,2 +1,26 @@
-[{"days":"30"},
-{"days":"22"}]
+[
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab05" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
+		"from" : { "$date" : { "$numberLong" : "216536400000" } },
+		"to" : { "$date" : { "$numberLong" : "216536400000" } }
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab06" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
+		"from" : { "$date" : "2014-03-23T10:22:10.826" },
+		"to" : { "$date" : "2014-03-23T10:22:10.826" }
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab07" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
+		"from" : { "$date" : "2014-03-23T10:22:10.826" },
+		"to" : { "$date" : "2014-03-23T10:22:10.826" }
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab08" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
+		"from" : { "$date" : "2014-03-23T10:22:10.826" },
+		"to" : { "$date" : "2014-03-23T10:22:10.826" }
+	}		
+]

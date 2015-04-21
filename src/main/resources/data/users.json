@@ -1,0 +1,22 @@
+[
+	{
+		"_id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" },
+		"firstName" : "Sven",
+		"lastName" : "Kubiak"
+	},
+	{
+		"_id" : { "$oid" : "532eb65ee4b0a8a4a7f060cc" },
+		"firstName" : "Pascal",
+		"lastName" : "Plewa"
+	},
+	{
+		"_id" : { "$oid" : "532eb65ee4b0a8a4a7f060cd" },
+		"firstName" : "Claudine",
+		"lastName" : "Zillmann"
+	},
+	{
+		"_id" : { "$oid" : "532eb65ee4b0a8a4a7f060cd" },
+		"firstName" : "Omar",
+		"lastName" : "Barboza"
+	}		
+]

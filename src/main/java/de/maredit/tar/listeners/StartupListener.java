@@ -34,14 +34,14 @@ public class StartupListener implements ApplicationListener<ApplicationEnvironme
       EmbeddedMongo.DB.port(this.environment.getProperty("spring.data.mongodb.port", Integer.class)).start();
     }
 
-    if (this.environment.getProperty("sping.data.mongodb.preload", Boolean.class)) {
+    if (this.environment.getProperty("spring.data.mongodb.preload", Boolean.class)) {
+      preloadData("users");
       preloadData("vacations");
     }
   }
 
   private void preloadData(String collection) {
     DB db = EmbeddedMongo.DB.getMongoClient().getDB(this.environment.getProperty("spring.data.mongodb.database", String.class));
-    db.dropDatabase();
     
     DBCollection dbCollection = db.getCollection(collection);
     URL url = Resources.getResource("data/" + collection + ".json");
