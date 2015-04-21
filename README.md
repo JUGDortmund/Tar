@@ -3,7 +3,23 @@
 1. Checkout
 2. mvn spring-boot:run
 
-Embedded MongoDB runs on port 28018
+Embedded MongoDB runs on port 28018 (when in dev profile)
+
+## Configuration
+The application defines three configuration environments (called "Profiles" in Spring context): _dev_, _test_ and _prod_. Each individual profile can be configured by editing the application.yml in src/main/resources.
+
+By default, the application runs in _dev_ profile. This is configured in the first lines in application.yml.
+
+The default profile can be overwritten by setting the following system property from the command line:
+
+	-Dspring.profiles.active=
+
+To overwrite the active profile is recommended when using prod environment.
+
+To use the _test_ profile, all test classes have to use the following annotation:
+
+	@ActiveProfile("test")
+
 
 ## Development-Environment
 
