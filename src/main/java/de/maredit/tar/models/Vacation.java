@@ -14,7 +14,7 @@ public class Vacation {
   private LocalDate created;
 
   private User user;
-  private User representation;
+  private User substitute;
   private User manager;
 
   private int days;
@@ -22,19 +22,19 @@ public class Vacation {
 
   private State state;
 
-  public Vacation(User user, LocalDate from, LocalDate to, User representation, User manager,
+  public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
                   int days, int daysLeft) {
 
     this.user = user;
     this.from = from;
     this.to = to;
-    this.representation = representation;
+    this.substitute = substitute;
     this.manager = manager;
     this.days = days;
     this.daysLeft = daysLeft;
 
     this.state =
-        representation != null ? State.REQUESTED_REPRESENTATION : State.WAITING_FOR_APPROVEMENT;
+        substitute != null ? State.REQUESTED_REPRESENTATION : State.WAITING_FOR_APPROVEMENT;
     this.created = LocalDate.now();
   }
 
@@ -78,12 +78,12 @@ public class Vacation {
     this.manager = manager;
   }
 
-  public User getRepresentation() {
-    return representation;
+  public User getSubstitute() {
+    return substitute;
   }
 
-  public void setRepresentation(User representation) {
-    this.representation = representation;
+  public void setSubstitute(User substitute) {
+    this.substitute = substitute;
   }
 
   public LocalDate getTo() {
