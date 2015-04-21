@@ -25,35 +25,26 @@ public class ApplicationAuthenticationProvider implements AuthenticationProvider
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     String username = authentication.getName();
     Object password = authentication.getCredentials();
-
-    if (StringUtils.isNotBlank(username) && password != null && authenticated(
-        authentication.getName(), String.valueOf(authentication.getCredentials()))) {
+    if (StringUtils.isNotBlank(username) && password != null) {
+      List<String> roles = ldapService.authenticateUser(username, String.valueOf(authentication.getCredentials()));
+      if (roles != null) {
       List<GrantedAuthority> grantedAuths = new ArrayList<>();
-      grantedAuths.add(new SimpleGrantedAuthority(getGroup()));
+      for (String role : roles) {
+        grantedAuths.add(new SimpleGrantedAuthority(role));
+      }
       Authentication
           auth =
           new UsernamePasswordAuthenticationToken(authentication.getName(),
-                                                  String.valueOf(authentication.getCredentials()),
+                                                  roles,
                                                   grantedAuths);
-
       return auth;
+      }
     }
-
     return null;
   }
 
   @Override
   public boolean supports(Class<?> authentication) {
-
     return authentication.equals(UsernamePasswordAuthenticationToken.class);
-  }
-
-  public boolean authenticated(String username, String password) {
-
-    return ldapService.authenticateUser(username, password);
-  }
-
-  public String getGroup() {
-    return "ROLE_USER";
   }
 }
