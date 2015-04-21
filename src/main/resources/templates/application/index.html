@@ -24,8 +24,41 @@
 	            	</div>
 	            	
 	            	<div class="col-md-4">
-	            		<!-- TODO: Vacation-List, Replacement-List -->
-	            	</div>
+	            		 
+              			<div class="panel panel-default module list-panel">
+                			<div class="panel-heading">Urlaube</div>
+            				<div class="panel-body vacation-list">
+              					<form action="#" role="form">
+	              					<div class="form-group">
+	              						<label for="selectedEmployee">Mitarbeiter</label> 
+		              					<select class="form-control autosubmit" style="width: 100%;" name="selectedEmployee" id="selectedEmployee">
+		              						<option value="oba">Barboza, Omar</option>
+		              						<option value="sku">Kubiak, Sven</option>
+		              						<option value="ppl">Plewa, Pascal</option>
+		              						<option value="bpr">Prenger, Björn</option>
+											<option value="czi">Zillmann, Claudine</option>
+										</select>
+									</div>
+								</form>
+								<!-- Dummy Data -->
+
+              					<div class="list-group">
+				                	<a class="list-group-item"  href="javascript:void(null);">
+				                    	02.01.15 - 08.01.15
+				                     	<span class="glyphicon approved" aria-hidden="true"></span>
+				                    </a>
+				                    <a class="list-group-item"  href="javascript:void(null);">
+				                    	02.01.15 - 08.01.15
+				                     	<span class="glyphicon pending" aria-hidden="true"></span>
+				                    </a>
+				                    <a class="list-group-item"  href="javascript:void(null);">
+				                    	02.01.15 - 08.01.15
+				                     	<span class="glyphicon rejected" aria-hidden="true"></span>
+				                    </a>
+				                </div>
+          					</div>
+        				</div>
+        			</div>
 
             		<div class="col-md-4">
 
@@ -47,8 +80,13 @@
 	                   
 	                    			<div class="row">
 	                      				<div class="col-xs-12 form-group">
+	                      					<!-- In most Cases, you cannot select the employee -->
+
 	                        				<label for="employee">Mitarbeiter *</label>
-	                        				<input class="form-control" type="text" name="employee" id="employee" value="Björn Prenger" />
+	                        				<select class="form-control" style="width: 100%;" name="employee" id="employee" disabled="disabled">
+			              						<option value="oba">Barboza, Omar</option>
+											</select>
+	                        				<!-- <input class="form-control" type="text" name="employee" id="employee" value="Björn Prenger" /> -->
 	                      				</div>
 	                      
 	                   	 			</div>
@@ -86,14 +124,28 @@
 		                   			<div class="row">
 				                    	<div class="col-xs-12 form-group">
 				                        	<label for="replacement">Vertreter</label>
-				                        	<input class="form-control" type="text" name="replacement" id="replacement" />
+				                        	<select class="form-control" style="width: 100%;" name="replacement" id="replacement">
+			              						<option value="oba">Barboza, Omar</option>
+			              						<option value="sku">Kubiak, Sven</option>
+			              						<option value="ppl">Plewa, Pascal</option>
+			              						<option value="bpr">Prenger, Björn</option>
+												<option value="czi">Zillmann, Claudine</option>
+											</select>
+				                        	<!-- <input class="form-control" type="text" name="replacement" id="replacement" /> -->
 				                      </div>
 		                    		</div>
 
 		                    		<div class="row">
 		                      			<div class="col-xs-12 form-group has-error">
 		                        			<label for="superior">Zuständiger Vorgesetzter *</label>
-		                       				<input class="form-control" type="text" name="superior" id="superior"/>
+		                        			<select class="form-control" style="width: 100%;" name="superior" id="superior">
+			              						<option value="oba">Barboza, Omar</option>
+			              						<option value="sku">Kubiak, Sven</option>
+			              						<option value="ppl">Plewa, Pascal</option>
+			              						<option value="bpr">Prenger, Björn</option>
+												<option value="czi">Zillmann, Claudine</option>
+											</select>
+		                       				<!-- <input class="form-control" type="text" name="superior" id="superior"/> -->
 		                      			</div>
 		                    		</div>
 	                     		
