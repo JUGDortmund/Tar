@@ -6,25 +6,33 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotNull;
+
 public class Vacation {
 
   @Id
   private String id;
 
+  @NotNull
   private LocalDate from;
+  @NotNull
   private LocalDate to;
+  @NotNull
   private LocalDate created;
 
   @DBRef
+  @NotNull
   private User user;
   @DBRef
   private User substitute;
   @DBRef
+  @NotNull
   private User manager;
 
   private int days;
   private int daysLeft;
 
+  @NotNull
   private State state;
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
