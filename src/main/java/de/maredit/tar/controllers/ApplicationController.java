@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
-import de.maredit.tar.services.UserService;
-import de.maredit.tar.services.VacationService;
+import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.VacationRepository;
 
 @Controller
 public class ApplicationController {
     
     @Autowired
-    private VacationService vacationService;
+    private VacationRepository vacationRepository;
     
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
     
-    @RequestMapping("")
+    @RequestMapping("/")
     public String index(Model model) {
-      List<User> users = userService.findAllUsers();
-      List<Vacation> vacations = vacationService.findVacationByUser();
+      List<User> users = this.userRepository.findAll();
+      List<Vacation> vacations = vacationRepository.findVacationByUser(user);
       
       model.addAttribute("users", users);
       model.addAttribute("vacations", vacations);
