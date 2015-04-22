@@ -1,18 +1,41 @@
 .list-panel {
+	
+	.task-list {
+		a.list-group-item:focus,
+		a.list-group-item:hover {
+			background-color: $lightest-green;
+		}
+	}
 
+	.vacation-list {
+		a.list-group-item:focus,
+		a.list-group-item:hover {
+			background-color: $lightest-blue;
+		}
+	}
+	
 	.glyphicon {
 		float: right;
 
-		&.pending:before {
-			content:"\231b";
+		&.pending {
+			color: #f39c12;
+			&:before {
+				content:"\231b";
+			}
 		}
 
-		&.approved:before {
-			content:"\e013";
+		&.approved {
+			color: #008d4c;
+			&:before {
+				content:"\e013";
+			}
 		}
 
-		&.rejected:before {
-			content:"\e014";
+		&.rejected {
+			color: #dd4b39;
+			&:before {
+				content:"\e014";
+			}
 		}
 	}
 
