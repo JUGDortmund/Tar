@@ -9,17 +9,16 @@
         <div class="panel-heading">Urlaubsformular</div>
         <div class="panel-body">
             <!-- Error-handling: show aler box, when validation fails  -->
-            <li th:text="${error}" />
-            <div class="alert alert-danger" role="alert" th:if="${error}">
-                <ul>
-                    <!-- <li th:each="err : ${fields.getFieldErrors('vacation')}" th:text="${err.getDefaultMessage()}" /> -->
-                </ul>
-            </div>
 
-            <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
+            <form th:action="@{/}" th:object="${vacation}" method="post" role="form">
+                <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
+                    <ul>
+                        <li th:each="err : ${#fields.detailedErrors()}" th:text="${err.fieldName +' '+ err.message}">Input is incorrect</li>
+                    </ul>
+                </div>
 
                 <div class="row">
-                    <div class="col-xs-12 form-group">
+                    <div th:class="${#fields.hasErrors('user')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                         <!-- In most Cases, you cannot select the employee -->
 
                         <label for="employee">Mitarbeiter *</label>
@@ -30,7 +29,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 form-group">
+                    <div th:class="${#fields.hasErrors('from')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                         <label for="dateFrom">von *</label>
                         <div class="input-group date">
                             <input type="text" class="form-control" name="dateFrom" id="dateFrom" th:field="*{from}" />
@@ -38,7 +37,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-6 form-group">
+                    <div th:class="${#fields.hasErrors('to')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                         <label for="dateTo">bis *</label>
                         <div class="input-group date">
                             <input type="text" class="form-control" name="dateTo" id="dateTo"  th:field="*{to}"/>
@@ -48,19 +47,19 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 form-group">
+                    <div th:class="${#fields.hasErrors('days')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                         <label for="vacationDays">Anzahl Urlaubstage *</label>
                         <input type="number" class="form-control" name="vacationDays" id="vacationDays" th:field="*{days}" />
                     </div>
 
-                    <div class="col-xs-6 form-group">
+                    <div th:class="${#fields.hasErrors('daysLeft')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                         <label for="daysLeft">Verbleibende Urlaubstage *</label>
                         <input type="number" class="form-control" name="daysLeft" id="daysLeft" th:field="*{daysLeft}"  />
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-12 form-group">
+                    <div th:class="${#fields.hasErrors('substitute')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                         <label for="replacement">Vertreter</label>
                         <select class="form-control" style="width: 100%;" name="replacement" id="replacement">
                             <option value="oba">Barboza, Omar</option>
@@ -74,7 +73,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-12 form-group has-error">
+                    <div th:class="${#fields.hasErrors('manager')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                         <label for="superior">Zuständiger Vorgesetzter *</label>
                         <select class="form-control" style="width: 100%;" name="superior" id="superior">
                             <option value="oba">Barboza, Omar</option>
@@ -89,7 +88,6 @@
 
                 <div class="row">
                     <div class="col-xs-12 form-group">
-
                         <label for="comment">Kommentar</label>
                         <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
                     </div>

@@ -1,10 +1,13 @@
 package de.maredit.tar.models;
 
-import java.time.LocalDate;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import java.time.LocalDate;
+
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class Vacation {
@@ -13,22 +16,32 @@ public class Vacation {
   private String id;
 
   @NotNull
+  @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate from;
+
   @NotNull
+  @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate to;
+
   @NotNull
+  @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate created;
 
   @DBRef
   @NotNull
   private User user;
+
   @DBRef
   private User substitute;
+
   @DBRef
   @NotNull
   private User manager;
 
+  @Min(0)
   private int days;
+
+  @Min(0)
   private int daysLeft;
 
   @NotNull
@@ -36,11 +49,11 @@ public class Vacation {
 
   public Vacation() {
     this.created = LocalDate.now();
+    this.state = State.WAITING_FOR_APPROVEMENT;
   }
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
                   int days, int daysLeft) {
-
     this.user = user;
     this.from = from;
     this.to = to;
@@ -100,6 +113,8 @@ public class Vacation {
 
   public void setSubstitute(User substitute) {
     this.substitute = substitute;
+    this.state =
+        substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
   }
 
   public LocalDate getTo() {
