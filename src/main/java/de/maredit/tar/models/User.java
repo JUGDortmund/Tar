@@ -11,20 +11,21 @@ public class User {
   private String firstName;
   private String lastName;
   private String username;
+  private String mail;
   private Boolean active;
 
   public User() {
   }
 
   public String getUidNumber() {
-	return uidNumber;
-}
+    return uidNumber;
+  }
 
-public void setUidNumber(String uidNumber) {
-	this.uidNumber = uidNumber;
-}
+  public void setUidNumber(String uidNumber) {
+    this.uidNumber = uidNumber;
+  }
 
-public String getFirstName() {
+  public String getFirstName() {
     return firstName;
   }
 
@@ -41,18 +42,26 @@ public String getFirstName() {
   }
 
   public String getUsername() {
-	return username;
-}
+    return username;
+  }
 
-public void setUsername(String username) {
-	this.username = username;
-}
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-public Boolean isActive() {
+  public Boolean isActive() {
     return active;
   }
 
   public void setActive(Boolean active) {
     this.active = active;
+  }
+
+  public String getMail() {
+    return mail;
+  }
+
+  public void setMail(String mail) {
+    this.mail = mail;
   }
 }

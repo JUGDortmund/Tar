@@ -13,6 +13,13 @@ spring:
       port: 28018
       database: tar
       embedded: true
+  ldap:
+    host: ldap-master.maredit.net
+    port: 636
+    userLookUpDN: ou=users,o=maredit,dc=de
+    apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
+    readPassword: 7Ey8vHzPPZrdWA
 ---
 ##### Test configuration #####
 spring:
