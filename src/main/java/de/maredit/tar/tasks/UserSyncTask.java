@@ -7,12 +7,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TestTask {
+public class UserSyncTask {
 
   @Autowired
   private LdapService ldapService;
 
-  @Scheduled(fixedRate = 50000)
+  @Scheduled(fixedDelay=5000)
   public void reportCurrentTime() {
     ldapService.synchronizeLdapUser();
   }
