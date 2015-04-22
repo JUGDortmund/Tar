@@ -1,7 +1,9 @@
 package de.maredit.tar.providers;
 
-import de.maredit.tar.services.LdapService;
+import org.springframework.security.authentication.AuthenticationServiceException;
 
+import com.unboundid.ldap.sdk.LDAPException;
+import de.maredit.tar.services.LdapService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -25,20 +27,22 @@ public class ApplicationAuthenticationProvider implements AuthenticationProvider
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     String username = authentication.getName();
     Object password = authentication.getCredentials();
-    if (StringUtils.isNotBlank(username) && password != null) {
-      List<String> roles = ldapService.authenticateUser(username, String.valueOf(authentication.getCredentials()));
-      if (roles != null) {
-      List<GrantedAuthority> grantedAuths = new ArrayList<>();
-      for (String role : roles) {
-        grantedAuths.add(new SimpleGrantedAuthority(role));
+    try {
+      if (StringUtils.isNotBlank(username)
+          && password != null
+          && ldapService
+              .authenticateUser(username, String.valueOf(authentication.getCredentials()))) {
+        List<GrantedAuthority> grantedAuths = new ArrayList<>();
+        for (String role : ldapService.getUserGroups(username)) {
+          grantedAuths.add(new SimpleGrantedAuthority(role));
+        }
+        Authentication auth =
+            new UsernamePasswordAuthenticationToken(authentication.getName(), password,
+                grantedAuths);
+        return auth;
       }
-      Authentication
-          auth =
-          new UsernamePasswordAuthenticationToken(authentication.getName(),
-                                                  roles,
-                                                  grantedAuths);
-      return auth;
-      }
+    } catch (LDAPException e) {
+      throw new AuthenticationServiceException("Error accessing LDAP", e);
     }
     return null;
   }
