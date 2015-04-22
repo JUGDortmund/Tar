@@ -34,6 +34,10 @@ public class Vacation {
   @NotNull
   private State state;
 
+  public Vacation() {
+    this.created = LocalDate.now();
+  }
+
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
                   int days, int daysLeft) {
 

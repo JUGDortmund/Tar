@@ -9,13 +9,14 @@
         <div class="panel-heading">Urlaubsformular</div>
         <div class="panel-body">
             <!-- Error-handling: show aler box, when validation fails  -->
-            <div class="alert alert-danger" role="alert">
+            <li th:text="${error}" />
+            <div class="alert alert-danger" role="alert" th:if="${error}">
                 <ul>
-                    <li>THerE's someThinG wronG</li>
+                    <!-- <li th:each="err : ${fields.getFieldErrors('vacation')}" th:text="${err.getDefaultMessage()}" /> -->
                 </ul>
             </div>
 
-            <form action="#" role="form">
+            <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
 
                 <div class="row">
                     <div class="col-xs-12 form-group">
@@ -25,16 +26,14 @@
                         <select class="form-control" style="width: 100%;" name="employee" id="employee" disabled="disabled">
                             <option value="oba">Barboza, Omar</option>
                         </select>
-                        <!-- <input class="form-control" type="text" name="employee" id="employee" value="Björn Prenger" /> -->
                     </div>
-
                 </div>
 
                 <div class="row">
                     <div class="col-xs-6 form-group">
                         <label for="dateFrom">von *</label>
                         <div class="input-group date">
-                            <input type="text" class="form-control" name="dateFrom" id="dateFrom" />
+                            <input type="text" class="form-control" name="dateFrom" id="dateFrom" th:field="*{from}" />
                             <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                         </div>
                     </div>
@@ -42,7 +41,7 @@
                     <div class="col-xs-6 form-group">
                         <label for="dateTo">bis *</label>
                         <div class="input-group date">
-                            <input type="text" class="form-control" name="dateTo" id="dateTo" />
+                            <input type="text" class="form-control" name="dateTo" id="dateTo"  th:field="*{to}"/>
                             <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                         </div>
                     </div>
@@ -51,12 +50,12 @@
                 <div class="row">
                     <div class="col-xs-6 form-group">
                         <label for="vacationDays">Anzahl Urlaubstage *</label>
-                        <input type="number" class="form-control" name="vacationDays" id="vacationDays" />
+                        <input type="number" class="form-control" name="vacationDays" id="vacationDays" th:field="*{days}" />
                     </div>
 
                     <div class="col-xs-6 form-group">
                         <label for="daysLeft">Verbleibende Urlaubstage *</label>
-                        <input type="number" class="form-control" name="daysLeft" id="daysLeft" />
+                        <input type="number" class="form-control" name="daysLeft" id="daysLeft" th:field="*{daysLeft}"  />
                     </div>
                 </div>
 
