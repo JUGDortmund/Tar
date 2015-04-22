@@ -21,4 +21,5 @@ public class ApplicationController {
   public String login() {
     return "login";
   }
+  
 }
