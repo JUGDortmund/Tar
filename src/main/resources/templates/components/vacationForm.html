@@ -22,8 +22,11 @@
                         <!-- In most Cases, you cannot select the employee -->
 
                         <label for="employee">Mitarbeiter *</label>
-                        <select class="form-control" style="width: 100%;" name="employee" id="employee" disabled="disabled">
-                            <option value="oba">Barboza, Omar</option>
+                        <select class="form-control" style="width: 100%;" name="employee" id="employee" th:field="*{user}"  disabled="disabled">
+                            <!-- <option value="oba" selected>Barboza, Omar</option> -->
+                            <option th:each="user : ${allUsers}"
+                                    th:value="${user}"
+                                    th:text="#{${user.lastName +', '+ user.firstName}}">Mustermann, Max</option>
                         </select>
                     </div>
                 </div>
@@ -61,26 +64,22 @@
                 <div class="row">
                     <div th:class="${#fields.hasErrors('substitute')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                         <label for="replacement">Vertreter</label>
-                        <select class="form-control" style="width: 100%;" name="replacement" id="replacement">
-                            <option value="oba">Barboza, Omar</option>
-                            <option value="sku">Kubiak, Sven</option>
-                            <option value="ppl">Plewa, Pascal</option>
-                            <option value="bpr">Prenger, Björn</option>
-                            <option value="czi">Zillmann, Claudine</option>
+                        <select class="form-control" style="width: 100%;" name="replacement" id="replacement" th:field="*{substitute}">
+                            <option th:each="substitute : ${allUsers}"
+                                    th:value="${substitute}"
+                                    th:text="#{${substitute.lastName +', '+ substitute.firstName}}">Mustermann, Max</option>
+
                         </select>
-                        <!-- <input class="form-control" type="text" name="replacement" id="replacement" /> -->
                     </div>
                 </div>
 
                 <div class="row">
                     <div th:class="${#fields.hasErrors('manager')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                         <label for="superior">Zuständiger Vorgesetzter *</label>
-                        <select class="form-control" style="width: 100%;" name="superior" id="superior">
-                            <option value="oba">Barboza, Omar</option>
-                            <option value="sku">Kubiak, Sven</option>
-                            <option value="ppl">Plewa, Pascal</option>
-                            <option value="bpr">Prenger, Björn</option>
-                            <option value="czi">Zillmann, Claudine</option>
+                        <select class="form-control" style="width: 100%;" name="superior" id="superior" th:field="*{manager}">
+                            <option th:each="manager : ${allManagers}"
+                                    th:value="${manager}"
+                                    th:text="#{${manager.lastName +', '+ manager.firstName}}">Mustermann, Max</option>
                         </select>
                         <!-- <input class="form-control" type="text" name="superior" id="superior"/> -->
                     </div>
