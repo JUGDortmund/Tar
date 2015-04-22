@@ -1,7 +1,6 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.repositories.VacationRepository;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.validation.Valid;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.repositories.VacationRepository;
 
 /**
  * Created by czillmann on 22.04.15.
