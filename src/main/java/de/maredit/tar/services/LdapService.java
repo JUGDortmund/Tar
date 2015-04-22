@@ -34,15 +34,19 @@ public class LdapService {
   @Autowired
   private LdapConfig ldapConfig;
 
-  private static final Logger LOG = LoggerFactory.getLogger(LdapService.class);
   private LDAPConnectionPool connectionPool;
+
+  @Autowired
+  UserRepository userRepository;
+
+  private static final Logger LOG = LoggerFactory.getLogger(LdapService.class);
 
   @PostConstruct
   public void init() throws LDAPException, GeneralSecurityException {
     LDAPConnection ldapConnection = null;
     ldapConnection =
         new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
-            "ldap-master.maredit.net", 636);
+            ldapConfig.getHost(), ldapConfig.getPort());
     connectionPool = new LDAPConnectionPool(ldapConnection, 10);
   }
 
@@ -51,18 +55,13 @@ public class LdapService {
     connectionPool.close();
   }
 
-  @Autowired
-  UserRepository userRepository;
-
-  private static final Logger log = LoggerFactory.getLogger(LdapService.class);
-
   public void synchronizeLdapUser() throws LDAPException {
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
       ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword()); // get value list
                                                                                    // with userDN
       SearchResultEntry searchResultEntry =
-          ldapConnection.getEntry(ldapConfig.getApllicationUserDN());
+          ldapConnection.getEntry(ldapConfig.getApplicationUserDN());
       String[] members = searchResultEntry.getAttributeValues("member");
 
       // iterate over userDN and create/update users
@@ -87,7 +86,7 @@ public class LdapService {
 
       ldapConnection.close();
     } catch (LDAPException e) {
-      log.error("Error reading user list from LDAP", e);
+      LOG.error("Error reading user list from LDAP", e);
     }
   }
 
@@ -97,15 +96,15 @@ public class LdapService {
     user.setUsername(resultEntry.getAttributeValue("uid"));
     user.setFirstName(resultEntry.getAttributeValue("cn"));
     user.setLastName(resultEntry.getAttributeValue("sn"));
-    if (log.isDebugEnabled()) {
-      log.debug("User modified. username:" + user.getUsername() + "/uidNumber:"
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("User modified. username:" + user.getUsername() + "/uidNumber:"
           + user.getUidNumber());
     }
   }
 
   public boolean authenticateUser(String uid, String password) throws LDAPException {
     BindResult bindResult =
-        connectionPool.bind("uid=" + uid + ",ou=users,o=maredit,dc=de", password);
+        connectionPool.bind(this.ldapConfig.getUserBindDN().replace("$username", uid) , password);
     return bindResult.getResultCode().equals(ResultCode.SUCCESS);
   }
 
@@ -119,8 +118,8 @@ public class LdapService {
     user.setLastName(resultEntry.getAttributeValue("sn"));
     user.setActive(Boolean.TRUE);
 
-    if (log.isDebugEnabled()) {
-      log.debug("User created. username:" + user.getUsername() + "/uidNumber:"
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("User created. username:" + user.getUsername() + "/uidNumber:"
           + user.getUidNumber());
     }
     return user;
@@ -132,14 +131,12 @@ public class LdapService {
     try {
       ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
       SearchRequest searchRequest =
-          new SearchRequest("ou=groups,o=maredit,dc=de", SearchScope.SUBORDINATE_SUBTREE,
-              Filter.createEqualityFilter("memberUid", uid));
+          new SearchRequest(ldapConfig.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
+              Filter.createEqualityFilter(ldapConfig.getGroupLookUpAttribute(), uid));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 
       if (searchResults.getEntryCount() > 0) {
-        for (SearchResultEntry entry : searchResults.getSearchEntries()) {
-          groups.add(entry.getAttribute("cn").getValue());
-        }
+        searchResults.getSearchEntries().forEach(entry -> groups.add(entry.getAttribute("cn").getValue()));
       }
     } catch (LDAPException e) {
       connectionPool.releaseConnectionAfterException(ldapConnection, e);

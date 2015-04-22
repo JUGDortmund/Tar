@@ -1,0 +1,6 @@
+groups:
+  mercus:
+    - LIST_VACATIONS
+    - CREATE_VACATION
+    - EDIT_VACATION
+  

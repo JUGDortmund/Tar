@@ -13,11 +13,17 @@ public class LdapConfig {
 
   private String userLookUpDN;
 
-  private String apllicationUserDN;
+  private String applicationUserDN;
 
   private String readUser;
 
   private String readPassword;
+
+  private String groupLookUpDN;
+  
+  private String groupLookUpAttribute;
+  
+  private String userBindDN;
 
   public String getHost() {
     return host;
@@ -59,11 +65,36 @@ public class LdapConfig {
     this.readPassword = readPassword;
   }
 
-  public String getApllicationUserDN() {
-    return apllicationUserDN;
+  public String getApplicationUserDN() {
+    return applicationUserDN;
+  }
+ 
+  public void setApplicationUserDN(String applicationUserDN) {
+    this.applicationUserDN = applicationUserDN;
   }
 
-  public void setApllicationUserDN(String apllicationUserDN) {
-    this.apllicationUserDN = apllicationUserDN;
+  public String getGroupLookUpDN() {
+    return groupLookUpDN;
   }
+
+  public void setGroupLookUpDN(String groupLookUpDN) {
+    this.groupLookUpDN = groupLookUpDN;
+  }
+
+  public String getGroupLookUpAttribute() {
+    return groupLookUpAttribute;
+  }
+
+  public void setGroupLookUpAttribute(String groupLookUpAttribute) {
+    this.groupLookUpAttribute = groupLookUpAttribute;
+  }
+
+  public String getUserBindDN() {
+    return userBindDN;
+  }
+
+  public void setUserBindDN(String userBindDN) {
+    this.userBindDN = userBindDN;
+  }
+
 }
