@@ -29,7 +29,7 @@ edit-vacation, approve-vacation  -->
                         <!-- <option value="oba" selected>Barboza, Omar</option> -->
                         <option th:each="user : ${allUsers}"
                                 th:value="${user}"
-                                th:text="#{${user.lastName +', '+ user.firstName}}">Mustermann, Max
+                                th:text="${user.lastName +', '+ user.firstName}">Mustermann, Max
                         </option>
                     </select>
                 </div>
@@ -80,7 +80,7 @@ edit-vacation, approve-vacation  -->
                             id="replacement" th:field="*{substitute}">
                         <option th:each="substitute : ${allUsers}"
                                 th:value="${substitute}"
-                                th:text="#{${substitute.lastName +', '+ substitute.firstName}}">
+                                th:text="${substitute.lastName +', '+ substitute.firstName}">
                             Mustermann, Max
                         </option>
 
@@ -95,7 +95,7 @@ edit-vacation, approve-vacation  -->
                             th:field="*{manager}">
                         <option th:each="manager : ${allManagers}"
                                 th:value="${manager}"
-                                th:text="#{${manager.lastName +', '+ manager.firstName}}">
+                                th:text="${manager.lastName +', '+ manager.firstName}">
                             Mustermann, Max
                         </option>
                     </select>
