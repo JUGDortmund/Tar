@@ -2,25 +2,71 @@
 	{
 		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab05" },
 		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
-		"from" : { "$date" : { "$numberLong" : "216536400000" } },
-		"to" : { "$date" : { "$numberLong" : "216536400000" } }
+		"from" : { "$date" : { "$numberLong" : "1420088400000" } },
+		"to" : { "$date" : { "$numberLong" : "1421298000000" } },
+		"state" : "APPROVED"
 	},
 	{
 		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab06" },
 		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
-		"from" : { "$date" : "2014-03-23T10:22:10.826" },
-		"to" : { "$date" : "2014-03-23T10:22:10.826" }
+		"from" : { "$date" : { "$numberLong" : "1422939600000" } },
+		"to" : { "$date" : { "$numberLong" : "1423371600000" } },
+		"state" : "APPROVED"
 	},
 	{
 		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab07" },
 		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
-		"from" : { "$date" : "2014-03-23T10:22:10.826" },
-		"to" : { "$date" : "2014-03-23T10:22:10.826" }
+		"from" : { "$date" : { "$numberLong" : "1426219200000" } },
+		"to" : { "$date" : { "$numberLong" : "1426219200000" } },
+		"state" : "REJECTED"
 	},
 	{
 		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab08" },
 		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cb" } },
-		"from" : { "$date" : "2014-03-23T10:22:10.826" },
-		"to" : { "$date" : "2014-03-23T10:22:10.826" }
-	}		
+		"from" : { "$date" : { "$numberLong" : "1423112400000" } },
+		"to" : { "$date" : { "$numberLong" : "1423198800000" } },
+		"state" : "WAITING_FOR_APPROVEMENT"
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab09" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cc" } },
+		"from" : { "$date" : { "$numberLong" : "1424754000000" } },
+		"to" : { "$date" : { "$numberLong" : "1424754000000" } },
+		"state" : "APPROVED"
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab10" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cc" } },
+		"from" : { "$date" : { "$numberLong" : "1425186000000" } },
+		"to" : { "$date" : { "$numberLong" : "1425531600000" } },
+		"state" : "APPROVED"
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab11" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cc" } },
+		"from" : { "$date" : { "$numberLong" : "1428120000000" } },
+		"to" : { "$date" : { "$numberLong" : "1428206400000" } },
+		"state" : "REJECTED"
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab12" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cd" } },
+		"from" : { "$date" : { "$numberLong" : "1433563200000" } },
+		"to" : { "$date" : { "$numberLong" : "1433908800000" } },
+		"state" : "APPROVED"
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab13" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cd" } },
+		"from" : { "$date" : { "$numberLong" : "1434081600000" } },
+		"to" : { "$date" : { "$numberLong" : "1434772800000" } },
+		"state" : "APPROVED"
+	},
+	{
+		"_id" : { "$oid" : "5342c360e4b0d70d0d9fab14" },
+		"user" : { "$ref" : "users", "$id" : { "$oid" : "532eb65ee4b0a8a4a7f060cd" } },
+		"from" : { "$date" : { "$numberLong" : "1450933200000" } },
+		"to" : { "$date" : { "$numberLong" : "1450933200000" } },
+		"state" : "APPROVED"
+	}
 ]

@@ -8,5 +8,5 @@ import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 
 public interface VacationRepository extends MongoRepository<Vacation, String> {
-  public List<Vacation> findVacationByUser(User user);
+  public List<Vacation> findVacationByUserOrderByFromAsc(User user);
 }

@@ -2,6 +2,8 @@ package de.maredit.tar.controllers;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,21 +26,35 @@ public class ApplicationController {
     private UserRepository userRepository;
     
     @RequestMapping("/")
-    public String index(Model model) {
+    public String index(HttpServletRequest request, Model model) {
+      User user = getUser(request);
+      
       List<User> users = this.userRepository.findAll();
-      List<Vacation> vacations = vacationRepository.findVacationByUser(new User());
-      
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      String name = auth.getName();
-      
+      List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(user);
+
       model.addAttribute("users", users);
       model.addAttribute("vacations", vacations);
-      
+      model.addAttribute("selectedUser", user);
+        
       return "application/index";
     }
     
     @RequestMapping("/login")
     public String login() {
         return "login";
+    }
+
+    private User getUser(HttpServletRequest request) {
+      User user = null;
+      
+      Object selected = request.getParameter("selected");
+      if (selected == null) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        user = this.userRepository.findUserByUsername(auth.getName());
+      } else {
+        user= this.userRepository.findUserByUsername(String.valueOf(selected));
+      }
+      
+      return user;
     }
 }
