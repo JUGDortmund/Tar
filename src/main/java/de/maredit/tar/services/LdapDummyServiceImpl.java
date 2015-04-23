@@ -23,7 +23,6 @@ public class LdapDummyServiceImpl implements LdapService {
   @Override
   public List<User> getUsers() throws LDAPException {
     List<User> users = new ArrayList<>();
-
     return users;
 
   }
@@ -36,7 +35,13 @@ public class LdapDummyServiceImpl implements LdapService {
   @Override
   public List<String> getUserGroups(String uid) throws LDAPException {
     List<String> groups = new ArrayList<>();
-
+    if ("user".equals(uid)) {
+      groups.add("userGroup");
+      groups.add("tar-user");
+    } else if ("supervisor".equals(uid)) {
+      groups.add("supervisorGroup");
+      groups.add("tar-supervisor");
+    }
     return groups;
   }
   
