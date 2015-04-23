@@ -54,17 +54,21 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public void sendMail(MimeMessage mimeMessage) {
-		((JavaMailSenderImpl)this.javaMailSender).send(mimeMessage);
+		((JavaMailSenderImpl) this.javaMailSender).send(mimeMessage);
 	}
-	
+
 	@Bean
 	public MailSender javaMailSender() {
 		if (javaMailSender == null) {
 			JavaMailSenderImpl jMailSender = new JavaMailSenderImpl();
-			jMailSender.setHost(mailProperties.getHost());
-			jMailSender.setPort(mailProperties.getPort());
-			jMailSender.setUsername(mailProperties.getUsername());
-			jMailSender.setPassword(mailProperties.getPassword());
+			if (mailProperties != null) {
+				jMailSender.setHost(mailProperties.getHost());
+				jMailSender.setPort(mailProperties.getPort());
+				jMailSender.setUsername(mailProperties.getUsername());
+				jMailSender.setPassword(mailProperties.getPassword());
+			} else {
+				LOGGER.error("mailProperties == null!. Apparently it has not been properly autowired!");
+			}
 			this.javaMailSender = jMailSender;
 		}
 		return javaMailSender;
@@ -83,8 +87,9 @@ public class MailServiceImpl implements MailService {
 				vacation.getSubstitute().getMail() });
 		message.setText(prepareMailBody(vacation));
 		sendMail(message);
-		
-		MimeMessage mimemessage = ((JavaMailSenderImpl) javaMailSender()).createMimeMessage();
+
+		MimeMessage mimemessage = ((JavaMailSenderImpl) javaMailSender())
+				.createMimeMessage();
 		MimeMessageHelper mmh = new MimeMessageHelper(mimemessage);
 		try {
 			mmh.setTo(vacation.getUser().getMail());
@@ -94,7 +99,7 @@ public class MailServiceImpl implements MailService {
 			LOGGER.error(e);
 		}
 		sendMail(mimemessage);
-		
+
 	}
 
 	private String prepareMailBody(Vacation vacation) {
