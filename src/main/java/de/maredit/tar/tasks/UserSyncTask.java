@@ -47,19 +47,19 @@ public class UserSyncTask {
           editedUser.add(user.getUidNumber());
         }
       }
-      dactivateApplicationUser(editedUser);
+      deactivateUserNotInLdap(editedUser);
 
     } catch (LDAPException e) {
       e.printStackTrace();
     }
   }
 
-  private void dactivateApplicationUser(List<String> editedUser) {
+  private void deactivateUserNotInLdap(List<String> editedUsers) {
     List<User> applicationUsers = userRepository.findAll();
 
     //iterate over all users currently in the application
     for (User applicationUser : applicationUsers) {
-      if (!editedUser.contains(applicationUser.getUidNumber())) {
+      if (!editedUsers.contains(applicationUser.getUidNumber())) {
         applicationUser.setActive(false);
         userRepository.save(applicationUser);
       }
