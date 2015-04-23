@@ -43,4 +43,27 @@ public class LdapConfig {
     return apllicationUserDN;
   }
 
+  public void setHost(String host) {
+    this.host = host;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+  public void setUserLookUpDN(String userLookUpDN) {
+    this.userLookUpDN = userLookUpDN;
+  }
+
+  public void setApllicationUserDN(String apllicationUserDN) {
+    this.apllicationUserDN = apllicationUserDN;
+  }
+
+  public void setReadUser(String readUser) {
+    this.readUser = readUser;
+  }
+
+  public void setReadPassword(String readPassword) {
+    this.readPassword = readPassword;
+  }
 }
