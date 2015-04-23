@@ -1,5 +1,7 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.models.User;
+
 import com.unboundid.ldap.sdk.LDAPException;
 
 import java.util.List;
@@ -9,9 +11,9 @@ import java.util.List;
  */
 public interface LdapService {
 
-  void synchronizeLdapUser() throws LDAPException;
-
   boolean authenticateUser(String uid, String password) throws LDAPException;
 
   List<String> getUserGroups(String uid) throws LDAPException;
+
+  List<User> getUsers() throws LDAPException;
 }

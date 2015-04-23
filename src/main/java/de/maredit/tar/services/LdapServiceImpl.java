@@ -36,9 +36,6 @@ public class LdapServiceImpl implements LdapService {
   @Autowired
   private LdapConfig ldapConfig;
 
-  @Autowired
-  UserRepository userRepository;
-
   private static final Logger LOG = LoggerFactory.getLogger(LdapServiceImpl.class);
 
   private LDAPConnectionPool connectionPool;
@@ -48,8 +45,7 @@ public class LdapServiceImpl implements LdapService {
     LDAPConnection ldapConnection = null;
     ldapConnection =
         new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
-                           ldapConfig.getHost(), ldapConfig.getPort(),
-                           ldapConfig.getReadUser(), ldapConfig.getReadPassword());
+            ldapConfig.getHost(), ldapConfig.getPort());
 
     connectionPool = new LDAPConnectionPool(ldapConnection, 10);
   }
@@ -59,67 +55,31 @@ public class LdapServiceImpl implements LdapService {
     connectionPool.close();
   }
 
-  /**
-   * Method to synchronize the system user objects with the LDAP user
-   */
   @Override
-  public void synchronizeLdapUser() throws LDAPException {
-    LDAPConnection ldapConnection = null;
+  public List<User> getUsers() throws LDAPException {
+
+    List<User> users = new ArrayList<>();
+    LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
-      ldapConnection = connectionPool.getConnection();
+      ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
       // get value list with userDN
-      SearchResultEntry
-          searchResultEntry =
+      SearchResultEntry searchResultEntry =
           ldapConnection.getEntry(ldapConfig.getApplicationUserDN());
       String[] members = searchResultEntry.getAttributeValues("member");
-
-      // iterate over userDN and create/update users
-      List<String> editedUser = new ArrayList();
 
       for (String member : members) {
         SearchResultEntry userEntry = ldapConnection.getEntry(member);
         if (userEntry != null) {
-          User user = userRepository.findByUidNumber(userEntry.getAttributeValue("uidNumber"));
-          if (user == null) {
-            user = createUser(userEntry);
-          } else {
-            updateUser(userEntry, user);
-          }
-          userRepository.save(user);
-          editedUser.add(user.getUidNumber());
+          users.add(createUser(userEntry));
         }
-
       }
-
-      // iterate over all users from repository and delete if they are not part of the LDAP
-      deactivateDeletedLdapUser(editedUser);
-      connectionPool.releaseConnection(ldapConnection);
     } catch (LDAPException e) {
-      LOG.error("Error reading user list from LDAP", e);
       connectionPool.releaseConnectionAfterException(ldapConnection, e);
       throw e;
     }
-  }
+    connectionPool.releaseConnection(ldapConnection);
+    return users;
 
-  private void deactivateDeletedLdapUser(List<String> editedUser) {
-    List<User> applicationUsers = userRepository.findAll();
-
-    //iterate over all users currently in the application
-    for (User applicationUser : applicationUsers) {
-      if (!editedUser.contains(applicationUser.getUidNumber())) {
-        applicationUser.setActive(false);
-        userRepository.save(applicationUser);
-      }
-    }
-  }
-
-  private void updateUser(SearchResultEntry resultEntry, User user) {
-    // set name changes here
-    user.setMail(resultEntry.getAttributeValue("mail"));
-    user.setUsername(resultEntry.getAttributeValue("uid"));
-    user.setFirstName(resultEntry.getAttributeValue("cn"));
-    user.setLastName(resultEntry.getAttributeValue("sn"));
-    LOG.debug("User updated. username: %s/uidNumber: %s", user.getUsername(), user.getUidNumber());
   }
 
   private User createUser(SearchResultEntry resultEntry) {
@@ -139,7 +99,7 @@ public class LdapServiceImpl implements LdapService {
   @Override
   public boolean authenticateUser(String uid, String password) throws LDAPException {
     BindResult bindResult =
-        connectionPool.bind("uid=" + uid + ",ou=users,o=maredit,dc=de", password);
+        connectionPool.bind(ldapConfig.getUserBindDN().replace("$username", uid), password);
     return bindResult.getResultCode().equals(ResultCode.SUCCESS);
   }
 
@@ -148,10 +108,10 @@ public class LdapServiceImpl implements LdapService {
     List<String> groups = new ArrayList<>();
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
-      ldapConnection.bind("cn=read,cn=ldap,ou=services,o=maredit,dc=de", "7Ey8vHzPPZrdWA");
+      ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
       SearchRequest searchRequest =
           new SearchRequest("ou=groups,o=maredit,dc=de", SearchScope.SUBORDINATE_SUBTREE,
-                            Filter.createEqualityFilter("memberUid", uid));
+              Filter.createEqualityFilter("memberUid", uid));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 
       if (searchResults.getEntryCount() > 0) {
