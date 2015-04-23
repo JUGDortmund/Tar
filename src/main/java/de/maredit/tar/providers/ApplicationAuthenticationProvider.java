@@ -41,6 +41,9 @@ public class ApplicationAuthenticationProvider implements AuthenticationProvider
           List<String> roles = mappingService.getGroups().get(group);
           if (roles != null) {
             roles.forEach(role -> grantedAuths.add(new SimpleGrantedAuthority(role)));
+            for (String role : roles) {
+              grantedAuths.add(new SimpleGrantedAuthority(role));
+            }
           }
         }
         Authentication auth =
