@@ -30,10 +30,10 @@ public class VacationTest {
     user.setLastName("Deer");
 
     vacation1 =
-        new Vacation(user, LocalDate.of(2015, Month.JULY, 18), LocalDate.of(2015, Month.AUGUST, 03),
+        new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
                      user, user, 15, 5);
     vacation2 =
-        new Vacation(user, LocalDate.of(2015, Month.JULY, 18), LocalDate.of(2015, Month.AUGUST, 03),
+        new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
                      null, user, 15, 5);
   }
 
@@ -41,12 +41,12 @@ public class VacationTest {
   public void vacationModel() {
     assertEquals("John", vacation1.getUser().getFirstName());
     assertEquals("John", vacation1.getSubstitute().getFirstName());
-    assertEquals(LocalDate.of(2015, Month.JULY, 18), vacation1.getFrom());
+    assertEquals(LocalDate.of(2099, Month.JULY, 18), vacation1.getFrom());
     assertEquals(State.REQUESTED_SUBSTITUTE, vacation1.getState());
 
     assertEquals("John", vacation2.getUser().getFirstName());
     assertNull(vacation2.getSubstitute());
-    assertEquals(LocalDate.of(2015, Month.JULY, 18), vacation2.getFrom());
+    assertEquals(LocalDate.of(2099, Month.JULY, 18), vacation2.getFrom());
     assertEquals(State.WAITING_FOR_APPROVEMENT, vacation2.getState());
   }
 }
