@@ -18,11 +18,10 @@ import java.util.List;
 
 @Component
 public class UserSyncTask {
-
   private static final Logger LOG = LoggerFactory.getLogger(UserSyncTask.class);
 
   @Autowired
-  UserRepository userRepository;
+  private UserRepository userRepository;
 
   @Autowired
   private LdapService ldapService;
@@ -30,11 +29,11 @@ public class UserSyncTask {
   /**
    * Scheduled 5 seconds after start and then every hour
    */
-  @Scheduled(initialDelay = 5000, fixedDelay=3600000)
-  public void reportCurrentTime() {
+  @Scheduled(fixedDelay=3600000)
+  public void syncLdapUser() {
     try {
       List<SearchResultEntry> ldapUserList = ldapService.getLdapUserList();
-      List<String> editedUser = new ArrayList();
+      List<String> editedUser = new ArrayList<String>();
       for (SearchResultEntry userEntry : ldapUserList) {
         if (userEntry != null) {
           User user = userRepository.findByUidNumber(userEntry.getAttributeValue("uidNumber"));
@@ -50,7 +49,7 @@ public class UserSyncTask {
       deactivateUserNotInLdap(editedUser);
 
     } catch (LDAPException e) {
-      e.printStackTrace();
+      LOG.error("Failed to sync LDAP users", e);
     }
   }
 
