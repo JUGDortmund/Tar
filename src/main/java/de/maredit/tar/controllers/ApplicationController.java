@@ -21,4 +21,10 @@ public class ApplicationController {
     public String login() {
         return "login";
     }
+
+    @RequestMapping("calendar")
+    public String calendar() {
+        return "application/calendar";
+    }
+    
 }
