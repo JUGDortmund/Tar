@@ -25,7 +25,10 @@ public class UserSyncTask {
   @Autowired
   private UserRepository userRepository;
 
-  @Scheduled(initialDelay = 5000, fixedDelay = 5000)
+  /**
+   * Scheduled 5 seconds after start and then every hour
+   */
+  @Scheduled(initialDelay = 5000, fixedDelay=3600000)
   public void reportCurrentTime() {
     try {
       List<User> users = ldapService.getUsers();

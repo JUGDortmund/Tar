@@ -1,6 +1,8 @@
 package de.maredit.tar.services;
 
 
+import de.maredit.tar.models.User;
+
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -13,11 +15,7 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
-
-import de.maredit.tar.configs.LdapConfig;
-import de.maredit.tar.models.User;
-import de.maredit.tar.repositories.UserRepository;
-
+import de.maredit.tar.services.configs.LdapConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +108,7 @@ public class LdapServiceImpl implements LdapService {
     try {
       ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
       SearchRequest searchRequest =
-          new SearchRequest("ou=groups,o=maredit,dc=de", SearchScope.SUBORDINATE_SUBTREE,
+          new SearchRequest(ldapConfig.getUserLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
               Filter.createEqualityFilter("memberUid", uid));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 
@@ -126,4 +124,37 @@ public class LdapServiceImpl implements LdapService {
     connectionPool.releaseConnection(ldapConnection);
     return groups;
   }
+  
+    /**
+   * Method to synchronize the system user objects with the LDAP user
+   */
+  @Override
+  public List<SearchResultEntry> getLdapUserList() throws LDAPException {
+    LDAPConnection ldapConnection = null;
+    try {
+      ldapConnection = connectionPool.getConnection();
+      // get value list with userDN
+      SearchResultEntry
+          searchResultEntry =
+          ldapConnection.getEntry(ldapConfig.getApplicationUserDN());
+      String[] members = searchResultEntry.getAttributeValues("member");
+
+      // iterate over userDN and create/update users
+      List<SearchResultEntry> ldapUser = new ArrayList();
+
+      for (String member : members) {
+        SearchResultEntry userEntry = ldapConnection.getEntry(member);
+        if (userEntry != null) {
+          ldapUser.add(userEntry);
+        }
+      }
+      connectionPool.releaseConnection(ldapConnection);
+      return ldapUser;
+    } catch (LDAPException e) {
+      LOG.error("Error reading user list from LDAP", e);
+      connectionPool.releaseConnectionAfterException(ldapConnection, e);
+      throw e;
+    }
+  }
+  
 }
