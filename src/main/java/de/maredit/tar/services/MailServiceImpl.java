@@ -1,5 +1,8 @@
 package de.maredit.tar.services;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
 
 @Configuration
 @EnableConfigurationProperties(MailProperties.class)
@@ -22,6 +30,9 @@ public class MailServiceImpl implements MailService {
 
 	@Autowired
 	private MailProperties mailProperties;
+
+	@Autowired
+	private SpringTemplateEngine templateEngine;
 
 	private MailSender javaMailSender;
 
@@ -41,6 +52,11 @@ public class MailServiceImpl implements MailService {
 		}
 	}
 
+	@Override
+	public void sendMail(MimeMessage mimeMessage) {
+		((JavaMailSenderImpl)this.javaMailSender).send(mimeMessage);
+	}
+	
 	@Bean
 	public MailSender javaMailSender() {
 		if (javaMailSender == null) {
@@ -52,5 +68,52 @@ public class MailServiceImpl implements MailService {
 			this.javaMailSender = jMailSender;
 		}
 		return javaMailSender;
+	}
+
+	@Override
+	public void sendMail(Vacation vacation) {
+		LOGGER.debug("Preparing email for Vacation: {}", vacation.toString());
+		SimpleMailMessage message = new SimpleMailMessage();
+		vacation.setUser(createDummyUser("Albert"));
+		vacation.setManager(createDummyUser("Einstein"));
+		vacation.setSubstitute(createDummyUser("Newton"));
+		message.setSubject("Urlaubsantrag");
+		message.setTo(new String[] { vacation.getUser().getMail(),
+				vacation.getManager().getMail(),
+				vacation.getSubstitute().getMail() });
+		message.setText(prepareMailBody(vacation));
+		sendMail(message);
+		
+		MimeMessage mimemessage = ((JavaMailSenderImpl) javaMailSender()).createMimeMessage();
+		MimeMessageHelper mmh = new MimeMessageHelper(mimemessage);
+		try {
+			mmh.setTo(vacation.getUser().getMail());
+			mmh.setSubject("Urlaubsantrag (html)");
+			mmh.setText(prepareMailBody(vacation));
+		} catch (MessagingException e) {
+			LOGGER.error(e);
+		}
+		sendMail(mimemessage);
+		
+	}
+
+	private String prepareMailBody(Vacation vacation) {
+		Context ctx = new Context();
+		ctx.setVariable("employee", vacation.getUser().getFirstName());
+		ctx.setVariable("manager", vacation.getManager().getFirstName());
+		ctx.setVariable("substitute", vacation.getSubstitute().getFirstName());
+		ctx.setVariable("fromDate", vacation.getFrom());
+		ctx.setVariable("toDate", vacation.getTo());
+		ctx.setVariable("totalDays", vacation.getDays());
+		ctx.setVariable("leftDays", vacation.getDaysLeft());
+
+		return templateEngine.process("mailForm", ctx);
+	}
+
+	private User createDummyUser(String name) {
+		User user = new User();
+		user.setFirstName(name);
+		user.setMail(name + "@maredit.de");
+		return user;
 	}
 }

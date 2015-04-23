@@ -17,17 +17,20 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.MailService;
 
 /**
  * Created by czillmann on 22.04.15.
  */
 @Controller
 public class VacationContoller extends WebMvcConfigurerAdapter {
+	private static final Logger log =  LoggerFactory.getLogger(VacationContoller.class);
 
   @Autowired
   private VacationRepository vacationRepository;
 
-  private static final Logger log =  LoggerFactory.getLogger(VacationContoller.class);
+  @Autowired
+  private MailService mailService;
 
   @InitBinder
   protected void initBinder(WebDataBinder binder) {
@@ -44,6 +47,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       return "application/index";
     } else {
       this.vacationRepository.save(vacation);
+      this.mailService.sendMail(vacation);
 
       return "application/index";
     }

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:remove="all">Template for Vacation Application</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<p> Hallo, <span th:text="${employee}">Welt!</span> </p>
+
+	<p> <b>Name des Projektleiter:</b> <span th:text="${manager}">Oliver Rossbach</span> </p>
+
+	<p> <b>Name(n) des Stellvertreters:</b> <span th:text="${substitute}">Oliver Rossbach</span> </p>
+
+	<p> <b>Beantragte Urlaubszeit:</b> <ul>
+		<li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
+		<li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
+
+	<p> <b>Summe der Urlaubstage:</b> <span th:text="${totalDays}">Tage</span> </p>
+
+	<p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
+
+	<p> Grüße, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+</body>
+</html>
