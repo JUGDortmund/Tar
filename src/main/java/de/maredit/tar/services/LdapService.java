@@ -12,9 +12,6 @@ import java.util.List;
  */
 public interface LdapService {
 
-
-  List<SearchResultEntry> getLdapUserList() throws LDAPException;
-
   boolean authenticateUser(String uid, String password) throws LDAPException;
 
   List<String> getUserGroups(String uid) throws LDAPException;

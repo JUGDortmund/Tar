@@ -1,8 +1,9 @@
 package de.maredit.tar.services;
 
 
-import de.maredit.tar.models.User;
+import org.springframework.context.annotation.Profile;
 
+import de.maredit.tar.models.User;
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -29,6 +30,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
+@Profile("!dev")
 public class LdapServiceImpl implements LdapService {
 
   @Autowired
@@ -55,7 +57,6 @@ public class LdapServiceImpl implements LdapService {
 
   @Override
   public List<User> getUsers() throws LDAPException {
-
     List<User> users = new ArrayList<>();
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
@@ -123,38 +124,6 @@ public class LdapServiceImpl implements LdapService {
     }
     connectionPool.releaseConnection(ldapConnection);
     return groups;
-  }
-  
-    /**
-   * Method to synchronize the system user objects with the LDAP user
-   */
-  @Override
-  public List<SearchResultEntry> getLdapUserList() throws LDAPException {
-    LDAPConnection ldapConnection = null;
-    try {
-      ldapConnection = connectionPool.getConnection();
-      // get value list with userDN
-      SearchResultEntry
-          searchResultEntry =
-          ldapConnection.getEntry(ldapConfig.getApplicationUserDN());
-      String[] members = searchResultEntry.getAttributeValues("member");
-
-      // iterate over userDN and create/update users
-      List<SearchResultEntry> ldapUser = new ArrayList();
-
-      for (String member : members) {
-        SearchResultEntry userEntry = ldapConnection.getEntry(member);
-        if (userEntry != null) {
-          ldapUser.add(userEntry);
-        }
-      }
-      connectionPool.releaseConnection(ldapConnection);
-      return ldapUser;
-    } catch (LDAPException e) {
-      LOG.error("Error reading user list from LDAP", e);
-      connectionPool.releaseConnectionAfterException(ldapConnection, e);
-      throw e;
-    }
   }
   
 }
