@@ -1,6 +1,7 @@
 package de.maredit.tar.services;
 
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.SearchResultEntry;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  */
 public interface LdapService {
 
-  void synchronizeLdapUser() throws LDAPException;
+  List<SearchResultEntry> getLdapUserList() throws LDAPException;
 
   boolean authenticateUser(String uid, String password) throws LDAPException;
 

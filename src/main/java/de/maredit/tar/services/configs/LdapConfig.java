@@ -1,4 +1,4 @@
-package de.maredit.tar.configs;
+package de.maredit.tar.services.configs;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
