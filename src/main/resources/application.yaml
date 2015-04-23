@@ -13,6 +13,13 @@ spring:
       port: 28018
       database: tar
       embedded: true
+  mail:
+    host: localhost
+    port: 2025
+    username: tar
+    password:
+    properties:
+      environment: dev
 ---
 ##### Test configuration #####
 spring:

@@ -1,6 +1,5 @@
 package de.maredit.tar.services;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +13,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
@@ -42,12 +40,22 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public void sendMail(SimpleMailMessage mailMessage) {
-		LOGGER.debug("Mail: {}", mailMessage.toString());
-
 		SimpleMailMessage msg = new SimpleMailMessage(mailMessage);
 		try {
 			this.javaMailSender.send(msg);
 		} catch (MailException ex) {
+			handleMailException(msg, ex);
+		}
+	}
+
+	private void handleMailException(SimpleMailMessage msg, MailException ex) {
+		if ("dev".equals(mailProperties.getProperties().get("environment"))) {
+			LOGGER.debug(
+					"Could not connect to SMTP-Server [host: {}, port:{}] in develop environment. "
+							+ "Tried to send the following email:\n {}",
+					mailProperties.getHost(), mailProperties.getPort(),
+					msg.toString());
+		} else {
 			LOGGER.error(ex.getMessage());
 		}
 	}
@@ -87,19 +95,6 @@ public class MailServiceImpl implements MailService {
 				vacation.getSubstitute().getMail() });
 		message.setText(prepareMailBody(vacation));
 		sendMail(message);
-
-		MimeMessage mimemessage = ((JavaMailSenderImpl) javaMailSender())
-				.createMimeMessage();
-		MimeMessageHelper mmh = new MimeMessageHelper(mimemessage);
-		try {
-			mmh.setTo(vacation.getUser().getMail());
-			mmh.setSubject("Urlaubsantrag (html)");
-			mmh.setText(prepareMailBody(vacation));
-		} catch (MessagingException e) {
-			LOGGER.error(e);
-		}
-		sendMail(mimemessage);
-
 	}
 
 	private String prepareMailBody(Vacation vacation) {
@@ -115,6 +110,10 @@ public class MailServiceImpl implements MailService {
 		return templateEngine.process("mailForm", ctx);
 	}
 
+	/*
+	 * TODO: to be removed after the frontend form delivers valid user
+	 * (Mitarbeiter), substitute (Vertreter) and manager (züständiger Vertreter)
+	 */
 	private User createDummyUser(String name) {
 		User user = new User();
 		user.setFirstName(name);
