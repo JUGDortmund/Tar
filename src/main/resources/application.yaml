@@ -32,6 +32,13 @@ spring:
       port: 28018
       database: tar
       embedded: false
+  mail:
+    host: localhost
+    port: 2025
+    username: tar
+    password:
+    properties:
+      environment: dev
 ---
 ##### Production configuration #####
 spring:
