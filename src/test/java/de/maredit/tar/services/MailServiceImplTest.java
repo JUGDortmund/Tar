@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +28,7 @@ import de.maredit.tar.Main;
 @ActiveProfiles("test")
 public class MailServiceImplTest {
 
-	private static final Logger LOGGER = LogManager
+	private static final Logger LOG = LogManager
 			.getLogger(MailServiceImplTest.class);
 
 	@Autowired
@@ -48,7 +48,7 @@ public class MailServiceImplTest {
 		mailMessage.setSubject("Test Subject");
 		mailMessage
 				.setText("This is a simple text for testing the email service!");
-		LOGGER.debug("mailService = {}", (mailService == null ? "null"
+		LOG.debug("mailService = {}", (mailService == null ? "null"
 				: mailService.toString()));
 
 		mockMailSender = new MailSender() {
@@ -79,14 +79,14 @@ public class MailServiceImplTest {
 	public void mailSenderProperties() {
 		String prefix = "spring.mail.";
 		Properties p = readProperties();
-		LOGGER.debug("Properties: {}", p.toString());
+		LOG.debug("Properties: {}", p.toString());
 
 		MailSender ms = mailService.javaMailSender();
 		JavaMailSenderImpl jms = null;
 		if (ms instanceof JavaMailSenderImpl) {
-			jms = (JavaMailSenderImpl) ms; 
+			jms = (JavaMailSenderImpl) ms;
 		}
-		
+
 		assertEquals(p.get(prefix + "host"), jms.getHost());
 		assertEquals(p.get(prefix + "port"), String.valueOf(jms.getPort()));
 		assertEquals(p.get(prefix + "username"), jms.getUsername());
@@ -94,12 +94,16 @@ public class MailServiceImplTest {
 
 	private Properties readProperties() {
 		Properties prop = new Properties();
-		try (InputStream input = MailServiceImplTest.class.getClassLoader()
-				.getResourceAsStream("application.properties")) {
-			prop.load(input);
-		} catch (IOException ioe) {
-			LOGGER.debug(ioe);
+		String properties = "spring.mail.host=localhost\n"
+				+ "spring.mail.port=2025\n" + "spring.mail.username=tar\n"
+				+ "spring.mail.password=";
+		StringReader stReader = new StringReader(properties);
+		try {
+			prop.load(stReader);
+		} catch (IOException e) {
+			LOG.error("Error loading properties!", e);
 		}
 		return prop;
 	}
+
 }
