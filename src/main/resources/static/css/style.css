@@ -22,8 +22,9 @@
     z-index: 5; }
     .offcanvas-filter.active {
       display: block; } }
-.offcanvas-toggle {
+.info-toggle {
   position: relative;
+  margin-top: -34px;
   z-index: 6; }
 
 .list-panel h3 {
