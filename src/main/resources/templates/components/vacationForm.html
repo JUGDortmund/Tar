@@ -25,11 +25,12 @@ edit-vacation, approve-vacation  -->
 
                     <label for="employee">Mitarbeiter *</label>
                     <select class="form-control" style="width: 100%;" name="employee" id="employee"
-                            th:field="*{user}" disabled="disabled">
+                            disabled="disabled">
                         <!-- <option value="oba" selected>Barboza, Omar</option> -->
-                        <option th:each="user : ${allUsers}"
-                                th:value="${user}"
-                                th:text="${user.lastName +', '+ user.firstName}">Mustermann, Max
+                        <option th:each="user : ${users}"
+                                th:value="${user.username}"
+                                th:selected="${selectedUser.username == user.username}"
+                                th:text="${user.lastName +', '+ user.firstName}">
                         </option>
                     </select>
                 </div>
@@ -78,7 +79,7 @@ edit-vacation, approve-vacation  -->
                     <label for="replacement">Vertreter</label>
                     <select class="form-control" style="width: 100%;" name="replacement"
                             id="replacement" th:field="*{substitute}">
-                        <option th:each="substitute : ${allUsers}"
+                        <option th:each="substitute : ${users}"
                                 th:value="${substitute}"
                                 th:text="${substitute.lastName +', '+ substitute.firstName}">
                             Mustermann, Max

@@ -48,7 +48,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       this.vacationRepository.save(vacation);
       this.mailService.sendMail(vacation);
 
-      return "application/index";
+      return "redirect:/";
     }
   }
 }

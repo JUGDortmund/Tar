@@ -1,6 +1,7 @@
 package de.maredit.tar.models;
 
 import de.maredit.tar.Main;
+import de.maredit.tar.models.enums.State;
 
 import org.junit.Before;
 import org.junit.Test;

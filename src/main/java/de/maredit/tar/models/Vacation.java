@@ -1,5 +1,7 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.models.enums.State;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.format.annotation.DateTimeFormat;
