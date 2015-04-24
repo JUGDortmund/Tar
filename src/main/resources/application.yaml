@@ -41,6 +41,13 @@ spring:
       database: tar
       embedded: true
       preload: true
+  mail:
+    host: localhost
+    port: 2025
+    username: tar
+    password:
+    properties:
+      environment: dev
   ldap:
     host: ldap-master.maredit.net
     port: 636

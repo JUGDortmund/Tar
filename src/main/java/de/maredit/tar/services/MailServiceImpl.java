@@ -9,28 +9,27 @@ import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring4.SpringTemplateEngine;
 
-import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 
 @Configuration
+@Profile("!dev")
 @EnableConfigurationProperties(MailProperties.class)
 public class MailServiceImpl implements MailService {
 
-	private static final Logger LOGGER = LogManager
+	private static final Logger LOG = LogManager
 			.getLogger(MailServiceImpl.class);
 
 	@Autowired
-	private MailProperties mailProperties;
+	private MailMessageComposer mailMessageComposer;
 
 	@Autowired
-	private SpringTemplateEngine templateEngine;
+	private MailProperties mailProperties;
 
 	private MailSender javaMailSender;
 
@@ -50,13 +49,13 @@ public class MailServiceImpl implements MailService {
 
 	private void handleMailException(SimpleMailMessage msg, MailException ex) {
 		if ("dev".equals(mailProperties.getProperties().get("environment"))) {
-			LOGGER.debug(
+			LOG.debug(
 					"Could not connect to SMTP-Server [host: {}, port:{}] in develop environment. "
 							+ "Tried to send the following email:\n {}",
 					mailProperties.getHost(), mailProperties.getPort(),
 					msg.toString());
 		} else {
-			LOGGER.error(ex.getMessage());
+			LOG.error(ex.getMessage());
 		}
 	}
 
@@ -75,7 +74,7 @@ public class MailServiceImpl implements MailService {
 				jMailSender.setUsername(mailProperties.getUsername());
 				jMailSender.setPassword(mailProperties.getPassword());
 			} else {
-				LOGGER.error("mailProperties == null!. Apparently it has not been properly autowired!");
+				LOG.error("mailProperties == null!. Apparently it has not been properly autowired!");
 			}
 			this.javaMailSender = jMailSender;
 		}
@@ -84,40 +83,7 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public void sendMail(Vacation vacation) {
-		LOGGER.debug("Preparing email for Vacation: {}", vacation.toString());
-		SimpleMailMessage message = new SimpleMailMessage();
-		vacation.setUser(createDummyUser("Albert"));
-		vacation.setManager(createDummyUser("Einstein"));
-		vacation.setSubstitute(createDummyUser("Newton"));
-		message.setSubject("Urlaubsantrag");
-		message.setTo(new String[] { vacation.getUser().getMail(),
-				vacation.getManager().getMail(),
-				vacation.getSubstitute().getMail() });
-		message.setText(prepareMailBody(vacation));
-		sendMail(message);
+		sendMail(mailMessageComposer.composeMail(vacation));
 	}
 
-	private String prepareMailBody(Vacation vacation) {
-		Context ctx = new Context();
-		ctx.setVariable("employee", vacation.getUser().getFirstName());
-		ctx.setVariable("manager", vacation.getManager().getFirstName());
-		ctx.setVariable("substitute", vacation.getSubstitute().getFirstName());
-		ctx.setVariable("fromDate", vacation.getFrom());
-		ctx.setVariable("toDate", vacation.getTo());
-		ctx.setVariable("totalDays", vacation.getDays());
-		ctx.setVariable("leftDays", vacation.getDaysLeft());
-
-		return templateEngine.process("mailForm", ctx);
-	}
-
-	/*
-	 * TODO: to be removed after the frontend form delivers valid user
-	 * (Mitarbeiter), substitute (Vertreter) and manager (züständiger Vertreter)
-	 */
-	private User createDummyUser(String name) {
-		User user = new User();
-		user.setFirstName(name);
-		user.setMail(name + "@maredit.de");
-		return user;
-	}
 }
