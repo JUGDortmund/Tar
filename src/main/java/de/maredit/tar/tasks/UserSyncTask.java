@@ -29,7 +29,7 @@ public class UserSyncTask {
   /**
    * Scheduled 5 seconds after start and then every hour
    */
-  @Scheduled(fixedDelay=3600000)
+  @Scheduled(cron = "0 */1 * * * ?")
   public void syncLdapUser() {
     try {
       List<SearchResultEntry> ldapUserList = ldapService.getLdapUserList();

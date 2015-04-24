@@ -32,7 +32,7 @@ spring:
       host: localhost
       port: 28018
       database: tar
-      embedded: false
+      embedded: true
       preload: true
   ldap:
     host: ldap-master.maredit.net
@@ -51,4 +51,11 @@ spring:
       port: 27017
       database: tar
       embedded: false 
-      preload: false           
+      preload: false 
+  ldap:
+    host: ldap-master.maredit.net
+    port: 636
+    userLookUpDN: ou=users,o=maredit,dc=de
+    apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
+    readPassword: 7Ey8vHzPPZrdWA          

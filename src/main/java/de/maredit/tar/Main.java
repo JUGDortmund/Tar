@@ -1,5 +1,6 @@
 package de.maredit.tar;
 
+import de.maredit.tar.listeners.ContextListener;
 import de.maredit.tar.listeners.StartupListener;
 
 import org.springframework.boot.SpringApplication;
@@ -12,7 +13,7 @@ public class Main {
 
   public static void main(String[] args) {
     SpringApplication springApplication = new SpringApplication(Main.class);
-    springApplication.addListeners(new StartupListener());
+    springApplication.addListeners(new StartupListener(), new ContextListener());
     springApplication.run(args);
   }
 }

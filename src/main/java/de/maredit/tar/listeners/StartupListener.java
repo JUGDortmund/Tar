@@ -16,5 +16,13 @@ public class StartupListener implements ApplicationListener<ApplicationEnvironme
     if (embeddedMongo != null && embeddedMongo.booleanValue()) {
       EmbeddedMongo.DB.port(this.environment.getProperty("spring.data.mongodb.port", Integer.class)).start();
     }
+    
+    if (this.environment.getProperty("spring.data.mongodb.preload", Boolean.class)) {
+      preloadData(event);
+    }
+  }
+
+  private void preloadData(ApplicationEnvironmentPreparedEvent event) {
+    
   }
 }
