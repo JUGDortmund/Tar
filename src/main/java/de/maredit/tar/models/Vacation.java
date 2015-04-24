@@ -9,6 +9,8 @@ import org.springframework.data.annotation.Reference;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import de.maredit.tar.models.enums.State;
+
 @Document(collection="vacations")
 public class Vacation {
   @Id

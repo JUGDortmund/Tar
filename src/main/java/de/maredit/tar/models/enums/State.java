@@ -1,4 +1,4 @@
-package de.maredit.tar.models;
+package de.maredit.tar.models.enums;
 
 public enum State {
   REQUESTED_SUBSTITUTE("pending"),
