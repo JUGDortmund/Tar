@@ -3,7 +3,6 @@ package de.maredit.tar.models.validators;
 import de.maredit.tar.models.Vacation;
 
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
@@ -21,8 +20,8 @@ public class VacationValidator implements Validator {
   @Override
   public void validate(Object o, Errors errors) {
     Vacation vacation = (Vacation) o;
-    if (vacation.getTo() != null && vacation.getFrom() != null && vacation.getTo()
-        .isBefore(vacation.getFrom())) {
+    if (vacation.getTo() != null && vacation.getFrom() != null
+        && vacation.getTo().isBefore(vacation.getFrom())) {
       errors.rejectValue("to", "to.before.from", "Ende-Termin liegt vor Anfangs-Termin");
     }
     if (vacation.getFrom() != null && vacation.getFrom().isBefore(LocalDate.now())) {
