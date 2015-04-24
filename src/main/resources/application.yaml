@@ -47,7 +47,7 @@ spring:
   profiles: prod
   data:
     mongodb:
-      host: localhost
+      host: tar-db.maredit.net
       port: 27017
       database: tar
       embedded: false 
