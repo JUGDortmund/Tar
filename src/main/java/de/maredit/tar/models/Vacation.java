@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -67,6 +68,14 @@ public class Vacation {
     this.state =
         substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
     this.created = LocalDate.now();
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public State getState() {
@@ -141,5 +150,25 @@ public class Vacation {
 
   public void setCreated(LocalDate created) {
     this.created = created;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Vacation other = (Vacation) obj;
+    if (!Objects.equals(this.id, other.id)) {
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(this.id);
   }
 }

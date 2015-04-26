@@ -16,6 +16,8 @@ public class MongoProperties {
   private String database;
   private Boolean embedded;
 
+  private Boolean preload;
+
   public String getHost() {
     return host;
   }
@@ -46,5 +48,13 @@ public class MongoProperties {
 
   public void setEmbedded(Boolean embedded) {
     this.embedded = embedded;
+  }
+
+  public Boolean isPreload() {
+    return preload;
+  }
+
+  public void setPreload(Boolean preload) {
+    this.preload = preload;
   }
 }

@@ -2,6 +2,8 @@ package de.maredit.tar.models;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.Objects;
+
 public class User {
 
   @Id
@@ -15,6 +17,14 @@ public class User {
   private Boolean active;
 
   public User() {
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getUidNumber() {
@@ -63,5 +73,25 @@ public class User {
 
   public void setMail(String mail) {
     this.mail = mail;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final User other = (User) obj;
+    if (!Objects.equals(this.uidNumber, other.uidNumber)) {
+      return false;
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(this.uidNumber);
   }
 }

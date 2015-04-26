@@ -5,20 +5,24 @@ import de.maredit.tar.models.Vacation;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class ApplicationController {
+public class ApplicationController extends WebMvcConfigurerAdapter {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ApplicationController.class);
 
   @Autowired
   private VacationRepository vacationRepository;
@@ -26,10 +30,11 @@ public class ApplicationController {
   @Autowired
   private UserRepository userRepository;
 
-  @RequestMapping(value = "/", method = RequestMethod.GET)
+
+  @RequestMapping("/")
   public String index(HttpServletRequest request, Model model, Vacation vacation) {
     User user = getUser(request);
-
+    vacation.setUser(user);
     List<User> users = this.userRepository.findAll();
     List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(user);
 
@@ -47,7 +52,6 @@ public class ApplicationController {
 
   private User getUser(HttpServletRequest request) {
     User user = null;
-
     Object selected = request.getParameter("selected");
     if (selected == null) {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
