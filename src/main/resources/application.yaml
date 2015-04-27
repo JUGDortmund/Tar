@@ -13,6 +13,7 @@ spring:
       port: 28018
       database: tar
       embedded: true
+      preload: true
 ---
 ##### Test configuration #####
 spring:
