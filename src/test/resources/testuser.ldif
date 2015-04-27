@@ -1,0 +1,69 @@
+version: 1
+
+dn: o=maredit,dc=de
+objectClass: organization
+objectClass: dcObject
+objectClass: top
+dc: de
+o: maredit
+description: maredit GmbH
+
+dn: ou=users,o=maredit,dc=de
+objectClass: organizationalUnit
+ou: users
+
+dn: ou=groups,o=maredit,dc=de
+objectClass: organizationalUnit
+ou: groups
+
+dn: ou=services,o=maredit,dc=de
+objectClass: organizationalUnit
+ou: services
+
+dn: cn=ldap,ou=services,o=maredit,dc=de
+objectClass: top
+objectClass: groupOfNames
+cn: ldap
+member: cn=read,cn=ldap,ou=services,o=maredit,dc=de
+
+dn: cn=read,cn=ldap,ou=services,o=maredit,dc=de
+objectClass: top
+objectClass: person
+cn: read
+sn: read
+userPassword: read
+
+dn: uid=worker,ou=users,o=maredit,dc=de
+objectClass: top
+objectClass: inetOrgPerson
+uid: worker
+userPassword: TakeARest
+sn: Worker
+cn: K.
+
+dn: uid=supervisor,ou=users,o=maredit,dc=de
+objectClass: top
+objectClass: inetOrgPerson
+uid: supervisor
+userPassword: TakeARest
+sn: Supervisor
+cn: asdf
+
+dn: cn=tar,ou=services,o=maredit,dc=de
+objectClass: top
+objectClass: groupOfNames
+cn: tar
+
+dn: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+objectClass: top
+objectClass: groupOfNames
+cn: tar-users
+member: uid=worker,ou=users,o=maredit,dc=de
+member: uid=supervisor,ou=users,o=maredit,dc=de
+
+dn: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
+objectClass: top
+objectClass: groupOfNames
+cn: tar-supervisors
+member: uid=supervisor,ou=users,o=maredit,dc=de
+

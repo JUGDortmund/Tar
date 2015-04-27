@@ -43,9 +43,13 @@ public class LdapServiceImpl implements LdapService {
   @PostConstruct
   public void init() throws LDAPException, GeneralSecurityException {
     LDAPConnection ldapConnection = null;
-    ldapConnection =
-        new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
-            ldapConfig.getHost(), ldapConfig.getPort());
+    if (ldapConfig.isDisableSSL()) {
+      ldapConnection = new LDAPConnection(ldapConfig.getHost(), ldapConfig.getPort());
+    } else {
+      ldapConnection =
+          new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
+              ldapConfig.getHost(), ldapConfig.getPort());
+    }
 
     connectionPool = new LDAPConnectionPool(ldapConnection, 10);
   }
@@ -97,10 +101,17 @@ public class LdapServiceImpl implements LdapService {
 
   @Override
   public boolean authenticateUser(String uid, String password) throws LDAPException {
+    try {
     BindResult bindResult =
         connectionPool.bind(ldapConfig.getUserBindDN().replace("$username", uid), password);
     return bindResult.getResultCode().equals(ResultCode.SUCCESS);
-  }
+    } catch (LDAPException e) {
+      if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS)) {
+        return false;
+      }
+      throw e;
+    }
+    }
 
   @Override
   public List<String> getUserGroups(String uid) throws LDAPException {
@@ -109,8 +120,9 @@ public class LdapServiceImpl implements LdapService {
     try {
       ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
       SearchRequest searchRequest =
-          new SearchRequest(ldapConfig.getUserLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-              Filter.createEqualityFilter("member", ldapConfig.getUserBindDN().replace("$username", uid)));
+          new SearchRequest(ldapConfig.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
+              Filter.createEqualityFilter(ldapConfig.getGroupLookUpAttribute(),
+                  ldapConfig.getUserBindDN().replace("$username", uid)));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 
       if (searchResults.getEntryCount() > 0) {
@@ -124,5 +136,9 @@ public class LdapServiceImpl implements LdapService {
     }
     connectionPool.releaseConnection(ldapConnection);
     return groups;
+  }
+
+  public LdapConfig getLdapConfig() {
+    return ldapConfig;
   }
 }

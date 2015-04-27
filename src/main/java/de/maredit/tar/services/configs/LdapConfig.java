@@ -24,6 +24,8 @@ public class LdapConfig {
   private String groupLookUpAttribute;
   
   private String userBindDN;
+  
+  private boolean disableSSL;
 
   public String getHost() {
     return host;
@@ -95,6 +97,14 @@ public class LdapConfig {
 
   public void setUserBindDN(String userBindDN) {
     this.userBindDN = userBindDN;
+  }
+
+  public boolean isDisableSSL() {
+    return disableSSL;
+  }
+
+  public void setDisableSSL(boolean disableSSL) {
+    this.disableSSL = disableSSL;
   }
 
 }
