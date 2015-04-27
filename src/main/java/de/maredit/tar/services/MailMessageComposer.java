@@ -7,9 +7,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class MailMessageComposer {
@@ -19,7 +28,6 @@ public class MailMessageComposer {
 
   private static final Logger LOG = LogManager.getLogger(MailMessageComposer.class);
 
-
   @Autowired
   public SpringTemplateEngine templateEngine;
 
@@ -28,8 +36,9 @@ public class MailMessageComposer {
   private String prepareMailBody(Vacation vacation) {
     Context ctx = new Context();
     ctx.setVariable("employee", vacation.getUser().getFirstName());
-    ctx.setVariable("manager", vacation.getManager().getFirstName());
-    ctx.setVariable("substitute", vacation.getSubstitute().getFirstName());
+    ctx.setVariable("manager", vacation.getManager().getFullname());
+    ctx.setVariable("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
+        .getFullname());
     ctx.setVariable("fromDate", vacation.getFrom());
     ctx.setVariable("toDate", vacation.getTo());
     ctx.setVariable("totalDays", vacation.getDays());
@@ -38,43 +47,52 @@ public class MailMessageComposer {
     return templateEngine.process(MAIL_TEMPLATE, ctx);
   }
 
-  public SimpleMailMessage composeMail(Vacation vacation) {
+  public SimpleMailMessage composeSimpleMailMessage(Vacation vacation) {
     LOG.debug("Preparing email for Vacation: {}", vacation.toString());
     SimpleMailMessage message = new SimpleMailMessage();
 
-    // TODO: Remove once a Vacation comes bundled with user, manager and substitute. Meanwhile just
-    // generate some dummy users.
-    if (vacation.getUser() == null) {
-      vacation.setUser(createDummyUser("Albert"));
-    }
-    if (vacation.getManager() == null) {
-      vacation.setManager(createDummyUser("Einstein"));
-    }
-
-    if (vacation.getSubstitute() == null) {
-      vacation.setSubstitute(createDummyUser("Newton"));
-    }
-
     message.setSubject(MAIL_SUBJECT);
-    message.setTo(new String[] {vacation.getUser().getMail(), vacation.getSubstitute().getMail(),
-        vacation.getManager().getMail()});
+    message.setSentDate(new Date());
+    message.setTo(getRecipients(vacation));
     message.setText(prepareMailBody(vacation));
+    return message;
+  }
+
+  private String[] getRecipients(Vacation vacation) {
+    List<String> recipients = new ArrayList<>();
+    recipients.add(retrieveMail(vacation.getUser()));
+    recipients.add(retrieveMail(vacation.getSubstitute()));
+    recipients.add(retrieveMail(vacation.getManager()));
+
+    List<String> filteredList =
+        recipients.stream().filter(e -> !e.isEmpty()).collect(Collectors.toList());
+    String[] array = new String[filteredList.size()];
+    return filteredList.toArray(array);
+  }
+
+  private String retrieveMail(User user) {
+    String mail = "";
+    if (user != null && user.getMail() != null) {
+      mail = user.getMail();
+    }
+    return mail;
+  }
+
+  public MimeMessage composeMimeMailMessage(Vacation vacation, MimeMessage message) {
+    try {
+      MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+      messageHelper.setSubject(MAIL_SUBJECT);
+      messageHelper.setTo(getRecipients(vacation));
+      messageHelper.setSentDate(new Date());
+      messageHelper.setText(prepareMailBody(vacation), true);
+    } catch (MessagingException e) {
+      LOG.error(e);
+    }
     return message;
   }
 
   public void setSpringTemplateEngine(SpringTemplateEngine templateEngine) {
     this.templateEngine = templateEngine;
-  }
-
-  /*
-   * TODO: to be removed after the frontend form delivers valid user (Mitarbeiter), substitute
-   * (Vertreter) and manager (züständiger Vertreter)
-   */
-  private User createDummyUser(String name) {
-    User user = new User();
-    user.setFirstName(name);
-    user.setMail(name + "@maredit.de");
-    return user;
   }
 
 }

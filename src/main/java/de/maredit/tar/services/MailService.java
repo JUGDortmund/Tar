@@ -1,18 +1,20 @@
 package de.maredit.tar.services;
 
-import javax.mail.internet.MimeMessage;
+import de.maredit.tar.models.Vacation;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
-import de.maredit.tar.models.Vacation;
+import javax.mail.internet.MimeMessage;
 
 @Service
 public interface MailService {
 
-	public void sendMail(SimpleMailMessage mailMessage);
+  public void sendMail(SimpleMailMessage mailMessage);
 
-	public void sendMail(MimeMessage mailMessage);
-	
-	public void sendMail(Vacation vacation);
+  public void sendMail(MimeMessage mailMessage);
+
+  public void sendSimpleMail(Vacation vacation);
+
+  public void sendMimeMail(Vacation vacation);
 }

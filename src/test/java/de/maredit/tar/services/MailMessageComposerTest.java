@@ -43,7 +43,7 @@ public class MailMessageComposerTest {
     "John@maredit.de"};
 
     // When
-    String[] actualArray = mailComposer.composeMail(vacation).getTo();
+    String[] actualArray = mailComposer.composeSimpleMailMessage(vacation).getTo();
 
     // Then
     assertEquals(expectedArray[0], actualArray[0]);
@@ -53,7 +53,7 @@ public class MailMessageComposerTest {
 
   @Test
   public void changedMailAdressesInComposedMail() {
-    SimpleMailMessage mailMessage = mailComposer.composeMail(standardVacation);
+    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
 
     assertEquals("Mark@maredit.de", mailMessage.getTo()[0]);
     assertEquals("Luke@maredit.de", mailMessage.getTo()[1]);
@@ -62,7 +62,7 @@ public class MailMessageComposerTest {
     standardVacation.getUser().setMail("JohnnyEnglish@maredit.de");
     standardVacation.getManager().setMail("manager@maredit.de");
     standardVacation.getSubstitute().setMail("substitute@maredit.de");
-    mailMessage = mailComposer.composeMail(standardVacation);
+    mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
 
     assertEquals("JohnnyEnglish@maredit.de", mailMessage.getTo()[0]);
     assertEquals("substitute@maredit.de", mailMessage.getTo()[1]);
@@ -76,7 +76,7 @@ public class MailMessageComposerTest {
     standardVacation.setDays(13);
     standardVacation.setDaysLeft(11);
 
-    SimpleMailMessage mailMessage = mailComposer.composeMail(standardVacation);
+    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
     String actualBodyText = mailMessage.getText();
 
     String errorMessage = "Expected substring not found in body text: ";
@@ -84,10 +84,10 @@ public class MailMessageComposerTest {
     String expectedSubString = "Hallo, <span>Mark</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Name des Projektleiters:</b> <span>John</span>";
+    expectedSubString = "<b>Name des Projektleiters:</b> <span>John Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Name des Stellvertreters:</b> <span>Luke</span>";
+    expectedSubString = "<b>Name des Stellvertreters:</b> <span>Luke Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
     expectedSubString = "Von: <span>2015-04-27</span>";
@@ -106,6 +106,7 @@ public class MailMessageComposerTest {
   private User createDummyUser(String name) {
     User user = new User();
     user.setFirstName(name);
+    user.setLastName("Surname");
     user.setMail(name + "@maredit.de");
     return user;
   }

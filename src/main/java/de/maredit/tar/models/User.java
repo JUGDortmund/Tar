@@ -16,8 +16,7 @@ public class User {
   private String mail;
   private Boolean active;
 
-  public User() {
-  }
+  public User() {}
 
   public String getId() {
     return id;
@@ -93,5 +92,9 @@ public class User {
   @Override
   public int hashCode() {
     return Objects.hashCode(this.uidNumber);
+  }
+
+  public String getFullname() {
+    return this.firstName + " " + this.lastName;
   }
 }

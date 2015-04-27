@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import javax.mail.internet.MimeMessage;
@@ -30,9 +30,9 @@ public class MailServiceImpl implements MailService {
   @Autowired
   private MailProperties mailProperties;
 
-  private MailSender javaMailSender;
+  private JavaMailSender javaMailSender;
 
-  public void setJavaMailSender(MailSender mailSender) {
+  public void setJavaMailSender(JavaMailSender mailSender) {
     this.javaMailSender = mailSender;
   }
 
@@ -58,11 +58,11 @@ public class MailServiceImpl implements MailService {
 
   @Override
   public void sendMail(MimeMessage mimeMessage) {
-    ((JavaMailSenderImpl) this.javaMailSender).send(mimeMessage);
+    javaMailSender.send(mimeMessage);
   }
 
   @Bean
-  public MailSender javaMailSender() {
+  public JavaMailSender javaMailSender() {
     if (javaMailSender == null) {
       JavaMailSenderImpl jMailSender = new JavaMailSenderImpl();
       if (mailProperties != null) {
@@ -79,8 +79,18 @@ public class MailServiceImpl implements MailService {
   }
 
   @Override
-  public void sendMail(Vacation vacation) {
-    sendMail(mailMessageComposer.composeMail(vacation));
+  public void sendSimpleMail(Vacation vacation) {
+    sendMail(mailMessageComposer.composeSimpleMailMessage(vacation));
+  }
+
+  @Override
+  public void sendMimeMail(Vacation vacation) {
+    JavaMailSenderImpl javaMailSender = null;
+    if (this.javaMailSender instanceof JavaMailSenderImpl) {
+      javaMailSender = (JavaMailSenderImpl) this.javaMailSender;
+    }
+    sendMail(mailMessageComposer.composeMimeMailMessage(vacation,
+        javaMailSender.createMimeMessage()));
   }
 
 }

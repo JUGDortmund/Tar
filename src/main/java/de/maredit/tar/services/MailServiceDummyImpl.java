@@ -41,7 +41,12 @@ public class MailServiceDummyImpl implements MailService {
   }
 
   @Override
-  public void sendMail(Vacation vacation) {
-    sendMail(mailMessageComposer.composeMail(vacation));
+  public void sendSimpleMail(Vacation vacation) {
+    sendMail(mailMessageComposer.composeSimpleMailMessage(vacation));
+  }
+
+  @Override
+  public void sendMimeMail(Vacation vacation) {
+    sendSimpleMail(vacation);
   }
 }

@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.util.List;
-
 import javax.validation.Valid;
+
+import java.util.List;
 
 /**
  * Created by czillmann on 22.04.15.
@@ -49,12 +49,10 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
-          fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage())
-      );
+          fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
       User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
       List<User> users = this.userRepository.findAll();
-      List<Vacation>
-          vacations =
+      List<Vacation> vacations =
           this.vacationRepository.findVacationByUserOrderByFromAsc(selectedUser);
       model.addAttribute("users", users);
       model.addAttribute("vacations", vacations);
@@ -63,7 +61,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       return "application/index";
     } else {
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(vacation);
+      this.mailService.sendMimeMail(vacation);
 
       return "redirect:/";
     }
