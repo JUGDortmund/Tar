@@ -11,19 +11,26 @@
 
   $('.panel-default').matchHeight();
 
+  $('[data-toggle="filter"]').click(function () {
+    $('.offcanvas-filter').toggleClass('active')
+  });
+
   $('#calendar').fullCalendar({
     header: {
       left: 'prev,next today',
       center: 'title',
-      right: 'month,agendaWeek'
+      right: 'month,basicWeek'
     },
-    defaultDate: '2015-02-12',
     defaultView: 'month',
+    lang: 'de',
+    weekends: false,
     eventLimit: true, // allow "more" link when too many events
     events: [
       {
-        title: 'All Day Event',
-        start: '2015-02-01'
+        title: 'Urlaub bpr',
+        status: 'pending',
+        start: '2015-04-01',
+        end: '2015-04-08'
       },
       {
         title: 'Long Event',

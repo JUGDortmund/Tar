@@ -28,8 +28,8 @@ public class UserSyncTask {
   /**
    * Scheduled 5 seconds after start and then every hour
    */
-  @Scheduled(initialDelay = 5000, fixedDelay=3600000)
-  public void reportCurrentTime() {
+  @Scheduled(cron = "0 */1 * * * ?")
+  public void syncLdapUser() {
     try {
       List<User> users = ldapService.getUsers();
       List<String> editedUser = new ArrayList<>();
@@ -48,7 +48,7 @@ public class UserSyncTask {
       deactivateDeletedLdapUser(editedUser);
 
     } catch (LDAPException e) {
-      e.printStackTrace();
+      LOG.error("Failed to sync LDAP users", e);
     }
   }
 

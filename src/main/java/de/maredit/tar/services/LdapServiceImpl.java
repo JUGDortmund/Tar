@@ -125,5 +125,4 @@ public class LdapServiceImpl implements LdapService {
     connectionPool.releaseConnection(ldapConnection);
     return groups;
   }
-  
 }
