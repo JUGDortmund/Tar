@@ -96,10 +96,10 @@ public class MailMessageComposerTest {
     expectedSubString = "Bis: <span>2016-05-30</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Summe der Urlaubstage:</b> <span>13</span>";
+    expectedSubString = "<b>Summe der Urlaubstage:</b> <span>13.0</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Summe der Resturlaubstage:</b> <span>11</span>";
+    expectedSubString = "<b>Summe der Resturlaubstage:</b> <span>11.0</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
   }
 
