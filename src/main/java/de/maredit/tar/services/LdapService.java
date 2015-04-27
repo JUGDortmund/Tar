@@ -10,10 +10,27 @@ import java.util.List;
  */
 public interface LdapService {
 
+  /**
+   * get user list wth user details from LDAP
+   * @return
+   * @throws LDAPException
+   */
   List<SearchResultEntry> getLdapUserList() throws LDAPException;
 
-  List<SearchResultEntry> getLdapTeamleaderList() throws LDAPException;
+  /**
+   * Get the list uf usernames for team leader
+   * @return
+   * @throws LDAPException
+   */
+  String[] getLdapTeamleaderList() throws LDAPException;
 
+  /**
+   * Authenticate user using configured ldap
+   * @param uid
+   * @param password
+   * @return
+   * @throws LDAPException
+   */
   boolean authenticateUser(String uid, String password) throws LDAPException;
 
   List<String> getUserGroups(String uid) throws LDAPException;

@@ -26,9 +26,6 @@ public class UserSyncTask {
   @Autowired
   private LdapService ldapService;
 
-  /**
-   * Scheduled 5 seconds after start and then every hour
-   */
   @Scheduled(cron = "0 */1 * * * ?")
   public void syncLdapUser() {
     try {
