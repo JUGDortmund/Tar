@@ -2,5 +2,7 @@
 @import "theme-overrides";
 @import "helpers/mixins";
 
+@import "modules/offcanvas/module_style";
 @import "modules/list-panel/module_style";
 @import "modules/vacation-form/module_style";
+@import "modules/vacation-detail/module_style";

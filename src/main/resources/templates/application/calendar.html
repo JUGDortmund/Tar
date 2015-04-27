@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+
+    <div layout:fragment="content">
+		<section class="content-header">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-12">
+                <h1>
+                  Urlaubsverwaltung
+                  <small>Anträge bearbeiten</small>
+                </h1>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="content">
+        	<div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-12 col-sm-8">
+                <p class="pull-right visible-xs info-toggle">
+                  <button type="button" class="btn btn-primary btn-xs offcanvas-toggle" data-toggle="filter">Infos</button>
+                </p>
+                <div class="panel panel-default">
+                  <div class="panel-heading">Kalender</div>
+                  <div class="panel-body">
+                    <div id="calendar"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-4 module offcanvas-filter" id="sidebar">
+                <div class="panel panel-default module list-panel">
+                  <div class="panel-heading">Info-Panel</div>
+                  <div class="panel-body">
+                    <div class="list-group">
+                      <h3 class="list-group-item">
+                        Filter
+                      </h3>
+                      <div class="list-group-item checkbox">
+                        <label>
+                            <input type="checkbox"/>Genehmigte Urlaube
+                        </label>
+                      </div>
+                       <div class="list-group-item checkbox">
+                        <label>
+                            <input type="checkbox"/>Beantragte Urlaube
+                        </label>
+                      </div>
+                       <div class="list-group-item checkbox">
+                        <label>
+                            <input type="checkbox"/>Stornierte Urlaube
+                        </label>
+                      </div>
+                      <div class="list-group-item checkbox">
+                        <label>
+                            <input type="checkbox"/>Abgelehnte Urlaube  
+                        </label>
+                      </div>
+                    </div>
+                   
+                    <div class="list-group">
+                      <h3 class="list-group-item">
+                        Urlaubsdetails
+                      </h3>
+                      <div class="list-group-item module vacation-detail">
+
+                          <h2>NUR Sichtbar, wenn ein Urlaubsbalken geklickt wurde</h2>
+
+                          <ul>
+                            <li><strong>Mitarbeiter:</strong></li>
+                            <li>Björn Prenger</li>
+                            <li><strong>Typ</strong></li>
+                            <li>Mögliche Werte: Urlaub/Vertretung etc.</li>
+                            <li><strong>Status</strong></li>
+                            <li>bestätigt</li>
+                            <li><strong>von - bis</strong></li>
+                            <li>01.04.2015 - 04.04.2015</li>
+                            <li><strong>Vertreter</strong></li>
+                            <li>Oliver Kykal</li>
+                            <li><strong>Kommentar</strong></li>
+                            <li>Oh, mann, endlich mal wieder nach Malle</li>
+                          </ul>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+
+
+        	   </div>
+            </div>
+          </div>
+        </section>
+
+    </div>
+
+</html>
