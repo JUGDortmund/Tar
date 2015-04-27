@@ -69,7 +69,7 @@ public class LdapServiceImpl implements LdapService {
       String[] members = searchResultEntry.getAttributeValues("member");
 
       // iterate over userDN and create/update users
-      List<SearchResultEntry> ldapUser = new ArrayList();
+      List<SearchResultEntry> ldapUser = new ArrayList<SearchResultEntry>();
 
       for (String member : members) {
         SearchResultEntry userEntry = ldapConnection.getEntry(member);
@@ -135,5 +135,4 @@ public class LdapServiceImpl implements LdapService {
     connectionPool.releaseConnection(ldapConnection);
     return groups;
   }
-
 }
