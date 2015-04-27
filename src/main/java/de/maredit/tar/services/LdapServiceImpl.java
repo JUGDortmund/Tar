@@ -110,7 +110,7 @@ public class LdapServiceImpl implements LdapService {
       ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
       SearchRequest searchRequest =
           new SearchRequest(ldapConfig.getUserLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-              Filter.createEqualityFilter("memberUid", uid));
+              Filter.createEqualityFilter("member", ldapConfig.getUserBindDN().replace("$username", uid)));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 
       if (searchResults.getEntryCount() > 0) {

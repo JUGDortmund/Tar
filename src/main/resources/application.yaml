@@ -20,8 +20,8 @@ spring:
     applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA
-    groupLookUpDN: ou=groups,o=maredit,dc=de
-    groupLookUpAttribute: memberUid
+    groupLookUpDN: ou=services,o=maredit,dc=de
+    groupLookUpAttribute: member
     userBindDN: uid=$username,ou=users,o=maredit,dc=de
 ---
 ##### Test configuration #####
