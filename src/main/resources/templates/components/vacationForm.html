@@ -60,13 +60,13 @@ edit-vacation, approve-vacation  -->
             <div class="row">
                 <div th:class="${#fields.hasErrors('days')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="vacationDays">Anzahl Urlaubstage *</label>
-                    <input type="number" class="form-control" name="vacationDays" id="vacationDays"
+                    <input type="number" class="form-control" name="vacationDays" id="vacationDays" step="0.5"
                            th:field="*{days}"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('daysLeft')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="daysLeft">Verbleibende Urlaubstage *</label>
-                    <input type="number" class="form-control" name="daysLeft" id="daysLeft"
+                    <input type="number" class="form-control" name="daysLeft" id="daysLeft" step="0.5"
                            th:field="*{daysLeft}"/>
                 </div>
             </div>

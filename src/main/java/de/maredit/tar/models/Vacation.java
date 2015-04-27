@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -41,11 +42,11 @@ public class Vacation {
   @NotNull
   private User manager;
 
-  @Min(0)
-  private int days;
+  @DecimalMin("0.5")
+  private float days;
 
   @Min(0)
-  private int daysLeft;
+  private float daysLeft;
 
   @NotNull
   private State state;
@@ -56,7 +57,7 @@ public class Vacation {
   }
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
-                  int days, int daysLeft) {
+                  float days, float daysLeft) {
     this.user = user;
     this.from = from;
     this.to = to;
@@ -86,19 +87,19 @@ public class Vacation {
     this.state = state;
   }
 
-  public int getDaysLeft() {
+  public float getDaysLeft() {
     return daysLeft;
   }
 
-  public void setDaysLeft(int amountLeft) {
-    this.daysLeft = amountLeft;
+  public void setDaysLeft(float daysLeft) {
+    this.daysLeft = daysLeft;
   }
 
-  public int getDays() {
+  public float getDays() {
     return days;
   }
 
-  public void setDays(int days) {
+  public void setDays(float days) {
     this.days = days;
   }
 
