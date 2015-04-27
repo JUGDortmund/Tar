@@ -12,6 +12,8 @@ public interface LdapService {
 
   List<SearchResultEntry> getLdapUserList() throws LDAPException;
 
+  List<SearchResultEntry> getLdapTeamleaderList() throws LDAPException;
+
   boolean authenticateUser(String uid, String password) throws LDAPException;
 
   List<String> getUserGroups(String uid) throws LDAPException;

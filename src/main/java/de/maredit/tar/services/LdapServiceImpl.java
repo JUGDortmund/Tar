@@ -65,7 +65,7 @@ public class LdapServiceImpl implements LdapService {
       // get value list with userDN
       SearchResultEntry
           searchResultEntry =
-          ldapConnection.getEntry(ldapConfig.getApllicationUserDN());
+          ldapConnection.getEntry(ldapConfig.getApplicationUserDN());
       String[] members = searchResultEntry.getAttributeValues("member");
 
       // iterate over userDN and create/update users
@@ -80,6 +80,25 @@ public class LdapServiceImpl implements LdapService {
       connectionPool.releaseConnection(ldapConnection);
       return ldapUser;
     } catch (LDAPException e) {
+      LOG.error("Error reading user list from LDAP", e);
+      connectionPool.releaseConnectionAfterException(ldapConnection, e);
+      throw e;
+    }
+  }
+
+  @Override
+  public List<SearchResultEntry> getLdapTeamleaderList() throws LDAPException {
+    LDAPConnection ldapConnection = null;
+    try {
+      ldapConnection = connectionPool.getConnection();
+      // get value list with userDN
+      SearchResultEntry
+          searchResultEntry =
+          ldapConnection.getEntry(ldapConfig.getApplicationTeamleaderDN());
+      LOG.info("LDAP Teamleader: " + searchResultEntry);
+      return null;
+    }
+    catch (LDAPException e) {
       LOG.error("Error reading user list from LDAP", e);
       connectionPool.releaseConnectionAfterException(ldapConnection, e);
       throw e;
