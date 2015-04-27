@@ -14,12 +14,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
-@ActiveProfiles("test")eated by pplewa on 27.04.15.
+@ActiveProfiles("test")
 public class LdapServiceImplIntegrationTest {
 
   @Autowired
@@ -37,8 +38,8 @@ public class LdapServiceImplIntegrationTest {
 
   @Test
   public void testGetLdapTeamleaderList() throws Exception {
-    final String[] ldapUserList = ldapService.getLdapTeamleaderList();
+    final Set<String> ldapUserList = ldapService.getLdapTeamleaderList();
     assertNotNull("Failed to load team leader list from LDAP", ldapUserList);
-    assertTrue("No team leader found", ldapUserList.length > 0);
+    assertTrue("No team leader found", ldapUserList.size() > 0);
   }
 }

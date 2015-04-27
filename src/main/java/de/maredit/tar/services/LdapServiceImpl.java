@@ -19,12 +19,14 @@ import de.maredit.tar.services.configs.LdapConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -88,7 +90,7 @@ public class LdapServiceImpl implements LdapService {
   }
 
   @Override
-  public String[] getLdapTeamleaderList() throws LDAPException {
+  public Set<String> getLdapTeamleaderList() throws LDAPException {
     LDAPConnection ldapConnection = null;
     try {
       ldapConnection = connectionPool.getConnection();
@@ -99,7 +101,9 @@ public class LdapServiceImpl implements LdapService {
 
       String[] memberUids = searchResultEntry.getAttributeValues("memberUid");
 
-      return memberUids;
+      final HashSet<String> userSet = new HashSet<>();
+      Collections.addAll(userSet, memberUids);
+      return userSet;
     }
     catch (LDAPException e) {
       LOG.error("Error reading user list from LDAP", e);

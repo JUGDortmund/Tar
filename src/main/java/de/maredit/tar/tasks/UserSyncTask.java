@@ -44,7 +44,6 @@ public class UserSyncTask {
         }
       }
       deactivateUserNotInLdap(editedUser);
-
     } catch (LDAPException e) {
       LOG.error("Failed to sync LDAP users", e);
     }

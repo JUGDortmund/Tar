@@ -4,6 +4,7 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by pplewa on 23.04.15.
@@ -22,7 +23,7 @@ public interface LdapService {
    * @return
    * @throws LDAPException
    */
-  String[] getLdapTeamleaderList() throws LDAPException;
+  Set<String> getLdapTeamleaderList() throws LDAPException;
 
   /**
    * Authenticate user using configured ldap
