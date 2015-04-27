@@ -26,8 +26,6 @@ spring:
     port: 2025
     username: tar
     password:
-    properties:
-      environment: dev
 ---
 ##### Test configuration #####
 spring:
@@ -73,3 +71,8 @@ spring:
     apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA          
+  mail:
+    host: postfix.maredit.net
+    port: 25
+    username: no-reply@maredit.de
+    password: lkvSdsE9YroldisNLVtdpVO4
