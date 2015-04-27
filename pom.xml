@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.maredit</groupId>
 	<artifactId>tar</artifactId>
-	<version>1.3.0-SNAPSHOT</version>
+	<version>1.3.0</version>
 	<packaging>jar</packaging>
 	<name>tar</name>
 	<url>http://www.maredit.de</url>
@@ -10,7 +10,7 @@
 		<connection>scm:git:ssh://git@stash.maredit.net:7999/com/tar.git</connection>
 		<developerConnection>scm:git:ssh://git@stash.maredit.net:7999/com/tar.git</developerConnection>
 		<url>http://stash.maredit.net/projects/COM/repos/tar/browse</url>
-	  <tag>HEAD</tag>
+	  <tag>TaR-1.3.0</tag>
   </scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
