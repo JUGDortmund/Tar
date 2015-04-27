@@ -1,0 +1,21 @@
+@media (max-width: 760px) {
+
+  .offcanvas-filter {
+    display: none;
+    left: 0px;
+    position: absolute;
+    right: 0px;
+    top: 20px;
+    z-index: 5;
+
+    &.active {
+      display: block;
+    }
+  }
+}
+
+.info-toggle {
+  position: relative;
+  margin-top: -34px;
+  z-index: 6;
+}

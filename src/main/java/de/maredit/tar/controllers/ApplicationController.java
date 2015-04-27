@@ -36,7 +36,7 @@ public class ApplicationController {
       model.addAttribute("vacations", vacations);
       model.addAttribute("selectedUser", user);
         
-      return "application/index";
+        return "application/index";
     }
     
     @RequestMapping("/login")
@@ -53,8 +53,14 @@ public class ApplicationController {
         user = this.userRepository.findUserByUsername(auth.getName());
       } else {
         user= this.userRepository.findUserByUsername(String.valueOf(selected));
-      }
-      
+    }
+    
       return user;
     }
+
+    @RequestMapping("calendar")
+    public String calendar() {
+        return "application/calendar";
+    }
+
 }
