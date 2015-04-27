@@ -3,7 +3,9 @@ package de.maredit.tar.services;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MailService {
 
   private MailSender mailSender;

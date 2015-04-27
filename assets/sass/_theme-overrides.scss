@@ -11,6 +11,10 @@
     }
 }
 
+.content-wrapper {
+	position: relative;
+}
+
 .has-error {
 	.select2-container--default,
 	.select2-selection--single {
