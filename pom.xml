@@ -7,6 +7,12 @@
 	<packaging>jar</packaging>
 	<name>tar</name>
 	<url>http://www.maredit.de</url>
+	<scm>
+		<connection>scm:git:ssh://git@stash.maredit.net:7999/com/tar.git</connection>
+		<developerConnection>scm:git:ssh://git@stash.maredit.net:7999/com/tar.git
+		</developerConnection>
+		<url>http://stash.maredit.net/projects/COM/repos/tar/browse</url>
+	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<springboot.version>1.2.3.RELEASE</springboot.version>
