@@ -30,14 +30,20 @@ import static org.junit.Assert.assertTrue;
 public class VacationValidatorTest {
 
   private User user = null;
+  private User user2 = null;
 
   @Before
   public void setup() {
     user = new User();
     user.setFirstName("John");
     user.setLastName("Deer");
-  }
+    user.setUidNumber("4711");
 
+    user2 = new User();
+    user2.setFirstName("Johanna");
+    user2.setLastName("Deerer");
+    user2.setUidNumber("4712");
+  }
 
   @Test
   public void testValidationWithValidVacation() {
@@ -45,7 +51,7 @@ public class VacationValidatorTest {
     VacationValidator validatorUnderTest = new VacationValidator();
     Vacation validVacation =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                     user, user, 15, 5);
+                     user2, user, 15, 5);
 
     Errors errors = new BeanPropertyBindingResult(validVacation, "validVacation");
     validatorUnderTest.validate(validVacation, errors);

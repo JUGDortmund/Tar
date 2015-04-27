@@ -20,7 +20,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class ApplicationController extends WebMvcConfigurerAdapter {
+public class ApplicationController {
 
   private static final Logger LOG = LoggerFactory.getLogger(ApplicationController.class);
 
