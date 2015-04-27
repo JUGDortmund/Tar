@@ -37,18 +37,17 @@ public class MailMessageComposerTest {
 
   @Test
   public void recipientsInComposedMail() {
-    // Given
     Vacation vacation = standardVacation;
     String[] expectedArray = {/* User */"Mark@maredit.de", /* Substitute */"Luke@maredit.de", /* Manager */
     "John@maredit.de"};
 
-    // When
     String[] actualArray = mailComposer.composeSimpleMailMessage(vacation).getTo();
 
-    // Then
     assertEquals(expectedArray[0], actualArray[0]);
-    assertEquals(expectedArray[1], actualArray[1]);
-    assertEquals(expectedArray[2], actualArray[2]);
+
+    actualArray = mailComposer.composeSimpleMailMessage(vacation).getCc();
+    assertEquals(expectedArray[1], actualArray[0]);
+    assertEquals(expectedArray[2], actualArray[1]);
   }
 
   @Test
@@ -56,8 +55,8 @@ public class MailMessageComposerTest {
     SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
 
     assertEquals("Mark@maredit.de", mailMessage.getTo()[0]);
-    assertEquals("Luke@maredit.de", mailMessage.getTo()[1]);
-    assertEquals("John@maredit.de", mailMessage.getTo()[2]);
+    assertEquals("Luke@maredit.de", mailMessage.getCc()[0]);
+    assertEquals("John@maredit.de", mailMessage.getCc()[1]);
 
     standardVacation.getUser().setMail("JohnnyEnglish@maredit.de");
     standardVacation.getManager().setMail("manager@maredit.de");
@@ -65,8 +64,8 @@ public class MailMessageComposerTest {
     mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
 
     assertEquals("JohnnyEnglish@maredit.de", mailMessage.getTo()[0]);
-    assertEquals("substitute@maredit.de", mailMessage.getTo()[1]);
-    assertEquals("manager@maredit.de", mailMessage.getTo()[2]);
+    assertEquals("substitute@maredit.de", mailMessage.getCc()[0]);
+    assertEquals("manager@maredit.de", mailMessage.getCc()[1]);
   }
 
   @Test

@@ -53,14 +53,14 @@ public class MailMessageComposer {
 
     message.setSubject(MAIL_SUBJECT);
     message.setSentDate(new Date());
-    message.setTo(getRecipients(vacation));
+    message.setTo(retrieveMail(vacation.getUser()));
+    message.setCc(getRecipients(vacation));
     message.setText(prepareMailBody(vacation));
     return message;
   }
 
   private String[] getRecipients(Vacation vacation) {
     List<String> recipients = new ArrayList<>();
-    recipients.add(retrieveMail(vacation.getUser()));
     recipients.add(retrieveMail(vacation.getSubstitute()));
     recipients.add(retrieveMail(vacation.getManager()));
 
@@ -82,6 +82,7 @@ public class MailMessageComposer {
     try {
       MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
       messageHelper.setSubject(MAIL_SUBJECT);
+      messageHelper.setTo(retrieveMail(vacation.getUser()));
       messageHelper.setTo(getRecipients(vacation));
       messageHelper.setSentDate(new Date());
       messageHelper.setText(prepareMailBody(vacation), true);
