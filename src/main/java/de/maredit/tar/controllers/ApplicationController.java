@@ -5,24 +5,23 @@ import de.maredit.tar.models.Vacation;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 @Controller
 public class ApplicationController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ApplicationController.class);
+  private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
 
   @Autowired
   private VacationRepository vacationRepository;
@@ -60,5 +59,10 @@ public class ApplicationController {
       user = this.userRepository.findUserByUsername(String.valueOf(selected));
     }
     return user;
+  }
+
+  @RequestMapping("calendar")
+  public String calendar() {
+    return "application/calendar";
   }
 }
