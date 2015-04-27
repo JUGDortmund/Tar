@@ -30,7 +30,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
-@Profile("!dev")
+@Profile({"prod", "ldapTest"})
 public class LdapServiceImpl implements LdapService {
 
   @Autowired

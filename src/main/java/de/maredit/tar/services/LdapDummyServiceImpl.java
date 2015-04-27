@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Profile("dev")
+@Profile({"dev", "test"})
 @ConfigurationProperties(locations = "classpath:dummy-user.yaml")
 public class LdapDummyServiceImpl implements LdapService {
 

@@ -13,6 +13,7 @@ spring:
       port: 28018
       database: tar
       embedded: true
+      preload: true
 ---
 ##### Test configuration #####
 spring:
@@ -26,6 +27,10 @@ spring:
       database: tar
       embedded: true
       preload: true
+---
+##### LDAP Test configuration #####
+spring:
+  profiles: ldapTest
   ldap:
     host: localhost
     port: 1600

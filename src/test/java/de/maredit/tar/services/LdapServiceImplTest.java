@@ -28,7 +28,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
-@ActiveProfiles("test")
+@ActiveProfiles("ldapTest")
 public class LdapServiceImplTest {
 
   private static InMemoryDirectoryServer ds;
