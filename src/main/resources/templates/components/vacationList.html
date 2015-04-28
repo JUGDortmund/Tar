@@ -19,12 +19,11 @@
 			<div class="list-group">
                 <h3 class="list-group-item">Urlaube</h3>
 			    <a th:each="vacation : ${vacations}" class="list-group-item" href="javascript:void(null);">
-			        <span th:text="${vacation.from +' - '  + vacation.to}"></span>
+			        <span th:text="${vacation.from + ' - '  + vacation.to}"></span>
 			        <span th:class="${'glyphicon ' + vacation.state.get()}" aria-hidden="true"></span>
 			    </a>
 			</div>
-
-            <div class="list-group">
+			<div class="list-group">
                 <h3 class="list-group-item">Vertretungen</h3>
                 <a class="list-group-item" href="javascript:void(null);">
                     <span>04.04.2015 - 08.04.2015</span>
