@@ -1,6 +1,7 @@
 package de.maredit.tar.listeners;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import org.springframework.context.ApplicationListener;
@@ -26,9 +27,16 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
       
       List<User> users = userRepository.findAll();
       for (User user : users) {
-        Vacation v1 = new Vacation(user, LocalDate.of(2015, 1, 1), LocalDate.of(2015, 1, 11), State.APPROVED);
-        Vacation v2 = new Vacation(user, LocalDate.of(2015, 1, 1), LocalDate.of(2015, 1, 11), State.REJECTED);
-        Vacation v3 = new Vacation(user, LocalDate.of(2015, 1, 1), LocalDate.of(2015, 1, 11), State.WAITING_FOR_APPROVEMENT);
+
+
+        Vacation v1 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
+                                   user, user, 15, 5);
+        Vacation v2 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
+                                   user, user, 15, 5);
+        v2.setState(State.REJECTED);
+        Vacation v3 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
+                                       user, user, 15, 5);
+        v3.setState(State.APPROVED);
         vacationRepository.save(v1);
         vacationRepository.save(v2);
         vacationRepository.save(v3);

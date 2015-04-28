@@ -16,7 +16,7 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
-import de.maredit.tar.services.configs.LdapConfig;
+import de.maredit.tar.properties.LdapProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +30,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
-@Profile({"prod", "ldapTest"})
+@Profile({"prod", "serviceTest"})
 public class LdapServiceImpl implements LdapService {
 
   @Autowired
-  private LdapConfig ldapConfig;
+  private LdapProperties ldapProperties;
 
   private static final Logger LOG = LoggerFactory.getLogger(LdapServiceImpl.class);
 
@@ -43,12 +43,12 @@ public class LdapServiceImpl implements LdapService {
   @PostConstruct
   public void init() throws LDAPException, GeneralSecurityException {
     LDAPConnection ldapConnection = null;
-    if (ldapConfig.isDisableSSL()) {
-      ldapConnection = new LDAPConnection(ldapConfig.getHost(), ldapConfig.getPort());
+    if (ldapProperties.isDisableSSL()) {
+      ldapConnection = new LDAPConnection(ldapProperties.getHost(), ldapProperties.getPort());
     } else {
       ldapConnection =
           new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
-              ldapConfig.getHost(), ldapConfig.getPort());
+              ldapProperties.getHost(), ldapProperties.getPort());
     }
 
     connectionPool = new LDAPConnectionPool(ldapConnection, 10);
@@ -64,10 +64,10 @@ public class LdapServiceImpl implements LdapService {
     List<User> users = new ArrayList<>();
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
-      ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
+      ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
       // get value list with userDN
       SearchResultEntry searchResultEntry =
-          ldapConnection.getEntry(ldapConfig.getApplicationUserDN());
+          ldapConnection.getEntry(ldapProperties.getApplicationUserDN());
       String[] members = searchResultEntry.getAttributeValues("member");
 
       for (String member : members) {
@@ -103,7 +103,7 @@ public class LdapServiceImpl implements LdapService {
   public boolean authenticateUser(String uid, String password) throws LDAPException {
     try {
     BindResult bindResult =
-        connectionPool.bind(ldapConfig.getUserBindDN().replace("$username", uid), password);
+        connectionPool.bind(ldapProperties.getUserBindDN().replace("$username", uid), password);
     return bindResult.getResultCode().equals(ResultCode.SUCCESS);
     } catch (LDAPException e) {
       if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS)) {
@@ -118,11 +118,11 @@ public class LdapServiceImpl implements LdapService {
     List<String> groups = new ArrayList<>();
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
-      ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
+      ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
       SearchRequest searchRequest =
-          new SearchRequest(ldapConfig.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-              Filter.createEqualityFilter(ldapConfig.getGroupLookUpAttribute(),
-                  ldapConfig.getUserBindDN().replace("$username", uid)));
+          new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
+              Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(),
+                  ldapProperties.getUserBindDN().replace("$username", uid)));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 
       if (searchResults.getEntryCount() > 0) {
@@ -136,9 +136,5 @@ public class LdapServiceImpl implements LdapService {
     }
     connectionPool.releaseConnection(ldapConnection);
     return groups;
-  }
-
-  public LdapConfig getLdapConfig() {
-    return ldapConfig;
   }
 }

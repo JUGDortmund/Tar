@@ -14,6 +14,11 @@ spring:
       database: tar
       embedded: true
       preload: true
+  mail:
+    host: localhost
+    port: 2025
+    username: tar
+    password:
 ---
 ##### Test configuration #####
 spring:
@@ -30,7 +35,7 @@ spring:
 ---
 ##### LDAP Test configuration #####
 spring:
-  profiles: ldapTest
+  profiles: serviceTest
   ldap:
     host: localhost
     port: 1600
@@ -42,6 +47,11 @@ spring:
     groupLookUpAttribute: member
     userBindDN: uid=$username,ou=users,o=maredit,dc=de
     disableSSL: true
+  mail:
+    host: localhost
+    port: 2025
+    username: tar
+    password:
 ---
 ##### Production configuration #####
 spring:
@@ -63,4 +73,8 @@ spring:
     groupLookUpDN: ou=services,o=maredit,dc=de
     groupLookUpAttribute: member
     userBindDN: uid=$username,ou=users,o=maredit,dc=de
-    
+  mail:
+    host: postfix.maredit.net
+    port: 25
+    username: no-reply@maredit.de
+    password: lkvSdsE9YroldisNLVtdpVO4

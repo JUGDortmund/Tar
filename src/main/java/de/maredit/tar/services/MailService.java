@@ -1,38 +1,20 @@
 package de.maredit.tar.services;
 
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSender;
+import de.maredit.tar.models.Vacation;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
+
 @Service
-public class MailService {
+public interface MailService {
 
-  private MailSender mailSender;
-  private SimpleMailMessage templateMessage;
+  public void sendMail(SimpleMailMessage mailMessage);
 
-  public void setMailSender(MailSender mailSender) {
-    this.mailSender = mailSender;
-  }
+  public void sendMail(MimeMessage mailMessage);
 
-  public void setTemplateMessage(SimpleMailMessage templateMessage) {
-    this.templateMessage = templateMessage;
-  }
+  public void sendSimpleMail(Vacation vacation);
 
-  public void sendAMessage() {
-    // Do the business calculations...
-
-    // Call the collaborators to persist the order...
-
-    // Create a thread safe "copy" of the template message and customize it
-    SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
-    msg.setTo("foo@bar.com");
-    msg.setText("Hello");
-    try {
-      this.mailSender.send(msg);
-    } catch (MailException ex) {
-      // simply log it and go on...
-      System.err.println(ex.getMessage());
-    }
-  }
+  public void sendMimeMail(Vacation vacation);
 }

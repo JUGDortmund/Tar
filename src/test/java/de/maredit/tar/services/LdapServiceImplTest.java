@@ -28,7 +28,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
-@ActiveProfiles("ldapTest")
+@ActiveProfiles("serviceTest")
 public class LdapServiceImplTest {
 
   private static InMemoryDirectoryServer ds;
@@ -54,11 +54,6 @@ public class LdapServiceImplTest {
 
   @Autowired
   private LdapServiceImpl ldapService;
-
-  @Before
-  public void setUp() {
-    ldapService.getLdapConfig().setPort(ds.getListenPort());
-  }
 
   @Test
   public void testGetUsers() throws LDAPException {
