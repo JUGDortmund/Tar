@@ -1,11 +1,11 @@
-package de.maredit.tar.services.configs;
+package de.maredit.tar.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "spring.ldap")
-public class LdapConfig {
+public class LdapProperties {
 
   private String host;
 
