@@ -18,7 +18,8 @@ spring:
     host: ldap-master.maredit.net
     port: 636
     userLookUpDN: ou=users,o=maredit,dc=de
-    apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    applicationTeamleaderDN: cn=teamleiter,cn=teams,ou=groups,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA  
 ---
@@ -63,7 +64,8 @@ spring:
     host: ldap-master.maredit.net
     port: 636
     userLookUpDN: ou=users,o=maredit,dc=de
-    apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    applicationTeamleaderDN: cn=teamleiter,cn=teams,ou=groups,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA
 ---
@@ -81,7 +83,8 @@ spring:
     host: ldap-master.maredit.net
     port: 636
     userLookUpDN: ou=users,o=maredit,dc=de
-    apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    applicationTeamleaderDN: cn=teamleiter,cn=teams,ou=groups,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA          
   mail:
