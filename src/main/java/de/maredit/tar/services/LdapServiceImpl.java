@@ -34,6 +34,7 @@ import javax.annotation.PreDestroy;
 @Service
 public class LdapServiceImpl implements LdapService {
 
+  public static final int NUM_CONNECTIONS = 10;
   @Autowired
   private LdapProperties ldapProperties;
 
@@ -49,7 +50,7 @@ public class LdapServiceImpl implements LdapService {
                            ldapProperties.getHost(), ldapProperties.getPort(),
                            ldapProperties.getReadUser(), ldapProperties.getReadPassword());
 
-    connectionPool = new LDAPConnectionPool(ldapConnection, 10);
+    connectionPool = new LDAPConnectionPool(ldapConnection, NUM_CONNECTIONS);
   }
 
   @PreDestroy
@@ -69,7 +70,7 @@ public class LdapServiceImpl implements LdapService {
       SearchResultEntry
           searchResultEntry =
           ldapConnection.getEntry(ldapProperties.getApplicationUserDN());
-      String[] members = searchResultEntry.getAttributeValues("member");
+      String[] members = searchResultEntry.getAttributeValues(FIELD_MEMBER);
 
       // iterate over userDN and create/update users
       List<SearchResultEntry> ldapUser = new ArrayList<SearchResultEntry>();
@@ -99,7 +100,7 @@ public class LdapServiceImpl implements LdapService {
           searchResultEntry =
           ldapConnection.getEntry(ldapProperties.getApplicationTeamleaderDN());
 
-      String[] memberUids = searchResultEntry.getAttributeValues("memberUid");
+      String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBERUID);
 
       final HashSet<String> userSet = new HashSet<>();
       Collections.addAll(userSet, memberUids);
@@ -115,7 +116,7 @@ public class LdapServiceImpl implements LdapService {
   @Override
   public boolean authenticateUser(String uid, String password) throws LDAPException {
     BindResult bindResult =
-        connectionPool.bind("uid=" + uid + "," + ldapProperties.getUserLookUpDN(), password);
+        connectionPool.bind(FIELD_UID + "=" + uid + "," + ldapProperties.getUserLookUpDN(), password);
     return bindResult.getResultCode().equals(ResultCode.SUCCESS);
   }
 
@@ -127,12 +128,12 @@ public class LdapServiceImpl implements LdapService {
       ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
       SearchRequest searchRequest =
           new SearchRequest(ldapProperties.getUserLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-                            Filter.createEqualityFilter("memberUid", uid));
+                            Filter.createEqualityFilter(FIELD_MEMBER, uid));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 
       if (searchResults.getEntryCount() > 0) {
         for (SearchResultEntry entry : searchResults.getSearchEntries()) {
-          groups.add(entry.getAttribute("cn").getValue());
+          groups.add(entry.getAttribute(FIELD_CN).getValue());
         }
       }
     } catch (LDAPException e) {

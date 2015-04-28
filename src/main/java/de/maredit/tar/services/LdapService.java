@@ -11,6 +11,12 @@ import java.util.Set;
  */
 public interface LdapService {
 
+  String FIELD_CN = "cn";
+  String FIELD_MEMBERUID = "memberUid";
+  String FIELD_MEMBER = "member";
+  String FIELD_UID = "uid";
+
+
   /**
    * get user list wth user details from LDAP
    * @return
