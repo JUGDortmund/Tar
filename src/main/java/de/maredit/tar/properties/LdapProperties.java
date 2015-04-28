@@ -13,7 +13,9 @@ public class LdapProperties {
 
   private String userLookUpDN;
 
-  private String apllicationUserDN;
+  private String applicationUserDN;
+
+  private String applicationTeamleaderDN;
 
   private String readUser;
 
@@ -39,8 +41,12 @@ public class LdapProperties {
     return readPassword;
   }
 
-  public String getApllicationUserDN() {
-    return apllicationUserDN;
+  public String getApplicationUserDN() {
+    return applicationUserDN;
+  }
+
+  public String getApplicationTeamleaderDN() {
+    return applicationTeamleaderDN;
   }
 
   public void setHost(String host) {
@@ -55,8 +61,12 @@ public class LdapProperties {
     this.userLookUpDN = userLookUpDN;
   }
 
-  public void setApllicationUserDN(String apllicationUserDN) {
-    this.apllicationUserDN = apllicationUserDN;
+  public void setApplicationUserDN(String applicationUserDN) {
+    this.applicationUserDN = applicationUserDN;
+  }
+
+  public void setApplicationTeamleaderDN(String applicationTeamleaderDN) {
+    this.applicationTeamleaderDN = applicationTeamleaderDN;
   }
 
   public void setReadUser(String readUser) {

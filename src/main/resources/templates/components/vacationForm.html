@@ -91,7 +91,7 @@ edit-vacation, approve-vacation  -->
                     <label for="superior">Zuständiger Vorgesetzter *</label>
                     <select class="form-control" style="width: 100%;" name="superior" id="superior" th:field="*{manager}">
                         <option value="" selected="selected">- Vorgesetzten auswählen -</option>
-                        <option th:each="manager : ${users}"
+                        <option th:each="manager : ${managers}"
                                 th:value="${manager.id}"
                                 th:text="${manager.lastName +', '+ manager.firstName}">
                             Mustermann, Max
