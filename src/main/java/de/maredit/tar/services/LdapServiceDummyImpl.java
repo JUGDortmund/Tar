@@ -5,6 +5,9 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 
 import de.maredit.tar.models.User;
+import de.maredit.tar.repositories.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,13 @@ import java.util.Set;
 @Profile({"test"})
 @ConfigurationProperties(locations = "classpath:dummy-user.yaml")
 public class LdapServiceDummyImpl implements LdapService {
+
+  public List<User> getUsers() {
+    return users;
+  }
+
+  @Autowired
+  UserRepository userRepository;
 
   private List<User> users;
 
@@ -56,6 +66,8 @@ public class LdapServiceDummyImpl implements LdapService {
 
   @Override
   public List<User> getLdapUserList() throws LDAPException {
+    final List<User> users = getUsers();
+    users.forEach(user -> userRepository.save(user));
     return users;
   }
 
