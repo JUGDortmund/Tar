@@ -1,7 +1,11 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.Vacation;
+import javax.annotation.PostConstruct;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import de.maredit.tar.services.mail.MailObject;
+import de.maredit.tar.models.Vacation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +19,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import javax.mail.internet.MimeMessage;
-
-@Configuration
-@Profile("!dev")
+@Service
+@Profile({"prod", "serviceTest"})
 @EnableConfigurationProperties(MailProperties.class)
 public class MailServiceImpl implements MailService {
 
@@ -30,67 +32,40 @@ public class MailServiceImpl implements MailService {
   @Autowired
   private MailProperties mailProperties;
 
-  private JavaMailSender javaMailSender;
-
-  public void setJavaMailSender(JavaMailSender mailSender) {
-    this.javaMailSender = mailSender;
+  private JavaMailSender mailSender;
+  
+  @PostConstruct
+  public void init() {
+    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    if (mailProperties != null && mailProperties.getHost() != null) { 
+    mailSender.setHost(mailProperties.getHost());
+    mailSender.setPort(mailProperties.getPort());
+    mailSender.setUsername(mailProperties.getUsername());
+    mailSender.setPassword(mailProperties.getPassword());
+    this.mailSender = mailSender;
+    }
   }
 
   @Override
-  public void sendMail(SimpleMailMessage mailMessage) {
-    SimpleMailMessage msg = new SimpleMailMessage(mailMessage);
+  public void sendSimpleMail(MailObject mail) {
+    SimpleMailMessage msg =
+        new SimpleMailMessage(mailMessageComposer.composeSimpleMailMessage(mail));
     try {
-      this.javaMailSender.send(msg);
+      this.mailSender.send(msg);
     } catch (MailException ex) {
-      handleMailException(msg, ex);
+      LOG.error("Error sending mail", ex);
     }
   }
 
-  private void handleMailException(SimpleMailMessage msg, MailException ex) {
-    if ("dev".equals(mailProperties.getProperties().get("environment"))) {
-      LOG.debug("Could not connect to SMTP-Server [host: {}, port:{}] in develop environment. "
-          + "Tried to send the following email:\n {}", mailProperties.getHost(),
-          mailProperties.getPort(), msg.toString());
-    } else {
-      LOG.error(ex.getMessage());
-    }
-  }
 
   @Override
-  public void sendMail(MimeMessage mimeMessage) {
-    javaMailSender.send(mimeMessage);
-  }
-
-  @Bean
-  public JavaMailSender javaMailSender() {
-    if (javaMailSender == null) {
-      JavaMailSenderImpl jMailSender = new JavaMailSenderImpl();
-      if (mailProperties != null) {
-        jMailSender.setHost(mailProperties.getHost());
-        jMailSender.setPort(mailProperties.getPort());
-        jMailSender.setUsername(mailProperties.getUsername());
-        jMailSender.setPassword(mailProperties.getPassword());
-      } else {
-        LOG.error("mailProperties == null!. Apparently it has not been properly autowired!");
-      }
-      this.javaMailSender = jMailSender;
+  public void sendMail(MailObject mail) {
+    try {
+      mailSender.send(mailMessageComposer.composeMimeMailMessage(mail,
+          mailSender.createMimeMessage()));
+    } catch (MailException ex) {
+      LOG.error("Error sending mail", ex);
     }
-    return javaMailSender;
-  }
-
-  @Override
-  public void sendSimpleMail(Vacation vacation) {
-    sendMail(mailMessageComposer.composeSimpleMailMessage(vacation));
-  }
-
-  @Override
-  public void sendMimeMail(Vacation vacation) {
-    JavaMailSenderImpl javaMailSender = null;
-    if (this.javaMailSender instanceof JavaMailSenderImpl) {
-      javaMailSender = (JavaMailSenderImpl) this.javaMailSender;
-    }
-    sendMail(mailMessageComposer.composeMimeMailMessage(vacation,
-        javaMailSender.createMimeMessage()));
   }
 
 }

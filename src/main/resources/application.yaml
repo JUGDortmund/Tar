@@ -21,11 +21,6 @@ spring:
     apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA  
-  mail:
-    host: localhost
-    port: 2025
-    username: tar
-    password:
 ---
 ##### Test configuration #####
 spring:
@@ -39,13 +34,31 @@ spring:
       database: tar
       embedded: true
       preload: true
+  ldap:
+    host: ldap-master.maredit.net
+    port: 636
+    userLookUpDN: ou=users,o=maredit,dc=de
+    apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
+    readPassword: 7Ey8vHzPPZrdWA
+---
+##### Service test configuration #####
+spring:
+  profiles: serviceTest
+  thymeleaf:
+    cache: false  
+  data:
+    mongodb:
+      host: localhost
+      port: 28018
+      database: tar
+      embedded: true
+      preload: true
   mail:
     host: localhost
-    port: 2025
-    username: tar
+    port: 1600
+    username:
     password:
-    properties:
-      environment: dev
   ldap:
     host: ldap-master.maredit.net
     port: 636
