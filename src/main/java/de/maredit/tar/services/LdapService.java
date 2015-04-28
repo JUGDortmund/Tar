@@ -23,7 +23,7 @@ public interface LdapService {
    * @return
    * @throws LDAPException
    */
-  Set<String> getLdapTeamleaderList() throws LDAPException;
+  Set<String> getLdapManagerList() throws LDAPException;
 
   /**
    * Authenticate user using configured ldap

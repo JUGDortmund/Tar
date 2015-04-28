@@ -14,7 +14,7 @@ import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 
-import de.maredit.tar.services.configs.LdapConfig;
+import de.maredit.tar.properties.LdapProperties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import javax.annotation.PreDestroy;
 public class LdapServiceImpl implements LdapService {
 
   @Autowired
-  private LdapConfig ldapConfig;
+  private LdapProperties ldapProperties;
 
   private static final Logger LOG = LoggerFactory.getLogger(LdapServiceImpl.class);
 
@@ -46,8 +46,8 @@ public class LdapServiceImpl implements LdapService {
     LDAPConnection ldapConnection = null;
     ldapConnection =
         new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
-                           ldapConfig.getHost(), ldapConfig.getPort(),
-                           ldapConfig.getReadUser(), ldapConfig.getReadPassword());
+                           ldapProperties.getHost(), ldapProperties.getPort(),
+                           ldapProperties.getReadUser(), ldapProperties.getReadPassword());
 
     connectionPool = new LDAPConnectionPool(ldapConnection, 10);
   }
@@ -68,7 +68,7 @@ public class LdapServiceImpl implements LdapService {
       // get value list with userDN
       SearchResultEntry
           searchResultEntry =
-          ldapConnection.getEntry(ldapConfig.getApplicationUserDN());
+          ldapConnection.getEntry(ldapProperties.getApplicationUserDN());
       String[] members = searchResultEntry.getAttributeValues("member");
 
       // iterate over userDN and create/update users
@@ -90,14 +90,14 @@ public class LdapServiceImpl implements LdapService {
   }
 
   @Override
-  public Set<String> getLdapTeamleaderList() throws LDAPException {
+  public Set<String> getLdapManagerList() throws LDAPException {
     LDAPConnection ldapConnection = null;
     try {
       ldapConnection = connectionPool.getConnection();
       // get value list with userDN
       SearchResultEntry
           searchResultEntry =
-          ldapConnection.getEntry(ldapConfig.getApplicationTeamleaderDN());
+          ldapConnection.getEntry(ldapProperties.getApplicationTeamleaderDN());
 
       String[] memberUids = searchResultEntry.getAttributeValues("memberUid");
 
@@ -115,7 +115,7 @@ public class LdapServiceImpl implements LdapService {
   @Override
   public boolean authenticateUser(String uid, String password) throws LDAPException {
     BindResult bindResult =
-        connectionPool.bind("uid=" + uid + "," + ldapConfig.getUserLookUpDN(), password);
+        connectionPool.bind("uid=" + uid + "," + ldapProperties.getUserLookUpDN(), password);
     return bindResult.getResultCode().equals(ResultCode.SUCCESS);
   }
 
@@ -124,9 +124,9 @@ public class LdapServiceImpl implements LdapService {
     List<String> groups = new ArrayList<>();
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
-      ldapConnection.bind(ldapConfig.getReadUser(), ldapConfig.getReadPassword());
+      ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
       SearchRequest searchRequest =
-          new SearchRequest(ldapConfig.getUserLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
+          new SearchRequest(ldapProperties.getUserLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
                             Filter.createEqualityFilter("memberUid", uid));
       SearchResult searchResults = ldapConnection.search(searchRequest);
 

@@ -3,9 +3,7 @@ package de.maredit.tar.services;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 
 import de.maredit.tar.Main;
-import de.maredit.tar.services.configs.LdapConfig;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +14,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
 @ActiveProfiles("test")
 public class LdapServiceImplIntegrationTest {
-
-  @Autowired
-  LdapConfig ldapConfig;
 
   @Autowired
   LdapService ldapService;
@@ -38,7 +34,7 @@ public class LdapServiceImplIntegrationTest {
 
   @Test
   public void testGetLdapTeamleaderList() throws Exception {
-    final Set<String> ldapUserList = ldapService.getLdapTeamleaderList();
+    final Set<String> ldapUserList = ldapService.getLdapManagerList();
     assertNotNull("Failed to load team leader list from LDAP", ldapUserList);
     assertTrue("No team leader found", ldapUserList.size() > 0);
   }

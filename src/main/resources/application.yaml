@@ -21,7 +21,12 @@ spring:
     applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
     applicationTeamleaderDN: cn=teamleiter,cn=teams,ou=groups,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
-    readPassword: 7Ey8vHzPPZrdWA
+    readPassword: 7Ey8vHzPPZrdWA  
+  mail:
+    host: localhost
+    port: 2025
+    username: tar
+    password:
 ---
 ##### Test configuration #####
 spring:
@@ -35,6 +40,13 @@ spring:
       database: tar
       embedded: true
       preload: true
+  mail:
+    host: localhost
+    port: 2025
+    username: tar
+    password:
+    properties:
+      environment: dev
   ldap:
     host: ldap-master.maredit.net
     port: 636
@@ -61,3 +73,8 @@ spring:
     apllicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA          
+  mail:
+    host: postfix.maredit.net
+    port: 25
+    username: no-reply@maredit.de
+    password: lkvSdsE9YroldisNLVtdpVO4
