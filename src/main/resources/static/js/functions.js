@@ -1,4 +1,15 @@
 (function() {
+  var refreshVacationForm;
+
+  refreshVacationForm = function(data) {
+    var $myForm;
+    $myForm = $('#vacation-form-panel');
+    $myForm.html(data).hide().fadeIn(800);
+    $('.panel-default').matchHeight();
+    $myForm.find('.input-group.date').datepicker({});
+    return $myForm.find('select').select2();
+  };
+
   (function($) {
     $('.input-group.date').datepicker({
       "format": "dd.mm.yyyy"
@@ -10,6 +21,20 @@
     $('.panel-default').matchHeight();
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
+    });
+    $('.vacation-list a, .task-list a').click(function() {
+      $.ajax({
+        url: $(this).attr('href'),
+        dataType: "html",
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log(textStatus);
+          return refreshVacationForm('<div><h1>TEST</h1> <div class="input-group date"> <input type="text" class="form-control" name="dateFrom" id="dateFrom" /> <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span> </div><div class="col-xs-12 form-group has-error"> <label for="superior">Zuständiger Vorgesetzter *</label> <select class="form-control" style="width: 100%;" name="superior" id="superior"> <option value="oba">Barboza, Omar</option> <option value="sku">Kubiak, Sven</option> <option value="ppl">Plewa, Pascal</option> <option value="bpr">Prenger, Björn</option> <option value="czi">Zillmann, Claudine</option> </select> </div></div>');
+        },
+        success: function(data) {
+          return refreshVacationForm(data);
+        }
+      });
+      return false;
     });
     return $('#calendar').fullCalendar({
       header: {
@@ -27,45 +52,6 @@
           status: 'pending',
           start: '2015-04-01',
           end: '2015-04-08'
-        }, {
-          title: 'Long Event',
-          start: '2015-02-07',
-          end: '2015-02-10'
-        }, {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2015-02-09T16:00:00'
-        }, {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2015-02-16T16:00:00'
-        }, {
-          title: 'Confernce',
-          start: '2015-02-11',
-          end: '2015-02-13'
-        }, {
-          title: 'Meeting',
-          start: '2015-02-12T10:30:00',
-          end: '2015-02-12T12:30:00'
-        }, {
-          title: 'Lunch',
-          start: '2015-02-12T12:00:00'
-        }, {
-          title: 'Meeting',
-          start: '2015-02-12T14:30:00'
-        }, {
-          title: 'Happy Hour',
-          start: '2015-02-12T17:30:00'
-        }, {
-          title: 'Dinner',
-          start: '2015-02-12T20:00:00'
-        }, {
-          title: 'Birthday Party',
-          start: '2015-02-13T07:00:00'
-        }, {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2015-02-28'
         }
       ]
     });
