@@ -2,6 +2,8 @@ package de.maredit.tar.services;
 
 
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.SearchResultEntry;
+
 import de.maredit.tar.models.User;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
@@ -9,9 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
-@Profile({"dev", "test"})
+@Profile({"test"})
 @ConfigurationProperties(locations = "classpath:dummy-user.yaml")
 public class LdapDummyServiceImpl implements LdapService {
 
@@ -52,8 +55,13 @@ public class LdapDummyServiceImpl implements LdapService {
   }
 
   @Override
-  public List<User> getUsers() throws LDAPException {
+  public List<User> getLdapUserList() throws LDAPException {
     return users;
+  }
+
+  @Override
+  public Set<String> getLdapManagerList() throws LDAPException {
+    return null;
   }
 
 

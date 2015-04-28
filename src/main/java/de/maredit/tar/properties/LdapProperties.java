@@ -15,6 +15,8 @@ public class LdapProperties {
 
   private String applicationUserDN;
 
+  private String applicationTeamleaderDN;
+
   private String readUser;
 
   private String readPassword;
@@ -39,6 +41,38 @@ public class LdapProperties {
     return port;
   }
 
+  public String getReadUser() {
+    return readUser;
+  }
+
+  public String getReadPassword() {
+    return readPassword;
+  }
+
+  public String getApplicationTeamleaderDN() {
+    return applicationTeamleaderDN;
+  }
+
+  public String getApplicationUserDN() {
+    return applicationUserDN;
+  }
+
+  public String getUserBindDN() {
+    return userBindDN;
+  }
+
+  public String getGroupLookUpDN() {
+    return groupLookUpDN;
+  }
+
+  public boolean isDisableSSL() {
+    return disableSSL;
+  }
+
+  public String getGroupLookUpAttribute() {
+    return groupLookUpAttribute;
+  }
+
   public void setPort(int port) {
     this.port = port;
   }
@@ -51,56 +85,32 @@ public class LdapProperties {
     this.userLookUpDN = userLookUpDN;
   }
 
-  public String getReadUser() {
-    return readUser;
-  }
-
   public void setReadUser(String readUser) {
     this.readUser = readUser;
-  }
-
-  public String getReadPassword() {
-    return readPassword;
   }
 
   public void setReadPassword(String readPassword) {
     this.readPassword = readPassword;
   }
 
-  public String getApplicationUserDN() {
-    return applicationUserDN;
-  }
- 
-  public void setApplicationUserDN(String applicationUserDN) {
-    this.applicationUserDN = applicationUserDN;
-  }
-
-  public String getGroupLookUpDN() {
-    return groupLookUpDN;
-  }
-
-  public void setGroupLookUpDN(String groupLookUpDN) {
-    this.groupLookUpDN = groupLookUpDN;
-  }
-
-  public String getGroupLookUpAttribute() {
-    return groupLookUpAttribute;
+  public void setApplicationTeamleaderDN(String applicationTeamleaderDN) {
+    this.applicationTeamleaderDN = applicationTeamleaderDN;
   }
 
   public void setGroupLookUpAttribute(String groupLookUpAttribute) {
     this.groupLookUpAttribute = groupLookUpAttribute;
   }
 
-  public String getUserBindDN() {
-    return userBindDN;
-  }
-
   public void setUserBindDN(String userBindDN) {
     this.userBindDN = userBindDN;
   }
 
-  public boolean isDisableSSL() {
-    return disableSSL;
+  public void setApplicationUserDN(String applicationUserDN) {
+    this.applicationUserDN = applicationUserDN;
+  }
+
+  public void setGroupLookUpDN(String groupLookUpDN) {
+    this.groupLookUpDN = groupLookUpDN;
   }
 
   public void setDisableSSL(boolean disableSSL) {

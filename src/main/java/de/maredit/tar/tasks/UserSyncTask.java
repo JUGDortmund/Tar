@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.SearchResultEntry;
+
 import de.maredit.tar.services.LdapService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,52 +27,29 @@ public class UserSyncTask {
   @Autowired
   private UserRepository userRepository;
 
-  /**
-   * Scheduled 5 seconds after start and then every hour
-   */
   @Scheduled(cron = "0 */1 * * * ?")
   public void syncLdapUser() {
     try {
-      List<User> users = ldapService.getUsers();
-      List<String> editedUser = new ArrayList<>();
-      for (User user : users) {
-        User localUser = userRepository.findByUidNumber(user.getUidNumber());
-        if (localUser == null) {
-          localUser = user;
-        } else {
-          updateUser(localUser, user);
-        }
-        userRepository.save(localUser);
-        editedUser.add(localUser.getUidNumber());
-      }
+      List<User> ldapUserList = ldapService.getLdapUserList();
 
-      // iterate over all users from repository and delete if they are not part of the LDAP
-      deactivateDeletedLdapUser(editedUser);
+      deactivateUserNotInLdap(ldapUserList);
 
     } catch (LDAPException e) {
       LOG.error("Failed to sync LDAP users", e);
     }
   }
 
-  private void deactivateDeletedLdapUser(List<String> editedUser) {
+
+  private void deactivateUserNotInLdap(List<User> ldapUsers) {
     List<User> applicationUsers = userRepository.findAll();
 
     // iterate over all users currently in the application
     for (User applicationUser : applicationUsers) {
-      if (!editedUser.contains(applicationUser.getUidNumber())) {
+      if (!ldapUsers.contains(applicationUser.getUidNumber())) {
         applicationUser.setActive(false);
         userRepository.save(applicationUser);
       }
     }
-  }
-
-  private void updateUser(User resultEntry, User user) {
-    // set name changes here
-    user.setMail(resultEntry.getMail());
-    user.setUsername(resultEntry.getUidNumber());
-    user.setFirstName(resultEntry.getFirstName());
-    user.setLastName(resultEntry.getLastName());
-    LOG.debug("User updated. username: %s/uidNumber: %s", user.getUsername(), user.getUidNumber());
   }
 
 }

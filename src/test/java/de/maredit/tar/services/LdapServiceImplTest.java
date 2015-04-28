@@ -6,6 +6,7 @@ import com.unboundid.ldap.listener.InMemoryDirectoryServer;
 import com.unboundid.ldap.listener.InMemoryDirectoryServerConfig;
 import com.unboundid.ldap.listener.InMemoryListenerConfig;
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldif.LDIFReader;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
@@ -13,7 +14,6 @@ import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,11 +53,11 @@ public class LdapServiceImplTest {
   }
 
   @Autowired
-  private LdapServiceImpl ldapService;
+  private LdapService ldapService;
 
   @Test
-  public void testGetUsers() throws LDAPException {
-    List<User> users = ldapService.getUsers();
+  public void testGetLdapUsers() throws LDAPException {
+    List<User> users = ldapService.getLdapUserList();
     assertEquals(2, users.size());
   }
 
