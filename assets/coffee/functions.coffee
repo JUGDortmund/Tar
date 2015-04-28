@@ -1,7 +1,9 @@
 (($) ->
   
 
-  $('.input-group.date').datepicker({})
+  $('.input-group.date').datepicker({
+     "format" : "dd.mm.yyyy"
+  })
 
   $('.panel-default select').select2()
 
