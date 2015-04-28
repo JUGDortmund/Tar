@@ -8,7 +8,7 @@ edit-vacation, approve-vacation  -->
 <div class="panel panel-default module vacation-form">
     <div class="panel-heading">Urlaubsformular</div>
     <div class="panel-body">
-        <!-- Error-handling: show aler box, when validation fails  -->
+        <!-- Error-handling: show alert box, when validation fails  -->
 
         <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">

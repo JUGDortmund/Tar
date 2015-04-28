@@ -20,6 +20,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.unboundid.ldap.sdk.LDAPException;
@@ -121,5 +122,14 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       user = this.userRepository.findUserByUsername(String.valueOf(selected));
     }
     return user;
+  }
+
+  @RequestMapping(value = "/editVacation", method = RequestMethod.GET)
+  public String loadVacation(@RequestParam(value = "vacationId") String vacationId, Model model) {
+    Vacation vacation = vacationRepository.findOne(vacationId);
+    LOG.info("loadVacation(): [vacationId: {}], [model: {}], [vacation: {}]", vacationId,
+        model.toString(), vacation.toString());
+    model.addAttribute("vacation", vacation);
+    return "redirect:/";
   }
 }
