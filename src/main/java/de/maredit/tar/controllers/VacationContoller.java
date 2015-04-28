@@ -2,17 +2,14 @@ package de.maredit.tar.controllers;
 
 import de.maredit.tar.services.mail.VacationCanceledMail;
 
-import com.unboundid.ldap.sdk.LDAPException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.models.enums.State;
 import org.springframework.security.access.annotation.Secured;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.models.validators.VacationValidator;
-import de.maredit.tar.repositories.UserRepository;
-import de.maredit.tar.repositories.VacationRepository;
-import de.maredit.tar.services.LdapService;
-import de.maredit.tar.services.MailService;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +22,18 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import com.unboundid.ldap.sdk.LDAPException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.validators.VacationValidator;
+import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.LdapService;
+import de.maredit.tar.services.MailService;
 
 /**
  * Created by czillmann on 22.04.15.
@@ -66,9 +67,18 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<User> users = this.userRepository.findAll();
     List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(user);
     List<User> managerList = getManagerList();
-
-    setVacationFormModelValues(model, user, users, vacations, managerList);
+    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
+    
+    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
     return "application/index";
+  }
+  
+  @RequestMapping("/vacation")
+  public String vacation(@RequestParam(value="id") String id, Model model) {
+    Vacation vacation = this.vacationRepository.findOne(id);
+    model.addAttribute("vacation", vacation);
+    System.out.println("vacation added " + vacation);
+    return "application/vacation";
   }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
@@ -78,11 +88,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
       User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
       List<User> users = this.userRepository.findAll();
-      List<Vacation> vacations =
-          this.vacationRepository.findVacationByUserOrderByFromAsc(selectedUser);
+      List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(selectedUser);
       List<User> managerList = getManagerList();
-      setVacationFormModelValues(model, selectedUser, users, vacations, managerList);
-
+      List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
+      
+      setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes);
       return "application/index";
     } else {
       this.vacationRepository.save(vacation);
@@ -94,7 +104,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.POST)
   @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
-  public String cancelVacation(Vacation vacation, Model model) {
+  public String cancelVacation(HttpServletRequest request, Vacation vacation, Model model) {
+    User user = getUser(request);
+    vacation.setUser(user);
 
     VacationCanceledMail mail = new 
         VacationCanceledMail(vacation);
@@ -102,23 +114,21 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     this.vacationRepository.save(vacation);
     this.mailService.sendMail(mail);
 
-    User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
     List<User> users = this.userRepository.findAll();
-    List<Vacation> vacations =
-        this.vacationRepository.findVacationByUserOrderByFromAsc(selectedUser);
+    List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(user);
     List<User> managerList = getManagerList();
-    setVacationFormModelValues(model, selectedUser, users, vacations, managerList);
+    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
 
     return "application/index";
   }
 
   private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,
-                                          List<Vacation> vacations, List<User> managerList) {
+                                          List<Vacation> vacations, List<User> managerList, List<Vacation> substitutes) {
     model.addAttribute("users", users);
     model.addAttribute("vacations", vacations);
     model.addAttribute("selectedUser", selectedUser);
-    model.addAttribute("managers",
-                       managerList);
+    model.addAttribute("managers", managerList);
+    model.addAttribute("substitutes", substitutes);
   }
 
   private List<User> getManagerList() {
@@ -134,13 +144,19 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     }
     return managerList;
   }
+  
+  private User getConnectedUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    User user = this.userRepository.findUserByUsername(auth.getName());
+    
+    return user;
+  }
 
   private User getUser(HttpServletRequest request) {
     User user = null;
     Object selected = request.getParameter("selected");
     if (selected == null) {
-      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      user = this.userRepository.findUserByUsername(auth.getName());
+      user = getConnectedUser();
     } else {
       user = this.userRepository.findUserByUsername(String.valueOf(selected));
     }

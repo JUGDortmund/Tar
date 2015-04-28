@@ -21,14 +21,14 @@ public class VacationCanceledMail implements MailObject {
 
   public VacationCanceledMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
-    values.put("manager", vacation.getManager().getFullname());
-    values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
-        .getFullname());
+//    values.put("manager", vacation.getManager().getFullname());
+//    values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
+//        .getFullname());
     values.put("fromDate", vacation.getFrom());
     values.put("toDate", vacation.getTo());
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    ccRecipients = getRecipients(vacation);
+//    ccRecipients = getRecipients(vacation);
     toRecipient = retrieveMail(vacation.getUser());
   }
 
