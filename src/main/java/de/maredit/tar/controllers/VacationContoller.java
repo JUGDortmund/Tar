@@ -26,6 +26,7 @@ import com.unboundid.ldap.sdk.LDAPException;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
@@ -64,7 +65,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<User> users = this.userRepository.findAll();
     List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(user);
     List<User> managerList = getManagerList();
-    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
+    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstituteAndState(getConnectedUser(), State.REQUESTED_SUBSTITUTE);
     
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
     return "application/index";
@@ -77,6 +78,16 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     
     return "application/vacation";
   }
+  
+  @RequestMapping("/substitution")
+  public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
+    Vacation vacation = this.vacationRepository.findOne(id);
+    vacation.setState((approve) ? State.APPROVED : State.REJECTED);
+    
+    this.vacationRepository.save(vacation);
+    
+    return "redirect:/";
+  }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
@@ -87,7 +98,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       List<User> users = this.userRepository.findAll();
       List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(selectedUser);
       List<User> managerList = getManagerList();
-      List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
+      List<Vacation> substitutes = this.vacationRepository.findVacationBySubstituteAndState(getConnectedUser(), State.REQUESTED_SUBSTITUTE);
       
       setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes);
       return "application/index";
