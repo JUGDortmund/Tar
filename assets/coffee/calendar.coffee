@@ -1,5 +1,9 @@
 (($) ->
 
+  getCurrentCheckedStatus = (checkboxId) ->
+    console.log('test')
+    return $(checkboxId).is(':checked')
+
   $('#calendar').fullCalendar
     header: {
       left: 'prev,next today'
@@ -14,12 +18,13 @@
     eventSources: [
       {
         url: '/calendar'
-        data : {
-          showApproved : $('#showApproved').is(':checked')
-          showPending : $('#showPending').is(':checked')
-          showRejected : $('#showRejected').is(':checked')
-          showCanceled: $('#showCanceled').is(':checked')
-        }
+        data : ->
+          return {
+            showApproved : $('#showApproved').is(':checked')
+            showPending : $('#showPending').is(':checked')
+            showRejected : $('#showRejected').is(':checked')
+            showCanceled: $('#showCanceled').is(':checked')
+          }
       }
     ]
     eventClick: (calEvent, jsEvent, view) -> 
