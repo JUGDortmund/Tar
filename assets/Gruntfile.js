@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 		coffee: {
 			compile: {
 				files: {
-					'../src/main/resources/static/js/functions.js' : 'coffee/functions.coffee'	
+					'../src/main/resources/static/js/functions.js' : 'coffee/*.coffee'	
 				}
 			}
 		},
