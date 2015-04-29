@@ -18,7 +18,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import javax.mail.internet.MimeMessage;
 
 @Configuration
-@Profile("!dev")
+@Profile({"prod", "serviceTest"})
 @EnableConfigurationProperties(MailProperties.class)
 public class MailServiceImpl implements MailService {
 

@@ -21,16 +21,24 @@ public class LdapProperties {
 
   private String readPassword;
 
+  private String groupLookUpDN;
+  
+  private String groupLookUpAttribute;
+  
+  private String userBindDN;
+  
+  private boolean disableSSL;
+
   public String getHost() {
     return host;
   }
 
-  public int getPort() {
-    return port;
+  public void setHost(String host) {
+    this.host = host;
   }
 
-  public String getUserLookUpDN() {
-    return userLookUpDN;
+  public int getPort() {
+    return port;
   }
 
   public String getReadUser() {
@@ -41,32 +49,40 @@ public class LdapProperties {
     return readPassword;
   }
 
-  public String getApplicationUserDN() {
-    return applicationUserDN;
-  }
-
   public String getApplicationTeamleaderDN() {
     return applicationTeamleaderDN;
   }
 
-  public void setHost(String host) {
-    this.host = host;
+  public String getApplicationUserDN() {
+    return applicationUserDN;
+  }
+
+  public String getUserBindDN() {
+    return userBindDN;
+  }
+
+  public String getGroupLookUpDN() {
+    return groupLookUpDN;
+  }
+
+  public boolean isDisableSSL() {
+    return disableSSL;
+  }
+
+  public String getGroupLookUpAttribute() {
+    return groupLookUpAttribute;
   }
 
   public void setPort(int port) {
     this.port = port;
   }
 
+  public String getUserLookUpDN() {
+    return userLookUpDN;
+  }
+
   public void setUserLookUpDN(String userLookUpDN) {
     this.userLookUpDN = userLookUpDN;
-  }
-
-  public void setApplicationUserDN(String applicationUserDN) {
-    this.applicationUserDN = applicationUserDN;
-  }
-
-  public void setApplicationTeamleaderDN(String applicationTeamleaderDN) {
-    this.applicationTeamleaderDN = applicationTeamleaderDN;
   }
 
   public void setReadUser(String readUser) {
@@ -76,4 +92,29 @@ public class LdapProperties {
   public void setReadPassword(String readPassword) {
     this.readPassword = readPassword;
   }
+
+  public void setApplicationTeamleaderDN(String applicationTeamleaderDN) {
+    this.applicationTeamleaderDN = applicationTeamleaderDN;
+  }
+
+  public void setGroupLookUpAttribute(String groupLookUpAttribute) {
+    this.groupLookUpAttribute = groupLookUpAttribute;
+  }
+
+  public void setUserBindDN(String userBindDN) {
+    this.userBindDN = userBindDN;
+  }
+
+  public void setApplicationUserDN(String applicationUserDN) {
+    this.applicationUserDN = applicationUserDN;
+  }
+
+  public void setGroupLookUpDN(String groupLookUpDN) {
+    this.groupLookUpDN = groupLookUpDN;
+  }
+
+  public void setDisableSSL(boolean disableSSL) {
+    this.disableSSL = disableSSL;
+  }
+
 }

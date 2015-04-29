@@ -10,11 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.convert.CustomConversions;
 
 import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 import java.util.Arrays;
 
@@ -23,6 +25,7 @@ import java.util.Arrays;
  */
 
 @Configuration
+@Profile("!serviceTest")
 public class MongoConfiguration extends AbstractMongoConfiguration {
 
   @Autowired
@@ -45,10 +48,10 @@ public class MongoConfiguration extends AbstractMongoConfiguration {
 
   @Override
   public Mongo mongo() throws Exception {
-    StringBuffer uriBuffer = new StringBuffer("mongodb://");
-    uriBuffer.append(mongoProperties.getHost());
-    uriBuffer.append(":");
-    uriBuffer.append(mongoProperties.getPort());
-    return new Mongo(new MongoURI(uriBuffer.toString()));
+    StringBuilder uriBuilder = new StringBuilder("mongodb://");
+    uriBuilder.append(mongoProperties.getHost());
+    uriBuilder.append(":");
+    uriBuilder.append(mongoProperties.getPort());
+    return new MongoClient(new MongoClientURI(uriBuilder.toString()));
   }
 }

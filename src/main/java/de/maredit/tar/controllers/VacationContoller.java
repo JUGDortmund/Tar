@@ -1,5 +1,7 @@
 package de.maredit.tar.controllers;
 
+import com.unboundid.ldap.sdk.LDAPException;
+
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.validators.VacationValidator;
@@ -20,10 +22,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.unboundid.ldap.sdk.LDAPException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -91,25 +90,26 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,
-      List<Vacation> vacations, List<User> managerList) {
+                                          List<Vacation> vacations, List<User> managerList) {
     model.addAttribute("users", users);
     model.addAttribute("vacations", vacations);
     model.addAttribute("selectedUser", selectedUser);
-    model.addAttribute("managers", managerList);
+    model.addAttribute("managers",
+                       managerList);
   }
 
   private List<User> getManagerList() {
     List<User> managerList = new ArrayList<User>();
-    List<User> filteredManagerList = null;
     try {
-      managerList = userRepository.findByUsernames(ldapService.getLdapManagerList());
-      filteredManagerList =
-          managerList.stream().filter(u -> u.isActive()).collect(Collectors.toList());
+      managerList =
+          userRepository.findByUsernames(ldapService.getLdapManagerList());
+      managerList =
+          managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
 
     } catch (LDAPException e) {
       LOG.error("Error while reading manager list for vacation form", e);
     }
-    return filteredManagerList;
+    return managerList;
   }
 
   private User getUser(HttpServletRequest request) {
@@ -122,14 +122,5 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       user = this.userRepository.findUserByUsername(String.valueOf(selected));
     }
     return user;
-  }
-
-  @RequestMapping(value = "/editVacation", method = RequestMethod.GET)
-  public String loadVacation(@RequestParam(value = "vacationId") String vacationId, Model model) {
-    Vacation vacation = vacationRepository.findOne(vacationId);
-    LOG.info("loadVacation(): [vacationId: {}], [model: {}], [vacation: {}]", vacationId,
-        model.toString(), vacation.toString());
-    model.addAttribute("vacation", vacation);
-    return "redirect:/";
   }
 }
