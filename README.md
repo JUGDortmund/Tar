@@ -20,6 +20,11 @@ To use the _test_ profile, all test classes have to use the following annotation
 
 	@ActiveProfile("test")
 
+## Login
+
+When starting the application in _dev_ profile, the authentication is using a local user management with defined users in _dummy-user.yaml_.
+There are only two users "user" and "supervisor" with password "login". When using other profiles, the LDAP-authentication is required and a group-mapping to application authorities in the _group-mapping.yaml_ has to be configured.
+
 
 ## Development-Environment
 
