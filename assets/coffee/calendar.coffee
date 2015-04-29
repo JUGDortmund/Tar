@@ -11,9 +11,29 @@
     weekends: false
     eventLimit: true
     weekNumbers: true
-    events: '/calendar'
-
+    eventSources: [
+      {
+        url: '/calendar'
+        data : {
+          showApproved : $('#showApproved').is(':checked')
+          showPending : $('#showPending').is(':checked')
+          showRejected : $('#showRejected').is(':checked')
+          showCanceled: $('#showCanceled').is(':checked')
+        }
+      }
+    ]
     eventClick: (calEvent, jsEvent, view) -> 
-      console.log('Event: ' + calEvent)
-      $(this).css('border-color', 'red')
+      $vacationDetail = $('#vacationDetail')
+      
+      $vacationDetail.find('.user').text( calEvent.userFirstName + ' ' + calEvent.userLastName )
+      $vacationDetail.find('.state').text( calEvent.state );
+      $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.end.format('DD.MM.YYYY') )
+      $vacationDetail.find('.substitue').text( calEvent.substituteFirstName + ' ' + calEvent.substituteLastName )
+
+      $vacationDetail.show()
+
+      $('#sidebar').addClass('active')
+
+  $('#calendarFilter .checkbox input').on 'click', ->
+    $('#calendar').fullCalendar( 'refetchEvents')
 )(jQuery);

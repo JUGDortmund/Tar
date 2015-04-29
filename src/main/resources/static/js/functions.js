@@ -1,6 +1,6 @@
 (function() {
   (function($) {
-    return $('#calendar').fullCalendar({
+    $('#calendar').fullCalendar({
       header: {
         left: 'prev,next today',
         center: 'title',
@@ -11,11 +11,30 @@
       weekends: false,
       eventLimit: true,
       weekNumbers: true,
-      events: '/calendar',
+      eventSources: [
+        {
+          url: '/calendar',
+          data: {
+            showApproved: $('#showApproved').is(':checked'),
+            showPending: $('#showPending').is(':checked'),
+            showRejected: $('#showRejected').is(':checked'),
+            showCanceled: $('#showCanceled').is(':checked')
+          }
+        }
+      ],
       eventClick: function(calEvent, jsEvent, view) {
-        console.log('Event: ' + calEvent);
-        return $(this).css('border-color', 'red');
+        var $vacationDetail;
+        $vacationDetail = $('#vacationDetail');
+        $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
+        $vacationDetail.find('.state').text(calEvent.state);
+        $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.end.format('DD.MM.YYYY'));
+        $vacationDetail.find('.substitue').text(calEvent.substituteFirstName + ' ' + calEvent.substituteLastName);
+        $vacationDetail.show();
+        return $('#sidebar').addClass('active');
       }
+    });
+    return $('#calendarFilter .checkbox input').on('click', function() {
+      return $('#calendar').fullCalendar('refetchEvents');
     });
   })(jQuery);
 
