@@ -30,7 +30,7 @@ import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
-@ActiveProfiles("test")
+@ActiveProfiles("serviceTest")
 public class MailServiceImplTest {
 
   private static final Logger LOG = LogManager.getLogger(MailServiceImplTest.class);

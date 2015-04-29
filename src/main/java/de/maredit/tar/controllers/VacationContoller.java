@@ -103,7 +103,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     try {
       managerList =
           userRepository.findByUsernames(ldapService.getLdapManagerList());
-      List<User> filteredManagerList =
+      managerList =
           managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
 
     } catch (LDAPException e) {
