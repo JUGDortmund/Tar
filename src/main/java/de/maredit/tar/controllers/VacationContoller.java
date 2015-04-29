@@ -104,9 +104,10 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     }
   }
 
-  @RequestMapping(value = "/cancelVacation", method = RequestMethod.POST)
+  @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
   @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
-  public String cancelVacation(HttpServletRequest request, Vacation vacation, Model model) {
+  public String cancelVacation(HttpServletRequest request, @RequestParam(value="id") String id, Model model) {
+    Vacation vacation = this.vacationRepository.findOne(id);
     User user = getUser(request);
     vacation.setUser(user);
 

@@ -110,9 +110,7 @@ edit-vacation, approve-vacation  -->
 
             <button type="submit" class="btn btn-success pull-right">beantragen</button>
         </form>
-        <form th:action="@{/cancelVacation}" th:object="${vacation}" method="post" role="form">
-			<button type="submit" th:action="@{/saveVacation}"  class="btn btn-danger pull-right">stornieren</button>
-		</form>
+        <a th:href="@{/cancelVacation(id=${vacation.id})}" onclick="return confirm('Willst du den Urlaub wirklich stornieren?');" class="btn btn-danger pull-right">stornieren</a>
     </div>
     <!-- panel-body end -->
 </div>
