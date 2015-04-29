@@ -11,9 +11,8 @@
     weekends: false
     eventLimit: true
     weekNumbers: true
-    events: {
-      url: 'myData.json'
-    }
+    events: '/calendar'
+
     eventClick: (calEvent, jsEvent, view) -> 
       console.log('Event: ' + calEvent)
       $(this).css('border-color', 'red')
