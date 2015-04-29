@@ -1,7 +1,5 @@
 package de.maredit.tar.controllers;
 
-import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.validators.VacationValidator;
@@ -10,8 +8,8 @@ import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.MailService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,12 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import com.unboundid.ldap.sdk.LDAPException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * Created by czillmann on 22.04.15.
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @Controller
 public class VacationContoller extends WebMvcConfigurerAdapter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(VacationContoller.class);
+  private static final Logger LOG = LogManager.getLogger(VacationContoller.class);
 
   @Autowired
   private VacationRepository vacationRepository;
@@ -72,7 +72,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
-          fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
+          fieldError -> LOG.error("Field '{}' {}!", fieldError.getField(),
+              fieldError.getDefaultMessage()));
       User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
       List<User> users = this.userRepository.findAll();
       List<Vacation> vacations =
@@ -90,21 +91,18 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,
-                                          List<Vacation> vacations, List<User> managerList) {
+      List<Vacation> vacations, List<User> managerList) {
     model.addAttribute("users", users);
     model.addAttribute("vacations", vacations);
     model.addAttribute("selectedUser", selectedUser);
-    model.addAttribute("managers",
-                       managerList);
+    model.addAttribute("managers", managerList);
   }
 
   private List<User> getManagerList() {
     List<User> managerList = new ArrayList<User>();
     try {
-      managerList =
-          userRepository.findByUsernames(ldapService.getLdapManagerList());
-      managerList =
-          managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
+      managerList = userRepository.findByUsernames(ldapService.getLdapManagerList());
+      managerList = managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
 
     } catch (LDAPException e) {
       LOG.error("Error while reading manager list for vacation form", e);
