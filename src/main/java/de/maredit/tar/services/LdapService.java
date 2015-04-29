@@ -3,7 +3,6 @@ package de.maredit.tar.services;
 import de.maredit.tar.models.User;
 
 import com.unboundid.ldap.sdk.LDAPException;
-import com.unboundid.ldap.sdk.SearchResultEntry;
 
 import java.util.List;
 import java.util.Set;

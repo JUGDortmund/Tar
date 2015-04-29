@@ -2,7 +2,6 @@ package de.maredit.tar.services;
 
 
 import com.unboundid.ldap.sdk.LDAPException;
-import com.unboundid.ldap.sdk.SearchResultEntry;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;

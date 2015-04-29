@@ -157,8 +157,7 @@ public class LdapServiceImpl implements LdapService {
   }
 
   private User createUser(SearchResultEntry resultEntry) {
-    User user;
-    user = new User();
+    User user = new User();
     user.setMail(resultEntry.getAttributeValue(LdapService.FIELD_MAIL));
     user.setUidNumber(resultEntry.getAttributeValue(LdapService.FIELD_UIDNUMBER));
     user.setUsername(resultEntry.getAttributeValue(LdapService.FIELD_UID));
