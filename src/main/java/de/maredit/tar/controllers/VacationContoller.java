@@ -65,7 +65,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     User user = getUser(request);
     vacation.setUser(user);
     List<User> users = this.userRepository.findAll();
-    List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(user);
+    List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
     List<User> managerList = getManagerList();
     List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
     
@@ -90,7 +90,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
       User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
       List<User> users = this.userRepository.findAll();
-      List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(selectedUser);
+      List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(selectedUser, State.CANCELED);
       List<User> managerList = getManagerList();
       List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
       
@@ -118,7 +118,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     this.mailService.sendMail(mail);
 
     List<User> users = this.userRepository.findAll();
-    List<Vacation> vacations = this.vacationRepository.findVacationByUserOrderByFromAsc(user);
+    List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
     List<User> managerList = getManagerList();
     List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
