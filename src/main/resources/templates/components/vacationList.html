@@ -18,7 +18,7 @@
             </form>
 			<div class="list-group">
                 <h3 class="list-group-item">Urlaube</h3>
-			    <a th:each="vacation : ${vacations}" class="list-group-item" th:href="@{/vacation(id=${vacation.id})}">
+			    <a th:each="vacation : ${vacations}" class="list-group-item" th:href="@{/vacation(id=${vacation.id},action='edit')}">
 			        <span th:text="${vacation.from + ' - '  + vacation.to}"></span>
 			        <span th:class="${'glyphicon ' + vacation.state.get()}" aria-hidden="true"></span>
 			    </a>

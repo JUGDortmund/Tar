@@ -74,10 +74,12 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
   
   @RequestMapping("/vacation")
-  public String vacation(@RequestParam(value="id") String id, Model model) {
+  public String vacation(@RequestParam(value="id") String id,@RequestParam(value="action", required=false) String action, Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
     model.addAttribute("vacation", vacation);
-    System.out.println("vacation added " + vacation);
+    if ("edit".equals(action)) {
+      return "application/vacationEdit";
+    }
     return "application/vacation";
   }
 
