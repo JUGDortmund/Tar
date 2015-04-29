@@ -1,7 +1,8 @@
 package de.maredit.tar.controllers;
 
-import com.unboundid.ldap.sdk.LDAPException;
+import de.maredit.tar.services.mail.VacationCanceledMail;
 
+import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.models.enums.State;
 import org.springframework.security.access.annotation.Secured;
@@ -97,15 +98,15 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
     vacation.setState(State.CANCELED);
     this.vacationRepository.save(vacation);
-//    this.mailService.sendMimeMail(vacation);
+    this.mailService.sendMail(new 
+        VacationCanceledMail(vacation));
 
     User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
     List<User> users = this.userRepository.findAll();
     List<Vacation> vacations =
         this.vacationRepository.findVacationByUserOrderByFromAsc(selectedUser);
-    model.addAttribute("users", users);
-    model.addAttribute("vacations", vacations);
-    model.addAttribute("selectedUser", selectedUser);
+    List<User> managerList = getManagerList();
+    setVacationFormModelValues(model, selectedUser, users, vacations, managerList);
 
     return "application/index";
   }
@@ -124,7 +125,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     try {
       managerList =
           userRepository.findByUsernames(ldapService.getLdapManagerList());
-      List<User> filteredManagerList =
+      managerList =
           managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
 
     } catch (LDAPException e) {
