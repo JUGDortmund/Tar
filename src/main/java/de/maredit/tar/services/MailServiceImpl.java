@@ -1,23 +1,19 @@
 package de.maredit.tar.services;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 import de.maredit.tar.services.mail.MailObject;
-import de.maredit.tar.models.Vacation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 @Service
 @Profile({"prod", "serviceTest"})
@@ -33,16 +29,18 @@ public class MailServiceImpl implements MailService {
   private MailProperties mailProperties;
 
   private JavaMailSender mailSender;
-  
+
   @PostConstruct
   public void init() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    if (mailProperties != null && mailProperties.getHost() != null) { 
-    mailSender.setHost(mailProperties.getHost());
-    mailSender.setPort(mailProperties.getPort());
-    mailSender.setUsername(mailProperties.getUsername());
-    mailSender.setPassword(mailProperties.getPassword());
-    this.mailSender = mailSender;
+    if (mailProperties != null && mailProperties.getHost() != null) {
+      mailSender.setHost(mailProperties.getHost());
+      if (mailProperties.getPort() != null) {
+        mailSender.setPort(mailProperties.getPort());
+      }
+      mailSender.setUsername(mailProperties.getUsername());
+      mailSender.setPassword(mailProperties.getPassword());
+      this.mailSender = mailSender;
     }
   }
 
