@@ -14,7 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import javax.mail.internet.MimeMessage;
 
 @Configuration
-@Profile("dev")
+@Profile({"dev", "test"})
 @EnableConfigurationProperties(MailProperties.class)
 public class MailServiceDummyImpl implements MailService {
 

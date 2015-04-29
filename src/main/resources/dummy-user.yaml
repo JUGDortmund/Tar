@@ -1,0 +1,26 @@
+users:
+  - username: user
+    uidNumber: 100
+    firstName: Benutzer
+    lastName: Test
+    mail: test@dummy.local
+  - username: supervisor
+    uidNumber: 101
+    firstName: Vorgesetzter
+    lastName: Test
+    mail: supervisor@dummy.local
+
+--- ## 
+authenticate:
+  user: login
+  supervisor: login
+
+--- ##
+
+groups:
+  user:
+    - userGroup
+    - tar-user
+  supervisor:
+    - supervisorGroup
+    - tar-supervisor
