@@ -1,6 +1,15 @@
 package de.maredit.tar.services;
 
 
+import de.maredit.tar.models.User;
+import de.maredit.tar.properties.LdapProperties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -14,15 +23,6 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
-
-import de.maredit.tar.models.User;
-import de.maredit.tar.properties.LdapProperties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class LdapServiceImpl implements LdapService {
   @Autowired
   private LdapProperties ldapProperties;
 
-  private static final Logger LOG = LoggerFactory.getLogger(LdapServiceImpl.class);
+  private static final Logger LOG = LogManager.getLogger(LdapServiceImpl.class);
 
   private LDAPConnectionPool connectionPool;
 
@@ -55,7 +55,7 @@ public class LdapServiceImpl implements LdapService {
     } else {
       ldapConnection =
           new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
-                             ldapProperties.getHost(), ldapProperties.getPort());
+              ldapProperties.getHost(), ldapProperties.getPort());
     }
 
     connectionPool = new LDAPConnectionPool(ldapConnection, NUM_CONNECTIONS);
@@ -73,8 +73,7 @@ public class LdapServiceImpl implements LdapService {
     try {
       ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
       // get value list with userDN
-      SearchResultEntry
-          searchResultEntry =
+      SearchResultEntry searchResultEntry =
           ldapConnection.getEntry(ldapProperties.getApplicationUserDN());
       String[] members = searchResultEntry.getAttributeValues(FIELD_MEMBER);
 
@@ -100,8 +99,7 @@ public class LdapServiceImpl implements LdapService {
     try {
       ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
       // get value list with userDN
-      SearchResultEntry
-          searchResultEntry =
+      SearchResultEntry searchResultEntry =
           ldapConnection.getEntry(ldapProperties.getApplicationTeamleaderDN());
 
       String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBERUID);
@@ -156,9 +154,8 @@ public class LdapServiceImpl implements LdapService {
     ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
     SearchRequest searchRequest =
         new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-                          Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(),
-                                                      ldapProperties.getUserBindDN()
-                                                          .replace("$username", uid)));
+            Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(), ldapProperties
+                .getUserBindDN().replace("$username", uid)));
     SearchResult searchResults = ldapConnection.search(searchRequest);
     return searchResults;
   }
@@ -172,7 +169,7 @@ public class LdapServiceImpl implements LdapService {
     user.setLastName(resultEntry.getAttributeValue(LdapService.FIELD_SN));
     user.setActive(Boolean.TRUE);
 
-    LOG.debug("User created. username: %s/uidNumber: %s", user.getUsername(), user.getUidNumber());
+    LOG.debug("User created. username: {} / uidNumber: {}", user.getUsername(), user.getUidNumber());
     return user;
   }
 }
