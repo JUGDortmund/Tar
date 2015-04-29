@@ -96,10 +96,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
   public String cancelVacation(Vacation vacation, Model model) {
 
+    VacationCanceledMail mail = new 
+        VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);
     this.vacationRepository.save(vacation);
-    this.mailService.sendMail(new 
-        VacationCanceledMail(vacation));
+    this.mailService.sendMail(mail);
 
     User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
     List<User> users = this.userRepository.findAll();
