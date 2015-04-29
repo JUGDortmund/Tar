@@ -1,7 +1,8 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.models.User;
+
 import com.unboundid.ldap.sdk.LDAPException;
-import com.unboundid.ldap.sdk.SearchResultEntry;
 
 import java.util.List;
 import java.util.Set;
@@ -12,9 +13,12 @@ import java.util.Set;
 public interface LdapService {
 
   String FIELD_CN = "cn";
+  String FIELD_SN = "sn";
   String FIELD_MEMBERUID = "memberUid";
   String FIELD_MEMBER = "member";
   String FIELD_UID = "uid";
+  String FIELD_UIDNUMBER = "uidnumber";
+  String FIELD_MAIL = "mail";
 
 
   /**
@@ -22,7 +26,7 @@ public interface LdapService {
    * @return
    * @throws LDAPException
    */
-  List<SearchResultEntry> getLdapUserList() throws LDAPException;
+  List<User> getLdapUserList() throws LDAPException;
 
   /**
    * Get the list uf usernames for team leader
@@ -41,4 +45,5 @@ public interface LdapService {
   boolean authenticateUser(String uid, String password) throws LDAPException;
 
   List<String> getUserGroups(String uid) throws LDAPException;
+
 }
