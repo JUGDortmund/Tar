@@ -1,8 +1,8 @@
 package de.maredit.tar.providers;
 
-import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.services.AuthorityMappingService;
 import de.maredit.tar.services.LdapService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,6 +13,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+
+import com.unboundid.ldap.sdk.LDAPException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -32,10 +34,8 @@ public class ApplicationAuthenticationProvider implements AuthenticationProvider
     String username = authentication.getName();
     Object password = authentication.getCredentials();
     try {
-      if (StringUtils.isNotBlank(username)
-          && password != null
-          && ldapService
-              .authenticateUser(username, String.valueOf(authentication.getCredentials()))) {
+      if (StringUtils.isNotBlank(username) && password != null
+          && ldapService.authenticateUser(username, String.valueOf(password))) {
         Set<GrantedAuthority> grantedAuths = new HashSet<>();
         for (String group : ldapService.getUserGroups(username)) {
           List<String> roles = mappingService.getGroups().get(group);

@@ -6,6 +6,7 @@ import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPConnectionPool;
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.LDAPSearchException;
 import com.unboundid.ldap.sdk.ResultCode;
 import com.unboundid.ldap.sdk.SearchRequest;
 import com.unboundid.ldap.sdk.SearchResult;
@@ -135,13 +136,7 @@ public class LdapServiceImpl implements LdapService {
     List<String> groups = new ArrayList<>();
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
-      ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
-      SearchRequest searchRequest =
-          new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-                            Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(),
-                                                        ldapProperties.getUserBindDN()
-                                                            .replace("$username", uid)));
-      SearchResult searchResults = ldapConnection.search(searchRequest);
+      SearchResult searchResults = searchForLdapGroups(uid, ldapConnection);
 
       if (searchResults.getEntryCount() > 0) {
         for (SearchResultEntry entry : searchResults.getSearchEntries()) {
@@ -154,6 +149,18 @@ public class LdapServiceImpl implements LdapService {
     }
     connectionPool.releaseConnection(ldapConnection);
     return groups;
+  }
+
+  private SearchResult searchForLdapGroups(String uid, LDAPConnection ldapConnection)
+      throws LDAPException, LDAPSearchException {
+    ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
+    SearchRequest searchRequest =
+        new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
+                          Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(),
+                                                      ldapProperties.getUserBindDN()
+                                                          .replace("$username", uid)));
+    SearchResult searchResults = ldapConnection.search(searchRequest);
+    return searchResults;
   }
 
   private User createUser(SearchResultEntry resultEntry) {
