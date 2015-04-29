@@ -16,7 +16,6 @@ import com.unboundid.util.ssl.TrustAllTrustManager;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.properties.LdapProperties;
-import de.maredit.tar.repositories.UserRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +41,6 @@ public class LdapServiceImpl implements LdapService {
 
   @Autowired
   private LdapProperties ldapProperties;
-
-  @Autowired
-  private UserRepository userRepository;
 
   private static final Logger LOG = LoggerFactory.getLogger(LdapServiceImpl.class);
 
@@ -81,38 +77,27 @@ public class LdapServiceImpl implements LdapService {
           ldapConnection.getEntry(ldapProperties.getApplicationUserDN());
       String[] members = searchResultEntry.getAttributeValues(FIELD_MEMBER);
 
-      // iterate over userDN and create/update users
-      List<User> ldapUser = new ArrayList<User>();
-
       for (String member : members) {
         SearchResultEntry userEntry = ldapConnection.getEntry(member);
         if (userEntry != null) {
-          User
-              user =
-              userRepository.findByUidNumber(userEntry.getAttributeValue(FIELD_UIDNUMBER));
-          if (user != null) {
-            updateUser(userEntry, user);
-          } else {
-            user = createUser(userEntry);
-          }
-          userRepository.save(user);
-          ldapUser.add(user);
+          users.add(createUser(userEntry));
         }
       }
-      connectionPool.releaseConnection(ldapConnection);
-      return ldapUser;
     } catch (LDAPException e) {
-      LOG.error("Error reading user list from LDAP", e);
       connectionPool.releaseConnectionAfterException(ldapConnection, e);
       throw e;
     }
+    connectionPool.releaseConnection(ldapConnection);
+    return users;
+
   }
 
   @Override
   public Set<String> getLdapManagerList() throws LDAPException {
-    LDAPConnection ldapConnection = null;
+    Set<String> manager = new HashSet<>();
+    LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
-      ldapConnection = connectionPool.getConnection();
+      ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
       // get value list with userDN
       SearchResultEntry
           searchResultEntry =
@@ -120,14 +105,14 @@ public class LdapServiceImpl implements LdapService {
 
       String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBERUID);
 
-      final HashSet<String> userSet = new HashSet<>();
-      Collections.addAll(userSet, memberUids);
-      return userSet;
+      Collections.addAll(manager, memberUids);
     } catch (LDAPException e) {
       LOG.error("Error reading user list from LDAP", e);
       connectionPool.releaseConnectionAfterException(ldapConnection, e);
       throw e;
     }
+    connectionPool.releaseConnection(ldapConnection);;
+    return manager;
   }
 
   @Override
@@ -183,14 +168,5 @@ public class LdapServiceImpl implements LdapService {
 
     LOG.debug("User created. username: %s/uidNumber: %s", user.getUsername(), user.getUidNumber());
     return user;
-  }
-
-  private void updateUser(SearchResultEntry resultEntry, User user) {
-    // set name changes here
-    user.setMail(resultEntry.getAttributeValue(LdapService.FIELD_MAIL));
-    user.setUsername(resultEntry.getAttributeValue(LdapService.FIELD_UID));
-    user.setFirstName(resultEntry.getAttributeValue(LdapService.FIELD_CN));
-    user.setLastName(resultEntry.getAttributeValue(LdapService.FIELD_SN));
-    LOG.debug("User updated. username: %s/uidNumber: %s", user.getUsername(), user.getUidNumber());
   }
 }
