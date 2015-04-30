@@ -1,10 +1,10 @@
 package de.maredit.tar.models.converters;
 
-import org.springframework.core.convert.converter.Converter;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * Created by czillmann on 24.04.15.
