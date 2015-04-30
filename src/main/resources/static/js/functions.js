@@ -2,7 +2,6 @@
   (function($) {
     var getCurrentCheckedStatus;
     getCurrentCheckedStatus = function(checkboxId) {
-      console.log('test');
       return $(checkboxId).is(':checked');
     };
     $('#calendar').fullCalendar({
@@ -29,12 +28,17 @@
           }
         }
       ],
+      eventDataTransform: function(eventData) {
+        eventData.displayedEnd = moment(eventData.end);
+        eventData.end = moment(eventData.end).add(1, 'days');
+        return eventData;
+      },
       eventClick: function(calEvent, jsEvent, view) {
         var $vacationDetail;
         $vacationDetail = $('#vacationDetail');
         $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
         $vacationDetail.find('.state').text(calEvent.state);
-        $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.end.format('DD.MM.YYYY'));
+        $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
         $vacationDetail.find('.substitute').text(calEvent.substituteFirstName + ' ' + calEvent.substituteLastName);
         $vacationDetail.show();
         return $('#sidebar').addClass('active');
