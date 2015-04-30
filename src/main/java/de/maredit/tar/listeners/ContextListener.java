@@ -31,10 +31,11 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
 
         Vacation v1 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
                                    user, user, 15, 5);
-        Vacation v2 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
+        v1.setState(State.WAITING_FOR_APPROVEMENT);
+        Vacation v2 = new Vacation(user, LocalDate.of(2098, Month.JULY, 18), LocalDate.of(2098, Month.AUGUST, 03),
                                    user, user, 15, 5);
-        v2.setState(State.REJECTED);
-        Vacation v3 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
+        v2.setState(State.REQUESTED_SUBSTITUTE);
+        Vacation v3 = new Vacation(user, LocalDate.of(2097, Month.JULY, 18), LocalDate.of(2097, Month.AUGUST, 03),
                                        user, user, 15, 5);
         v3.setState(State.APPROVED);
         vacationRepository.save(v1);
