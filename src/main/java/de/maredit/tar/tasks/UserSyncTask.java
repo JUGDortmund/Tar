@@ -1,19 +1,19 @@
 package de.maredit.tar.tasks;
 
-import de.maredit.tar.repositories.UserRepository;
-import de.maredit.tar.models.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import com.unboundid.ldap.sdk.LDAPException;
-
-import de.maredit.tar.services.LdapService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import com.unboundid.ldap.sdk.LDAPException;
+
+import de.maredit.tar.models.User;
+import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.services.LdapService;
 
 @Component
 public class UserSyncTask {

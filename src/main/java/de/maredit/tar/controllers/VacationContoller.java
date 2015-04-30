@@ -33,6 +33,8 @@ import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.MailService;
+import de.maredit.tar.services.mail.SubstitutionApprovedMail;
+import de.maredit.tar.services.mail.SubstitutionRejectedMail;
 import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 
@@ -77,16 +79,25 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   @RequestMapping("/substitution")
   public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
     Vacation vacation = this.vacationRepository.findOne(id);
-    vacation.setState((approve) ? State.APPROVED : State.REJECTED);
+    
+    if (approve) {
+      vacation.setState(State.APPROVED);
+      this.mailService.sendMail(new SubstitutionApprovedMail(vacation));
+    } else {
+      vacation.setState(State.REJECTED);
+      this.mailService.sendMail(new SubstitutionRejectedMail(vacation));
+    }
     
     this.vacationRepository.save(vacation);
     
     return "redirect:/";
   }
   
+  @RequestMapping("/vacation")
   public String vacation(@RequestParam(value="id") String id,@RequestParam(value="action", required=false) String action, Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
     model.addAttribute("vacation", vacation);
+    
     if ("edit".equals(action)) {
       return "application/vacationEdit";
     }
