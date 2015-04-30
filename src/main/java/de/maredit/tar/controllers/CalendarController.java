@@ -53,7 +53,7 @@ public class CalendarController {
                                                  @RequestParam(value = "showRejected", defaultValue = "false") Boolean showRejected) {
     LocalDate startDate = LocalDate.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     LocalDate endDate = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    LOG.info("Selecting vacation data from " + startDate + " to " + endDate);
+    LOG.debug("Selecting vacation data from " + startDate + " to " + endDate);
 
     List<State> states = new ArrayList<State>();
     if (showApproved) {
@@ -64,7 +64,7 @@ public class CalendarController {
       states.add(State.REQUESTED_SUBSTITUTE);
     }
     if (showCanceled) {
-      LOG.info("no canceled state right now..");
+      states.add(State.CANCELED);
     }
     if (showRejected) {
       states.add(State.REJECTED);
@@ -73,13 +73,14 @@ public class CalendarController {
     List<Vacation>
         vacations =
         this.vacationRepository
-            .findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(startDate, endDate, states, startDate, endDate, states);
+            .findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(startDate, endDate, states,
+                                                                      startDate, endDate, states);
 
     List<CalendarEvent>
         calendarEvents =
         vacations.stream().map(vacation -> {
           CalendarEvent calendarEvent = new CalendarEvent(vacation);
-          LOG.info(
+          LOG.debug(
               "added CalendarEvent '" + calendarEvent.getTitle() + "' [start: " + calendarEvent
                   .getStart() + " - end: "
               + calendarEvent.getEnd() + "] - "+calendarEvent.getState());
