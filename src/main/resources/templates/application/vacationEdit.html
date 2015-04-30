@@ -108,11 +108,10 @@ edit-vacation, approve-vacation  -->
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success pull-right">beantragen</button>
+            <button type="submit" class="btn btn-success">beantragen</button>
+            <a th:href="@{/cancelVacation(id=${vacation.id})}" onclick="return confirm('Willst du den Urlaub wirklich stornieren?');" class="btn btn-danger pull-right">stornieren</a>
         </form>
     </div>
-    <!-- panel-body end -->
 </div>
-
 </body>
 </html>

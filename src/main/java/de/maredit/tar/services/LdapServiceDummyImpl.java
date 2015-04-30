@@ -1,19 +1,19 @@
 package de.maredit.tar.services;
 
 
-import com.unboundid.ldap.sdk.LDAPException;
-
-import de.maredit.tar.models.User;
-import de.maredit.tar.repositories.UserRepository;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.unboundid.ldap.sdk.LDAPException;
+
+import de.maredit.tar.models.User;
+import de.maredit.tar.repositories.UserRepository;
 
 @Service
 @Profile({"test"})

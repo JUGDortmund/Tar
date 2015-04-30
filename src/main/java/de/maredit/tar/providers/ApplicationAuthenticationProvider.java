@@ -1,7 +1,8 @@
 package de.maredit.tar.providers;
 
-import de.maredit.tar.services.AuthorityMappingService;
-import de.maredit.tar.services.LdapService;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,8 @@ import org.springframework.stereotype.Component;
 
 import com.unboundid.ldap.sdk.LDAPException;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import de.maredit.tar.services.AuthorityMappingService;
+import de.maredit.tar.services.LdapService;
 
 @Component
 public class ApplicationAuthenticationProvider implements AuthenticationProvider {
