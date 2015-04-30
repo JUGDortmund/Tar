@@ -1,7 +1,8 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.services.mail.MailObject;
 import org.springframework.stereotype.Service;
+
+import de.maredit.tar.services.mail.MailObject;
 
 @Service
 public interface MailService {

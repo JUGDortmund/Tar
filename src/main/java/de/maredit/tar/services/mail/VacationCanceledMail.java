@@ -1,14 +1,11 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
 
 public class VacationCanceledMail implements MailObject {
 
@@ -21,26 +18,11 @@ public class VacationCanceledMail implements MailObject {
 
   public VacationCanceledMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
-//    values.put("manager", vacation.getManager().getFullname());
-//    values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
-//        .getFullname());
     values.put("fromDate", vacation.getFrom());
     values.put("toDate", vacation.getTo());
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-//    ccRecipients = getRecipients(vacation);
     toRecipient = retrieveMail(vacation.getUser());
-  }
-
-  private String[] getRecipients(Vacation vacation) {
-    List<String> recipients = new ArrayList<>();
-    recipients.add(retrieveMail(vacation.getSubstitute()));
-    recipients.add(retrieveMail(vacation.getManager()));
-
-    List<String> filteredList =
-        recipients.stream().filter(e -> !e.isEmpty()).collect(Collectors.toList());
-    String[] array = new String[filteredList.size()];
-    return filteredList.toArray(array);
   }
 
   private String retrieveMail(User user) {

@@ -1,6 +1,7 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.services.mail.MailObject;
+import javax.annotation.PostConstruct;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import de.maredit.tar.services.mail.MailObject;
 
 @Service
 @Profile({"prod", "serviceTest"})

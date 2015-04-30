@@ -7,7 +7,6 @@ refreshVacationForm = (data) ->
   $myForm.find('.input-group.date').datepicker({})
   $myForm.find('select').select2()
 
-
 # document ready 
 (($) ->
   

@@ -1,11 +1,11 @@
 package de.maredit.tar.models.validators;
 
-import de.maredit.tar.models.Vacation;
+import java.time.LocalDate;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDate;
+import de.maredit.tar.models.Vacation;
 
 /**
  * Created by czillmann on 22.04.15.
