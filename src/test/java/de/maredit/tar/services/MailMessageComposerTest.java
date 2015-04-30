@@ -1,12 +1,12 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.services.mail.VacationCreateMail;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,18 +41,18 @@ public class MailMessageComposerTest {
     String[] expectedArray = {/* User */"Mark@maredit.de", /* Substitute */"Luke@maredit.de", /* Manager */
     "John@maredit.de"};
 
-    String[] actualArray = mailComposer.composeSimpleMailMessage(vacation).getTo();
+    String[] actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation)).getTo();
 
     assertEquals(expectedArray[0], actualArray[0]);
 
-    actualArray = mailComposer.composeSimpleMailMessage(vacation).getCc();
+    actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation)).getCc();
     assertEquals(expectedArray[1], actualArray[0]);
     assertEquals(expectedArray[2], actualArray[1]);
   }
 
   @Test
   public void changedMailAdressesInComposedMail() {
-    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
+    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
 
     assertEquals("Mark@maredit.de", mailMessage.getTo()[0]);
     assertEquals("Luke@maredit.de", mailMessage.getCc()[0]);
@@ -61,7 +61,7 @@ public class MailMessageComposerTest {
     standardVacation.getUser().setMail("JohnnyEnglish@maredit.de");
     standardVacation.getManager().setMail("manager@maredit.de");
     standardVacation.getSubstitute().setMail("substitute@maredit.de");
-    mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
+    mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
 
     assertEquals("JohnnyEnglish@maredit.de", mailMessage.getTo()[0]);
     assertEquals("substitute@maredit.de", mailMessage.getCc()[0]);
@@ -75,7 +75,7 @@ public class MailMessageComposerTest {
     standardVacation.setDays(13);
     standardVacation.setDaysLeft(11);
 
-    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(standardVacation);
+    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
     String actualBodyText = mailMessage.getText();
 
     String errorMessage = "Expected substring not found in body text: ";

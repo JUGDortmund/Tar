@@ -3,116 +3,103 @@
 
 <body th:fragment="vacationForm">
 
-<!-- Possible additional classes for vacation-form:
-edit-vacation, approve-vacation  -->
-<div class="panel panel-default module vacation-form">
-    <div class="panel-heading">Urlaubsformular</div>
-    <div class="panel-body">
-        <!-- Error-handling: show aler box, when validation fails  -->
-
-        <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
-                <ul>
-                    <li th:each="err : ${#fields.detailedErrors()}"
-                        th:text="${err.fieldName +' '+ err.message}">Input is incorrect
-                    </li>
-                </ul>
-            </div>
-
-            <div class="row">
-                <div th:class="${#fields.hasErrors('user')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
-                    <!-- In most Cases, you cannot select the employee -->
-
-                    <label for="employee">Mitarbeiter *</label>
-                    <select class="form-control" style="width: 100%;" name="employee" id="employee" th:field="*{user}">
-                        <option th:each="user : ${users}"
-                                th:value="${user.id}"
-                                th:text="${user.lastName +', '+ user.firstName}">
-                        </option>
-                    </select>
+    
+        <!-- Possible additional classes for vacation-form:
+        edit-vacation, approve-vacation  -->
+        <div class="panel panel-default module vacation-form">
+            <div class="panel-heading">Urlaubsformular</div>
+            <div class="panel-body">
+                <!-- Error-handling: show aler box, when validation fails  -->
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        <li>THerE's someThinG wronG</li>
+                    </ul>
                 </div>
-            </div>
 
-            <div class="row">
-                <div th:class="${#fields.hasErrors('from')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
-                    <label for="dateFrom">von *</label>
+                <form action="#" role="form">
 
-                    <div class="input-group date">
-                        <input type="text" class="form-control" name="dateFrom" id="dateFrom"
-                               th:field="*{from}"/>
-                        <span class="input-group-addon"><i
-                                class="glyphicon glyphicon-th"></i></span>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <!-- In most Cases, you cannot select the employee -->
+
+                            <label for="employee">Mitarbeiter *</label>
+                            <select class="form-control" style="width: 100%;" name="employee" id="employee" disabled="disabled">
+                                <option value="oba">Barboza, Omar</option>
+                            </select>
+                            <!-- <input class="form-control" type="text" name="employee" id="employee" value="Björn Prenger" /> -->
+                        </div>
+
                     </div>
-                </div>
 
-                <div th:class="${#fields.hasErrors('to')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
-                    <label for="dateTo">bis *</label>
+                    <div class="row">
+                        <div class="col-xs-6 form-group">
+                            <label for="dateFrom">von *</label>
+                            <div class="input-group date">
+                                <input type="text" class="form-control" name="dateFrom" id="dateFrom" />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        </div>
 
-                    <div class="input-group date">
-                        <input type="text" class="form-control" name="dateTo" id="dateTo"
-                               th:field="*{to}"/>
-                        <span class="input-group-addon"><i
-                                class="glyphicon glyphicon-th"></i></span>
+                        <div class="col-xs-6 form-group">
+                            <label for="dateTo">bis *</label>
+                            <div class="input-group date">
+                                <input type="text" class="form-control" name="dateTo" id="dateTo" />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div th:class="${#fields.hasErrors('days')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
-                    <label for="vacationDays">Anzahl Urlaubstage *</label>
-                    <input type="number" class="form-control" name="vacationDays" id="vacationDays" step="0.5"
-                           th:field="*{days}"/>
-                </div>
+                    <div class="row">
+                        <div class="col-xs-6 form-group">
+                            <label for="vacationDays">Anzahl Urlaubstage *</label>
+                            <input type="number" class="form-control" name="vacationDays" id="vacationDays" />
+                        </div>
 
-                <div th:class="${#fields.hasErrors('daysLeft')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
-                    <label for="daysLeft">Verbleibende Urlaubstage *</label>
-                    <input type="number" class="form-control" name="daysLeft" id="daysLeft" step="0.5"
-                           th:field="*{daysLeft}"/>
-                </div>
-            </div>
+                        <div class="col-xs-6 form-group">
+                            <label for="daysLeft">Verbleibende Urlaubstage *</label>
+                            <input type="number" class="form-control" name="daysLeft" id="daysLeft" />
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div th:class="${#fields.hasErrors('substitute')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
-                    <label for="replacement">Vertreter</label>
-                    <select class="form-control" style="width: 100%;" name="replacement" th:field="*{substitute}"
-                            id="replacement">
-                        <option value="" selected="selected">- Vertreter auswählen -</option>
-                        <option th:each="substitute : ${users}"
-                                th:value="${substitute.id}"
-                                th:text="${substitute.lastName +', '+ substitute.firstName}">
-                            Mustermann, Max
-                        </option>
-                    </select>
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <label for="replacement">Vertreter</label>
+                            <select class="form-control" style="width: 100%;" name="replacement" id="replacement">
+                                <option value="oba">Barboza, Omar</option>
+                                <option value="sku">Kubiak, Sven</option>
+                                <option value="ppl">Plewa, Pascal</option>
+                                <option value="bpr">Prenger, Björn</option>
+                                <option value="czi">Zillmann, Claudine</option>
+                            </select>
+                            <!-- <input class="form-control" type="text" name="replacement" id="replacement" /> -->
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div th:class="${#fields.hasErrors('manager')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
-                    <label for="superior">Zuständiger Vorgesetzter *</label>
-                    <select class="form-control" style="width: 100%;" name="superior" id="superior" th:field="*{manager}">
-                        <option value="" selected="selected">- Vorgesetzten auswählen -</option>
-                        <option th:each="manager : ${managers}"
-                                th:value="${manager.id}"
-                                th:text="${manager.lastName +', '+ manager.firstName}">
-                            Mustermann, Max
-                        </option>
-                    </select>
-                    <!-- <input class="form-control" type="text" name="superior" id="superior"/> -->
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group has-error">
+                            <label for="superior">Zuständiger Vorgesetzter *</label>
+                            <select class="form-control" style="width: 100%;" name="superior" id="superior">
+                                <option value="oba">Barboza, Omar</option>
+                                <option value="sku">Kubiak, Sven</option>
+                                <option value="ppl">Plewa, Pascal</option>
+                                <option value="bpr">Prenger, Björn</option>
+                                <option value="czi">Zillmann, Claudine</option>
+                            </select>
+                            <!-- <input class="form-control" type="text" name="superior" id="superior"/> -->
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    <label for="comment">Kommentar</label>
-                    <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
 
-            <button type="submit" class="btn btn-success pull-right">beantragen</button>
-        </form>
-    </div>
-    <!-- panel-body end -->
-</div>
+                            <label for="comment">Kommentar</label>
+                            <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
+                        </div>
+                    </div>
 
+                    <button type="submit" class="btn btn-success pull-right">beantragen</button>
+                </form>
+            </div> <!-- panel-body end -->
+        </div>
 </body>
 </html>
