@@ -25,11 +25,6 @@ spring:
     groupLookUpAttribute: member
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA
-  mail:
-    host: localhost
-    port: 2025
-    username: tar
-    password:
 ---
 ##### Test configuration #####
 spring:
@@ -60,11 +55,11 @@ spring:
     username: tar
     password:
 ---
-##### LDAP Test configuration #####
+##### Service test configuration #####
 spring:
   profiles: serviceTest
   thymeleaf:
-    cache: false
+    cache: false  
   data:
     mongodb:
       host: localhost
@@ -72,6 +67,11 @@ spring:
       database: tar
       embedded: true
       preload: true
+  mail:
+    host: localhost
+    port: 1600
+    username:
+    password:
   ldap:
     host: localhost
     port: 1600
@@ -83,11 +83,6 @@ spring:
     groupLookUpAttribute: member
     userBindDN: uid=$username,ou=users,o=maredit,dc=de
     disableSSL: true
-  mail:
-    host: localhost
-    port: 2025
-    username: tar
-    password:
 ---
 ##### Production configuration #####
 spring:

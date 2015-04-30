@@ -5,7 +5,8 @@ public enum State {
   WAITING_FOR_APPROVEMENT("pending"),
   APPROVED("approved"),
   REJECTED("rejected"),
-  ERROR("error");
+  ERROR("error"),
+  CANCELED("canceled");
   
   private final String value;
 
