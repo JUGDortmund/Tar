@@ -101,9 +101,14 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   public String vacation(@RequestParam(value = "id") String id,
       @RequestParam(value = "action", required = false) String action, Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
-    model.addAttribute("vacation", vacation);
-
+    LOG.debug("Vacation: {}", vacation.toString());
     if ("edit".equals(action)) {
+      model.addAttribute("vacation", vacation);
+      model.addAttribute("users", userRepository.findAll());
+      model.addAttribute("managers", getManagerList());
+      model.addAttribute("selectedUser",
+          this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
+
       return "application/vacationEdit";
     }
 
@@ -113,24 +118,39 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
-      bindingResult.getFieldErrors().forEach(
-          fieldError -> LOG.error("Field '{}' {}!", fieldError.getField(),
-              fieldError.getDefaultMessage()));
-      User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
-      List<User> users = this.userRepository.findAll();
-      List<Vacation> vacations =
-          this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(selectedUser,
-              State.CANCELED);
-      List<User> managerList = getManagerList();
-      List<Vacation> substitutes =
-          this.vacationRepository.findVacationBySubstitute(getConnectedUser());
-
-      setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes);
+      processErrorAndRefreshForm(vacation, bindingResult, model);
       return "application/index";
     } else {
       this.vacationRepository.save(vacation);
       this.mailService.sendMail(new VacationCreateMail(vacation));
+      return "redirect:/";
+    }
+  }
 
+  private void processErrorAndRefreshForm(Vacation vacation, BindingResult bindingResult,
+      Model model) {
+    bindingResult.getFieldErrors().forEach(
+        fieldError -> LOG.error("Field '{}' {}!", fieldError.getField(),
+            fieldError.getDefaultMessage()));
+    User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
+    List<User> users = this.userRepository.findAll();
+    List<Vacation> vacations =
+        this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(selectedUser,
+            State.CANCELED);
+    List<User> managerList = getManagerList();
+    List<Vacation> substitutes =
+        this.vacationRepository.findVacationBySubstitute(getConnectedUser());
+
+    setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes);
+  }
+
+  @RequestMapping(value = "/updateVacation", method = RequestMethod.POST)
+  public String updateVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
+    if (bindingResult.hasErrors()) {
+      processErrorAndRefreshForm(vacation, bindingResult, model);
+      return "application/index";
+    } else {
+      LOG.debug("Updating vacation[id= {}]: {}", vacation.getId(), vacation.toString());
       return "redirect:/";
     }
   }

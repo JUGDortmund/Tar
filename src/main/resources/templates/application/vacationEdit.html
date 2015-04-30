@@ -8,9 +8,9 @@ edit-vacation, approve-vacation  -->
 <div class="panel panel-default module vacation-form">
     <div class="panel-heading">Urlaubsformular</div>
     <div class="panel-body">
-        <!-- Error-handling: show aler box, when validation fails  -->
+        <!-- Error-handling: show alert box, when validation fails  -->
 
-        <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
+        <form th:action="@{/updateVacation}" th:object="${vacation}" method="post" role="form">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
                 <ul>
                     <li th:each="err : ${#fields.detailedErrors()}"
@@ -21,12 +21,12 @@ edit-vacation, approve-vacation  -->
 
             <div class="row">
                 <div th:class="${#fields.hasErrors('user')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
-                    <!-- In most Cases, you cannot select the employee -->
-
                     <label for="employee">Mitarbeiter *</label>
-                    <select class="form-control" style="width: 100%;" name="employee" id="employee" th:field="*{user}">
+<!-- 					<input type="text" class="form-control" disabled="disabled" th:value="${vacation.user.lastName +', '+ vacation.user.firstName}" th:field="*{user}" /> -->
+					<select class="form-control" style="width: 100%;" name="employee" id="employee" th:field="*{user}" th:readonly="true">
                         <option th:each="user : ${users}"
                                 th:value="${user.id}"
+                                th:selected="${vacation.user == user}"
                                 th:text="${user.lastName +', '+ user.firstName}">
                         </option>
                     </select>
@@ -76,9 +76,9 @@ edit-vacation, approve-vacation  -->
                     <label for="replacement">Vertreter</label>
                     <select class="form-control" style="width: 100%;" name="replacement" th:field="*{substitute}"
                             id="replacement">
-                        <option value="" selected="selected">- Vertreter auswählen -</option>
                         <option th:each="substitute : ${users}"
                                 th:value="${substitute.id}"
+                                th:selected="${vacation.substitute == substitute}"
                                 th:text="${substitute.lastName +', '+ substitute.firstName}">
                             Mustermann, Max
                         </option>
@@ -90,9 +90,9 @@ edit-vacation, approve-vacation  -->
                 <div th:class="${#fields.hasErrors('manager')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                     <label for="superior">Zuständiger Vorgesetzter *</label>
                     <select class="form-control" style="width: 100%;" name="superior" id="superior" th:field="*{manager}">
-                        <option value="" selected="selected">- Vorgesetzten auswählen -</option>
                         <option th:each="manager : ${managers}"
                                 th:value="${manager.id}"
+                                th:selected="${vacation.manager == manager}"
                                 th:text="${manager.lastName +', '+ manager.firstName}">
                             Mustermann, Max
                         </option>
@@ -108,7 +108,7 @@ edit-vacation, approve-vacation  -->
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-success">beantragen</button>
+            <button type="submit" class="btn btn-success">aktualisieren</button>
             <a th:href="@{/cancelVacation(id=${vacation.id})}" onclick="return confirm('Willst du den Urlaub wirklich stornieren?');" class="btn btn-danger pull-right">stornieren</a>
         </form>
     </div>
