@@ -1,11 +1,11 @@
 package de.maredit.tar;
 
-import de.maredit.tar.listeners.ContextListener;
-import de.maredit.tar.listeners.StartupListener;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import de.maredit.tar.listeners.ContextListener;
+import de.maredit.tar.listeners.StartupListener;
 
 @SpringBootApplication
 @EnableScheduling

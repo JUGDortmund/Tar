@@ -1,11 +1,11 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.User;
+import java.util.List;
+import java.util.Set;
 
 import com.unboundid.ldap.sdk.LDAPException;
 
-import java.util.List;
-import java.util.Set;
+import de.maredit.tar.models.User;
 
 /**
  * Created by pplewa on 23.04.15.

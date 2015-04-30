@@ -28,14 +28,17 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
       List<User> users = userRepository.findAll();
       for (User user : users) {
 
-
-        Vacation v1 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                                   user, user, 15, 5);
-        Vacation v2 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                                   user, user, 15, 5);
+        Vacation v1 =
+            new Vacation(user, LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(
+                1).plusDays(15), user, user, 15, 5);
+        Vacation v2 =
+            new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(20),
+                         user, user, 15, 5);
         v2.setState(State.REJECTED);
-        Vacation v3 = new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                                       user, user, 15, 5);
+        Vacation
+            v3 =
+            new Vacation(user, LocalDate.now().plusWeeks(2), LocalDate.now().plusWeeks(2).plusDays(15),
+                         user, user, 15, 5);
         v3.setState(State.APPROVED);
         vacationRepository.save(v1);
         vacationRepository.save(v2);

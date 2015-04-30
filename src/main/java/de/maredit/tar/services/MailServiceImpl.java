@@ -1,23 +1,22 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.Vacation;
+import javax.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
+import de.maredit.tar.services.mail.MailObject;
 
-@Configuration
+@Service
 @Profile({"prod", "serviceTest"})
 @EnableConfigurationProperties(MailProperties.class)
 public class MailServiceImpl implements MailService {
@@ -30,67 +29,42 @@ public class MailServiceImpl implements MailService {
   @Autowired
   private MailProperties mailProperties;
 
-  private JavaMailSender javaMailSender;
+  private JavaMailSender mailSender;
 
-  public void setJavaMailSender(JavaMailSender mailSender) {
-    this.javaMailSender = mailSender;
-  }
-
-  @Override
-  public void sendMail(SimpleMailMessage mailMessage) {
-    SimpleMailMessage msg = new SimpleMailMessage(mailMessage);
-    try {
-      this.javaMailSender.send(msg);
-    } catch (MailException ex) {
-      handleMailException(msg, ex);
-    }
-  }
-
-  private void handleMailException(SimpleMailMessage msg, MailException ex) {
-    if ("dev".equals(mailProperties.getProperties().get("environment"))) {
-      LOG.debug("Could not connect to SMTP-Server [host: {}, port:{}] in develop environment. "
-          + "Tried to send the following email:\n {}", mailProperties.getHost(),
-          mailProperties.getPort(), msg.toString());
-    } else {
-      LOG.error(ex.getMessage());
-    }
-  }
-
-  @Override
-  public void sendMail(MimeMessage mimeMessage) {
-    javaMailSender.send(mimeMessage);
-  }
-
-  @Bean
-  public JavaMailSender javaMailSender() {
-    if (javaMailSender == null) {
-      JavaMailSenderImpl jMailSender = new JavaMailSenderImpl();
-      if (mailProperties != null) {
-        jMailSender.setHost(mailProperties.getHost());
-        jMailSender.setPort(mailProperties.getPort());
-        jMailSender.setUsername(mailProperties.getUsername());
-        jMailSender.setPassword(mailProperties.getPassword());
-      } else {
-        LOG.error("mailProperties == null!. Apparently it has not been properly autowired!");
+  @PostConstruct
+  public void init() {
+    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+    if (mailProperties != null && mailProperties.getHost() != null) {
+      mailSender.setHost(mailProperties.getHost());
+      if (mailProperties.getPort() != null) {
+        mailSender.setPort(mailProperties.getPort());
       }
-      this.javaMailSender = jMailSender;
+      mailSender.setUsername(mailProperties.getUsername());
+      mailSender.setPassword(mailProperties.getPassword());
+      this.mailSender = mailSender;
     }
-    return javaMailSender;
   }
 
   @Override
-  public void sendSimpleMail(Vacation vacation) {
-    sendMail(mailMessageComposer.composeSimpleMailMessage(vacation));
+  public void sendSimpleMail(MailObject mail) {
+    SimpleMailMessage msg =
+        new SimpleMailMessage(mailMessageComposer.composeSimpleMailMessage(mail));
+    try {
+      this.mailSender.send(msg);
+    } catch (MailException ex) {
+      LOG.error("Error sending mail", ex);
+    }
   }
 
+
   @Override
-  public void sendMimeMail(Vacation vacation) {
-    JavaMailSenderImpl javaMailSender = null;
-    if (this.javaMailSender instanceof JavaMailSenderImpl) {
-      javaMailSender = (JavaMailSenderImpl) this.javaMailSender;
+  public void sendMail(MailObject mail) {
+    try {
+      mailSender.send(mailMessageComposer.composeMimeMailMessage(mail,
+          mailSender.createMimeMessage()));
+    } catch (MailException ex) {
+      LOG.error("Error sending mail", ex);
     }
-    sendMail(mailMessageComposer.composeMimeMailMessage(vacation,
-        javaMailSender.createMimeMessage()));
   }
 
 }
