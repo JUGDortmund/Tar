@@ -45,5 +45,4 @@ public interface LdapService {
   boolean authenticateUser(String uid, String password) throws LDAPException;
 
   List<String> getUserGroups(String uid) throws LDAPException;
-
 }

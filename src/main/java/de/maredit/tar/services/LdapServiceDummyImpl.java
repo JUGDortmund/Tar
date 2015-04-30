@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.unboundid.ldap.sdk.LDAPException;
 
 import de.maredit.tar.models.User;
-import de.maredit.tar.repositories.UserRepository;
 
 @Service
 @Profile({"test"})
@@ -24,10 +22,9 @@ public class LdapServiceDummyImpl implements LdapService {
     return users;
   }
 
-  @Autowired
-  UserRepository userRepository;
-
   private List<User> users;
+  
+  private Set<String> managers;
 
   private Map<String, String> authenticate;
 
@@ -66,14 +63,15 @@ public class LdapServiceDummyImpl implements LdapService {
   @Override
   public List<User> getLdapUserList() throws LDAPException {
     final List<User> users = getUsers();
-    users.forEach(user -> userRepository.save(user));
     return users;
   }
 
   @Override
   public Set<String> getLdapManagerList() throws LDAPException {
-    return null;
+    return managers;
   }
 
-
+  public void setManagers(Set<String> managers) {
+    this.managers = managers;
+  }
 }
