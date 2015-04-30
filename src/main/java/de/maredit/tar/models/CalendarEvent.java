@@ -1,8 +1,5 @@
 package de.maredit.tar.models;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -24,6 +21,7 @@ public class CalendarEvent {
   private String substituteLastName;
 
   private String state;
+  private Boolean allDay;
 
   public CalendarEvent(Vacation vacation) {
     this.setStart(vacation.getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -37,6 +35,7 @@ public class CalendarEvent {
       this.setSubstituteFirstName(vacation.getSubstitute().getFirstName());
       this.setSubstituteLastName(vacation.getSubstitute().getLastName());
     }
+    this.allDay = true;
   }
 
   public String getStart() {
@@ -109,5 +108,13 @@ public class CalendarEvent {
 
   public void setState(String state) {
     this.state = state;
+  }
+
+  public Boolean isAllDay() {
+    return allDay;
+  }
+
+  public void setAllDay(Boolean allDay) {
+    this.allDay = allDay;
   }
 }
