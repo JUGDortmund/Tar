@@ -144,7 +144,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<User> managerList = getManagerList();
     List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
-    return "application/index";
+    
+    return "redirect:/";
   }
 
   private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,
