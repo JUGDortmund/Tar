@@ -1,14 +1,14 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
 
 public class VacationCreateMail implements MailObject {
 

@@ -7,16 +7,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VacationCanceledMail implements MailObject {
+public class SubstitutionRejectedMail implements MailObject {
 
-  private static final String MAIL_TEMPLATE = "mail/vacationCanceled";
-  private static final String MAIL_SUBJECT = "Urlaub storniert";
+  private static final String MAIL_TEMPLATE = "mail/substitutionRejected";
+  private static final String MAIL_SUBJECT = "Vertretung abgelehnt";
 
   private Map<String, Object> values = new HashMap<>();
   private String[] ccRecipients;
   private String toRecipient;
 
-  public VacationCanceledMail(Vacation vacation) {
+  public SubstitutionRejectedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
     values.put("fromDate", vacation.getFrom());
     values.put("toDate", vacation.getTo());
@@ -65,7 +65,7 @@ public class VacationCanceledMail implements MailObject {
 
   @Override
   public String toString() {
-    return "VacationCanceledMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
+    return "SubstitutionRejectedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
            + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
            + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
            + ", getToRecipient()=" + getToRecipient() + "]";

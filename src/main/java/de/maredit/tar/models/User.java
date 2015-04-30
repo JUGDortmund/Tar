@@ -1,8 +1,8 @@
 package de.maredit.tar.models;
 
-import org.springframework.data.annotation.Id;
-
 import java.util.Objects;
+
+import org.springframework.data.annotation.Id;
 
 public class User {
 

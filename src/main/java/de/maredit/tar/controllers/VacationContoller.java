@@ -1,18 +1,24 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.services.mail.VacationCanceledMail;
+import com.unboundid.ldap.sdk.LDAPException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import de.maredit.tar.services.mail.VacationCreateMail;
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
-import org.springframework.security.access.annotation.Secured;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import de.maredit.tar.models.validators.VacationValidator;
+import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.LdapService;
+import de.maredit.tar.services.MailService;
+import de.maredit.tar.services.mail.SubstitutionApprovedMail;
+import de.maredit.tar.services.mail.SubstitutionRejectedMail;
+import de.maredit.tar.services.mail.VacationCanceledMail;
+import de.maredit.tar.services.mail.VacationCreateMail;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,15 +31,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.unboundid.ldap.sdk.LDAPException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.models.validators.VacationValidator;
-import de.maredit.tar.repositories.UserRepository;
-import de.maredit.tar.repositories.VacationRepository;
-import de.maredit.tar.services.LdapService;
-import de.maredit.tar.services.MailService;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * Created by czillmann on 22.04.15.
@@ -41,7 +44,11 @@ import de.maredit.tar.services.MailService;
 @Controller
 public class VacationContoller extends WebMvcConfigurerAdapter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(VacationContoller.class);
+  public VacationContoller() {
+    super();
+  }
+
+  private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
 
   @Autowired
   private VacationRepository vacationRepository;
@@ -67,19 +74,38 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<User> users = this.userRepository.findAll();
     List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
     List<User> managerList = getManagerList();
-    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
+    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstituteAndState(getConnectedUser(), State.REQUESTED_SUBSTITUTE);
     
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
     return "application/index";
+  }
+  
+  @RequestMapping("/substitution")
+  public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
+    Vacation vacation = this.vacationRepository.findOne(id);
+    
+    if (approve) {
+      vacation.setState(State.APPROVED);
+      this.mailService.sendMail(new SubstitutionApprovedMail(vacation));
+    } else {
+      vacation.setState(State.REJECTED);
+      this.mailService.sendMail(new SubstitutionRejectedMail(vacation));
+    }
+    
+    this.vacationRepository.save(vacation);
+    
+    return "redirect:/";
   }
   
   @RequestMapping("/vacation")
   public String vacation(@RequestParam(value="id") String id,@RequestParam(value="action", required=false) String action, Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
     model.addAttribute("vacation", vacation);
+    
     if ("edit".equals(action)) {
       return "application/vacationEdit";
     }
+    
     return "application/vacation";
   }
 
@@ -122,7 +148,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<User> managerList = getManagerList();
     List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(getConnectedUser());
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
-    return "application/index";
+    
+    return "redirect:/";
   }
 
   private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,

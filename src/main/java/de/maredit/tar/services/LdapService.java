@@ -1,8 +1,8 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.User;
-
 import com.unboundid.ldap.sdk.LDAPException;
+
+import de.maredit.tar.models.User;
 
 import java.util.List;
 import java.util.Set;
@@ -23,24 +23,16 @@ public interface LdapService {
 
   /**
    * get user list wth user details from LDAP
-   * @return
-   * @throws LDAPException
    */
   List<User> getLdapUserList() throws LDAPException;
 
   /**
    * Get the list uf usernames for team leader
-   * @return
-   * @throws LDAPException
    */
   Set<String> getLdapManagerList() throws LDAPException;
 
   /**
    * Authenticate user using configured ldap
-   * @param uid
-   * @param password
-   * @return
-   * @throws LDAPException
    */
   boolean authenticateUser(String uid, String password) throws LDAPException;
 

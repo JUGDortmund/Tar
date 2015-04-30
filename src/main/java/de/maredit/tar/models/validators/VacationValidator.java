@@ -30,8 +30,8 @@ public class VacationValidator implements Validator {
     if (vacation.getTo() != null && vacation.getTo().isBefore(LocalDate.now())) {
       errors.rejectValue("to", "date.in.past", "Datum liegt in der Vergangenheit");
     }
-//    if (vacation.getSubstitute() != null && vacation.getUser().getUidNumber().equals(vacation.getSubstitute().getUidNumber())){
-//      errors.rejectValue("substitute", "substitute.is.user", "Vertretung darf nicht Antragssteller sein");
-//    }
+    if (vacation.getSubstitute() != null && vacation.getUser().getUidNumber().equals(vacation.getSubstitute().getUidNumber())){
+      errors.rejectValue("substitute", "substitute.is.user", "Vertretung darf nicht Antragssteller sein");
+    }
   }
 }

@@ -1,10 +1,6 @@
 package de.maredit.tar.configs;
 
-import de.maredit.tar.models.converters.DateToLocalDateConverter;
-import de.maredit.tar.models.converters.DateToLocalDateTimeConverter;
-import de.maredit.tar.models.converters.LocalDateTimeToDateConverter;
-import de.maredit.tar.models.converters.LocalDateToDateConverter;
-import de.maredit.tar.properties.MongoProperties;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +14,11 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
-import java.util.Arrays;
+import de.maredit.tar.models.converters.DateToLocalDateConverter;
+import de.maredit.tar.models.converters.DateToLocalDateTimeConverter;
+import de.maredit.tar.models.converters.LocalDateTimeToDateConverter;
+import de.maredit.tar.models.converters.LocalDateToDateConverter;
+import de.maredit.tar.properties.MongoProperties;
 
 /**
  * Created by czillmann on 24.04.15.
