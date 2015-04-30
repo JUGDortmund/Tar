@@ -55,7 +55,13 @@
   var refreshVacationForm;
 
   refreshVacationForm = function(data) {
-    var $myForm;
+    var $myForm, clientWidth;
+    clientWidth = document.documentElement.clientWidth;
+    if (clientWidth < 770) {
+      $('html, body').animate({
+        scrollTop: ($('.vacation-form').offset().top)
+      }, 'slow');
+    }
     $myForm = $('#vacation-form-panel');
     $myForm.html(data).hide().fadeIn(800);
     $('.panel-default').matchHeight();
@@ -80,8 +86,7 @@
         url: $(this).attr('href'),
         dataType: "html",
         error: function(jqXHR, textStatus, errorThrown) {
-          console.log(textStatus);
-          return refreshVacationForm('<div><h1>TEST</h1> <div class="input-group date"> <input type="text" class="form-control" name="dateFrom" id="dateFrom" /> <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span> </div><div class="col-xs-12 form-group has-error"> <label for="superior">Zuständiger Vorgesetzter *</label> <select class="form-control" style="width: 100%;" name="superior" id="superior"> <option value="oba">Barboza, Omar</option> <option value="sku">Kubiak, Sven</option> <option value="ppl">Plewa, Pascal</option> <option value="bpr">Prenger, Björn</option> <option value="czi">Zillmann, Claudine</option> </select> </div></div>');
+          return console.log(textStatus);
         },
         success: function(data) {
           return refreshVacationForm(data);
