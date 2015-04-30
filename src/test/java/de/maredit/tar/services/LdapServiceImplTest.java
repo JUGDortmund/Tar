@@ -90,9 +90,9 @@ public class LdapServiceImplTest {
     Assert.assertEquals(expectedGroups2, supervisorGroups);
   }
   
-//  @Test
+  @Test
   public void testGetLdapManagers() throws LDAPException {
-    Set<String> users = ldapService.getLdapManagerList();
+    Set<String> users = ldapService.getLdapSupervisorList();
     assertEquals(1, users.size());
   }
 

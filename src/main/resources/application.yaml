@@ -20,7 +20,7 @@ spring:
     userLookUpDN: ou=users,o=maredit,dc=de
     userBindDN: uid=$username,ou=users,o=maredit,dc=de
     applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
-    applicationTeamleaderDN: cn=teamleiter,cn=teams,ou=groups,o=maredit,dc=de
+    applicationSupervisorDN: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
     groupLookUpDN: ou=services,o=maredit,dc=de
     groupLookUpAttribute: member
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
@@ -61,7 +61,7 @@ spring:
     port: 1600
     userLookUpDN: ou=users,o=maredit,dc=de
     applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
-    applicationTeamleaderDN: cn=teamleiter,cn=teams,ou=groups,o=maredit,dc=de
+    applicationSupervisorDN: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: read
     groupLookUpDN: ou=services,o=maredit,dc=de
@@ -84,7 +84,7 @@ spring:
     port: 636
     userLookUpDN: ou=users,o=maredit,dc=de
     applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
-    applicationTeamleaderDN: cn=teamleiter,cn=teams,ou=groups,o=maredit,dc=de
+    applicationSupervisorDN: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
     readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
     readPassword: 7Ey8vHzPPZrdWA
     groupLookUpDN: ou=services,o=maredit,dc=de

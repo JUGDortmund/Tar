@@ -94,7 +94,7 @@ public class LdapServiceImpl implements LdapService {
   }
 
   @Override
-  public Set<String> getLdapManagerList() throws LDAPException {
+  public Set<String> getLdapSupervisorList() throws LDAPException {
     Set<String> manager = new HashSet<>();
     LDAPConnection ldapConnection = connectionPool.getConnection();
     try {
@@ -102,9 +102,9 @@ public class LdapServiceImpl implements LdapService {
       // get value list with userDN
       SearchResultEntry
           searchResultEntry =
-          ldapConnection.getEntry(ldapProperties.getApplicationTeamleaderDN());
+          ldapConnection.getEntry(ldapProperties.getApplicationSupervisorDN());
 
-      String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBERUID);
+      String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBER);
 
       Collections.addAll(manager, memberUids);
     } catch (LDAPException e) {
