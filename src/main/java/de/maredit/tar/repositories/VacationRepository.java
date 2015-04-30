@@ -2,6 +2,7 @@ package de.maredit.tar.repositories;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.State;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -12,5 +13,7 @@ public interface VacationRepository extends MongoRepository<Vacation, String> {
 
   public List<Vacation> findVacationByUserOrderByFromAsc(User user);
 
-  public List<Vacation> findVacationByFromBetweenOrToBetween(LocalDate startFrom, LocalDate endFrom, LocalDate startTo, LocalDate endTo);
+  public List<Vacation> findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(
+      LocalDate startFrom, LocalDate endFrom, List<State> states, LocalDate startTo,
+      LocalDate endTo, List<State> states1);
 }

@@ -2,6 +2,7 @@ package de.maredit.tar.controllers;
 
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.VacationRepository;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -44,14 +46,34 @@ public class CalendarController {
   @RequestMapping(value = "/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public List<CalendarEvent> getCalendarElements(@RequestParam(value = "start") String start,
-                                                 @RequestParam(value = "end") String end) {
+                                                 @RequestParam(value = "end") String end,
+                                                 @RequestParam(value = "showApproved", defaultValue = "true") Boolean showApproved,
+                                                 @RequestParam(value = "showPending", defaultValue = "false") Boolean showPending,
+                                                 @RequestParam(value = "showCanceled", defaultValue = "false") Boolean showCanceled,
+                                                 @RequestParam(value = "showRejected", defaultValue = "false") Boolean showRejected) {
     LocalDate startDate = LocalDate.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     LocalDate endDate = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     LOG.info("Selecting vacation data from " + startDate + " to " + endDate);
+
+    List<State> states = new ArrayList<State>();
+    if (showApproved) {
+      states.add(State.APPROVED);
+    }
+    if (showPending) {
+      states.add(State.WAITING_FOR_APPROVEMENT);
+      states.add(State.REQUESTED_SUBSTITUTE);
+    }
+    if (showCanceled) {
+      LOG.info("no canceled state right now..");
+    }
+    if (showRejected) {
+      states.add(State.REJECTED);
+    }
+
     List<Vacation>
         vacations =
         this.vacationRepository
-            .findVacationByFromBetweenOrToBetween(startDate, endDate, startDate, endDate);
+            .findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(startDate, endDate, states, startDate, endDate, states);
 
     List<CalendarEvent>
         calendarEvents =
@@ -60,7 +82,7 @@ public class CalendarController {
           LOG.info(
               "added CalendarEvent '" + calendarEvent.getTitle() + "' [start: " + calendarEvent
                   .getStart() + " - end: "
-              + calendarEvent.getEnd() + "]");
+              + calendarEvent.getEnd() + "] - "+calendarEvent.getState());
           return calendarEvent;
         }).collect(toList());
 
