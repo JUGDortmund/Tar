@@ -33,7 +33,7 @@
       $vacationDetail.find('.user').text( calEvent.userFirstName + ' ' + calEvent.userLastName )
       $vacationDetail.find('.state').text( calEvent.state );
       $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.end.format('DD.MM.YYYY') )
-      $vacationDetail.find('.substitue').text( calEvent.substituteFirstName + ' ' + calEvent.substituteLastName )
+      $vacationDetail.find('.substitute').text( calEvent.substituteFirstName + ' ' + calEvent.substituteLastName )
 
       $vacationDetail.show()
 
