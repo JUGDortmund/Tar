@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 public class ContextListener implements ApplicationListener<ContextRefreshedEvent> {
@@ -20,9 +21,12 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
     UserSyncTask userSyncTask = event.getApplicationContext().getBean(UserSyncTask.class);
     userSyncTask.syncLdapUser();
     
-    if (event.getApplicationContext().getEnvironment().getProperty("spring.data.mongodb.preload", Boolean.class)) {
+    if (event.getApplicationContext().getEnvironment()
+        .getProperty("spring.data.mongodb.preload", Boolean.class)) {
       UserRepository userRepository = event.getApplicationContext().getBean(UserRepository.class);
-      VacationRepository vacationRepository = event.getApplicationContext().getBean(VacationRepository.class);
+      VacationRepository
+          vacationRepository =
+          event.getApplicationContext().getBean(VacationRepository.class);
       
       List<User> users = userRepository.findAll();
       for (User user : users) {
