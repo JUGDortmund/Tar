@@ -1,5 +1,6 @@
 package de.maredit.tar.controllers;
 
+import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
@@ -12,7 +13,7 @@ import de.maredit.tar.services.mail.SubstitutionApprovedMail;
 import de.maredit.tar.services.mail.SubstitutionRejectedMail;
 import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
-
+import de.maredit.tar.services.mail.VacationModifiedMail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.unboundid.ldap.sdk.LDAPException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +107,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       model.addAttribute("managers", getManagerList());
       model.addAttribute("selectedUser",
           this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
+      model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
 
       return "application/vacationEdit";
     }
@@ -121,8 +121,12 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       processErrorAndRefreshForm(vacation, bindingResult, model);
       return "application/index";
     } else {
+      boolean newVacation = vacation.getId() == null;
+      if (!newVacation) {
+        vacation.setState(State.WAITING_FOR_APPROVEMENT);
+      }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(new VacationCreateMail(vacation));
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));
       return "redirect:/";
     }
   }
@@ -142,17 +146,6 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
         this.vacationRepository.findVacationBySubstitute(getConnectedUser());
 
     setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes);
-  }
-
-  @RequestMapping(value = "/updateVacation", method = RequestMethod.POST)
-  public String updateVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
-    if (bindingResult.hasErrors()) {
-      processErrorAndRefreshForm(vacation, bindingResult, model);
-      return "application/index";
-    } else {
-      LOG.debug("Updating vacation[id= {}]: {}", vacation.getId(), vacation.toString());
-      return "redirect:/";
-    }
   }
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
