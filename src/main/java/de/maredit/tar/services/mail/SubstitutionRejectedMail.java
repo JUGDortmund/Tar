@@ -1,20 +1,21 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-
 public class SubstitutionRejectedMail implements MailObject {
+
   private static final String MAIL_TEMPLATE = "mail/substitutionRejected";
   private static final String MAIL_SUBJECT = "Vertretung abgelehnt";
-  
+
   private Map<String, Object> values = new HashMap<>();
   private String[] ccRecipients;
   private String toRecipient;
-  
+
   public SubstitutionRejectedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
     values.put("fromDate", vacation.getFrom());
@@ -31,7 +32,7 @@ public class SubstitutionRejectedMail implements MailObject {
     }
     return mail;
   }
-  
+
   @Override
   public String getTemplate() {
     return MAIL_TEMPLATE;
@@ -61,12 +62,12 @@ public class SubstitutionRejectedMail implements MailObject {
   public String getToRecipient() {
     return toRecipient;
   }
-  
+
   @Override
   public String toString() {
     return "SubstitutionRejectedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-        + ", getToRecipient()=" + getToRecipient() + "]";
+           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+           + ", getToRecipient()=" + getToRecipient() + "]";
   }
 }

@@ -1,20 +1,21 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-
 public class SubstitutionApprovedMail implements MailObject {
+
   private static final String MAIL_TEMPLATE = "mail/substitutionApproved";
   private static final String MAIL_SUBJECT = "Vertretung akzeptiert";
-  
+
   private Map<String, Object> values = new HashMap<>();
   private String[] ccRecipients;
   private String toRecipient;
-  
+
   public SubstitutionApprovedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
     values.put("fromDate", vacation.getFrom());
@@ -31,42 +32,42 @@ public class SubstitutionApprovedMail implements MailObject {
     }
     return mail;
   }
-  
+
   @Override
   public String getTemplate() {
     return MAIL_TEMPLATE;
   }
-  
+
   @Override
   public String getHtmlTemplate() {
     return MAIL_TEMPLATE;
   }
-  
+
   @Override
   public Map<String, Object> getValues() {
     return values;
   }
-  
+
   @Override
   public String[] getCCRecipients() {
     return ccRecipients;
   }
-  
+
   @Override
   public String getSubject() {
     return MAIL_SUBJECT;
   }
-  
+
   @Override
   public String getToRecipient() {
     return toRecipient;
   }
-  
+
   @Override
   public String toString() {
     return "SubstitutionApprovedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-        + ", getToRecipient()=" + getToRecipient() + "]";
+           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+           + ", getToRecipient()=" + getToRecipient() + "]";
   }
 }

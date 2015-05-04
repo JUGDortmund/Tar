@@ -1,11 +1,11 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
 
 public class VacationCanceledMail implements MailObject {
 
@@ -66,8 +66,8 @@ public class VacationCanceledMail implements MailObject {
   @Override
   public String toString() {
     return "VacationCanceledMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-        + ", getToRecipient()=" + getToRecipient() + "]";
+           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+           + ", getToRecipient()=" + getToRecipient() + "]";
   }
 }
