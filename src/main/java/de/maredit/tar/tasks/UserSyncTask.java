@@ -29,6 +29,7 @@ public class UserSyncTask {
   @Scheduled(cron = "0 */1 * * * ?")
   public void syncLdapUser() {
     try {
+      LOG.debug("Syncing users");
       List<User> ldapUserList = ldapService.getLdapUserList();
 
       List<User> editedUser = new ArrayList<>();
@@ -70,7 +71,7 @@ public class UserSyncTask {
     user.setUsername(resultEntry.getUidNumber());
     user.setFirstName(resultEntry.getFirstName());
     user.setLastName(resultEntry.getLastName());
-    LOG.debug("User updated: {}", user.toString());
+    LOG.trace("User updated: {}", user.toString());
   }
 
 }
