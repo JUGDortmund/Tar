@@ -67,11 +67,10 @@ public class UserSyncTask {
   private void updateUser(User resultEntry, User user) {
     // set name changes here
     user.setMail(resultEntry.getMail());
-    user.setUsername(resultEntry.getUidNumber());
+    user.setUsername(resultEntry.getUsername());
     user.setFirstName(resultEntry.getFirstName());
     user.setLastName(resultEntry.getLastName());
     LOG.debug("User updated. username: {} / uidNumber: {}", user.getUsername(),
               user.getUidNumber());
   }
-
 }
