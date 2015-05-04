@@ -7,7 +7,7 @@
             <div class="list-group">
 	                <a th:each="substitute : ${substitutes}" class="list-group-item" th:href="@{/vacation(id=${substitute.id})}">
 				        <span th:text="${substitute.from + ' - '  + substitute.to}"></span>
-                    	<strong th:text="${substitute.user.firstName + ' - ' + substitute.user.lastName}"></strong> 
+                    	<strong th:text="${substitute.user.firstName + ' ' + substitute.user.lastName}"></strong> 
                     	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 				   </a>
             </div>
