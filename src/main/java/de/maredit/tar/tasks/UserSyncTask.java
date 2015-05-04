@@ -1,24 +1,24 @@
 package de.maredit.tar.tasks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import com.unboundid.ldap.sdk.LDAPException;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.LdapService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class UserSyncTask {
 
-  private static final Logger LOG = LoggerFactory.getLogger(UserSyncTask.class);
+  private static final Logger LOG = LogManager.getLogger(UserSyncTask.class);
 
   @Autowired
   private LdapService ldapService;
@@ -70,7 +70,8 @@ public class UserSyncTask {
     user.setUsername(resultEntry.getUidNumber());
     user.setFirstName(resultEntry.getFirstName());
     user.setLastName(resultEntry.getLastName());
-    LOG.debug("User updated. username: %s/uidNumber: %s", user.getUsername(), user.getUidNumber());
+    LOG.debug("User updated. username: {} / uidNumber: {}", user.getUsername(),
+              user.getUidNumber());
   }
 
 }
