@@ -1,14 +1,16 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
 
 public class VacationCreateMail implements MailObject {
 
@@ -20,22 +22,24 @@ public class VacationCreateMail implements MailObject {
   private String toRecipient;
 
   public VacationCreateMail(Vacation vacation) {
-    values.put("employee", vacation.getUser().getFirstName());
-    values.put("manager", vacation.getManager().getFullname());
+    values.put("employee", vacation.getUser().getFullname());
+    values.put("manager", vacation.getManager().getFirstName());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
-    values.put("fromDate", vacation.getFrom());
-    values.put("toDate", vacation.getTo());
+    values.put("fromDate", vacation.getFrom().format(DateTimeFormatter.ofLocalizedDate(
+        FormatStyle.MEDIUM)));
+    values.put("toDate",
+               vacation.getTo().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    ccRecipients = getRecipients(vacation);
-    toRecipient = retrieveMail(vacation.getUser());
+    ccRecipients = getCCRecipients(vacation);
+    toRecipient = retrieveMail(vacation.getManager());
   }
 
-  private String[] getRecipients(Vacation vacation) {
+  private String[] getCCRecipients(Vacation vacation) {
     List<String> recipients = new ArrayList<>();
     recipients.add(retrieveMail(vacation.getSubstitute()));
-    recipients.add(retrieveMail(vacation.getManager()));
+    recipients.add(retrieveMail(vacation.getUser()));
 
     List<String> filteredList =
         recipients.stream().filter(e -> !e.isEmpty()).collect(Collectors.toList());
@@ -84,9 +88,9 @@ public class VacationCreateMail implements MailObject {
   @Override
   public String toString() {
     return "VacationCreateMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-        + ", getToRecipient()=" + getToRecipient() + "]";
+           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+           + ", getToRecipient()=" + getToRecipient() + "]";
   }
 
 }
