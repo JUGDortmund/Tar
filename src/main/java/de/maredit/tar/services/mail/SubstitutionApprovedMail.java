@@ -20,13 +20,16 @@ public class SubstitutionApprovedMail implements MailObject {
 
   public SubstitutionApprovedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
+    values.put("manager", vacation.getManager().getFullname());
+    values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
+        .getFullname());
     values.put("fromDate", vacation.getFrom());
     values.put("toDate", vacation.getTo());
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     toRecipient = retrieveMail(vacation.getUser());
 
-    if(vacation.getSubstitute() != null) {
+    if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
     }
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getManager()));
