@@ -6,7 +6,7 @@
     <div class="panel-body task-list">
         <div class="list-group">
             <h3 class="list-group-item">Vertretungen</h3>
-            <a th:each="substitute : ${substitutesForApproval}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='approve')}">
+            <a th:each="substitute : ${substitutesForApproval}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='substitute')}">
                 <span th:text="${substitute.from + ' - '  + substitute.to}"></span>
                 <strong th:text="${substitute.user.firstName + ' - ' + substitute.user.lastName}"></strong>
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>

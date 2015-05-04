@@ -81,41 +81,28 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
         getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
     
-    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes, substitutesForApproval, approvals);
+    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
+                               substitutesForApproval, approvals);
     return "application/index";
+  }
+
+  @RequestMapping("/substitution")
+  public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
+    Vacation vacation = this.vacationRepository.findOne(id);
+    vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
+
+    this.vacationRepository.save(vacation);
+
+    return "redirect:/";
   }
   
   @RequestMapping("/approval")
-  public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
+  public String approval(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
     Vacation vacation = this.vacationRepository.findOne(id);
-    State newState = vacation.getState();
-    MailObject mailApprove = null;
-    MailObject mailReject = null;
-    
-    switch(vacation.getState()){
-      case REQUESTED_SUBSTITUTE:
-        newState = State.WAITING_FOR_APPROVEMENT;
-        mailApprove = new SubstitutionApprovedMail(vacation);
-        mailReject = new SubstitutionRejectedMail(vacation);
-        break;
-      case WAITING_FOR_APPROVEMENT:
-        newState = State.APPROVED;
-        mailApprove = new VacationApprovedMail(vacation);
-        mailReject = new VacationDeclinedMail(vacation);
-        break;
-      default: break;
-    }
+    vacation.setState((approve) ? State.APPROVED : State.REJECTED);
 
-    if (approve) {
-      vacation.setState(newState);
-      this.mailService.sendMail(mailApprove);
-    } else {
-      vacation.setState(State.REJECTED);
-      this.mailService.sendMail(mailReject);
-    }
-    
     this.vacationRepository.save(vacation);
-    
+
     return "redirect:/";
   }
   
@@ -129,6 +116,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
         return "application/vacationEdit";
       case "approve":
         return "application/vacationApprove";
+      case "substitute":
+        return "application/vacationSubstitute";
       case "view":
         return "application/vacationView";
       default:

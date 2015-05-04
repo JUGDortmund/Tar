@@ -55,8 +55,8 @@
                     <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
                 </div>
             </div>
-             <a th:href="@{/approval(id=${vacation.id}, approve=false)}" onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');" class="btn btn-danger">ablehnen</a>
-             <a th:href="@{/approval(id=${vacation.id}, approve=true)}" onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');" class="btn btn-success pull-right">annehmen</a>
+             <a th:href="@{/substitute(id=${vacation.id}, approve=false)}" onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');" class="btn btn-danger">ablehnen</a>
+             <a th:href="@{/substitute(id=${vacation.id}, approve=true)}" onclick="return confirm('Willst du die Vertretung wirklich annehmen?');" class="btn btn-success pull-right">annehmen</a>
     </div>
 </div>
 </body>
