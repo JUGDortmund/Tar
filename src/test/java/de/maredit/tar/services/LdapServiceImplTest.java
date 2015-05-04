@@ -94,6 +94,7 @@ public class LdapServiceImplTest {
   public void testGetLdapManagers() throws LDAPException {
     Set<String> users = ldapService.getLdapSupervisorList();
     assertEquals(1, users.size());
+    Assert.assertTrue(users.contains("supervisor"));
   }
 
 }

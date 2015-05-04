@@ -1,22 +1,6 @@
 package de.maredit.tar.services;
 
 
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -30,15 +14,32 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.properties.LdapProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 @Service
 @Profile({"prod", "dev", "serviceTest"})
 public class LdapServiceImpl implements LdapService {
 
   public static final int NUM_CONNECTIONS = 10;
+  
+  private static final Pattern UID_PATTERN = Pattern.compile("uid=(\\w+)");
 
   @Autowired
   private LdapProperties ldapProperties;
@@ -105,8 +106,13 @@ public class LdapServiceImpl implements LdapService {
           ldapConnection.getEntry(ldapProperties.getApplicationSupervisorDN());
 
       String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBER);
-
-      Collections.addAll(manager, memberUids);
+      
+      for (String member : memberUids) {
+        Matcher m = UID_PATTERN.matcher(member);
+        if (m.find()) {
+          manager.add(m.group(1));
+        }
+      }
     } catch (LDAPException e) {
       LOG.error("Error reading user list from LDAP", e);
       connectionPool.releaseConnectionAfterException(ldapConnection, e);
