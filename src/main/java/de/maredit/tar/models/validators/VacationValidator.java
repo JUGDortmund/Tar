@@ -1,11 +1,11 @@
 package de.maredit.tar.models.validators;
 
-import java.time.LocalDate;
+import de.maredit.tar.models.Vacation;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import de.maredit.tar.models.Vacation;
+import java.time.LocalDate;
 
 /**
  * Created by czillmann on 22.04.15.
@@ -30,8 +30,8 @@ public class VacationValidator implements Validator {
     if (vacation.getTo() != null && vacation.getTo().isBefore(LocalDate.now())) {
       errors.rejectValue("to", "date.in.past", "Datum liegt in der Vergangenheit");
     }
-//    if (vacation.getSubstitute() != null && vacation.getUser().getUidNumber().equals(vacation.getSubstitute().getUidNumber())){
-//      errors.rejectValue("substitute", "substitute.is.user", "Vertretung darf nicht Antragssteller sein");
-//    }
+    if (vacation.getSubstitute() != null && vacation.getUser().getUidNumber().equals(vacation.getSubstitute().getUidNumber())){
+      errors.rejectValue("substitute", "substitute.is.user", "Vertretung darf nicht Antragssteller sein");
+    }
   }
 }
