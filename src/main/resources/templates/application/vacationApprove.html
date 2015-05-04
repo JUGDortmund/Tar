@@ -3,49 +3,49 @@
 <body>
 <div class="panel panel-default module vacation-form approve-vacation">
     <div class="panel-heading">Urlaubsformular</div>
-    <div class="panel-body">
+    <div class="panel-body" th:object="${vacation}">
             <div class="row">
                 <div class="col-xs-12 form-group">
                     <label for="employee">Mitarbeiter</label>
-					<input type="text" class="form-control" th:value="${vacation.user.firstName + ' ' + vacation.user.lastName}" disabled="disabled"/>
+					<input type="text" class="form-control" th:value="*{user.firstName + ' ' + user.lastName}" disabled="disabled"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-6 form-group">
                     <label for="dateFrom">von</label>
-                    <input type="text" class="form-control" name="dateFrom" id="dateFrom" th:value="${vacation.from}" disabled="disabled"/>
+                    <input type="text" class="form-control" name="dateFrom" id="dateFrom" th:value="*{from}" disabled="disabled"/>
                 </div>
 
                 <div class="col-xs-6 form-group">
                     <label for="dateTo">bis</label>
-                    <input type="text" class="form-control" name="dateTo" id="dateTo" th:value="${vacation.to}" disabled="disabled"/>
+                    <input type="text" class="form-control" name="dateTo" id="dateTo" th:value="*{to}" disabled="disabled"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-6 form-group">
                     <label for="vacationDays">Anzahl Urlaubstage</label>
-                    <input type="number" class="form-control" name="vacationDays" id="vacationDays" th:value="${vacation.days}"  disabled="disabled"/>
+                    <input type="number" class="form-control" name="vacationDays" id="vacationDays" th:value="*{days}"  disabled="disabled"/>
                 </div>
 
                 <div class="col-xs-6 form-group">
                     <label for="daysLeft">Verbleibende Urlaubstage</label>
-                    <input type="number" class="form-control" name="daysLeft" id="daysLeft" th:field="${vacation.daysLeft}" disabled="disabled"/>
+                    <input type="number" class="form-control" name="daysLeft" id="daysLeft" th:field="*{daysLeft}" disabled="disabled"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 form-group">
                     <label for="replacement">Vertreter</label>
-                    <input type="text" class="form-control" th:value="${vacation.substitute != NULL ? vacation.substitute.firstName + ' ' + vacation.substitute.lastName : ''}" disabled="disabled"/>
+                    <input type="text" class="form-control" th:value="*{substitute != NULL ? substitute.firstName + ' ' + substitute.lastName : ''}" disabled="disabled"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 form-group">
                     <label for="superior">Zuständiger Vorgesetzter</label>
-                    <input type="text" class="form-control" th:value="${vacation.manager.firstName + ' ' + vacation.manager.lastName}" disabled="disabled"/>
+                    <input type="text" class="form-control" th:value="*{manager.firstName + ' ' + manager.lastName}" disabled="disabled"/>
                 </div>
             </div>
 
