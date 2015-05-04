@@ -90,8 +90,10 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
     Vacation vacation = this.vacationRepository.findOne(id);
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
-
     this.vacationRepository.save(vacation);
+
+    MailObject mail = (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
+    this.mailService.sendMail(mail);
 
     return "redirect:/";
   }
@@ -100,8 +102,10 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   public String approval(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
     Vacation vacation = this.vacationRepository.findOne(id);
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
-
     this.vacationRepository.save(vacation);
+
+    MailObject mail = (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
+    this.mailService.sendMail(mail);
 
     return "redirect:/";
   }
