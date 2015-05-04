@@ -13,7 +13,6 @@ public class VacationCanceledMail implements MailObject {
   private static final String MAIL_SUBJECT = "Urlaub storniert";
 
   private Map<String, Object> values = new HashMap<>();
-  private String[] ccRecipients;
   private String toRecipient;
 
   public VacationCanceledMail(Vacation vacation) {
@@ -50,7 +49,7 @@ public class VacationCanceledMail implements MailObject {
 
   @Override
   public String[] getCCRecipients() {
-    return ccRecipients;
+    return null;
   }
 
   @Override

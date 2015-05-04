@@ -12,7 +12,6 @@ public class SubstitutionRejectedMail implements MailObject {
   private static final String MAIL_SUBJECT = "Vertretung abgelehnt";
   
   private Map<String, Object> values = new HashMap<>();
-  private String[] ccRecipients;
   private String toRecipient;
   
   public SubstitutionRejectedMail(Vacation vacation) {
@@ -49,7 +48,7 @@ public class SubstitutionRejectedMail implements MailObject {
 
   @Override
   public String[] getCCRecipients() {
-    return ccRecipients;
+    return null;
   }
 
   @Override
