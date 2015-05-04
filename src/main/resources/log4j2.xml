@@ -6,6 +6,9 @@
     </Console>
   </Appenders>
   <Loggers>
+    <Logger name="de.maredit" level="debug" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
     <Root level="INFO">
       <AppenderRef ref="Console"/>
     </Root>
