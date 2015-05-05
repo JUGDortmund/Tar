@@ -27,23 +27,29 @@
       }
     ]
     eventDataTransform: (eventData) ->
-      eventData.color = '#f00'
+      switch eventData.state
+        when 'approved' then eventData.color = '#008d4c'
+        when 'pending' then eventData.color = '#f39c12'
+        when 'rejected' then eventData.color = '#dd4b39'
+        when 'canceled' then eventData.color = '#ca195a'
+        else eventData.color = '#00f'
       eventData.displayedEnd = moment( eventData.end )
       eventData.end = moment( eventData.end ).add(1,'days')
       return eventData
-    eventClick: (calEvent, jsEvent, view) -> 
+    eventClick: (calEvent, jsEvent, view) ->
+      #Show Details of event Object in div with ID vacationDetail when event is clicked 
       $vacationDetail = $('#vacationDetail')
-      
       $vacationDetail.find('.user').text( calEvent.userFirstName + ' ' + calEvent.userLastName )
       $vacationDetail.find('.state').text( calEvent.state );
       $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
-      $vacationDetail.find('.substitute').text( calEvent.substituteFirstName + ' ' + calEvent.substituteLastName )
-      $vacationDetail.find('.manager').text( calEvent.managerFirstName + ' ' + calEvent.managerLastName )
-
+      #Test if substitute is set. If set, show name, else show -
+      if ( ( calEvent.substituteFirstName != null ) && ( calEvent.substituteLastName != null ) ) then ( substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName ) else ( substituteText = '-' )
+      $vacationDetail.find('.substitute').text( substituteText )
+      #Test if substitute is set. If set, show name, else show -
+      if ( ( calEvent.managerFirstName != null ) && ( calEvent.managerLastName != null ) ) then ( managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName ) else ( managerText = '-' )
+      $vacationDetail.find('.manager').text( managerText )
       $vacationDetail.show()
-
       $('#sidebar').addClass('active')
-
   $('#calendarFilter .checkbox input').on 'click', ->
     $('#calendar').fullCalendar( 'refetchEvents')
 )(jQuery);
