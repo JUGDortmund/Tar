@@ -3,14 +3,13 @@ package de.maredit.tar.services.mail;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class VacationCreateMail implements MailObject {
 
@@ -32,32 +31,11 @@ public class VacationCreateMail implements MailObject {
                vacation.getTo().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    ccRecipients = getCcRecipients(vacation);
-    toRecipients = getRecipients(vacation);
-  }
-
-  private String[] getRecipients(Vacation vacation) {
-    List<String> recipients = new ArrayList<>();
-    recipients.add(retrieveMail(vacation.getSubstitute()));
-    recipients.add(retrieveMail(vacation.getManager()));
-
-    List<String> filteredList =
-        recipients.stream().filter(e -> !e.isEmpty()).collect(Collectors.toList());
-    String[] array = new String[filteredList.size()];
-    return filteredList.toArray(array);
-  }
-
-  private String[] getCcRecipients(Vacation vacation) {
-    String[] recipients = {retrieveMail(vacation.getUser())};
-    return recipients;
-  }
-
-  private String retrieveMail(User user) {
-    String mail = "";
-    if (user != null && user.getMail() != null) {
-      mail = user.getMail();
+    ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getUser()));
+    if (vacation.getSubstitute() != null) {
+      toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getSubstitute()));
     }
-    return mail;
+    toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getManager()));
   }
 
   @Override
@@ -95,7 +73,6 @@ public class VacationCreateMail implements MailObject {
     return "VacationCreateMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
            + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
            + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-           + ", getToRecipient()=" + getToRecipients() + "]";
+           + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
   }
-
 }

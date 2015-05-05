@@ -1,14 +1,13 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SubstitutionRejectedMail implements MailObject {
@@ -28,20 +27,11 @@ public class SubstitutionRejectedMail implements MailObject {
         DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    toRecipients = getRecipients(vacation);
-  }
-
-  private String[] getRecipients(Vacation vacation) {
-    String[] recipients = {retrieveMail(vacation.getUser())};
-    return recipients;
-  }
-
-  private String retrieveMail(User user) {
-    String mail = "";
-    if (user != null && user.getMail() != null) {
-      mail = user.getMail();
+    toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
+    if (vacation.getSubstitute() != null) {
+      ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
     }
-    return mail;
+    ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getManager()));
   }
 
   @Override
@@ -79,6 +69,6 @@ public class SubstitutionRejectedMail implements MailObject {
     return "SubstitutionRejectedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
            + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
            + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-           + ", getToRecipient()=" + getToRecipients() + "]";
+           + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
   }
 }

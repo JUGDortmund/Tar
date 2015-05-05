@@ -1,5 +1,7 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.User;
+
 import java.util.Map;
 
 public interface MailObject {
@@ -15,4 +17,12 @@ public interface MailObject {
   String getSubject();
 
   String[] getToRecipients();
+
+  default String retrieveMail(User user) {
+    String mail = "";
+    if (user != null && user.getMail() != null) {
+      mail = user.getMail();
+    }
+    return mail;
+  }
 }

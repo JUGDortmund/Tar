@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="taskList">
-    <div class="panel panel-default module list-panel">
-        <div class="panel-heading">Aufgaben:</div>
-        <div class="panel-body task-list">
-            <div class="list-group">
-	                <a th:each="substitute : ${substitutes}" class="list-group-item" th:href="@{/vacation(id=${substitute.id})}">
-				        <span th:text="${substitute.from + ' - '  + substitute.to}"></span>
-                    	<strong th:text="${substitute.user.firstName + ' - ' + substitute.user.lastName}"></strong> 
-                    	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-				   </a>
-            </div>
+<div class="panel panel-default module list-panel">
+    <div class="panel-heading">Aufgaben</div>
+    <div class="panel-body task-list">
+        <div class="list-group">
+            <h3 class="list-group-item">Vertretungen</h3>
+            <a th:each="substitute : ${substitutesForApproval}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='substitute')}">
+                <span th:text="${substitute.from + ' - '  + substitute.to}"></span>
+                <strong th:text="${substitute.user.firstName + ' - ' + substitute.user.lastName}"></strong>
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div class="list-group">
+            <h3 class="list-group-item">Ausstehende Genehmigungen</h3>
+            <a th:each="approval : ${approvals}" class="list-group-item" th:href="@{/vacation(id=${approval.id},action='approve')}">
+                <span th:text="${approval.from + ' - '  + approval.to}"></span>
+                <strong th:text="${approval.user.firstName + ' - ' + approval.user.lastName}"></strong>
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            </a>
         </div>
     </div>
+</div>
 </body>
 </html>
