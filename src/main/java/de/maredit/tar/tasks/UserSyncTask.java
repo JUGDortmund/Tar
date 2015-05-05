@@ -71,7 +71,7 @@ public class UserSyncTask {
     user.setUsername(resultEntry.getUsername());
     user.setFirstName(resultEntry.getFirstName());
     user.setLastName(resultEntry.getLastName());
-    LOG.debug("User updated. username: {} / uidNumber: {}", user.getUsername(),
+    LOG.trace("User updated. username: {} / uidNumber: {}", user.getUsername(),
               user.getUidNumber());
   }
 

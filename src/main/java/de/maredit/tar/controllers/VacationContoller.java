@@ -9,11 +9,15 @@ import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.MailService;
+import de.maredit.tar.services.mail.MailObject;
 import de.maredit.tar.services.mail.SubstitutionApprovedMail;
 import de.maredit.tar.services.mail.SubstitutionRejectedMail;
+import de.maredit.tar.services.mail.VacationApprovedMail;
 import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
+import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,19 +87,25 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("/substitution")
-  public String substitution(@RequestParam(value = "id") String id,
-      @RequestParam(value = "approve") boolean approve) {
+  public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
     Vacation vacation = this.vacationRepository.findOne(id);
-
-    if (approve) {
-      vacation.setState(State.APPROVED);
-      this.mailService.sendMail(new SubstitutionApprovedMail(vacation));
-    } else {
-      vacation.setState(State.REJECTED);
-      this.mailService.sendMail(new SubstitutionRejectedMail(vacation));
-    }
-
+    vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
+
+    MailObject mail = (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
+    this.mailService.sendMail(mail);
+
+    return "redirect:/";
+  }
+  
+  @RequestMapping("/approval")
+  public String approval(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
+    Vacation vacation = this.vacationRepository.findOne(id);
+    vacation.setState((approve) ? State.APPROVED : State.REJECTED);
+    this.vacationRepository.save(vacation);
+
+    MailObject mail = (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
+    this.mailService.sendMail(mail);
 
     return "redirect:/";
   }
@@ -107,6 +117,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     
     switch(action) {
       case "edit":
+        model.addAttribute("vacation", vacation);
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("managers", getManagerList());
+        model.addAttribute("selectedUser",
+            this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
         model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
         return "application/vacationEdit";
       case "approve":

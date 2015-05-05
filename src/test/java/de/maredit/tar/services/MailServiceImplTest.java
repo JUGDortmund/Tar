@@ -26,7 +26,6 @@ import java.util.Map;
 @ActiveProfiles("serviceTest")
 public class MailServiceImplTest {
 
-  @SuppressWarnings("unused")
   private static final Logger LOG = LogManager.getLogger(MailServiceImplTest.class);
 
   @Autowired
