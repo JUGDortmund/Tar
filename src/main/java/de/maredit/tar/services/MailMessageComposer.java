@@ -39,7 +39,7 @@ public class MailMessageComposer {
 
     message.setSubject(mail.getSubject());
     message.setSentDate(new Date());
-    message.setTo(mail.getToRecipient());
+    message.setTo(mail.getToRecipients());
     message.setCc(mail.getCCRecipients());
     message.setText(prepareMailBody(mail, mail.getTemplate()));
     return message;
@@ -51,7 +51,7 @@ public class MailMessageComposer {
       MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
       messageHelper.setSubject(mail.getSubject());
       messageHelper.setSentDate(new Date());
-      messageHelper.setTo(mail.getToRecipient());
+      messageHelper.setTo(mail.getToRecipients());
       messageHelper.setCc(mail.getCCRecipients());
       messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
     } catch (MessagingException e) {

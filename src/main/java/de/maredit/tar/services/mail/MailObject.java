@@ -14,5 +14,5 @@ public interface MailObject {
 
   String getSubject();
 
-  String getToRecipient();
+  String[] getToRecipients();
 }

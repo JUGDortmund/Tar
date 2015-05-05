@@ -73,33 +73,4 @@ public class VacationValidatorTest {
     assertTrue(errors.hasErrors());
     assertNotNull(errors.getFieldError("to"));
   }
-
-  @Test
-  public void testValidationWithFromDateInPast() {
-    VacationValidator validatorUnderTest = new VacationValidator();
-
-    Vacation invalidFromVacation =
-        new Vacation(user, LocalDate.of(2010, Month.AUGUST, 18), LocalDate.of(2099, Month.JULY, 03),
-                     null, user, 15, 5);
-
-    Errors errors = new BeanPropertyBindingResult(invalidFromVacation, "invalidFromVacation");
-    validatorUnderTest.validate(invalidFromVacation, errors);
-
-    assertTrue(errors.hasErrors());
-    assertNotNull(errors.getFieldError("from"));
-  }
-
-  @Test
-  public void testValidationWithToDateInPast() {
-    VacationValidator validatorUnderTest = new VacationValidator();
-
-    Vacation invalidToVacation =
-        new Vacation(user, LocalDate.of(2099, Month.AUGUST, 18), LocalDate.of(2010, Month.JULY, 03),
-                     null, user, 15, 5);
-    Errors errors = new BeanPropertyBindingResult(invalidToVacation, "invalidFromVacation");
-    validatorUnderTest.validate(invalidToVacation, errors);
-
-    assertTrue(errors.hasErrors());
-    assertNotNull(errors.getFieldError("to"));
-  }
 }

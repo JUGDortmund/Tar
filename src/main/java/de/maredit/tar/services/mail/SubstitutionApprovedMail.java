@@ -5,8 +5,10 @@ import de.maredit.tar.models.Vacation;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SubstitutionApprovedMail implements MailObject {
@@ -16,7 +18,7 @@ public class SubstitutionApprovedMail implements MailObject {
 
   private Map<String, Object> values = new HashMap<>();
   private String[] ccRecipients;
-  private String toRecipient;
+  private String[] toRecipients;
 
   public SubstitutionApprovedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
@@ -26,7 +28,12 @@ public class SubstitutionApprovedMail implements MailObject {
         DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    toRecipient = retrieveMail(vacation.getUser());
+    toRecipients = getRecipients(vacation);
+  }
+
+  private String[] getRecipients(Vacation vacation) {
+    String[] recipients = {retrieveMail(vacation.getUser())};
+    return recipients;
   }
 
   private String retrieveMail(User user) {
@@ -63,8 +70,8 @@ public class SubstitutionApprovedMail implements MailObject {
   }
 
   @Override
-  public String getToRecipient() {
-    return toRecipient;
+  public String[] getToRecipients() {
+    return toRecipients;
   }
 
   @Override
@@ -72,6 +79,6 @@ public class SubstitutionApprovedMail implements MailObject {
     return "SubstitutionApprovedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
            + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
            + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-           + ", getToRecipient()=" + getToRecipient() + "]";
+           + ", getToRecipient()=" + getToRecipients() + "]";
   }
 }

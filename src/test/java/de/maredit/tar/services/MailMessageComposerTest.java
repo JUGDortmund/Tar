@@ -33,6 +33,8 @@ public class MailMessageComposerTest {
     standardVacation.setUser(createDummyUser("Mark"));
     standardVacation.setSubstitute(createDummyUser("Luke"));
     standardVacation.setManager(createDummyUser("John"));
+    standardVacation.setFrom(LocalDate.of(2015, 04, 27));
+    standardVacation.setTo(LocalDate.of(2016, 05, 30));
   }
 
   @Test
@@ -42,30 +44,29 @@ public class MailMessageComposerTest {
     "John@maredit.de"};
 
     String[] actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation)).getTo();
-
-    assertEquals(expectedArray[0], actualArray[0]);
-
-    actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation)).getCc();
     assertEquals(expectedArray[1], actualArray[0]);
     assertEquals(expectedArray[2], actualArray[1]);
+
+    actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation)).getCc();
+    assertEquals(expectedArray[0], actualArray[0]);
   }
 
   @Test
   public void changedMailAdressesInComposedMail() {
     SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
 
-    assertEquals("Mark@maredit.de", mailMessage.getTo()[0]);
-    assertEquals("Luke@maredit.de", mailMessage.getCc()[0]);
-    assertEquals("John@maredit.de", mailMessage.getCc()[1]);
+    assertEquals("Mark@maredit.de", mailMessage.getCc()[0]);
+    assertEquals("Luke@maredit.de", mailMessage.getTo()[0]);
+    assertEquals("John@maredit.de", mailMessage.getTo()[1]);
 
     standardVacation.getUser().setMail("JohnnyEnglish@maredit.de");
     standardVacation.getManager().setMail("manager@maredit.de");
     standardVacation.getSubstitute().setMail("substitute@maredit.de");
     mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
 
-    assertEquals("JohnnyEnglish@maredit.de", mailMessage.getTo()[0]);
-    assertEquals("substitute@maredit.de", mailMessage.getCc()[0]);
-    assertEquals("manager@maredit.de", mailMessage.getCc()[1]);
+    assertEquals("JohnnyEnglish@maredit.de", mailMessage.getCc()[0]);
+    assertEquals("substitute@maredit.de", mailMessage.getTo()[0]);
+    assertEquals("manager@maredit.de", mailMessage.getTo()[1]);
   }
 
   @Test
@@ -80,7 +81,7 @@ public class MailMessageComposerTest {
 
     String errorMessage = "Expected substring not found in body text: ";
 
-    String expectedSubString = "Hallo, <span>Mark</span>";
+    String expectedSubString = "Hallo, <span>John Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
     expectedSubString = "<b>Name des Projektleiters:</b> <span>John Surname</span>";
@@ -89,10 +90,10 @@ public class MailMessageComposerTest {
     expectedSubString = "<b>Name des Stellvertreters:</b> <span>Luke Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "Von: <span>2015-04-27</span>";
+    expectedSubString = "Von: <span>27.04.2015</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "Bis: <span>2016-05-30</span>";
+    expectedSubString = "Bis: <span>30.05.2016</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
     expectedSubString = "<b>Summe der Urlaubstage:</b> <span>13.0</span>";

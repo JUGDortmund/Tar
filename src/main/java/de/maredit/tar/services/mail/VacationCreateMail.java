@@ -19,11 +19,11 @@ public class VacationCreateMail implements MailObject {
 
   private Map<String, Object> values = new HashMap<>();
   private String[] ccRecipients;
-  private String toRecipient;
+  private String[] toRecipients;
 
   public VacationCreateMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFullname());
-    values.put("manager", vacation.getManager().getFirstName());
+    values.put("manager", vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
     values.put("fromDate", vacation.getFrom().format(DateTimeFormatter.ofLocalizedDate(
@@ -32,19 +32,24 @@ public class VacationCreateMail implements MailObject {
                vacation.getTo().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    ccRecipients = getCCRecipients(vacation);
-    toRecipient = retrieveMail(vacation.getManager());
+    ccRecipients = getCcRecipients(vacation);
+    toRecipients = getRecipients(vacation);
   }
 
-  private String[] getCCRecipients(Vacation vacation) {
+  private String[] getRecipients(Vacation vacation) {
     List<String> recipients = new ArrayList<>();
     recipients.add(retrieveMail(vacation.getSubstitute()));
-    recipients.add(retrieveMail(vacation.getUser()));
+    recipients.add(retrieveMail(vacation.getManager()));
 
     List<String> filteredList =
         recipients.stream().filter(e -> !e.isEmpty()).collect(Collectors.toList());
     String[] array = new String[filteredList.size()];
     return filteredList.toArray(array);
+  }
+
+  private String[] getCcRecipients(Vacation vacation) {
+    String[] recipients = {retrieveMail(vacation.getUser())};
+    return recipients;
   }
 
   private String retrieveMail(User user) {
@@ -81,8 +86,8 @@ public class VacationCreateMail implements MailObject {
   }
 
   @Override
-  public String getToRecipient() {
-    return toRecipient;
+  public String[] getToRecipients() {
+    return toRecipients;
   }
 
   @Override
@@ -90,7 +95,7 @@ public class VacationCreateMail implements MailObject {
     return "VacationCreateMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
            + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
            + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-           + ", getToRecipient()=" + getToRecipient() + "]";
+           + ", getToRecipient()=" + getToRecipients() + "]";
   }
 
 }

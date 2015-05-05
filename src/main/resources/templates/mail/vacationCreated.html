@@ -5,9 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<p> Hallo, <span th:text="${manager}">Welt!</span> </p>
+	<p>
+		Hallo, <span th:text="${manager}">Welt!</span>!<br />
+		Hallo, <span th:text="${substitute}">Welt!</span>!
+	</p>
 
-	<p> <span th:text="${employee}">Welt!</span> hat Urlaub beantragt! Hier sind die Details: </p>
+	<p> <span th:text="${employee}">Welt!</span> hat Urlaub beantragt. Hier sind die Details: </p>
 	
 	<p> <b>Name des Projektleiters:</b> <span th:text="${manager}">Max Mustermann</span> </p>
 
@@ -21,6 +24,6 @@
 
 	<p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
 
-	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team (i.A. von <span th:text="${employee}">Welt</span>) </em> </p>
 </body>
 </html>
