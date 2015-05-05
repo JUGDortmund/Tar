@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="panel panel-default module vacation-form edit-vacation">
+    <div class="panel-heading">Urlaubsformular</div>
+    <div class="panel-body" th:object="${vacation}">
+        <div class="row">
+            <div class="col-xs-12 form-group">
+                <label for="employee">Mitarbeiter</label>
+                <input type="text" class="form-control" th:value="*{user.firstName + ' ' + user.lastName}" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 form-group">
+                <label for="dateFrom">von</label>
+
+                <div class="input-group date">
+                    <input type="text" class="form-control" name="dateFrom" id="dateFrom" th:value="*{from}" disabled="disabled"/>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                </div>
+            </div>
+
+            <div class="col-xs-6 form-group">
+                <label for="dateTo">bis</label>
+
+                <div class="input-group date">
+                    <input type="text" class="form-control" name="dateTo" id="dateTo" th:value="*{to}" disabled="disabled"/>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-6 form-group">
+                <label for="vacationDays">Anzahl Urlaubstage</label>
+                <input type="number" class="form-control" name="vacationDays" id="vacationDays" th:value="*{days}"  disabled="disabled"/>
+            </div>
+
+            <div class="col-xs-6 form-group">
+                <label for="daysLeft">Verbleibende Urlaubstage</label>
+                <input type="number" class="form-control" name="daysLeft" id="daysLeft" th:field="*{daysLeft}" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 form-group">
+                <label for="replacement">Vertreter</label>
+                <input type="text" class="form-control" th:value="*{substitute.firstName + ' ' + substitute.lastName}" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 form-group">
+                <label for="superior">Zuständiger Vorgesetzter</label>
+                <input type="text" class="form-control" th:value="*{manager.firstName + ' ' + manager.lastName}" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 form-group">
+                <label for="comment">Kommentar</label>
+                <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">beantragen</button>
+        <a th:href="@{/cancelVacation(id=${vacation.id})}" onclick="return confirm('Willst du den Urlaub wirklich stornieren?');" class="btn btn-danger pull-right">stornieren</a>
+    </div>
+</div>
+</body>
+</html>
+
