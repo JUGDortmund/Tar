@@ -11,7 +11,7 @@
 	                    <option th:each="user : ${users}"
                                 th:value="${user.username}"
                                 th:selected="${selectedUser.username == user.username}"
-                                th:text="${user.lastName +', '+ user.firstName}">
+                                th:text="${user.lastname +', '+ user.firstname}">
                         </option>
                     </select>
                 </div>

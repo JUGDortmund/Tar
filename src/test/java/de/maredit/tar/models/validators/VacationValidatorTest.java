@@ -35,13 +35,13 @@ public class VacationValidatorTest {
   @Before
   public void setup() {
     user = new User();
-    user.setFirstName("John");
-    user.setLastName("Deer");
+    user.setFirstname("John");
+    user.setLastname("Deer");
     user.setUidNumber("4711");
 
     user2 = new User();
-    user2.setFirstName("Johanna");
-    user2.setLastName("Deerer");
+    user2.setFirstname("Johanna");
+    user2.setLastname("Deerer");
     user2.setUidNumber("4712");
   }
 

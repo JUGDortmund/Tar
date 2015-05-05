@@ -1,6 +1,5 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -21,7 +20,7 @@ public class VacationCanceledMail implements MailObject {
   private String[] toRecipients;
 
   public VacationCanceledMail(Vacation vacation) {
-    values.put("employee", vacation.getUser().getFirstName());
+    values.put("employee", vacation.getUser().getFirstname());
     values.put("fromDate", vacation.getFrom().format(
         DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     values.put("toDate", vacation.getTo().format(

@@ -1,13 +1,13 @@
 users:
   - username: user
     uidNumber: 100
-    firstName: Benutzer
-    lastName: Test
+    firstname: Benutzer
+    lastname: Test
     mail: test@dummy.local
   - username: supervisor
     uidNumber: 101
-    firstName: Vorgesetzter
-    lastName: Test
+    firstname: Vorgesetzter
+    lastname: Test
     mail: supervisor@dummy.local
 
 --- ## 

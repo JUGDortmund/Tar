@@ -18,7 +18,7 @@ public class VacationDeclinedMail implements MailObject {
   private String[] toRecipients;
 
   public VacationDeclinedMail(Vacation vacation) {
-    values.put("employee", vacation.getUser().getFirstName());
+    values.put("employee", vacation.getUser().getFirstname());
     values.put("fromDate", vacation.getFrom());
     values.put("toDate", vacation.getTo());
     values.put("totalDays", vacation.getDays());

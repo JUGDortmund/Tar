@@ -27,8 +27,8 @@ public class VacationTest {
   @Before
   public void setup() {
     User user = new User();
-    user.setFirstName("John");
-    user.setLastName("Deer");
+    user.setFirstname("John");
+    user.setLastname("Deer");
 
     vacation1 =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
@@ -40,12 +40,12 @@ public class VacationTest {
 
   @Test
   public void vacationModel() {
-    assertEquals("John", vacation1.getUser().getFirstName());
-    assertEquals("John", vacation1.getSubstitute().getFirstName());
+    assertEquals("John", vacation1.getUser().getFirstname());
+    assertEquals("John", vacation1.getSubstitute().getFirstname());
     assertEquals(LocalDate.of(2099, Month.JULY, 18), vacation1.getFrom());
     assertEquals(State.REQUESTED_SUBSTITUTE, vacation1.getState());
 
-    assertEquals("John", vacation2.getUser().getFirstName());
+    assertEquals("John", vacation2.getUser().getFirstname());
     assertNull(vacation2.getSubstitute());
     assertEquals(LocalDate.of(2099, Month.JULY, 18), vacation2.getFrom());
     assertEquals(State.WAITING_FOR_APPROVEMENT, vacation2.getState());

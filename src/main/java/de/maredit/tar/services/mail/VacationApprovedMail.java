@@ -1,6 +1,5 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -19,7 +18,7 @@ public class VacationApprovedMail implements MailObject {
   private String[] toRecipients;
 
   public VacationApprovedMail(Vacation vacation) {
-    values.put("employee", vacation.getUser().getFirstName());
+    values.put("employee", vacation.getUser().getFirstname());
     values.put("fromDate", vacation.getFrom());
     values.put("toDate", vacation.getTo());
     values.put("totalDays", vacation.getDays());

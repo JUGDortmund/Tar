@@ -105,8 +105,8 @@ public class MailMessageComposerTest {
 
   private User createDummyUser(String name) {
     User user = new User();
-    user.setFirstName(name);
-    user.setLastName("Surname");
+    user.setFirstname(name);
+    user.setLastname("Surname");
     user.setMail(name + "@maredit.de");
     return user;
   }

@@ -29,11 +29,11 @@ public class CalendarEvent {
     this.setTitle("Urlaub " + vacation.getUser().getUsername().substring(0, 3));
     this.setState(vacation.getState().get());
     this.setUserName(vacation.getUser().getUsername());
-    this.setUserFirstName(vacation.getUser().getFirstName());
-    this.setUserLastName(vacation.getUser().getLastName());
+    this.setUserFirstName(vacation.getUser().getFirstname());
+    this.setUserLastName(vacation.getUser().getLastname());
     if (vacation.getSubstitute() != null) {
-      this.setSubstituteFirstName(vacation.getSubstitute().getFirstName());
-      this.setSubstituteLastName(vacation.getSubstitute().getLastName());
+      this.setSubstituteFirstName(vacation.getSubstitute().getFirstname());
+      this.setSubstituteLastName(vacation.getSubstitute().getLastname());
     }
     this.allDay = true;
   }

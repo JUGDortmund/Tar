@@ -20,7 +20,7 @@ public class SubstitutionRejectedMail implements MailObject {
   private String[] toRecipients;
 
   public SubstitutionRejectedMail(Vacation vacation) {
-    values.put("employee", vacation.getUser().getFirstName());
+    values.put("employee", vacation.getUser().getFirstname());
     values.put("fromDate", vacation.getFrom().format(
         DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
     values.put("toDate", vacation.getTo().format(
