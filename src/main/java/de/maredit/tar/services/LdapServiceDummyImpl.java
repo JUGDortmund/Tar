@@ -1,33 +1,25 @@
 package de.maredit.tar.services;
 
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.User;
-import de.maredit.tar.repositories.UserRepository;
 
 @Service
-@Profile({"test"})
+@Profile({"dev", "demo", "test"})
 @ConfigurationProperties(locations = "classpath:dummy-user.yaml")
 public class LdapServiceDummyImpl implements LdapService {
 
-  public List<User> getUsers() {
-    return users;
-  }
-
-  @Autowired
-  UserRepository userRepository;
-
   private List<User> users;
+  
+  private List<String> supervisors;
 
   private Map<String, String> authenticate;
 
@@ -49,6 +41,10 @@ public class LdapServiceDummyImpl implements LdapService {
     this.groups = groups;
   }
 
+  public List<User> getUsers() {
+    return users;
+  }
+
   public void setUsers(List<User> users) {
     this.users = users;
   }
@@ -66,14 +62,19 @@ public class LdapServiceDummyImpl implements LdapService {
   @Override
   public List<User> getLdapUserList() throws LDAPException {
     final List<User> users = getUsers();
-    users.forEach(user -> userRepository.save(user));
     return users;
   }
 
   @Override
   public Set<String> getLdapManagerList() throws LDAPException {
-    return null;
+    return new HashSet<String>(getSupervisors());
   }
 
+  public List<String> getSupervisors() {
+    return supervisors;
+  }
 
+  public void setSupervisors(List<String> supervisors) {
+    this.supervisors = supervisors;
+  }
 }

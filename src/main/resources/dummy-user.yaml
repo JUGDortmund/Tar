@@ -1,26 +1,39 @@
 users:
-  - username: user
+  - username: user1
     uidNumber: 100
-    firstName: Benutzer
+    firstName: Benutzer 1
     lastName: Test
-    mail: test@dummy.local
-  - username: supervisor
+    mail: tar-dummyuser1@mailinator.com
+  - username: user2
     uidNumber: 101
+    firstName: Benutzer 2
+    lastName: Test
+    mail: tar-dummyuser2@mailinator.com
+  - username: supervisor
+    uidNumber: 200
     firstName: Vorgesetzter
     lastName: Test
-    mail: supervisor@dummy.local
+    mail: tar-supervisor@mailinator.com
 
 --- ## 
 authenticate:
-  user: login
+  user1: login
+  user2: login
   supervisor: login
 
 --- ##
 
 groups:
-  user:
+  user1:
+    - userGroup
+    - tar-user
+  user2:
     - userGroup
     - tar-user
   supervisor:
     - supervisorGroup
     - tar-supervisor
+    
+--- ##
+supervisors:
+  - supervisor

@@ -30,7 +30,6 @@ public class MailMessageComposer {
   private String prepareMailBody(MailObject mail, String templateName) {
     Context ctx = new Context();
     ctx.setVariables(mail.getValues());
-
     return templateEngine.process(templateName, ctx);
   }
 
