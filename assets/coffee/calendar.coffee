@@ -27,6 +27,7 @@
       }
     ]
     eventDataTransform: (eventData) ->
+      eventData.color = '#f00'
       eventData.displayedEnd = moment( eventData.end )
       eventData.end = moment( eventData.end ).add(1,'days')
       return eventData
@@ -37,6 +38,7 @@
       $vacationDetail.find('.state').text( calEvent.state );
       $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
       $vacationDetail.find('.substitute').text( calEvent.substituteFirstName + ' ' + calEvent.substituteLastName )
+      $vacationDetail.find('.manager').text( calEvent.managerFirstName + ' ' + calEvent.managerLastName )
 
       $vacationDetail.show()
 
