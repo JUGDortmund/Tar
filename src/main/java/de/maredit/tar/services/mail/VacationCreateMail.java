@@ -1,15 +1,14 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.utils.ConversionUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class VacationCreateMail implements MailObject {
 
@@ -20,15 +19,15 @@ public class VacationCreateMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
+
   public VacationCreateMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFullname());
     values.put("manager", vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
-    values.put("fromDate", vacation.getFrom().format(DateTimeFormatter.ofLocalizedDate(
-        FormatStyle.MEDIUM)));
+    values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
     values.put("toDate",
-               vacation.getTo().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+               ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getUser()));
