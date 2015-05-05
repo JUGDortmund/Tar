@@ -26,7 +26,7 @@ public class UserSyncTask {
   @Autowired
   private UserRepository userRepository;
 
-  @Scheduled(cron = "0 */1 * * * ?")
+  @Scheduled(cron = "0 0 */1 * * ?")
   public void syncLdapUser() {
     try {
       List<User> ldapUserList = ldapService.getLdapUserList();
