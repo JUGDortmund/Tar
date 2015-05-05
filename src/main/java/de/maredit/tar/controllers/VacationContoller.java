@@ -67,14 +67,18 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     User user = getUser(request);
     vacation.setUser(user);
     List<User> users = this.userRepository.findAll();
-    List<Vacation> vacations =
-        this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
+    List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
+        user, State.CANCELED);
     List<User> managerList = getManagerList();
-    List<Vacation> substitutes =
-        this.vacationRepository.findVacationBySubstituteAndState(getConnectedUser(),
-            State.REQUESTED_SUBSTITUTE);
-
-    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
+    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
+        getConnectedUser());
+    List<Vacation> substitutesForApproval = this.vacationRepository.findVacationBySubstituteAndState(
+        getConnectedUser(), State.REQUESTED_SUBSTITUTE);
+    List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
+        getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
+    
+    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
+                               substitutesForApproval, approvals);
     return "application/index";
   }
 
@@ -97,28 +101,44 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("/vacation")
-  public String vacation(@RequestParam(value = "id") String id,
-      @RequestParam(value = "action", required = false) String action, Model model) {
+  public String vacation(@RequestParam(value="id") String id,@RequestParam(value="action", required=false) String action, Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
-    LOG.debug("Vacation: {}", vacation.toString());
-    if ("edit".equals(action)) {
-      model.addAttribute("vacation", vacation);
-      model.addAttribute("users", userRepository.findAll());
-      model.addAttribute("managers", getManagerList());
-      model.addAttribute("selectedUser",
-          this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
-      model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
-
-      return "application/vacationEdit";
+    model.addAttribute("vacation", vacation);
+    
+    switch(action) {
+      case "edit":
+        model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
+        return "application/vacationEdit";
+      case "approve":
+        return "application/vacationApprove";
+      case "substitute":
+        return "application/vacationSubstitute";
+      case "view":
+        return "application/vacationView";
+      default:
+        return "application/vacation";
     }
-
-    return "application/vacation";
   }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
-      processErrorAndRefreshForm(vacation, bindingResult, model);
+      bindingResult.getFieldErrors().forEach(
+          fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
+      User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
+      List<User> users = this.userRepository.findAll();
+      List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
+          selectedUser, State.CANCELED);
+      List<User> managerList = getManagerList();
+      List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
+          getConnectedUser());
+      List<Vacation> substitutesForApproval = this.vacationRepository.findVacationBySubstituteAndState(
+          getConnectedUser(), State.REQUESTED_SUBSTITUTE);
+      List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
+          getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
+      
+      setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes, substitutesForApproval,
+                                 approvals);
       return "application/index";
     } else {
       boolean newVacation = vacation.getId() == null;
@@ -131,27 +151,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     }
   }
 
-  private void processErrorAndRefreshForm(Vacation vacation, BindingResult bindingResult,
-      Model model) {
-    bindingResult.getFieldErrors().forEach(
-        fieldError -> LOG.error("Field '{}' {}!", fieldError.getField(),
-            fieldError.getDefaultMessage()));
-    User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
-    List<User> users = this.userRepository.findAll();
-    List<Vacation> vacations =
-        this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(selectedUser,
-            State.CANCELED);
-    List<User> managerList = getManagerList();
-    List<Vacation> substitutes =
-        this.vacationRepository.findVacationBySubstitute(getConnectedUser());
-
-    setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes);
-  }
-
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
   @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
-  public String cancelVacation(HttpServletRequest request, @RequestParam(value = "id") String id,
-      Model model) {
+  public String cancelVacation(HttpServletRequest request, @RequestParam(value="id") String id, Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
     User user = getUser(request);
     vacation.setUser(user);
@@ -165,27 +167,36 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<Vacation> vacations =
         this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
     List<User> managerList = getManagerList();
-    List<Vacation> substitutes =
-        this.vacationRepository.findVacationBySubstitute(getConnectedUser());
-    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes);
+    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
+        getConnectedUser());
+    List<Vacation> substitutesForApproval = this.vacationRepository.findVacationBySubstituteAndState(
+        getConnectedUser(), State.REQUESTED_SUBSTITUTE);
+    List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
+        getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
+    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes, substitutesForApproval, approvals);
 
     return "redirect:/";
   }
 
   private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,
-      List<Vacation> vacations, List<User> managerList, List<Vacation> substitutes) {
+                                          List<Vacation> vacations, List<User> managerList,
+                                          List<Vacation> substitutes, List<Vacation> substitutesForApproval, List<Vacation> approvals) {
     model.addAttribute("users", users);
     model.addAttribute("vacations", vacations);
     model.addAttribute("selectedUser", selectedUser);
     model.addAttribute("managers", managerList);
     model.addAttribute("substitutes", substitutes);
+    model.addAttribute("substitutesForApproval", substitutesForApproval);
+    model.addAttribute("approvals", approvals);
   }
 
   private List<User> getManagerList() {
     List<User> managerList = new ArrayList<User>();
     try {
-      managerList = userRepository.findByUsernames(ldapService.getLdapManagerList());
-      managerList = managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
+      managerList =
+          userRepository.findByUsernames(ldapService.getLdapManagerList());
+      managerList =
+          managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
 
     } catch (LDAPException e) {
       LOG.error("Error while reading manager list for vacation form", e);

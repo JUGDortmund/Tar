@@ -1,19 +1,23 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-
 public class SubstitutionRejectedMail implements MailObject {
+
   private static final String MAIL_TEMPLATE = "mail/substitutionRejected";
   private static final String MAIL_SUBJECT = "Vertretung abgelehnt";
-  
+
   private Map<String, Object> values = new HashMap<>();
   private String toRecipient;
-  
+  private String[] ccRecipients;
+
   public SubstitutionRejectedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
     values.put("fromDate", vacation.getFrom());
@@ -21,6 +25,10 @@ public class SubstitutionRejectedMail implements MailObject {
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     toRecipient = retrieveMail(vacation.getUser());
+    if(vacation.getSubstitute() != null) {
+      ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
+    }
+    ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getManager()));
   }
 
   private String retrieveMail(User user) {
@@ -30,7 +38,7 @@ public class SubstitutionRejectedMail implements MailObject {
     }
     return mail;
   }
-  
+
   @Override
   public String getTemplate() {
     return MAIL_TEMPLATE;
@@ -60,12 +68,12 @@ public class SubstitutionRejectedMail implements MailObject {
   public String getToRecipient() {
     return toRecipient;
   }
-  
+
   @Override
   public String toString() {
     return "SubstitutionRejectedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-        + ", getToRecipient()=" + getToRecipient() + "]";
+           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+           + ", getToRecipient()=" + getToRecipient() + "]";
   }
 }

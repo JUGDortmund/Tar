@@ -34,6 +34,22 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 @Service
 @Profile({"prod", "dev", "serviceTest"})
 public class LdapServiceImpl implements LdapService {
@@ -110,7 +126,7 @@ public class LdapServiceImpl implements LdapService {
       connectionPool.releaseConnectionAfterException(ldapConnection, e);
       throw e;
     }
-    connectionPool.releaseConnection(ldapConnection);;
+    connectionPool.releaseConnection(ldapConnection);
     return manager;
   }
 
@@ -154,8 +170,10 @@ public class LdapServiceImpl implements LdapService {
     ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
     SearchRequest searchRequest =
         new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-            Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(), ldapProperties
-                .getUserBindDN().replace("$username", uid)));
+                          Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(),
+                                                      ldapProperties
+                                                          .getUserBindDN()
+                                                          .replace("$username", uid)));
     SearchResult searchResults = ldapConnection.search(searchRequest);
     return searchResults;
   }
