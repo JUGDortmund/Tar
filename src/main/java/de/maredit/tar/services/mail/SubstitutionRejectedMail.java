@@ -59,7 +59,7 @@ public class SubstitutionRejectedMail implements MailObject {
 
   @Override
   public String[] getCCRecipients() {
-    return null;
+    return ccRecipients;
   }
 
   @Override

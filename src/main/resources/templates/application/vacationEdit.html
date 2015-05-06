@@ -72,6 +72,7 @@
                     <label for="replacement">Vertreter</label>
                     <select class="form-control" style="width: 100%;" name="replacement" th:field="*{substitute}"
                             id="replacement" th:disabled="${disableInput}">
+                        <option th:value="${null}" th:selected="${vacation.substitute == substitute}">(keine)</option>
                         <option th:each="substitute : ${users}"
                                 th:value="${substitute.id}"
                                 th:selected="${vacation.substitute == substitute}"

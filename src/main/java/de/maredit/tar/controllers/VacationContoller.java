@@ -158,7 +158,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     } else {
       boolean newVacation = vacation.getId() == null;
       if (!newVacation) {
-        vacation.setState(State.WAITING_FOR_APPROVEMENT);
+        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));

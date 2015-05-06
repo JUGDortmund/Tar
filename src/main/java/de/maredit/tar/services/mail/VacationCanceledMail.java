@@ -59,7 +59,7 @@ public class VacationCanceledMail implements MailObject {
 
   @Override
   public String[] getCCRecipients() {
-    return null;
+    return ccRecipients;
   }
 
   @Override

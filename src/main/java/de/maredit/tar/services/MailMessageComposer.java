@@ -59,7 +59,7 @@ public class MailMessageComposer {
       }
       messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
     } catch (MessagingException e) {
-      LOG.error(e);
+      LOG.error("Error creating mail", e);
     }
     return message;
   }
