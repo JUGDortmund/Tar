@@ -1,5 +1,4 @@
 (($) ->
-
   getCurrentCheckedStatus = (checkboxId) ->
     return $(checkboxId).is(':checked')
 
