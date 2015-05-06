@@ -170,9 +170,6 @@ public class LdapServiceImpl implements LdapService {
     user.setFirstname(resultEntry.getAttributeValue(LdapService.FIELD_CN));
     user.setLastname(resultEntry.getAttributeValue(LdapService.FIELD_SN));
     user.setActive(Boolean.TRUE);
-
-    LOG.debug("User created. username: {} / uidNumber: {}", user.getUsername(),
-              user.getUidNumber());
     return user;
   }
 }

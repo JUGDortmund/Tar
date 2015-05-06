@@ -20,6 +20,8 @@ public class VacationApprovedMail implements MailObject {
 
   public VacationApprovedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstname());
+    values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
+        .getFullname());
     values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
     values.put("toDate",
                ConversionUtils.convertLocalDateToString(vacation.getTo()));
