@@ -66,7 +66,7 @@ public class LdapServiceDummyImpl implements LdapService {
   }
 
   @Override
-  public Set<String> getLdapManagerList() throws LDAPException {
+  public Set<String> getLdapSupervisorList() throws LDAPException {
     return new HashSet<String>(getSupervisors());
   }
 

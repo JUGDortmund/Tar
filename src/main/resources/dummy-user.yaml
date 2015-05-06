@@ -22,7 +22,6 @@ authenticate:
   supervisor: login
 
 --- ##
-
 groups:
   user1:
     - userGroup
