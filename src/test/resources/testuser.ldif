@@ -66,4 +66,3 @@ objectClass: top
 objectClass: groupOfNames
 cn: tar-supervisors
 member: uid=supervisor,ou=users,o=maredit,dc=de
-

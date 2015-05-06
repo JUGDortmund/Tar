@@ -7,11 +7,9 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldif.LDIFReader;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
-
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -25,6 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,12 +46,10 @@ public class LdapServiceImplTest {
                                                                           new TrustAllTrustManager())
                                                                           .createSSLSocketFactory(
                                                                               "TLSv1.1")));
-
     ds = new InMemoryDirectoryServer(config);
     ds.importFromLDIF(true,
         new LDIFReader(LdapServiceImplTest.class.getResourceAsStream("/testuser.ldif")));
     ds.startListening();
-
     EmbeddedMongo.DB.port(28018).start();
   }
 
@@ -92,4 +89,12 @@ public class LdapServiceImplTest {
     expectedGroups2.add("tar-users");
     Assert.assertEquals(expectedGroups2, supervisorGroups);
   }
+  
+  @Test
+  public void testGetLdapManagers() throws LDAPException {
+    Set<String> users = ldapService.getLdapSupervisorList();
+    assertEquals(1, users.size());
+    Assert.assertTrue(users.contains("supervisor"));
+  }
+
 }
