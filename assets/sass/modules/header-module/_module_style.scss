@@ -1,10 +1,7 @@
 .main-header {
-	
-	img {
-		border: 1px solid red;
-
-		&.user-image {
-			height: 40px;
-		}
+	.logo-image {
+		margin-top: 5px;
+		height: 42px;
+		width: 62px;
 	}
 }
