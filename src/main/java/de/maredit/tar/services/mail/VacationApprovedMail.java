@@ -19,6 +19,9 @@ public class VacationApprovedMail implements MailObject {
 
   public VacationApprovedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstName());
+    values.put("manager", vacation.getManager().getFullname());
+    values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
+        .getFullname());
     values.put("fromDate", vacation.getFrom());
     values.put("toDate", vacation.getTo());
     values.put("totalDays", vacation.getDays());

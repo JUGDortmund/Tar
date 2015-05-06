@@ -26,7 +26,7 @@ public class UserSyncTask {
   @Autowired
   private UserRepository userRepository;
 
-  @Scheduled(cron = "0 */1 * * * ?")
+  @Scheduled(cron = "0 0 */1 * * ?")
   public void syncLdapUser() {
     try {
       LOG.debug("Syncing users");
@@ -37,8 +37,12 @@ public class UserSyncTask {
         User localUser = userRepository.findByUidNumber(user.getUidNumber());
         if (localUser == null) {
           localUser = user;
+          LOG.debug("User created. username: {} / uidNumber: {}", user.getUsername(),
+                    user.getUidNumber());
         } else {
           updateUser(localUser, user);
+          LOG.debug("User updated. username: {} / uidNumber: {}", user.getUsername(),
+                                                    user.getUidNumber());
         }
         userRepository.save(localUser);
         editedUser.add(localUser);
@@ -71,8 +75,6 @@ public class UserSyncTask {
     user.setUsername(resultEntry.getUsername());
     user.setFirstName(resultEntry.getFirstName());
     user.setLastName(resultEntry.getLastName());
-    LOG.trace("User updated. username: {} / uidNumber: {}", user.getUsername(),
-              user.getUidNumber());
   }
 
 }
