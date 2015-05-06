@@ -55,13 +55,13 @@
         $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
         $vacationDetail.find('.state').text(calEvent.state);
         $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
-        if ((calEvent.substituteFirstName !== null) && (calEvent.substituteLastName !== null)) {
+        if ((calEvent.substituteFirstName != null) && (calEvent.substituteLastName != null)) {
           substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName;
         } else {
           substituteText = '-';
         }
         $vacationDetail.find('.substitute').text(substituteText);
-        if ((calEvent.managerFirstName !== null) && (calEvent.managerLastName !== null)) {
+        if ((calEvent.managerFirstName != null) && (calEvent.managerLastName != null)) {
           managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName;
         } else {
           managerText = '-';

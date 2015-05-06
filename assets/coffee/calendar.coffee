@@ -43,10 +43,10 @@
       $vacationDetail.find('.state').text( calEvent.state );
       $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
       #Test if substitute is set. If set, show name, else show -
-      if ( ( calEvent.substituteFirstName != null ) && ( calEvent.substituteLastName != null ) ) then ( substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName ) else ( substituteText = '-' )
+      if ( ( calEvent.substituteFirstName? ) && ( calEvent.substituteLastName? ) ) then ( substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName ) else ( substituteText = '-' )
       $vacationDetail.find('.substitute').text( substituteText )
       #Test if substitute is set. If set, show name, else show -
-      if ( ( calEvent.managerFirstName != null ) && ( calEvent.managerLastName != null ) ) then ( managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName ) else ( managerText = '-' )
+      if ( ( calEvent.managerFirstName? ) && ( calEvent.managerLastName? ) ) then ( managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName ) else ( managerText = '-' )
       $vacationDetail.find('.manager').text( managerText )
       $vacationDetail.show()
       $('#sidebar').addClass('active')

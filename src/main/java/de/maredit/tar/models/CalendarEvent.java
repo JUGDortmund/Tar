@@ -20,6 +20,9 @@ public class CalendarEvent {
   private String substituteFirstName;
   private String substituteLastName;
 
+  private String managerFirstName;
+  private String managerLastName;
+
   private String state;
   private Boolean allDay;
 
@@ -35,6 +38,8 @@ public class CalendarEvent {
       this.setSubstituteFirstName(vacation.getSubstitute().getFirstName());
       this.setSubstituteLastName(vacation.getSubstitute().getLastName());
     }
+    this.setManagerFirstName(vacation.getManager().getFirstName());
+    this.setManagerLastName(vacation.getManager().getLastName());
     this.allDay = true;
   }
 
@@ -100,6 +105,22 @@ public class CalendarEvent {
 
   public void setSubstituteLastName(String substituteLastName) {
     this.substituteLastName = substituteLastName;
+  }
+
+  public String getManagerFirstName() {
+    return managerFirstName;
+  }
+
+  public void setManagerFirstName(String managerFirstName) {
+    this.managerFirstName = managerFirstName;
+  }
+
+  public String getManagerLastName() {
+    return managerLastName;
+  }
+
+  public void setManagerLastName(String managerLastName) {
+    this.managerLastName = managerLastName;
   }
 
   public String getState() {
