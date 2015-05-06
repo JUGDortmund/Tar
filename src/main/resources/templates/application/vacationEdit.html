@@ -8,7 +8,8 @@
         <!-- Error-handling: show alert box, when validation fails  -->
 
         <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
-        	<input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:field="*{id}"/>
+
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
                 <ul>
                     <li th:each="err : ${#fields.detailedErrors()}"
@@ -20,12 +21,14 @@
             <div class="row">
                 <div th:class="${#fields.hasErrors('user')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                     <label for="employee">Mitarbeiter *</label>
-<!-- 					<input type="text" class="form-control" disabled="disabled" th:value="${vacation.user.lastName +', '+ vacation.user.firstName}" th:field="*{user}" /> -->
-					<select class="form-control" style="width: 100%;" name="employee" id="employee" th:field="*{user}" th:readonly="${true}" th:disabled="${disableInput}">
-						<option th:value="${vacation.user.id}" th:selected="true"
+                    <!-- 					<input type="text" class="form-control" disabled="disabled" th:value="${vacation.user.lastName +', '+ vacation.user.firstName}" th:field="*{user}" /> -->
+                    <select class="form-control" style="width: 100%;" name="employee" id="employee"
+                            th:field="*{user}" th:readonly="${true}" th:if="${!disableInput}">
+                        <option th:value="${vacation.user.id}" th:selected="true"
                                 th:text="${vacation.user.lastName +', '+ vacation.user.firstName}">
                         </option>
                     </select>
+                    <input th:if="${disableInput}" type="text" class="form-control" th:value="*{user.lastName+ ', ' + user.firstName}" disabled="disabled"/>
                 </div>
             </div>
 
@@ -33,10 +36,10 @@
                 <div th:class="${#fields.hasErrors('from')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="dateFrom">von *</label>
 
-                    <div class="input-group date">
+                    <div th:class="${disableInput ? 'input-group' : 'input-group date'}">
                         <input type="text" class="form-control" name="dateFrom" id="dateFrom"
                                th:field="*{from}" th:disabled="${disableInput}"/>
-                        <span class="input-group-addon"><i
+                        <span th:if="${!disableInput}" class="input-group-addon"><i
                                 class="glyphicon glyphicon-th"></i></span>
                     </div>
                 </div>
@@ -44,10 +47,10 @@
                 <div th:class="${#fields.hasErrors('to')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="dateTo">bis *</label>
 
-                    <div class="input-group date">
+                    <div th:class="${disableInput ? 'input-group' : 'input-group date'}">
                         <input type="text" class="form-control" name="dateTo" id="dateTo"
                                th:field="*{to}" th:disabled="${disableInput}"/>
-                        <span class="input-group-addon"><i
+                        <span th:if="${!disableInput}" class="input-group-addon"><i
                                 class="glyphicon glyphicon-th"></i></span>
                     </div>
                 </div>
@@ -56,13 +59,15 @@
             <div class="row">
                 <div th:class="${#fields.hasErrors('days')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="vacationDays">Anzahl Urlaubstage *</label>
-                    <input type="number" class="form-control" name="vacationDays" id="vacationDays" step="0.5"
+                    <input type="number" class="form-control" name="vacationDays" id="vacationDays"
+                           step="0.5"
                            th:field="*{days}" th:disabled="${disableInput}"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('daysLeft')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="daysLeft">Verbleibende Urlaubstage *</label>
-                    <input type="number" class="form-control" name="daysLeft" id="daysLeft" step="0.5"
+                    <input type="number" class="form-control" name="daysLeft" id="daysLeft"
+                           step="0.5"
                            th:field="*{daysLeft}" th:disabled="${disableInput}"/>
                 </div>
             </div>
@@ -70,9 +75,12 @@
             <div class="row">
                 <div th:class="${#fields.hasErrors('substitute')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                     <label for="replacement">Vertreter</label>
-                    <select class="form-control" style="width: 100%;" name="replacement" th:field="*{substitute}"
-                            id="replacement" th:disabled="${disableInput}">
-                        <option th:value="${null}" th:selected="${vacation.substitute == substitute}">(keine)</option>
+                    <select class="form-control" style="width: 100%;" name="replacement"
+                            th:field="*{substitute}"
+                            id="replacement" th:disabled="${disableInput}" th:if="${!disableInput}">
+                        <option th:value="${null}"
+                                th:selected="${vacation.substitute == substitute}">(kein Vertreter)
+                        </option>
                         <option th:each="substitute : ${users}"
                                 th:value="${substitute.id}"
                                 th:selected="${vacation.substitute == substitute}"
@@ -80,13 +88,15 @@
                             Mustermann, Max
                         </option>
                     </select>
+                    <input th:if="${disableInput}" type="text" class="form-control" th:value="*{substitute != NULL ? substitute.lastName+ ', ' + substitute.firstName : ''}" disabled="disabled"/>
                 </div>
             </div>
 
             <div class="row">
                 <div th:class="${#fields.hasErrors('manager')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                     <label for="superior">Zuständiger Vorgesetzter *</label>
-                    <select class="form-control" style="width: 100%;" name="superior" id="superior" th:field="*{manager}" th:disabled="${disableInput}">
+                    <select class="form-control" style="width: 100%;" name="superior" id="superior"
+                            th:field="*{manager}" th:disabled="${disableInput}" th:if="${!disableInput}">
                         <option th:each="manager : ${managers}"
                                 th:value="${manager.id}"
                                 th:selected="${vacation.manager == manager}"
@@ -94,19 +104,24 @@
                             Mustermann, Max
                         </option>
                     </select>
-                    <!-- <input class="form-control" type="text" name="superior" id="superior"/> -->
+                    <input th:if="${disableInput}" type="text" class="form-control" th:value="*{manager.lastName+ ', ' + manager.firstName}" disabled="disabled"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 form-group">
                     <label for="comment">Kommentar</label>
-                    <textarea class="form-control" rows="5" name="comment" id="comment" th:disabled="${disableInput}"></textarea>
+                    <textarea class="form-control" rows="5" name="comment" id="comment"
+                              th:disabled="${disableInput}"></textarea>
                 </div>
             </div>
 
-            <a th:if="${disableInput} == false" th:href="@{/cancelVacation(id=${vacation.id})}" onclick="return confirm('Willst du den Urlaub wirklich stornieren?');" class="btn btn-danger">stornieren</a>
-            <button type="submit" class="btn btn-success pull-right" th:if="${disableInput} == false">aktualisieren</button>
+            <a th:if="${disableInput} == false" th:href="@{/cancelVacation(id=${vacation.id})}"
+               onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
+               class="btn btn-danger">stornieren</a>
+            <button type="submit" class="btn btn-success pull-right"
+                    th:if="${disableInput} == false">aktualisieren
+            </button>
         </form>
     </div>
 </div>

@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-xs-12 form-group">
                     <label for="employee">Mitarbeiter</label>
-					<input type="text" class="form-control" th:value="*{user.firstName + ' ' + user.lastName}" disabled="disabled"/>
+					<input type="text" class="form-control" th:value="*{user.lsstName + ', ' + user.firstName}" disabled="disabled"/>
                 </div>
             </div>
 
@@ -38,14 +38,14 @@
             <div class="row">
                 <div class="col-xs-12 form-group">
                     <label for="replacement">Vertreter</label>
-                    <input type="text" class="form-control" th:value="*{substitute.firstName + ' ' + substitute.lastName}" disabled="disabled"/>
+                    <input type="text" class="form-control" th:value="*{substitute.lastName +', '+ substitute.firstName}" disabled="disabled"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12 form-group">
                     <label for="superior">Zuständiger Vorgesetzter</label>
-                    <input type="text" class="form-control" th:value="*{manager.firstName + ' ' + manager.lastName}" disabled="disabled"/>
+                    <input type="text" class="form-control" th:value="*{manager.lastName +', '+ manager.firstName}" disabled="disabled"/>
                 </div>
             </div>
 
