@@ -9,7 +9,9 @@
 	}
 
 	.navbar .nav > li {
-		> a:hover {
+		> a:hover,
+		> a:active,
+		> a:focus {
 			background-color: transparent !important;
 		}
 
