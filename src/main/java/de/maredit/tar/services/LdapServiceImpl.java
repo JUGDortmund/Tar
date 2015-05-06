@@ -147,7 +147,7 @@ public class LdapServiceImpl implements LdapService {
     }
     connectionPool.releaseConnection(ldapConnection);
     return groups;
-  }
+  } 
 
   private SearchResult searchForLdapGroups(String uid, LDAPConnection ldapConnection)
       throws LDAPException, LDAPSearchException {
@@ -169,10 +169,11 @@ public class LdapServiceImpl implements LdapService {
     user.setUsername(resultEntry.getAttributeValue(LdapService.FIELD_UID));
     user.setFirstName(resultEntry.getAttributeValue(LdapService.FIELD_CN));
     user.setLastName(resultEntry.getAttributeValue(LdapService.FIELD_SN));
+    user.setPhoto(resultEntry.getAttributeValueBytes(LdapService.FIELD_PHOTO));
     user.setActive(Boolean.TRUE);
-
+    
     LOG.debug("User created. username: {} / uidNumber: {}", user.getUsername(),
-              user.getUidNumber());
+              user.getUidNumber() );
     return user;
   }
 }

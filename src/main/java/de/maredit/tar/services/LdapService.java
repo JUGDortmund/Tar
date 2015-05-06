@@ -19,6 +19,7 @@ public interface LdapService {
   String FIELD_UID = "uid";
   String FIELD_UIDNUMBER = "uidnumber";
   String FIELD_MAIL = "mail";
+  String FIELD_PHOTO = "jpegPhoto";
 
 
   /**

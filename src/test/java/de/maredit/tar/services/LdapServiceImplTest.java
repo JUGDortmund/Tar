@@ -33,63 +33,64 @@ import static org.junit.Assert.assertEquals;
 @ActiveProfiles("serviceTest")
 public class LdapServiceImplTest {
 
-  private static InMemoryDirectoryServer ds;
+	private static InMemoryDirectoryServer ds;
 
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-    InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=de");
-    config.setBaseDNs("o=maredit,dc=de");
-    config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig("testListener",
-                                                                      InetAddress
-                                                                          .getLoopbackAddress(),
-                                                                      1600,
-                                                                      new SSLUtil(
-                                                                          new TrustAllTrustManager())
-                                                                          .createSSLSocketFactory(
-                                                                              "TLSv1.1")));
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(
+				"dc=de");
+		config.setBaseDNs("o=maredit,dc=de");
+		config.setListenerConfigs(InMemoryListenerConfig.createLDAPConfig(
+				"testListener", InetAddress.getLoopbackAddress(), 1600,
+				new SSLUtil(new TrustAllTrustManager())
+						.createSSLSocketFactory("TLSv1.1")));
 
-    ds = new InMemoryDirectoryServer(config);
-    ds.importFromLDIF(true,
-        new LDIFReader(LdapServiceImplTest.class.getResourceAsStream("/testuser.ldif")));
-    ds.startListening();
+		ds = new InMemoryDirectoryServer(config);
+		ds.importFromLDIF(
+				true,
+				new LDIFReader(LdapServiceImplTest.class
+						.getResourceAsStream("/testuser.ldif")));
+		ds.startListening();
 
-    EmbeddedMongo.DB.port(28018).start();
-  }
+		EmbeddedMongo.DB.port(28018).start();
+	}
 
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-    ds.shutDown(true);
-  }
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		ds.shutDown(true);
+	}
 
-  @Autowired
-  private LdapService ldapService;
+	@Autowired
+	private LdapService ldapService;
 
-  @Test
-  public void testGetLdapUsers() throws LDAPException {
-    List<User> users = ldapService.getLdapUserList();
-    assertEquals(2, users.size());
-  }
+	@Test
+	public void testGetLdapUsers() throws LDAPException {
+		List<User> users = ldapService.getLdapUserList();
+		assertEquals(2, users.size());
+	}
 
-  @Test
-  public void testAuthenticateUser() throws LDAPException {
-    Assert.assertTrue(ldapService.authenticateUser("worker", "TakeARest"));
-    Assert.assertFalse(ldapService.authenticateUser("worker", "WrongPassword"));
-    Assert.assertFalse(ldapService.authenticateUser("unknownUser", "WrongPassword"));
-  }
+	@Test
+	public void testAuthenticateUser() throws LDAPException {
+		Assert.assertTrue(ldapService.authenticateUser("worker", "TakeARest"));
+		Assert.assertFalse(ldapService.authenticateUser("worker",
+				"WrongPassword"));
+		Assert.assertFalse(ldapService.authenticateUser("unknownUser",
+				"WrongPassword"));
+	}
 
-  @Test
-  public void testGetUserGroups() throws LDAPException {
-    List<String> workerGroups = ldapService.getUserGroups("worker");
-    Assert.assertEquals(1, workerGroups.size());
-    List<String> expectedGroups = new ArrayList<>();
-    expectedGroups.add("tar-users");
-    Assert.assertEquals(expectedGroups, workerGroups);
-    
-    List<String> supervisorGroups = ldapService.getUserGroups("supervisor");
-    Assert.assertEquals(2, supervisorGroups.size());
-    List<String> expectedGroups2 = new ArrayList<>();
-    expectedGroups2.add("tar-supervisors");
-    expectedGroups2.add("tar-users");
-    Assert.assertEquals(expectedGroups2, supervisorGroups);
-  }
+	@Test
+	public void testGetUserGroups() throws LDAPException {
+		List<String> workerGroups = ldapService.getUserGroups("worker");
+		Assert.assertEquals(1, workerGroups.size());
+		List<String> expectedGroups = new ArrayList<>();
+		expectedGroups.add("tar-users");
+		Assert.assertEquals(expectedGroups, workerGroups);
+
+		List<String> supervisorGroups = ldapService.getUserGroups("supervisor");
+		Assert.assertEquals(2, supervisorGroups.size());
+		List<String> expectedGroups2 = new ArrayList<>();
+		expectedGroups2.add("tar-supervisors");
+		expectedGroups2.add("tar-users");
+		Assert.assertEquals(expectedGroups2, supervisorGroups);
+	}
 }
