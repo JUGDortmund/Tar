@@ -24,3 +24,7 @@ groups:
   supervisor:
     - supervisorGroup
     - tar-supervisor
+    
+--- ##
+managers:
+  - supervisor

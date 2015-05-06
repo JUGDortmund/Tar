@@ -234,7 +234,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     List<User> managerList = new ArrayList<User>();
     try {
       managerList =
-          userRepository.findByUsernames(ldapService.getLdapManagerList());
+          userRepository.findByUsernames(ldapService.getLdapSupervisorList());
       managerList =
           managerList.stream().filter(e -> e.isActive()).sorted((e1, e2) -> e1.getLastname()
               .compareTo(e2.getLastname()))
