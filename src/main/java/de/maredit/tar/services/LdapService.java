@@ -14,7 +14,6 @@ public interface LdapService {
 
   String FIELD_CN = "cn";
   String FIELD_SN = "sn";
-  String FIELD_MEMBERUID = "memberUid";
   String FIELD_MEMBER = "member";
   String FIELD_UID = "uid";
   String FIELD_UIDNUMBER = "uidnumber";
@@ -28,9 +27,9 @@ public interface LdapService {
   List<User> getLdapUserList() throws LDAPException;
 
   /**
-   * Get the list uf usernames for team leader
+   * Get the list uf usernames for supervisor
    */
-  Set<String> getLdapManagerList() throws LDAPException;
+  Set<String> getLdapSupervisorList() throws LDAPException;
 
   /**
    * Authenticate user using configured ldap
@@ -38,5 +37,4 @@ public interface LdapService {
   boolean authenticateUser(String uid, String password) throws LDAPException;
 
   List<String> getUserGroups(String uid) throws LDAPException;
-
 }

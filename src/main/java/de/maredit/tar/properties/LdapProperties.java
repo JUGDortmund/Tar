@@ -15,7 +15,7 @@ public class LdapProperties {
 
   private String applicationUserDN;
 
-  private String applicationTeamleaderDN;
+  private String applicationSupervisorDN;
 
   private String readUser;
 
@@ -49,8 +49,8 @@ public class LdapProperties {
     return readPassword;
   }
 
-  public String getApplicationTeamleaderDN() {
-    return applicationTeamleaderDN;
+  public String getApplicationSupervisorDN() {
+    return applicationSupervisorDN;
   }
 
   public String getApplicationUserDN() {
@@ -93,8 +93,8 @@ public class LdapProperties {
     this.readPassword = readPassword;
   }
 
-  public void setApplicationTeamleaderDN(String applicationTeamleaderDN) {
-    this.applicationTeamleaderDN = applicationTeamleaderDN;
+  public void setApplicationSupervisorDN(String applicationSupervisorDN) {
+    this.applicationSupervisorDN = applicationSupervisorDN;
   }
 
   public void setGroupLookUpAttribute(String groupLookUpAttribute) {
