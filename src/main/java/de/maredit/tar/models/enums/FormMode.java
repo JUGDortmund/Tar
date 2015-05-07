@@ -7,8 +7,8 @@ public enum FormMode {
   NEW("new"),
   EDIT("edit"),
   VIEW("view"),
-  SUBSTITUTE("substitute"),
-  MANAGER("manager");
+  SUBSTITUTE_APPROVAL("substituteapproval"),
+  MANAGER_APPROVAL("managerapproval");
 
   private final String value;
 

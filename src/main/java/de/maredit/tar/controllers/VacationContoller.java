@@ -127,9 +127,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
         return "application/vacationForm";
       case "approve":
-        return "application/vacationApprove";
+        model.addAttribute("formMode", FormMode.MANAGER_APPROVAL.get());
+        return "application/vacationForm";
       case "substitute":
-        return "application/vacationSubstitute";
+        model.addAttribute("formMode", FormMode.SUBSTITUTE_APPROVAL.get());
+        return "application/vacationForm";
       case "view":
         return "application/vacationView";
       default:

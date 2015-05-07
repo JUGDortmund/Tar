@@ -131,11 +131,16 @@ edit-vacation, approve-vacation  -->
                 </th:block>
 
                 <!--/* substitute */-->
-
+                <th:block th:case="'substituteapproval'">
+                    <a th:href="@{/substitution(id=${vacation.id}, approve=false)}" onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');" class="btn btn-danger">ablehnen</a>
+                    <a th:href="@{/substitution(id=${vacation.id}, approve=true)}" onclick="return confirm('Willst du die Vertretung wirklich annehmen?');" class="btn btn-success pull-right">annehmen</a>
+                </th:block>
                 <!--/* manager */-->
-
+                <th:block th:case="'managerapproval'">
+                    <a th:href="@{/approval(id=${vacation.id}, approve=false)}" onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');" class="btn btn-danger">ablehnen</a>
+                    <a th:href="@{/approval(id=${vacation.id}, approve=true)}" onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');" class="btn btn-success pull-right">annehmen</a>
+                </th:block>
             </th:block>
-
 
         </form>
     </div>
