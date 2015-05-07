@@ -14,17 +14,22 @@ spring:
       database: tar
       embedded: true
       preload: true
-  ldap:
-    host: ldap-master.maredit.net
-    port: 636
-    userLookUpDN: ou=users,o=maredit,dc=de
-    userBindDN: uid=$username,ou=users,o=maredit,dc=de
-    applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
-    applicationSupervisorDN: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
-    groupLookUpDN: ou=services,o=maredit,dc=de
-    groupLookUpAttribute: member
-    readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
-    readPassword: 7Ey8vHzPPZrdWA
+---
+##### Demo configuration #####
+spring:
+  profiles: demo
+  data:
+    mongodb:
+      host: localhost
+      port: 28018
+      database: tar
+      embedded: true
+      preload: true
+  mail:
+    host: postfix.maredit.net
+    port: 25
+    username: no-reply@maredit.de
+    password: lkvSdsE9YroldisNLVtdpVO4
 ---
 ##### Test configuration #####
 spring:
