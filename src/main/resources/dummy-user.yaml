@@ -1,20 +1,20 @@
 users:
   - username: user1
     uidNumber: 100
-    firstName: Benutzer 1
-    lastName: Dname
+    firstname: Benutzer 1
+    lastname: Dname
     mail: tar-dummyuser1@mailinator.com
     active: true
   - username: user2
     uidNumber: 101
-    firstName: Benutzer 2
-    lastName: Bname
+    firstname: Benutzer 2
+    lastname: Bname
     mail: tar-dummyuser2@mailinator.com
     active: true
   - username: supervisor
     uidNumber: 200
-    firstName: Vorgesetzter
-    lastName: Xname
+    firstname: Vorgesetzter
+    lastname: Xname
     mail: tar-supervisor@mailinator.com
     active: true
 
