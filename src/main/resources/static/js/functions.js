@@ -29,17 +29,44 @@
         }
       ],
       eventDataTransform: function(eventData) {
+        switch (eventData.state) {
+          case 'approved':
+            eventData.color = '#008d4c';
+            break;
+          case 'pending':
+            eventData.color = '#f39c12';
+            break;
+          case 'rejected':
+            eventData.color = '#dd4b39';
+            break;
+          case 'canceled':
+            eventData.color = '#ca195a';
+            break;
+          default:
+            eventData.color = '#00f';
+        }
         eventData.displayedEnd = moment(eventData.end);
         eventData.end = moment(eventData.end).add(1, 'days');
         return eventData;
       },
       eventClick: function(calEvent, jsEvent, view) {
-        var $vacationDetail;
+        var $vacationDetail, managerText, substituteText;
         $vacationDetail = $('#vacationDetail');
         $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
         $vacationDetail.find('.state').text(calEvent.state);
         $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
-        $vacationDetail.find('.substitute').text(calEvent.substituteFirstName + ' ' + calEvent.substituteLastName);
+        if ((calEvent.substituteFirstName != null) && (calEvent.substituteLastName != null)) {
+          substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName;
+        } else {
+          substituteText = '-';
+        }
+        $vacationDetail.find('.substitute').text(substituteText);
+        if ((calEvent.managerFirstName != null) && (calEvent.managerLastName != null)) {
+          managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName;
+        } else {
+          managerText = '-';
+        }
+        $vacationDetail.find('.manager').text(managerText);
         $vacationDetail.show();
         return $('#sidebar').addClass('active');
       }
@@ -65,13 +92,17 @@
     $myForm = $('#vacation-form-panel');
     $myForm.html(data).hide().fadeIn(800);
     $('.panel-default').matchHeight();
-    $myForm.find('.input-group.date').datepicker({});
+    $myForm.find('.input-group.date').datepicker({
+      "format": "dd.mm.yyyy",
+      "autoclose": true
+    });
     return $myForm.find('select').select2();
   };
 
   (function($) {
     $('.input-group.date').datepicker({
-      "format": "dd.mm.yyyy"
+      "format": "dd.mm.yyyy",
+      "autoclose": true
     });
     $('.panel-default select').select2();
     $('.autosubmit').on('change', function() {

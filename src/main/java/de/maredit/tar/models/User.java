@@ -14,7 +14,7 @@ public class User {
   private String lastname;
   private String username;
   private String mail;
-  private Boolean active;
+  private boolean active;
 
   public User() {}
 
@@ -58,11 +58,11 @@ public class User {
     this.username = username;
   }
 
-  public Boolean isActive() {
+  public boolean isActive() {
     return active;
   }
 
-  public void setActive(Boolean active) {
+  public void setActive(boolean active) {
     this.active = active;
   }
 
