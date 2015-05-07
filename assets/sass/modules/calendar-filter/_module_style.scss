@@ -1,0 +1,20 @@
+.calendar-filter {
+
+	> .list-group-item {
+
+		color: $white;
+
+		&.filter-approved {
+			background-color: $vacation-approved;
+		}
+        &.filter-pending {
+        	background-color: $vacation-pending;
+        }
+		&.filter-cancelled {
+			background-color: $vacation-cancelled;
+		}
+		&.filter-rejected {
+			background-color: $vacation-rejected;
+		}
+	}
+}
