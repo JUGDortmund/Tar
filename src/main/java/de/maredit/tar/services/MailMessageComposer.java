@@ -39,7 +39,9 @@ public class MailMessageComposer {
     message.setSubject(mail.getSubject());
     message.setSentDate(new Date());
     message.setTo(mail.getToRecipients());
-    message.setCc(mail.getCCRecipients());
+    if (mail.getCCRecipients() != null) {
+      message.setCc(mail.getCCRecipients());
+    }
     message.setText(prepareMailBody(mail, mail.getTemplate()));
     return message;
   }
@@ -51,10 +53,12 @@ public class MailMessageComposer {
       messageHelper.setSubject(mail.getSubject());
       messageHelper.setSentDate(new Date());
       messageHelper.setTo(mail.getToRecipients());
-      messageHelper.setCc(mail.getCCRecipients());
+      if (mail.getCCRecipients() != null) {
+        messageHelper.setCc(mail.getCCRecipients());
+      }
       messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
     } catch (MessagingException e) {
-      LOG.error(e);
+      LOG.error("Error creating mail", e);
     }
     return message;
   }

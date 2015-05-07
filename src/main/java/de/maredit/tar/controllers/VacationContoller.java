@@ -1,7 +1,6 @@
 package de.maredit.tar.controllers;
 
 import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
@@ -17,6 +16,7 @@ import de.maredit.tar.services.mail.VacationApprovedMail;
 import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
+import de.maredit.tar.services.mail.VacationModifiedMail;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +47,7 @@ import javax.validation.Valid;
 @Controller
 public class VacationContoller extends WebMvcConfigurerAdapter {
 
-  private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
+  private static final Logger LOG = LogManager.getLogger(VacationContoller.class);
 
   @Autowired
   private VacationRepository vacationRepository;
@@ -127,6 +127,12 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
     switch (action) {
       case "edit":
+        model.addAttribute("vacation", vacation);
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("managers", getManagerList());
+        model.addAttribute("selectedUser",
+            this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
+        model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
         return "application/vacationEdit";
       case "approve":
         return "application/vacationApprove";
@@ -165,9 +171,12 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
                                  approvals);
       return "application/index";
     } else {
+      boolean newVacation = vacation.getId() == null;
+      if (!newVacation) {
+        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT : State.REQUESTED_SUBSTITUTE);
+      }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(new VacationCreateMail(vacation));
-
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));
       return "redirect:/";
     }
   }
@@ -180,15 +189,14 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     User user = getUser(request);
     vacation.setUser(user);
 
-    VacationCanceledMail mail = new
-        VacationCanceledMail(vacation);
+    VacationCanceledMail mail = new VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);
     this.vacationRepository.save(vacation);
     this.mailService.sendMail(mail);
 
     List<User> users = getSortedUserList();
-    List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
-        user, State.CANCELED);
+    List<Vacation> vacations =
+        this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
     List<User> managerList = getManagerList();
     List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
         getConnectedUser());
@@ -198,8 +206,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
             getConnectedUser(), State.REQUESTED_SUBSTITUTE);
     List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
         getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
-    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
-                               substitutesForApproval, approvals);
+    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes, substitutesForApproval, approvals);
 
     return "redirect:/";
   }

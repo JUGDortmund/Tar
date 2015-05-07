@@ -1,7 +1,5 @@
 package de.maredit.tar.tasks;
 
-import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.LdapService;
@@ -11,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import com.unboundid.ldap.sdk.LDAPException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,7 @@ public class UserSyncTask {
   @Scheduled(cron = "0 0 */1 * * ?")
   public void syncLdapUser() {
     try {
+      LOG.debug("Syncing users");
       List<User> ldapUserList = ldapService.getLdapUserList();
 
       List<User> editedUser = new ArrayList<>();
@@ -75,4 +76,5 @@ public class UserSyncTask {
     user.setFirstname(resultEntry.getFirstname());
     user.setLastname(resultEntry.getLastname());
   }
+
 }
