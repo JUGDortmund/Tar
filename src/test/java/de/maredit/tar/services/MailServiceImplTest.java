@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import scala.util.parsing.combinator.testing.Str;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
 @ActiveProfiles("serviceTest")
@@ -45,10 +47,11 @@ public class MailServiceImplTest {
       }
       
       @Override
-      public String getToRecipient() {
-        return "test@maredit.de";
+      public String[] getToRecipients() {
+        String[] receipients = {"test@maredit.de"};
+        return receipients;
       }
-      
+
       @Override
       public String getTemplate() {
         return "mail/test";

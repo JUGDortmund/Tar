@@ -34,7 +34,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
-@Profile({"prod", "dev", "serviceTest"})
+@Profile({"prod", "serviceTest"})
 public class LdapServiceImpl implements LdapService {
 
   public static final int NUM_CONNECTIONS = 10;
@@ -173,8 +173,8 @@ public class LdapServiceImpl implements LdapService {
     user.setMail(resultEntry.getAttributeValue(LdapService.FIELD_MAIL));
     user.setUidNumber(resultEntry.getAttributeValue(LdapService.FIELD_UIDNUMBER));
     user.setUsername(resultEntry.getAttributeValue(LdapService.FIELD_UID));
-    user.setFirstName(resultEntry.getAttributeValue(LdapService.FIELD_CN));
-    user.setLastName(resultEntry.getAttributeValue(LdapService.FIELD_SN));
+    user.setFirstname(resultEntry.getAttributeValue(LdapService.FIELD_CN));
+    user.setLastname(resultEntry.getAttributeValue(LdapService.FIELD_SN));
     user.setActive(Boolean.TRUE);
     return user;
   }
