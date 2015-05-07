@@ -52,16 +52,21 @@
 }).call(this);
 
 (function() {
-  var refreshVacationForm;
+  var refreshVacationForm, scrollToVacationForm;
 
-  refreshVacationForm = function(data) {
-    var $myForm, clientWidth;
+  scrollToVacationForm = function() {
+    var clientWidth;
     clientWidth = document.documentElement.clientWidth;
-    if (clientWidth < 770) {
-      $('html, body').animate({
+    if (clientWidth < 761) {
+      return $('html, body').animate({
         scrollTop: ($('.vacation-form').offset().top)
       }, 'slow');
     }
+  };
+
+  refreshVacationForm = function(data) {
+    var $myForm;
+    scrollToVacationForm();
     $myForm = $('#vacation-form-panel');
     $myForm.html(data).hide().fadeIn(800);
     $('.panel-default').matchHeight();
@@ -73,6 +78,9 @@
   };
 
   (function($) {
+    $('#newVacation').click(function() {
+      return scrollToVacationForm();
+    });
     $('.input-group.date').datepicker({
       "format": "dd.mm.yyyy",
       "autoclose": true

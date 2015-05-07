@@ -1,6 +1,6 @@
 .vacation-button {
-	position: fixed; 
-	top: 70px; 
+	position: absolute; 
+	top: 24px; 
 	right: 0px; 
 	background-color: #fff; 
 	@include border-radius(5px 0px 0px 5px); 
@@ -15,6 +15,7 @@
 
 @media (max-width: 760px) {
 	.vacation-button {
+		position: fixed;
 		top: auto;
 		right: 0px; 
 		left: 0px;
