@@ -30,7 +30,6 @@ public class MailMessageComposer {
   private String prepareMailBody(MailObject mail, String templateName) {
     Context ctx = new Context();
     ctx.setVariables(mail.getValues());
-
     return templateEngine.process(templateName, ctx);
   }
 
@@ -39,8 +38,10 @@ public class MailMessageComposer {
 
     message.setSubject(mail.getSubject());
     message.setSentDate(new Date());
-    message.setTo(mail.getToRecipient());
-    message.setCc(mail.getCCRecipients());
+    message.setTo(mail.getToRecipients());
+    if (mail.getCCRecipients() != null) {
+      message.setCc(mail.getCCRecipients());
+    }
     message.setText(prepareMailBody(mail, mail.getTemplate()));
     return message;
   }
@@ -51,11 +52,13 @@ public class MailMessageComposer {
       MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
       messageHelper.setSubject(mail.getSubject());
       messageHelper.setSentDate(new Date());
-      messageHelper.setTo(mail.getToRecipient());
-      messageHelper.setCc(mail.getCCRecipients());
+      messageHelper.setTo(mail.getToRecipients());
+      if (mail.getCCRecipients() != null) {
+        messageHelper.setCc(mail.getCCRecipients());
+      }
       messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
     } catch (MessagingException e) {
-      LOG.error(e);
+      LOG.error("Error creating mail", e);
     }
     return message;
   }

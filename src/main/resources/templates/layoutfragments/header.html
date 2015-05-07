@@ -26,15 +26,14 @@
 							th:src="@{*{'data:image/jpeg;base64,'+ user.photo}}"
 							class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
 							<span class="hidden-xs"
-							th:text="*{user.firstName + ' ' + user.lastName}"></span>
+							th:text="*{user.firstname + ' ' + user.lastname}"></span>
 					</a>
 					</li>
 					<li class="dropdown user user-menu" th:if="*{user.photo == null}">
 						<!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle"
 						data-toggle="dropdown"> <!-- The user image in the navbar--> <img
 							src="../images/dummy_user_image.jpg" class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
-							<span class="hidden-xs"
-							th:text="*{user.firstName + ' ' + user.lastName}"></span>
+							<span class="hidden-xs"	th:text="*{user.firstname + ' ' + user.lastname}"></span>
 					</a>
 					</li>
 					<li>

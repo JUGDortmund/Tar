@@ -8,7 +8,7 @@ edit-vacation, approve-vacation  -->
 <div class="panel panel-default module vacation-form">
     <div class="panel-heading">Urlaubsformular</div>
     <div class="panel-body">
-        <!-- Error-handling: show aler box, when validation fails  -->
+        <!-- Error-handling: show alert box, when validation fails  -->
 
         <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
@@ -27,7 +27,7 @@ edit-vacation, approve-vacation  -->
                     <select class="form-control" style="width: 100%;" name="employee" id="employee" th:field="*{user}">
                         <option th:each="user : ${users}"
                                 th:value="${user.id}"
-                                th:text="${user.lastName +', '+ user.firstName}">
+                                th:text="${user.lastname +', '+ user.firstname}">
                         </option>
                     </select>
                 </div>
@@ -79,7 +79,7 @@ edit-vacation, approve-vacation  -->
                         <option value="" selected="selected">- Vertreter auswählen -</option>
                         <option th:each="substitute : ${users}"
                                 th:value="${substitute.id}"
-                                th:text="${substitute.lastName +', '+ substitute.firstName}">
+                                th:text="${substitute.lastname +', '+ substitute.firstname}">
                             Mustermann, Max
                         </option>
                     </select>
@@ -93,7 +93,7 @@ edit-vacation, approve-vacation  -->
                         <option value="" selected="selected">- Vorgesetzten auswählen -</option>
                         <option th:each="manager : ${managers}"
                                 th:value="${manager.id}"
-                                th:text="${manager.lastName +', '+ manager.firstName}">
+                                th:text="${manager.lastname +', '+ manager.firstname}">
                             Mustermann, Max
                         </option>
                     </select>

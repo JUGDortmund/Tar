@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import de.maredit.tar.services.mail.MailObject;
 
 @Service
-@Profile({"prod", "serviceTest"})
+@Profile({"prod", "demo", "serviceTest"})
 @EnableConfigurationProperties(MailProperties.class)
 public class MailServiceImpl implements MailService {
 
