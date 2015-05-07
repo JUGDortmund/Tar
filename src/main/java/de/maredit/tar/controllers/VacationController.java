@@ -1,9 +1,5 @@
 package de.maredit.tar.controllers;
 
-import org.springframework.data.repository.query.Param;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
@@ -20,9 +16,11 @@ import de.maredit.tar.services.mail.VacationApprovedMail;
 import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
+import de.maredit.tar.services.mail.VacationModifiedMail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -30,6 +28,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,9 +74,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
     binder.addValidators(new VacationValidator());
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.controllers.VacationController#index(javax.servlet.http.HttpServletRequest, org.springframework.ui.Model, de.maredit.tar.models.Vacation)
-   */
   @RequestMapping("/")
   public String index(HttpServletRequest request, Model model, @ModelAttribute("vacation") Vacation vacation) {
     User user = getUser(request);
@@ -100,9 +96,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
     return "application/index";
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.controllers.VacationController#substitution(de.maredit.tar.models.Vacation, boolean)
-   */
   @RequestMapping("/substitution")
   public String substitution(@ModelAttribute("vacation") Vacation vacation, @RequestParam(value="approve") boolean approve) {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
@@ -116,9 +109,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.controllers.VacationController#approval(de.maredit.tar.models.Vacation, boolean)
-   */
   @RequestMapping("/approval")
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation, @RequestParam(value="approve") boolean approve) {
@@ -133,13 +123,16 @@ public class VacationController extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.controllers.VacationController#vacation(de.maredit.tar.models.Vacation, java.lang.String, org.springframework.ui.Model)
-   */
   @RequestMapping(value="/vacation", method={RequestMethod.GET}, params="id")
   public String vacation(@ModelAttribute("vacation") Vacation vacation,@RequestParam(value="action", required=false) String action, Model model) {
     switch(action) {
       case "edit":
+        model.addAttribute("vacation", vacation);
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("managers", getManagerList());
+        model.addAttribute("selectedUser",
+            this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
+        model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
         return "application/vacationEdit";
       case "approve":
         return "application/vacationApprove";
@@ -152,9 +145,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
     }
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.controllers.VacationController#saveVacation(de.maredit.tar.models.Vacation, org.springframework.validation.BindingResult, org.springframework.ui.Model)
-   */
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
@@ -182,16 +172,16 @@ public class VacationController extends WebMvcConfigurerAdapter {
                                  approvals);
       return "application/index";
     } else {
+      boolean newVacation = vacation.getId() == null;
+      if (!newVacation) {
+        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT : State.REQUESTED_SUBSTITUTE);
+      }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(new VacationCreateMail(vacation));
-
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));
       return "redirect:/";
     }
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.controllers.VacationController#cancelVacation(javax.servlet.http.HttpServletRequest, de.maredit.tar.models.Vacation, org.springframework.ui.Model)
-   */
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String cancelVacation(HttpServletRequest request,@ModelAttribute("vacation") Vacation vacation, Model model) {

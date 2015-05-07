@@ -57,7 +57,7 @@ public class Vacation {
   }
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
-                  float days, float daysLeft) {
+      float days, float daysLeft) {
     this.user = user;
     this.from = from;
     this.to = to;
@@ -66,8 +66,7 @@ public class Vacation {
     this.days = days;
     this.daysLeft = daysLeft;
 
-    this.state =
-        substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
+    this.state = substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
     this.created = LocalDate.now();
   }
 
@@ -125,8 +124,7 @@ public class Vacation {
 
   public void setSubstitute(User substitute) {
     this.substitute = substitute;
-    this.state =
-        substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
+    this.state = substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
   }
 
   public LocalDate getTo() {
@@ -171,5 +169,12 @@ public class Vacation {
   @Override
   public int hashCode() {
     return Objects.hashCode(this.id);
+  }
+
+  @Override
+  public String toString() {
+    return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
+        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", daysLeft="
+        + daysLeft + ", state=" + state + "]";
   }
 }

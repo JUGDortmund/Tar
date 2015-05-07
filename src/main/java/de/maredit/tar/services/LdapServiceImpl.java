@@ -56,7 +56,7 @@ public class LdapServiceImpl implements LdapService {
     } else {
       ldapConnection =
           new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
-                             ldapProperties.getHost(), ldapProperties.getPort());
+              ldapProperties.getHost(), ldapProperties.getPort());
     }
 
     connectionPool = new LDAPConnectionPool(ldapConnection, NUM_CONNECTIONS);

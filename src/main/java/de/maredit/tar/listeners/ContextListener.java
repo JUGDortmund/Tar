@@ -1,7 +1,6 @@
 package de.maredit.tar.listeners;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 
 import org.springframework.context.ApplicationListener;
