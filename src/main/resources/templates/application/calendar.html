@@ -34,26 +34,26 @@
                 <div class="panel panel-default module list-panel">
                   <div class="panel-heading">Info-Panel</div>
                   <div class="panel-body">
-                    <div class="list-group" id="calendarFilter">
+                    <div class="list-group module calendar-filter" id="calendarFilter">
                       <h3 class="list-group-item">
                         Filter
                       </h3>
-                      <div class="list-group-item checkbox">
+                      <div class="list-group-item checkbox filter-approved">
                         <label>
                             <input type="checkbox" id="showApproved" checked="checked"/>Genehmigte Urlaube
                         </label>
                       </div>
-                       <div class="list-group-item checkbox">
+                       <div class="list-group-item checkbox filter-pending">
                         <label>
                             <input type="checkbox" id="showPending"/>Beantragte Urlaube
                         </label>
                       </div>
-                       <div class="list-group-item checkbox">
+                       <div class="list-group-item checkbox filter-cancelled">
                         <label>
                             <input type="checkbox"  id="showCanceled"/>Stornierte Urlaube
                         </label>
                       </div>
-                      <div class="list-group-item checkbox">
+                      <div class="list-group-item checkbox filter-rejected">
                         <label>
                             <input type="checkbox"  id="showRejected"/>Abgelehnte Urlaube  
                         </label>
@@ -75,7 +75,9 @@
                             <li><strong>von - bis</strong></li>
                             <li class="time">01.04.2015 - 04.04.2015</li>
                             <li><strong>Vertreter</strong></li>
-                            <li class="substitute">Oliver Kykal</li>
+                            <li class="substitute"></li>
+                            <li><strong>Vorgesetzter</strong></li>
+                            <li class="manager"></li>
                             <li><strong>Kommentar</strong></li>
                             <li>Kommentare werden noch nicht erstellt!</li>
                           </ul>

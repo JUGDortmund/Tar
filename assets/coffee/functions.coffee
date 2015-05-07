@@ -8,7 +8,6 @@ refreshVacationForm = (data) ->
   scrollToVacationForm()
 
   $myForm = $('#vacation-form-panel')
-  
   $myForm.html(data).hide().fadeIn( 800 )
   $('.panel-default').matchHeight()
   $myForm.find('.input-group.date').datepicker({

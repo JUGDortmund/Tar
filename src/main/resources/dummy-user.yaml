@@ -1,24 +1,35 @@
 users:
-  - username: user
+  - username: user1
     uidNumber: 100
-    firstName: Benutzer
-    lastName: Test
-    mail: test@dummy.local
-  - username: supervisor
+    firstname: Benutzer 1
+    lastname: Dname
+    mail: tar-dummyuser1@mailinator.com
+    active: true
+  - username: user2
     uidNumber: 101
-    firstName: Vorgesetzter
-    lastName: Test
-    mail: supervisor@dummy.local
+    firstname: Benutzer 2
+    lastname: Bname
+    mail: tar-dummyuser2@mailinator.com
+    active: true
+  - username: supervisor
+    uidNumber: 200
+    firstname: Vorgesetzter
+    lastname: Xname
+    mail: tar-supervisor@mailinator.com
+    active: true
 
 --- ## 
 authenticate:
-  user: login
+  user1: login
+  user2: login
   supervisor: login
 
 --- ##
-
 groups:
-  user:
+  user1:
+    - userGroup
+    - tar-user
+  user2:
     - userGroup
     - tar-user
   supervisor:
@@ -26,5 +37,5 @@ groups:
     - tar-supervisor
     
 --- ##
-managers:
+supervisors:
   - supervisor

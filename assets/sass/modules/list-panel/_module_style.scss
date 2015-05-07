@@ -27,21 +27,28 @@
 		float: right;
 
 		&.pending {
-			color: #f39c12;
+			color: $vacation-pending;
 			&:before {
 				content:"\231b";
 			}
 		}
 
 		&.approved {
-			color: #008d4c;
+			color: $vacation-approved;
 			&:before {
 				content:"\e013";
 			}
 		}
 
+		&.cancelled {
+			color: $vacation-cancelled;
+			&:before {
+				content:"\e014";
+			}
+		}
+
 		&.rejected {
-			color: #dd4b39;
+			color: $vacation-rejected;
 			&:before {
 				content:"\e014";
 			}
