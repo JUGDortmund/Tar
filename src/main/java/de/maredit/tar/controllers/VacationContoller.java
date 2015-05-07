@@ -70,52 +70,62 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   public String index(HttpServletRequest request, Model model, Vacation vacation) {
     User user = getUser(request);
     vacation.setUser(user);
-    List<User> users = this.userRepository.findAll();
+    List<User> users = getSortedUserList();
     List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
         user, State.CANCELED);
     List<User> managerList = getManagerList();
     List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
         getConnectedUser());
-    List<Vacation> substitutesForApproval = this.vacationRepository.findVacationBySubstituteAndState(
-        getConnectedUser(), State.REQUESTED_SUBSTITUTE);
+    List<Vacation>
+        substitutesForApproval =
+        this.vacationRepository.findVacationBySubstituteAndState(
+            getConnectedUser(), State.REQUESTED_SUBSTITUTE);
     List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
         getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
-    
+
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
                                substitutesForApproval, approvals);
     return "application/index";
   }
 
   @RequestMapping("/substitution")
-  public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
+  public String substitution(@RequestParam(value = "id") String id,
+                             @RequestParam(value = "approve") boolean approve) {
     Vacation vacation = this.vacationRepository.findOne(id);
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
 
-    MailObject mail = (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
+    MailObject
+        mail =
+        (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
     this.mailService.sendMail(mail);
 
     return "redirect:/";
   }
-  
+
   @RequestMapping("/approval")
-  public String approval(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
+  public String approval(@RequestParam(value = "id") String id,
+                         @RequestParam(value = "approve") boolean approve) {
     Vacation vacation = this.vacationRepository.findOne(id);
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
 
-    MailObject mail = (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
+    MailObject
+        mail =
+        (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
     this.mailService.sendMail(mail);
 
     return "redirect:/";
   }
 
   @RequestMapping("/vacation")
-  public String vacation(@RequestParam(value="id") String id,@RequestParam(value="action", required=false) String action, Model model) {
+  public String vacation(@RequestParam(value = "id") String id,
+                         @RequestParam(value = "action", required = false) String action,
+                         Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
     model.addAttribute("vacation", vacation);
-    
-    switch(action) {
+
+    switch (action) {
       case "edit":
         model.addAttribute("vacation", vacation);
         model.addAttribute("users", userRepository.findAll());
@@ -141,18 +151,23 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
       User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
-      List<User> users = this.userRepository.findAll();
-      List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
-          selectedUser, State.CANCELED);
+      List<User> users = getSortedUserList();
+      List<Vacation>
+          vacations =
+          this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
+              selectedUser, State.CANCELED);
       List<User> managerList = getManagerList();
       List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
           getConnectedUser());
-      List<Vacation> substitutesForApproval = this.vacationRepository.findVacationBySubstituteAndState(
-          getConnectedUser(), State.REQUESTED_SUBSTITUTE);
+      List<Vacation>
+          substitutesForApproval =
+          this.vacationRepository.findVacationBySubstituteAndState(
+              getConnectedUser(), State.REQUESTED_SUBSTITUTE);
       List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
           getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
-      
-      setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes, substitutesForApproval,
+
+      setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes,
+                                 substitutesForApproval,
                                  approvals);
       return "application/index";
     } else {
@@ -168,7 +183,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
   @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
-  public String cancelVacation(HttpServletRequest request, @RequestParam(value="id") String id, Model model) {
+  public String cancelVacation(HttpServletRequest request, @RequestParam(value = "id") String id,
+                               Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
     User user = getUser(request);
     vacation.setUser(user);
@@ -178,14 +194,16 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     this.vacationRepository.save(vacation);
     this.mailService.sendMail(mail);
 
-    List<User> users = this.userRepository.findAll();
+    List<User> users = getSortedUserList();
     List<Vacation> vacations =
         this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
     List<User> managerList = getManagerList();
     List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
         getConnectedUser());
-    List<Vacation> substitutesForApproval = this.vacationRepository.findVacationBySubstituteAndState(
-        getConnectedUser(), State.REQUESTED_SUBSTITUTE);
+    List<Vacation>
+        substitutesForApproval =
+        this.vacationRepository.findVacationBySubstituteAndState(
+            getConnectedUser(), State.REQUESTED_SUBSTITUTE);
     List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
         getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes, substitutesForApproval, approvals);
@@ -195,7 +213,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,
                                           List<Vacation> vacations, List<User> managerList,
-                                          List<Vacation> substitutes, List<Vacation> substitutesForApproval, List<Vacation> approvals) {
+                                          List<Vacation> substitutes,
+                                          List<Vacation> substitutesForApproval,
+                                          List<Vacation> approvals) {
     model.addAttribute("users", users);
     model.addAttribute("vacations", vacations);
     model.addAttribute("selectedUser", selectedUser);
@@ -205,13 +225,27 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     model.addAttribute("approvals", approvals);
   }
 
+  private List<User> getSortedUserList() {
+    List<User> userList = new ArrayList<User>();
+    userList =
+        userRepository.findAll();
+    userList =
+        userList.stream().filter(e -> e.isActive())
+            .sorted((e1, e2) -> e1.getLastname().toUpperCase()
+                .compareTo(e2.getLastname().toUpperCase()))
+            .collect(Collectors.toList());
+    return userList;
+  }
+
   private List<User> getManagerList() {
     List<User> managerList = new ArrayList<User>();
     try {
       managerList =
           userRepository.findByUsernames(ldapService.getLdapSupervisorList());
       managerList =
-          managerList.stream().filter(e -> e.isActive()).collect(Collectors.toList());
+          managerList.stream().filter(e -> e.isActive()).sorted((e1, e2) -> e1.getLastname()
+              .compareTo(e2.getLastname()))
+              .collect(Collectors.toList());
 
     } catch (LDAPException e) {
       LOG.error("Error while reading manager list for vacation form", e);

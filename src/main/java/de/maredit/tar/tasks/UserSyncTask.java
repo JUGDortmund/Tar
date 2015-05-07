@@ -42,7 +42,7 @@ public class UserSyncTask {
         } else {
           updateUser(localUser, user);
           LOG.debug("User updated. username: {} / uidNumber: {}", user.getUsername(),
-                                                    user.getUidNumber());
+                    user.getUidNumber());
         }
         userRepository.save(localUser);
         editedUser.add(localUser);
@@ -73,8 +73,8 @@ public class UserSyncTask {
     // set name changes here
     user.setMail(resultEntry.getMail());
     user.setUsername(resultEntry.getUsername());
-    user.setFirstName(resultEntry.getFirstName());
-    user.setLastName(resultEntry.getLastName());
+    user.setFirstname(resultEntry.getFirstname());
+    user.setLastname(resultEntry.getLastname());
   }
 
 }
