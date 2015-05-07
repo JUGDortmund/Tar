@@ -4,6 +4,7 @@ import com.unboundid.ldap.sdk.LDAPException;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.repositories.UserRepository;
@@ -117,7 +118,14 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     
     switch(action) {
       case "edit":
-        return "application/vacationEdit";
+        List<User> managerList = getManagerList();
+        List<User> users = this.userRepository.findAll();
+
+        model.addAttribute("managers", managerList);
+        model.addAttribute("users", users);
+        model.addAttribute("formMode", FormMode.EDIT.get());
+
+        return "application/vacationForm";
       case "approve":
         return "application/vacationApprove";
       case "substitute":
@@ -127,6 +135,20 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       default:
         return "application/vacation";
     }
+  }
+
+  @RequestMapping("newVacation")
+  public String newVacation(Vacation vacation, BindingResult bindingResult, HttpServletRequest request, Model model){
+    User user = getConnectedUser();
+    vacation.setUser(user);
+    List<User> managerList = getManagerList();
+    List<User> users = this.userRepository.findAll();
+
+    model.addAttribute("managers", managerList);
+    model.addAttribute("users", users);
+    model.addAttribute("vacation", vacation);
+    model.addAttribute("formMode", FormMode.NEW.get());
+    return "application/vacationForm";
   }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)

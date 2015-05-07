@@ -93,7 +93,7 @@
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
     });
-    return $('.vacation-list a, .task-list a').click(function() {
+    return $('.vacation-list a, .task-list a, #newVacation').click(function() {
       $.ajax({
         url: $(this).attr('href'),
         dataType: "html",

@@ -37,7 +37,7 @@ refreshVacationForm = (data) ->
   $('[data-toggle="filter"]').click ->
     $('.offcanvas-filter').toggleClass 'active'
 
-  $('.vacation-list a, .task-list a').click ->
+  $('.vacation-list a, .task-list a, #newVacation').click ->
     $.ajax
       url: $(this).attr('href')
       dataType: "html"
