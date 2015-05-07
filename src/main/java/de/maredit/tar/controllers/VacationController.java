@@ -23,7 +23,6 @@ import de.maredit.tar.services.mail.VacationDeclinedMail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,7 +46,7 @@ import javax.validation.Valid;
  * Created by czillmann on 22.04.15.
  */
 @Controller
-public class VacationContoller extends WebMvcConfigurerAdapter {
+public class VacationController extends WebMvcConfigurerAdapter {
 
   private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
 
@@ -76,8 +75,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     binder.addValidators(new VacationValidator());
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.controllers.VacationController#index(javax.servlet.http.HttpServletRequest, org.springframework.ui.Model, de.maredit.tar.models.Vacation)
+   */
   @RequestMapping("/")
-  public String index(HttpServletRequest request, Model model, Vacation vacation) {
+  public String index(HttpServletRequest request, Model model, @ModelAttribute("vacation") Vacation vacation) {
     User user = getUser(request);
     vacation.setUser(user);
     List<User> users = getSortedUserList();
@@ -98,6 +100,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     return "application/index";
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.controllers.VacationController#substitution(de.maredit.tar.models.Vacation, boolean)
+   */
   @RequestMapping("/substitution")
   public String substitution(@ModelAttribute("vacation") Vacation vacation, @RequestParam(value="approve") boolean approve) {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
@@ -111,7 +116,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.controllers.VacationController#approval(de.maredit.tar.models.Vacation, boolean)
+   */
   @RequestMapping("/approval")
+  @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation, @RequestParam(value="approve") boolean approve) {
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
@@ -124,6 +133,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.controllers.VacationController#vacation(de.maredit.tar.models.Vacation, java.lang.String, org.springframework.ui.Model)
+   */
   @RequestMapping(value="/vacation", method={RequestMethod.GET}, params="id")
   public String vacation(@ModelAttribute("vacation") Vacation vacation,@RequestParam(value="action", required=false) String action, Model model) {
     switch(action) {
@@ -140,8 +152,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     }
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.controllers.VacationController#saveVacation(de.maredit.tar.models.Vacation, org.springframework.validation.BindingResult, org.springframework.ui.Model)
+   */
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
-//  @PreAuthorize("hasRole('USER') or #vacation.user.username == authentication.name")
+  @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
@@ -174,7 +189,11 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     }
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.controllers.VacationController#cancelVacation(javax.servlet.http.HttpServletRequest, de.maredit.tar.models.Vacation, org.springframework.ui.Model)
+   */
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
+  @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String cancelVacation(HttpServletRequest request,@ModelAttribute("vacation") Vacation vacation, Model model) {
     User user = getUser(request);
     vacation.setUser(user);
