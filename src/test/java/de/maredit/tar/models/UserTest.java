@@ -29,8 +29,8 @@ public class UserTest {
 	public void setup() {
 		when(userRepository.count()).thenReturn(counter++).thenReturn(counter++);
 		user = new User();
-		user.setFirstName("John");
-		user.setLastName("Deer");
+		user.setFirstname("John");
+		user.setLastname("Deer");
 		user.setUidNumber(uidNumber);
 		user.setActive(Boolean.TRUE);
 		user.setUsername("jdeer");
@@ -44,8 +44,8 @@ public class UserTest {
 		assertEquals("User count should have increased!", previousCount + 1, userRepository.count());
 		
 		User user = userRepository.findOne(uidNumber);
-		assertEquals("John", user.getFirstName());
-		assertEquals("Deer", user.getLastName());
+		assertEquals("John", user.getFirstname());
+		assertEquals("Deer", user.getLastname());
 		assertEquals(Boolean.TRUE, user.isActive());
 		
 		user.setActive(Boolean.FALSE);

@@ -1,7 +1,7 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.utils.ConversionUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -16,30 +16,22 @@ public class VacationCanceledMail implements MailObject {
 
   private Map<String, Object> values = new HashMap<>();
   private String[] ccRecipients;
-  private String toRecipient;
+  private String[] toRecipients;
 
   public VacationCanceledMail(Vacation vacation) {
-    values.put("employee", vacation.getUser().getFirstName());
-    values.put("manager", vacation.getManager().getFullname());
+    values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
-    values.put("fromDate", vacation.getFrom());
-    values.put("toDate", vacation.getTo());
+    values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
+    values.put("toDate",
+               ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    toRecipient = retrieveMail(vacation.getUser());
+    toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
     }
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getManager()));
-  }
-
-  private String retrieveMail(User user) {
-    String mail = "";
-    if (user != null && user.getMail() != null) {
-      mail = user.getMail();
-    }
-    return mail;
   }
 
   @Override
@@ -68,8 +60,8 @@ public class VacationCanceledMail implements MailObject {
   }
 
   @Override
-  public String getToRecipient() {
-    return toRecipient;
+  public String[] getToRecipients() {
+    return toRecipients;
   }
 
   @Override
@@ -77,6 +69,6 @@ public class VacationCanceledMail implements MailObject {
     return "VacationCanceledMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
            + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
            + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-           + ", getToRecipient()=" + getToRecipient() + "]";
+           + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
   }
 }
