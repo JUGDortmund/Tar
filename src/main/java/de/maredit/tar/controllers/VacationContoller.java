@@ -1,7 +1,10 @@
 package de.maredit.tar.controllers;
 
-import com.unboundid.ldap.sdk.LDAPException;
+import org.springframework.data.repository.query.Param;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
@@ -17,7 +20,6 @@ import de.maredit.tar.services.mail.VacationApprovedMail;
 import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,14 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   @Autowired
   private LdapService ldapService;
+  
+  @ModelAttribute("vacation")
+  public Vacation getVacation(@RequestParam(value="id", required=false) String id) {
+    if (id == null) {
+      return new Vacation();
+    }
+    return vacationRepository.findOne(id);
+  }
 
   @InitBinder("vacation")
   protected void initBinder(WebDataBinder binder) {
@@ -87,8 +97,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("/substitution")
-  public String substitution(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
-    Vacation vacation = this.vacationRepository.findOne(id);
+  public String substitution(@ModelAttribute("vacation") Vacation vacation, @RequestParam(value="approve") boolean approve) {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
 
@@ -99,8 +108,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
   
   @RequestMapping("/approval")
-  public String approval(@RequestParam(value="id") String id, @RequestParam(value="approve") boolean approve) {
-    Vacation vacation = this.vacationRepository.findOne(id);
+  public String approval(@ModelAttribute("vacation") Vacation vacation, @RequestParam(value="approve") boolean approve) {
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
 
@@ -110,11 +118,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
   
-  @RequestMapping("/vacation")
-  public String vacation(@RequestParam(value="id") String id,@RequestParam(value="action", required=false) String action, Model model) {
-    Vacation vacation = this.vacationRepository.findOne(id);
-    model.addAttribute("vacation", vacation);
-    
+  @RequestMapping(value="/vacation", method={RequestMethod.GET}, params="id")
+  public String vacation(@ModelAttribute("vacation") Vacation vacation,@RequestParam(value="action", required=false) String action, Model model) {
     switch(action) {
       case "edit":
         return "application/vacationEdit";
@@ -130,7 +135,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
-  public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
+//  @PreAuthorize("hasRole('USER') or #vacation.user.username == authentication.name")
+  public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
@@ -158,9 +164,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
-  @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
-  public String cancelVacation(HttpServletRequest request, @RequestParam(value="id") String id, Model model) {
-    Vacation vacation = this.vacationRepository.findOne(id);
+  public String cancelVacation(HttpServletRequest request,@ModelAttribute("vacation") Vacation vacation, Model model) {
     User user = getUser(request);
     vacation.setUser(user);
 
