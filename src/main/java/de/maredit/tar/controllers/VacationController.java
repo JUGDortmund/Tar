@@ -176,7 +176,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
         vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation, getConnectedUser()));
       return "redirect:/";
     }
   }

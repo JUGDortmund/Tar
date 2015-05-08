@@ -7,7 +7,7 @@
 <body>
 	<p> Hallo, <span th:text="${employee}">Welt!</span> </p>
 
-	<p> Dein Urlaubsantrag wurde geändert! Hier sind die Details: </p>
+	<p> Dein Urlaubsantrag wurde ge&auml;ndert! Hier sind die Details: </p>
 	
 	<p> <b>Name des Projektleiters:</b> <span th:text="${manager}">Max Mustermann</span> </p>
 
@@ -20,6 +20,10 @@
 	<p> <b>Summe der Urlaubstage:</b> <span th:text="${totalDays}">Tage</span> </p>
 
 	<p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
+
+	<th:block th:if="${modifiedBy} != null">
+	<p> Der Urlaub wurde ge&auml;ndert von: <span th:text="${modifiedBy}">Bearbeiter</span></p>
+	</th:block>
 
 	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
 </body>
