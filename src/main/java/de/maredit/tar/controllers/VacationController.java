@@ -132,7 +132,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
         model.addAttribute("managers", getManagerList());
         model.addAttribute("selectedUser",
             this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
-        model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
         return "application/vacationEdit";
       case "approve":
         return "application/vacationApprove";

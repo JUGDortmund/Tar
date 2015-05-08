@@ -1,7 +1,6 @@
 package de.maredit.tar.configs;
 
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
 import de.maredit.tar.providers.ApplicationAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -59,5 +58,4 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
     roleHierarchy.setHierarchy("ROLE_SUPERVISOR > ROLE_USER");
     return roleHierarchy;
   }
-
 }

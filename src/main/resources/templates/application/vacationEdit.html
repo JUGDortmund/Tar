@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 <div class="panel panel-default module vacation-form edit-vacation">
     <div class="panel-heading">Urlaubsformular</div>
-    <div class="panel-body">
+    <div class="panel-body" >
         <!-- Error-handling: show alert box, when validation fails  -->
-
-        <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form">
+		<th:block th:object="${vacation}" th:with="editable=${#authorization.expression('hasRole(''SUPERVISOR'')') or vacation.user.username == #authentication.name}">
+        <form th:action="@{/saveVacation}" method="post" role="form">
             <input type="hidden" th:field="*{id}"/>
 
             <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
@@ -21,14 +22,14 @@
             <div class="row">
                 <div th:class="${#fields.hasErrors('user')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                     <label for="employee">Mitarbeiter *</label>
-                    <!-- 					<input type="text" class="form-control" disabled="disabled" th:value="${vacation.user.lastName +', '+ vacation.user.firstname}" th:field="*{user}" /> -->
+                    <!-- 					<input type="text" class="form-control" disabled="disabled" th:value="${vacation.user.lastname +', '+ vacation.user.firstname}" th:field="*{user}" /> -->
                     <select class="form-control" style="width: 100%;" name="employee" id="employee"
-                            th:field="*{user}" th:readonly="${true}" th:if="${!disableInput}">
+                            th:field="*{user}" th:readonly="${true}" th:if="${editable}">
                         <option th:value="${vacation.user.id}" th:selected="true"
-                                th:text="${vacation.user.lastName +', '+ vacation.user.firstname}">
+                                th:text="${vacation.user.lastname +', '+ vacation.user.firstname}">
                         </option>
                     </select>
-                    <input th:if="${disableInput}" type="text" class="form-control" th:value="*{user.lastName+ ', ' + user.firstname}" disabled="disabled"/>
+                    <input th:if="${!editable}" type="text" class="form-control" th:value="*{user.lastname+ ', ' + user.firstname}" disabled="disabled"/>
                 </div>
             </div>
 
@@ -36,10 +37,10 @@
                 <div th:class="${#fields.hasErrors('from')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="dateFrom">von *</label>
 
-                    <div th:class="${disableInput ? 'input-group' : 'input-group date'}">
+                    <div th:class="${editable ? 'input-group date' : 'input-group'}">
                         <input type="text" class="form-control" name="dateFrom" id="dateFrom"
-                               th:field="*{from}" th:disabled="${disableInput}"/>
-                        <span th:if="${!disableInput}" class="input-group-addon"><i
+                               th:field="*{from}" th:disabled="${!editable}"/>
+                        <span th:if="${editable}" class="input-group-addon"><i
                                 class="glyphicon glyphicon-th"></i></span>
                     </div>
                 </div>
@@ -47,10 +48,10 @@
                 <div th:class="${#fields.hasErrors('to')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="dateTo">bis *</label>
 
-                    <div th:class="${disableInput ? 'input-group' : 'input-group date'}">
+                    <div th:class="${editable ? 'input-group date' : 'input-group'}">
                         <input type="text" class="form-control" name="dateTo" id="dateTo"
-                               th:field="*{to}" th:disabled="${disableInput}"/>
-                        <span th:if="${!disableInput}" class="input-group-addon"><i
+                               th:field="*{to}" th:disabled="${!editable}"/>
+                        <span th:if="${editable}" class="input-group-addon"><i
                                 class="glyphicon glyphicon-th"></i></span>
                     </div>
                 </div>
@@ -61,14 +62,14 @@
                     <label for="vacationDays">Anzahl Urlaubstage *</label>
                     <input type="number" class="form-control" name="vacationDays" id="vacationDays"
                            step="0.5"
-                           th:field="*{days}" th:disabled="${disableInput}"/>
+                           th:field="*{days}" th:disabled="${!editable}"/>
                 </div>
 
                 <div th:class="${#fields.hasErrors('daysLeft')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
                     <label for="daysLeft">Verbleibende Urlaubstage *</label>
                     <input type="number" class="form-control" name="daysLeft" id="daysLeft"
                            step="0.5"
-                           th:field="*{daysLeft}" th:disabled="${disableInput}"/>
+                           th:field="*{daysLeft}" th:disabled="${!editable}"/>
                 </div>
             </div>
 
@@ -77,18 +78,18 @@
                     <label for="replacement">Vertreter</label>
                     <select class="form-control" style="width: 100%;" name="replacement"
                             th:field="*{substitute}"
-                            id="replacement" th:disabled="${disableInput}" th:if="${!disableInput}">
+                            id="replacement" th:disabled="${!editable}" th:if="${editable}">
                         <option th:value="${null}"
                                 th:selected="${vacation.substitute == substitute}">(kein Vertreter)
                         </option>
                         <option th:each="substitute : ${users}"
                                 th:value="${substitute.id}"
                                 th:selected="${vacation.substitute == substitute}"
-                                th:text="${substitute.lastName +', '+ substitute.firstname}">
+                                th:text="${substitute.lastname +', '+ substitute.firstname}">
                             Mustermann, Max
                         </option>
                     </select>
-                    <input th:if="${disableInput}" type="text" class="form-control" th:value="*{substitute != NULL ? substitute.lastName+ ', ' + substitute.firstname : ''}" disabled="disabled"/>
+                    <input th:if="${!editable}" type="text" class="form-control" th:value="*{substitute != NULL ? substitute.lastname+ ', ' + substitute.firstname : ''}" disabled="disabled"/>
                 </div>
             </div>
 
@@ -96,15 +97,15 @@
                 <div th:class="${#fields.hasErrors('manager')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                     <label for="superior">Zuständiger Vorgesetzter *</label>
                     <select class="form-control" style="width: 100%;" name="superior" id="superior"
-                            th:field="*{manager}" th:disabled="${disableInput}" th:if="${!disableInput}">
+                            th:field="*{manager}" th:disabled="${!editable}" th:if="${editable}">
                         <option th:each="manager : ${managers}"
                                 th:value="${manager.id}"
                                 th:selected="${vacation.manager == manager}"
-                                th:text="${manager.lastName +', '+ manager.firstname}">
+                                th:text="${manager.lastname +', '+ manager.firstname}">
                             Mustermann, Max
                         </option>
                     </select>
-                    <input th:if="${disableInput}" type="text" class="form-control" th:value="*{manager.lastName+ ', ' + manager.firstname}" disabled="disabled"/>
+                    <input th:if="${!editable}" type="text" class="form-control" th:value="*{manager.lastname+ ', ' + manager.firstname}" disabled="disabled"/>
                 </div>
             </div>
 
@@ -112,17 +113,19 @@
                 <div class="col-xs-12 form-group">
                     <label for="comment">Kommentar</label>
                     <textarea class="form-control" rows="5" name="comment" id="comment"
-                              th:disabled="${disableInput}"></textarea>
+                              th:disabled="${!editable}"></textarea>
                 </div>
             </div>
 
-            <a th:if="${disableInput} == false" th:href="@{/cancelVacation(id=${vacation.id})}"
-               onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
-               class="btn btn-danger">stornieren</a>
-            <button type="submit" class="btn btn-success pull-right"
-                    th:if="${disableInput} == false">aktualisieren
-            </button>
+			<th:block th:if="${editable}">
+                <a th:href="@{/cancelVacation(id=${vacation.id})}"
+                   onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
+                   class="btn btn-danger">stornieren</a>
+                <button type="submit" class="btn btn-success pull-right">aktualisieren
+                </button>
+            </th:block>
         </form>
+        </th:block>
     </div>
 </div>
 </body>
