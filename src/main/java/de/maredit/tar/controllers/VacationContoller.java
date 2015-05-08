@@ -1,6 +1,7 @@
 package de.maredit.tar.controllers;
 
 import com.unboundid.ldap.sdk.LDAPException;
+
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
@@ -86,6 +87,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
     setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
                                substitutesForApproval, approvals);
+
+    model.addAttribute("formMode", FormMode.NEW);
     return "application/index";
   }
 
@@ -132,17 +135,17 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
         model.addAttribute("users", userRepository.findAll());
         model.addAttribute("managers", getManagerList());
         model.addAttribute("selectedUser",
-            this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
+                           this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
         model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
 
- 		model.addAttribute("formMode", FormMode.EDIT.get());
+        model.addAttribute("formMode", FormMode.EDIT);
 
         return "application/vacationForm";
       case "approve":
-        model.addAttribute("formMode", FormMode.MANAGER_APPROVAL.get());
+        model.addAttribute("formMode", FormMode.MANAGER_APPROVAL);
         return "application/vacationForm";
       case "substitute":
-        model.addAttribute("formMode", FormMode.SUBSTITUTE_APPROVAL.get());
+        model.addAttribute("formMode", FormMode.SUBSTITUTE_APPROVAL);
         return "application/vacationForm";
       case "view":
         return "application/vacationView";
@@ -152,7 +155,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("newVacation")
-  public String newVacation(Vacation vacation, BindingResult bindingResult, HttpServletRequest request, Model model){
+  public String newVacation(Vacation vacation, BindingResult bindingResult,
+                            HttpServletRequest request, Model model) {
     User user = getConnectedUser();
     vacation.setUser(user);
     List<User> managerList = getManagerList();
@@ -161,7 +165,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     model.addAttribute("managers", managerList);
     model.addAttribute("users", users);
     model.addAttribute("vacation", vacation);
-    model.addAttribute("formMode", FormMode.NEW.get());
+    model.addAttribute("formMode", FormMode.NEW);
     return "application/vacationForm";
   }
 
@@ -192,11 +196,14 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       return "application/index";
     } else {
       boolean newVacation = vacation.getId() == null;
+      LOG.info("edit mode - " + newVacation);
       if (!newVacation) {
-        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT : State.REQUESTED_SUBSTITUTE);
+        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
+                                                           : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));
+      this.mailService.sendMail(
+          newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));
       return "redirect:/";
     }
   }
@@ -226,7 +233,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
             getConnectedUser(), State.REQUESTED_SUBSTITUTE);
     List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
         getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
-    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes, substitutesForApproval, approvals);
+    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
+                               substitutesForApproval, approvals);
 
     return "redirect:/";
   }
