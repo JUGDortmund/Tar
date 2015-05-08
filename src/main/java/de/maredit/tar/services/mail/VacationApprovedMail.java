@@ -1,9 +1,13 @@
 package de.maredit.tar.services.mail;
 
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.utils.ConversionUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +36,16 @@ public class VacationApprovedMail implements MailObject {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
     }
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getManager()));
+  }
+
+  @Override
+  public void setCcRecipients(String[] ccRecipients) {
+    this.ccRecipients = ccRecipients;
+  }
+
+  @Override
+  public boolean sendToAdditionalRecipient() {
+    return true;
   }
 
   @Override

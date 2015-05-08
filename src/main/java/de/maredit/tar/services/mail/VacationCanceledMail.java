@@ -35,6 +35,16 @@ public class VacationCanceledMail implements MailObject {
   }
 
   @Override
+  public void setCcRecipients(String[] ccRecipients) {
+    this.ccRecipients = ccRecipients;
+  }
+
+  @Override
+  public boolean sendToAdditionalRecipient() {
+    return true;
+  }
+
+  @Override
   public String getTemplate() {
     return MAIL_TEMPLATE;
   }
