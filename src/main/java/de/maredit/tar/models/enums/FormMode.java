@@ -5,12 +5,12 @@ package de.maredit.tar.models.enums;
  */
 public enum FormMode {
   NEW("new"),
-  EDIT("edit"),
-  VIEW("view"),
-  SUBSTITUTE_APPROVAL("substituteapproval"),
-  MANAGER_APPROVAL("managerapproval");
+  EDIT("edit-vacation"),
+  VIEW("edit-vacation"),
+  SUBSTITUTE_APPROVAL("approve-vacation"),
+  MANAGER_APPROVAL("approve-vacation");
 
-  private final String value;
+  public final String value;
 
   FormMode (String value) {
     this.value = value;

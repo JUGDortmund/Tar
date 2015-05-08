@@ -131,27 +131,24 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
     switch (action) {
       case "edit":
-        model.addAttribute("vacation", vacation);
         model.addAttribute("users", userRepository.findAll());
         model.addAttribute("managers", getManagerList());
-        model.addAttribute("selectedUser",
-                           this.userRepository.findByUidNumber(vacation.getUser().getUidNumber()));
-        model.addAttribute("disableInput", !getConnectedUser().equals(vacation.getUser()));
-
         model.addAttribute("formMode", FormMode.EDIT);
-
-        return "application/vacationForm";
+        break;
       case "approve":
         model.addAttribute("formMode", FormMode.MANAGER_APPROVAL);
-        return "application/vacationForm";
+        break;
       case "substitute":
         model.addAttribute("formMode", FormMode.SUBSTITUTE_APPROVAL);
-        return "application/vacationForm";
+        break;
       case "view":
-        return "application/vacationView";
+        model.addAttribute("formMode", FormMode.VIEW);
+        break;
       default:
-        return "application/vacation";
+        model.addAttribute("formMode", FormMode.VIEW);
+        break;
     }
+    return "application/vacationForm";
   }
 
   @RequestMapping("newVacation")
@@ -196,7 +193,6 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       return "application/index";
     } else {
       boolean newVacation = vacation.getId() == null;
-      LOG.info("edit mode - " + newVacation);
       if (!newVacation) {
         vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
                                                            : State.REQUESTED_SUBSTITUTE);
