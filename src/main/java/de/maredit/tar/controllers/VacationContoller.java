@@ -70,23 +70,10 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   @RequestMapping("/")
   public String index(HttpServletRequest request, Model model, Vacation vacation) {
-    User user = getUser(request);
-    vacation.setUser(user);
-    List<User> users = getSortedUserList();
-    List<Vacation> vacations = this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
-        user, State.CANCELED);
-    List<User> managerList = getManagerList();
-    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
-        getConnectedUser());
-    List<Vacation>
-        substitutesForApproval =
-        this.vacationRepository.findVacationBySubstituteAndState(
-            getConnectedUser(), State.REQUESTED_SUBSTITUTE);
-    List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
-        getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
 
-    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
-                               substitutesForApproval, approvals);
+    vacation.setUser(getConnectedUser());
+    User selectedUser = getUser(request);
+    setIndexModelValues(model, selectedUser);
 
     model.addAttribute("formMode", FormMode.NEW);
     return "application/index";
@@ -131,7 +118,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
     switch (action) {
       case "edit":
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", getSortedUserList());
         model.addAttribute("managers", getManagerList());
         model.addAttribute("formMode", FormMode.EDIT);
         break;
@@ -148,48 +135,31 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
         model.addAttribute("formMode", FormMode.VIEW);
         break;
     }
-    return "application/vacationForm";
+    return "components/vacationForm";
   }
 
   @RequestMapping("newVacation")
   public String newVacation(Vacation vacation, BindingResult bindingResult,
                             HttpServletRequest request, Model model) {
-    User user = getConnectedUser();
-    vacation.setUser(user);
-    List<User> managerList = getManagerList();
-    List<User> users = this.userRepository.findAll();
-
-    model.addAttribute("managers", managerList);
-    model.addAttribute("users", users);
+    vacation.setUser(getConnectedUser());
+    model.addAttribute("managers", getManagerList());
+    model.addAttribute("users", getSortedUserList());
     model.addAttribute("vacation", vacation);
     model.addAttribute("formMode", FormMode.NEW);
-    return "application/vacationForm";
+    return "components/vacationForm";
   }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
-  public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model) {
+  public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model,
+                             HttpServletRequest request) {
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
-      User selectedUser = this.userRepository.findByUidNumber(vacation.getUser().getUidNumber());
-      List<User> users = getSortedUserList();
-      List<Vacation>
-          vacations =
-          this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(
-              selectedUser, State.CANCELED);
-      List<User> managerList = getManagerList();
-      List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
-          getConnectedUser());
-      List<Vacation>
-          substitutesForApproval =
-          this.vacationRepository.findVacationBySubstituteAndState(
-              getConnectedUser(), State.REQUESTED_SUBSTITUTE);
-      List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
-          getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
 
-      setVacationFormModelValues(model, selectedUser, users, vacations, managerList, substitutes,
-                                 substitutesForApproval,
-                                 approvals);
+      User selectedUser = getUser(request);
+
+      setIndexModelValues(model, selectedUser);
+      model.addAttribute("formMode", FormMode.EDIT);
       return "application/index";
     } else {
       boolean newVacation = vacation.getId() == null;
@@ -209,37 +179,27 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   public String cancelVacation(HttpServletRequest request, @RequestParam(value = "id") String id,
                                Model model) {
     Vacation vacation = this.vacationRepository.findOne(id);
-    User user = getUser(request);
-    vacation.setUser(user);
 
     VacationCanceledMail mail = new VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);
     this.vacationRepository.save(vacation);
     this.mailService.sendMail(mail);
 
-    List<User> users = getSortedUserList();
-    List<Vacation> vacations =
-        this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
-    List<User> managerList = getManagerList();
-    List<Vacation> substitutes = this.vacationRepository.findVacationBySubstitute(
-        getConnectedUser());
-    List<Vacation>
-        substitutesForApproval =
-        this.vacationRepository.findVacationBySubstituteAndState(
-            getConnectedUser(), State.REQUESTED_SUBSTITUTE);
-    List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
-        getConnectedUser(), State.WAITING_FOR_APPROVEMENT);
-    setVacationFormModelValues(model, user, users, vacations, managerList, substitutes,
-                               substitutesForApproval, approvals);
-
     return "redirect:/";
   }
 
-  private void setVacationFormModelValues(Model model, User selectedUser, List<User> users,
-                                          List<Vacation> vacations, List<User> managerList,
-                                          List<Vacation> substitutes,
-                                          List<Vacation> substitutesForApproval,
-                                          List<Vacation> approvals) {
+  private void setIndexModelValues(Model model, User selectedUser) {
+
+    List<User> users = getSortedUserList();
+    List<User> managerList = getManagerList();
+
+    List<Vacation> vacations = getVacationsForUser(selectedUser);
+    List<Vacation> substitutes = getSubstitutesForUser(selectedUser);
+
+    List<Vacation>
+        substitutesForApproval = getVacationsForSubstituteApprovalForUser(getConnectedUser());
+    List<Vacation> approvals = getVacationsForApprovalForUser(getConnectedUser());
+
     model.addAttribute("users", users);
     model.addAttribute("vacations", vacations);
     model.addAttribute("selectedUser", selectedUser);
@@ -280,7 +240,6 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   private User getConnectedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     User user = this.userRepository.findUserByUsername(auth.getName());
-
     return user;
   }
 
@@ -293,5 +252,34 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       user = this.userRepository.findUserByUsername(String.valueOf(selected));
     }
     return user;
+  }
+
+  private List<Vacation> getSubstitutesForUser(User user) {
+    List<Vacation>
+        substitutes =
+        this.vacationRepository.findVacationBySubstituteAndStateNotOrderByFromAsc(
+            user, State.CANCELED);
+    return substitutes;
+  }
+
+  private List<Vacation> getVacationsForUser(User user) {
+    List<Vacation>
+        vacations =
+        this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
+    return vacations;
+  }
+
+  private List<Vacation> getVacationsForApprovalForUser(User user) {
+    List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
+        user, State.WAITING_FOR_APPROVEMENT);
+    return approvals;
+  }
+
+  private List<Vacation> getVacationsForSubstituteApprovalForUser(User user) {
+    List<Vacation>
+        substitutesForApproval =
+        this.vacationRepository.findVacationBySubstituteAndState(
+            user, State.REQUESTED_SUBSTITUTE);
+    return substitutesForApproval;
   }
 }

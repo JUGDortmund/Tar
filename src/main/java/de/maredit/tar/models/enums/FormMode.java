@@ -12,7 +12,7 @@ public enum FormMode {
 
   public final String value;
 
-  FormMode (String value) {
+  FormMode(String value) {
     this.value = value;
   }
 
