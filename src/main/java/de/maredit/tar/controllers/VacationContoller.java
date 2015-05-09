@@ -120,7 +120,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       case "edit":
         model.addAttribute("users", getSortedUserList());
         model.addAttribute("managers", getManagerList());
-        model.addAttribute("formMode", FormMode.EDIT);
+        FormMode mode = getConnectedUser().equals(vacation.getUser()) ? FormMode.EDIT : FormMode.VIEW;
+        model.addAttribute("formMode", mode);
         break;
       case "approve":
         model.addAttribute("formMode", FormMode.MANAGER_APPROVAL);
