@@ -23,7 +23,7 @@ import de.maredit.tar.services.mail.VacationModifiedMail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -31,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,9 +48,9 @@ import javax.validation.Valid;
  * Created by czillmann on 22.04.15.
  */
 @Controller
-public class VacationContoller extends WebMvcConfigurerAdapter {
+public class VacationController extends WebMvcConfigurerAdapter {
 
-  private static final Logger LOG = LogManager.getLogger(VacationContoller.class);
+  private static final Logger LOG = LogManager.getLogger(VacationController.class);
 
   @Autowired
   private VacationRepository vacationRepository;
@@ -63,13 +64,22 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   @Autowired
   private LdapService ldapService;
 
+  @ModelAttribute("vacation")
+  public Vacation getVacation(@RequestParam(value = "id", required = false) String id) {
+    if (id == null) {
+      return new Vacation();
+    }
+    return vacationRepository.findOne(id);
+  }
+
   @InitBinder("vacation")
   protected void initBinder(WebDataBinder binder) {
     binder.addValidators(new VacationValidator());
   }
 
   @RequestMapping("/")
-  public String index(HttpServletRequest request, Model model, Vacation vacation) {
+  public String index(HttpServletRequest request, Model model,
+                      @ModelAttribute("vacation") Vacation vacation) {
 
     vacation.setUser(getConnectedUser());
     User selectedUser = getUser(request);
@@ -80,9 +90,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("/substitution")
-  public String substitution(@RequestParam(value = "id") String id,
+  public String substitution(@ModelAttribute("vacation") Vacation vacation,
                              @RequestParam(value = "approve") boolean approve) {
-    Vacation vacation = this.vacationRepository.findOne(id);
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
 
@@ -95,9 +104,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("/approval")
-  public String approval(@RequestParam(value = "id") String id,
+  @PreAuthorize("hasRole('SUPERVISOR')")
+  public String approval(@ModelAttribute("vacation") Vacation vacation,
                          @RequestParam(value = "approve") boolean approve) {
-    Vacation vacation = this.vacationRepository.findOne(id);
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
 
@@ -109,24 +118,15 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
 
-  @RequestMapping("/vacation")
-  public String vacation(@RequestParam(value = "id") String id,
+  @RequestMapping(value = "/vacation", method = {RequestMethod.GET}, params = "id")
+  public String vacation(@ModelAttribute("vacation") Vacation vacation,
                          @RequestParam(value = "action", required = false) String action,
                          Model model) {
-    Vacation vacation = this.vacationRepository.findOne(id);
-    model.addAttribute("vacation", vacation);
-
     switch (action) {
       case "edit":
         model.addAttribute("users", getSortedUserList());
         model.addAttribute("managers", getManagerList());
-
-        // this gets out with proper authorization. It will be replaced by:
-        // model.addAttribute("formMode", FormMode.EDIT);
-        FormMode
-            mode =
-            getConnectedUser().equals(vacation.getUser()) ? FormMode.EDIT : FormMode.VIEW;
-        model.addAttribute("formMode", mode);
+        model.addAttribute("formMode", FormMode.EDIT);
         break;
       case "approve":
         model.addAttribute("formMode", FormMode.MANAGER_APPROVAL);
@@ -155,7 +155,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
-  public String saveVacation(@Valid Vacation vacation, BindingResult bindingResult, Model model,
+  @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
+  public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation,
+                             BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
@@ -173,18 +175,19 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
                                                            : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(
-          newVacation ? new VacationCreateMail(vacation) : new VacationModifiedMail(vacation));
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation)
+                                            : new VacationModifiedMail(vacation,
+                                                                       getConnectedUser()));
       return "redirect:/";
     }
   }
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
-  @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
-  public String cancelVacation(@RequestParam(value = "id") String id) {
-    Vacation vacation = this.vacationRepository.findOne(id);
+  @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
+  public String cancelVacation(@ModelAttribute("vacation") Vacation vacation) {
 
-    VacationCanceledMail mail = new VacationCanceledMail(vacation);
+    VacationCanceledMail mail = new
+        VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);
     this.vacationRepository.save(vacation);
     this.mailService.sendMail(mail);
@@ -244,6 +247,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   private User getConnectedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     User user = this.userRepository.findUserByUsername(auth.getName());
+
     return user;
   }
 

@@ -11,7 +11,9 @@ edit-vacation, approve-vacation  -->
     <div class="panel-body">
 
         <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form"
-              th:with="editable=${formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT}">
+              th:with="editable=
+                    ${(formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT)
+                        and (#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
             <input type="hidden" th:field="*{id}"/>
 
             <!-- Error-handling: show alert box, when validation fails  -->
@@ -113,7 +115,7 @@ edit-vacation, approve-vacation  -->
                     </th:block>
                     <th:block th:unless="${editable}">
                         <input class="form-control" name="vacationDays"
-                               type="number"  disabled="disabled"
+                               type="number" disabled="disabled"
                                th:field="*{days}"/>
                     </th:block>
 

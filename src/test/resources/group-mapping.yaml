@@ -1,9 +1,7 @@
 --- ## test autorities
 groups:
   tar-user:
-    - AUTH_OWN_EDIT_VACATION
-    - AUTH_OWN_CANCEL_VACATION
+    - ROLE_USER
   tar-supervisor:
-    - AUTH_EDIT_VACATION
-    - AUTH_CANCEL_VACATION
-    - AUTH_ACCEPT_VACATION
+    - ROLE_USER
+    - ROLE_SUPERVISOR

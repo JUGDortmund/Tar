@@ -29,17 +29,15 @@ public class AuthorityMappingServiceTest {
     Assert.notNull(auths);
     Assert.notEmpty(auths);
     List<String> assertedAuths = new ArrayList<>();
-    assertedAuths.add("AUTH_OWN_EDIT_VACATION");
-    assertedAuths.add("AUTH_OWN_CANCEL_VACATION");
+    assertedAuths.add("ROLE_USER");
     org.junit.Assert.assertEquals(assertedAuths, auths);
     
     List<String> auths2 = authMappingService.getGroups().get("tar-supervisor");
     Assert.notNull(auths2);
     Assert.notEmpty(auths2);
     List<String> assertedAuths2 = new ArrayList<>();
-    assertedAuths2.add("AUTH_EDIT_VACATION");
-    assertedAuths2.add("AUTH_CANCEL_VACATION");
-    assertedAuths2.add("AUTH_ACCEPT_VACATION");
+    assertedAuths2.add("ROLE_USER");
+    assertedAuths2.add("ROLE_SUPERVISOR");
     org.junit.Assert.assertEquals(assertedAuths2, auths2);
   }
 }
