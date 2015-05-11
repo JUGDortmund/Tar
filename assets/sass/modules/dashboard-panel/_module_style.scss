@@ -1,0 +1,109 @@
+.dashboard-panel {
+	
+	.panel-heading {
+		color: $white;
+		font-size: 16px;
+
+		&:after {
+			float: right;
+			-moz-osx-font-smoothing: grayscale;
+		    display: inline-block;
+		    font-family: "Glyphicons Halflings";
+		    font-style: normal;
+		    font-weight: 400;
+		    line-height: 1;
+		    position: relative;
+		    top: 1px;
+		}
+	}
+
+	h3 {
+		background-color: $white;
+		font-size: 16px;
+	}
+
+	&.approve-vacation {
+		border-color: $task-primary;
+
+		.panel-heading {
+			background-color: $task-primary;
+
+			&:after {
+				content: "\e137";
+			}
+		}
+
+		h3 {
+			color: $task-primary;
+		}
+	}
+
+	&.edit-vacation {
+		border-color: $vacation-edit-primary;
+
+		.panel-heading {
+			background-color: $vacation-edit-primary;
+		}
+
+		h3 {
+			color: $vacation-edit-primary;
+		}
+	}
+
+	&.new {
+		border-color: $vacation-new-primary;
+
+		.panel-heading {
+			background-color: $vacation-new-primary;
+
+			&:after {
+				content: "\e164";
+			}
+		}
+	}
+
+
+	@media (max-width: 760px) {
+		.btn {
+			width: 100%;
+			margin-bottom: 10px;
+		}
+	}
+
+	.checkbox {
+		margin: 0 0 -1px 0;
+	}
+
+	.glyphicon {
+		float: right;
+
+		&.pending {
+			color: $vacation-pending;
+			&:before {
+				content:"\231b";
+			}
+		}
+
+		&.approved {
+			color: $vacation-approved;
+			&:before {
+				content:"\e013";
+			}
+		}
+
+		&.cancelled {
+			color: $vacation-cancelled;
+			&:before {
+				content:"\e014";
+			}
+		}
+
+		&.rejected {
+			color: $vacation-rejected;
+			&:before {
+				content:"\e014";
+			}
+		}
+	}
+
+}

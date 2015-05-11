@@ -1,12 +1,10 @@
 #Scroll to vaction-form in small resolutions
 scrollToVacationForm = ->
   clientWidth = document.documentElement.clientWidth;
-  if clientWidth < 761 then $('html, body').animate({ scrollTop: ($('.vacation-form').offset().top)}, 'slow')
+  if clientWidth < 761 then $('html, body').animate({ scrollTop: ($('#vacation-form-panel').offset().top)}, 'slow')
 
 # Ajax form refresh:
 refreshVacationForm = (data) ->
-  scrollToVacationForm()
-
   $myForm = $('#vacation-form-panel')
   $myForm.html(data).hide().fadeIn( 800 )
   $('.panel-default').matchHeight()
@@ -15,11 +13,10 @@ refreshVacationForm = (data) ->
     "autoclose" : true
   })
   $myForm.find('select').select2()
+  scrollToVacationForm()
 
 # document ready 
 (($) ->
-  $('#newVacation').click ->
-    scrollToVacationForm()
 
   $('.input-group.date').datepicker({
      "format" : "dd.mm.yyyy"
@@ -36,7 +33,7 @@ refreshVacationForm = (data) ->
   $('[data-toggle="filter"]').click ->
     $('.offcanvas-filter').toggleClass 'active'
 
-  $('.vacation-list a, .task-list a, #newVacation').click ->
+  $('.edit-vacation a, .approve-vacation a, #newVacation').click ->
     $.ajax
       url: $(this).attr('href')
       dataType: "html"
