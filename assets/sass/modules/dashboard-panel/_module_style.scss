@@ -43,6 +43,10 @@
 
 		.panel-heading {
 			background-color: $vacation-edit-primary;
+
+			&:after {
+				content: "\e109";
+			}
 		}
 
 		h3 {
