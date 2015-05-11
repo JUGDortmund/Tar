@@ -120,6 +120,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
       case "edit":
         model.addAttribute("users", getSortedUserList());
         model.addAttribute("managers", getManagerList());
+
+        // this gets out with proper authorization. It will be replaced by:
+        // model.addAttribute("formMode", FormMode.EDIT);
         FormMode mode = getConnectedUser().equals(vacation.getUser()) ? FormMode.EDIT : FormMode.VIEW;
         model.addAttribute("formMode", mode);
         break;
@@ -140,7 +143,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("newVacation")
-  public String newVacation(Vacation vacation, BindingResult bindingResult,
+  public String newVacation(Vacation vacation,
                             HttpServletRequest request, Model model) {
     vacation.setUser(getConnectedUser());
     model.addAttribute("managers", getManagerList());

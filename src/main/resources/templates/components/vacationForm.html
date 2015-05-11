@@ -113,7 +113,7 @@ edit-vacation, approve-vacation  -->
                     </th:block>
                     <th:block th:unless="${editable}">
                         <input class="form-control" name="vacationDays"
-                               disabled="disabled"
+                               type="number"  disabled="disabled"
                                th:field="*{days}"/>
                     </th:block>
 
@@ -132,7 +132,7 @@ edit-vacation, approve-vacation  -->
                     </th:block>
                     <th:block th:unless="${editable}">
                         <input class="form-control" name="vacationDays"
-                               disabled="disabled"
+                               type="number" disabled="disabled"
                                th:field="*{daysLeft}"/>
                     </th:block>
                 </div>
@@ -157,7 +157,7 @@ edit-vacation, approve-vacation  -->
                     <th:block
                             th:unless="${editable}">
                         <input type="text" class="form-control"
-                               th:value="*{substitute.lastname + ', ' + substitute.firstname}"
+                               th:value="*{substitute != null ? substitute.lastname + ', ' + substitute.firstname : ''}"
                                disabled="disabled"/>
                     </th:block>
                 </div>
