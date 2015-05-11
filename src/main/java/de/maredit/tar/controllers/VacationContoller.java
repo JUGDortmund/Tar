@@ -17,7 +17,6 @@ import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -105,7 +105,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   @RequestMapping("/approval")
   public String approval(@RequestParam(value = "id") String id,
-                         @RequestParam(value = "approve") boolean approve) {
+                         @RequestParam(value = "approve") boolean approve) throws SocketException {
     Vacation vacation = this.vacationRepository.findOne(id);
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);

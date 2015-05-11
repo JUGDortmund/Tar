@@ -1,5 +1,10 @@
 package de.maredit.tar.services;
 
+import net.fortuna.ical4j.model.ValidationException;
+
+import org.springframework.core.io.ByteArrayResource;
+
+import java.io.IOException;
 import java.util.Date;
 
 import javax.mail.MessagingException;
@@ -13,7 +18,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
-
 import de.maredit.tar.services.mail.MailObject;
 
 @Component
@@ -57,7 +61,8 @@ public class MailMessageComposer {
         messageHelper.setCc(mail.getCCRecipients());
       }
       messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
-    } catch (MessagingException e) {
+      messageHelper.addAttachment("vacation.ics", new ByteArrayResource(mail.getICalAttachment()));
+    } catch (MessagingException | IOException | ValidationException e) {
       LOG.error("Error creating mail", e);
     }
     return message;

@@ -1,7 +1,10 @@
 package de.maredit.tar.services.mail;
 
+import net.fortuna.ical4j.model.ValidationException;
+
 import de.maredit.tar.models.User;
 
+import java.io.IOException;
 import java.util.Map;
 
 public interface MailObject {
@@ -24,5 +27,9 @@ public interface MailObject {
       mail = user.getMail();
     }
     return mail;
+  }
+
+  default byte[] getICalAttachment() throws IOException, ValidationException {
+    return null;
   }
 }
