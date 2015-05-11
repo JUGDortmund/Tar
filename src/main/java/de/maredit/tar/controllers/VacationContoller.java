@@ -123,7 +123,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
         // this gets out with proper authorization. It will be replaced by:
         // model.addAttribute("formMode", FormMode.EDIT);
-        FormMode mode = getConnectedUser().equals(vacation.getUser()) ? FormMode.EDIT : FormMode.VIEW;
+        FormMode
+            mode =
+            getConnectedUser().equals(vacation.getUser()) ? FormMode.EDIT : FormMode.VIEW;
         model.addAttribute("formMode", mode);
         break;
       case "approve":
@@ -142,9 +144,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
     return "components/vacationForm";
   }
 
-  @RequestMapping("newVacation")
-  public String newVacation(Vacation vacation,
-                            HttpServletRequest request, Model model) {
+  @RequestMapping("/newVacation")
+  public String newVacation(Vacation vacation, Model model) {
     vacation.setUser(getConnectedUser());
     model.addAttribute("managers", getManagerList());
     model.addAttribute("users", getSortedUserList());
@@ -180,8 +181,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
   @Secured({"AUTH_OWN_CANCEL_VACATION", "AUTH_CANCEL_VACATION"})
-  public String cancelVacation(HttpServletRequest request, @RequestParam(value = "id") String id,
-                               Model model) {
+  public String cancelVacation(@RequestParam(value = "id") String id) {
     Vacation vacation = this.vacationRepository.findOne(id);
 
     VacationCanceledMail mail = new VacationCanceledMail(vacation);
