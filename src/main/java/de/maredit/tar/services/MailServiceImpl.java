@@ -52,7 +52,7 @@ public class MailServiceImpl implements MailService {
         new SimpleMailMessage(mailMessageComposer.composeSimpleMailMessage(mail));
     try {
       if(mail.sendToAdditionalRecipient()) {
-        ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalrecipients().toArray());
+        mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalRecipients()));
       }
       this.mailSender.send(msg);
     } catch (MailException ex) {
@@ -64,7 +64,7 @@ public class MailServiceImpl implements MailService {
   public void sendMail(MailObject mail) {
     try {
       if(mail.sendToAdditionalRecipient()) {
-        ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalrecipients().toArray());
+        mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalRecipients()));
       }
       mailSender.send(mailMessageComposer.composeMimeMailMessage(mail,
           mailSender.createMimeMessage()));

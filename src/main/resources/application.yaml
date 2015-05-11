@@ -15,7 +15,7 @@ spring:
       embedded: true
       preload: true
   mail:
-    additionalrecipients:
+    additionalRecipients:
       - mareditTarTest@dontsendmespam.de
 ---
 ##### Demo configuration #####
@@ -33,7 +33,7 @@ spring:
     port: 25
     username: no-reply@maredit.de
     password: lkvSdsE9YroldisNLVtdpVO4
-    additionalrecipients:
+    additionalRecipients:
       - mareditTarTest@dontsendmespam.de
 ---
 ##### Test configuration #####
@@ -49,7 +49,7 @@ spring:
       embedded: true
       preload: true
   mail:
-    additionalrecipients:
+    additionalRecipients:
       - mareditTarTest@dontsendmespam.de
 ---
 ##### Service test configuration #####
@@ -69,7 +69,7 @@ spring:
     port: 1600
     username:
     password:
-    additionalrecipients:
+    additionalRecipients:
       - mareditTarTest@dontsendmespam.de
   ldap:
     host: localhost
@@ -110,5 +110,5 @@ spring:
     port: 25
     username: no-reply@maredit.de
     password: lkvSdsE9YroldisNLVtdpVO4
-    additionalrecipients:
+    additionalRecipients:
       - mareditTarTest@dontsendmespam.de
