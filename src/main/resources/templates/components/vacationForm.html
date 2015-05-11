@@ -34,7 +34,7 @@ edit-vacation, approve-vacation  -->
                         <span th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">*</span>
                     </label>
 
-                    <th:block th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">
+                    <th:block th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
                         <select class="form-control" style="width: 100%;" name="employee"
                                 id="employee"
                                 th:field="*{user}">
@@ -44,8 +44,7 @@ edit-vacation, approve-vacation  -->
                             </option>
                         </select>
                     </th:block>
-                    <th:block
-                            th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">
+                    <th:block th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
                         <input type="text" class="form-control"
                                th:value="*{user.lastname + ', ' + user.firstname}"
                                disabled="disabled"/>

@@ -20,9 +20,11 @@ import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,7 +68,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @ModelAttribute("vacation")
   public Vacation getVacation(@RequestParam(value = "id", required = false) String id) {
-    if (id == null) {
+    if (StringUtils.isBlank(id)) {
       return new Vacation();
     }
     return vacationRepository.findOne(id);
@@ -75,6 +77,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @InitBinder("vacation")
   protected void initBinder(WebDataBinder binder) {
     binder.addValidators(new VacationValidator());
+    binder.registerCustomEditor(String.class, "id", new StringTrimmerEditor(true));
   }
 
   @RequestMapping("/")
@@ -145,7 +148,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("/newVacation")
-  public String newVacation(Vacation vacation, Model model) {
+  public String newVacation(@ModelAttribute("vacation") Vacation vacation, Model model) {
     vacation.setUser(getConnectedUser());
     model.addAttribute("managers", getManagerList());
     model.addAttribute("users", getSortedUserList());
@@ -169,7 +172,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
       model.addAttribute("formMode", FormMode.EDIT);
       return "application/index";
     } else {
-      boolean newVacation = vacation.getId() == null;
+      boolean newVacation = StringUtils.isBlank(vacation.getId());
       if (!newVacation) {
         vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
                                                            : State.REQUESTED_SUBSTITUTE);
