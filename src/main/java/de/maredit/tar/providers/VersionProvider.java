@@ -16,9 +16,9 @@ public final class VersionProvider {
 	public VersionProvider() {
 		ResourceBundle resourceBundle;
 		try {
-			resourceBundle = ResourceBundle.getBundle("pom");
+			resourceBundle = ResourceBundle.getBundle("version");
 			appVersion = resourceBundle.getString("version");
-			buildVersion = resourceBundle.getString("build.version");
+//			buildVersion = resourceBundle.getString("build.version");
 		} catch (MissingResourceException e) {
 			LOG.debug("Resource bundle 'pom' was not found");
 		}

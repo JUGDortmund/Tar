@@ -14,10 +14,12 @@ spring:
       database: tar-dev
       embedded: true
       preload: true
+  number:
+    build: "0001"
 ---
 ##### Demo configuration #####
 spring:
-  profiles: demo
+  profiles: demo  
   data:
     mongodb:
       host: localhost

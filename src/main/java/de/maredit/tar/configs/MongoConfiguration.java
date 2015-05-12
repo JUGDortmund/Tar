@@ -28,30 +28,32 @@ import de.maredit.tar.properties.MongoProperties;
 @Profile("!serviceTest")
 public class MongoConfiguration extends AbstractMongoConfiguration {
 
-  @Autowired
-  MongoProperties mongoProperties;
+	@Autowired
+	MongoProperties mongoProperties;
 
-  @SuppressWarnings("unused")
-  private static final Logger LOG = LogManager.getLogger(MongoConfiguration.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOG = LogManager
+			.getLogger(MongoConfiguration.class);
 
-  @Override
-  public CustomConversions customConversions() {
-    return new CustomConversions(Arrays.asList(new DateToLocalDateTimeConverter(),
-        new LocalDateTimeToDateConverter(), new DateToLocalDateConverter(),
-        new LocalDateToDateConverter()));
-  }
+	@Override
+	public CustomConversions customConversions() {
+		return new CustomConversions(Arrays.asList(
+				new DateToLocalDateTimeConverter(),
+				new LocalDateTimeToDateConverter(),
+				new DateToLocalDateConverter(), new LocalDateToDateConverter()));
+	}
 
-  @Override
-  protected String getDatabaseName() {
-    return mongoProperties.getDatabase();
-  }
+	@Override
+	protected String getDatabaseName() {
+		return mongoProperties.getDatabase();
+	}
 
-  @Override
-  public Mongo mongo() throws Exception {
-    StringBuilder uriBuilder = new StringBuilder("mongodb://");
-    uriBuilder.append(mongoProperties.getHost());
-    uriBuilder.append(":");
-    uriBuilder.append(mongoProperties.getPort());
-    return new MongoClient(new MongoClientURI(uriBuilder.toString()));
-  }
+	@Override
+	public Mongo mongo() throws Exception {
+		StringBuilder uriBuilder = new StringBuilder("mongodb://");
+		uriBuilder.append(mongoProperties.getHost());
+		uriBuilder.append(":");
+		uriBuilder.append(mongoProperties.getPort());
+		return new MongoClient(new MongoClientURI(uriBuilder.toString()));
+	}
 }

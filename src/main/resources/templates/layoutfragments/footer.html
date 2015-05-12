@@ -3,16 +3,22 @@
 
 <body>
 
-<footer class="main-footer" th:fragment="footer">
-    <!-- To the right -->
-    <div class="pull-right hidden-xs">
-        ${appVersion} - ${buildVersion}
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2015 <a href="http://www.maredit.de">maredit GmbH</a>.</strong>
-    
+	<footer class="main-footer" th:fragment="footer">
+		<!-- To the right -->
+		<div class="pull-right hidden-xs" th:if="${buildnumber != null}">
+		${appVersion} - 
+			<span th:text="${buildnumber}"></span>
+		</div>
+		<div class="pull-right hidden-xs" th:if="${buildnumber == null}">
+			${appVersion}
+		</div>
+		<!-- Default to the left -->
+		<strong>Copyright &copy; 2015 <a href="http://www.maredit.de">maredit
+				GmbH</a>.
+		</strong>
 
-</footer>
+
+	</footer>
 
 </body>
 
