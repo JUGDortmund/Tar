@@ -22,7 +22,7 @@ public class VacationCreateMail implements MailObject {
 
   public VacationCreateMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFullname());
-    values.put("manager", vacation.getManager().getFullname());
+    values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
     values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
