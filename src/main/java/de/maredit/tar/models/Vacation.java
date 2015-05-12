@@ -51,6 +51,8 @@ public class Vacation {
   @NotNull
   private State state;
 
+  private User author;
+
   public Vacation() {
     this.created = LocalDate.now();
     this.state = State.WAITING_FOR_APPROVEMENT;
@@ -176,5 +178,13 @@ public class Vacation {
     return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
         + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", daysLeft="
         + daysLeft + ", state=" + state + "]";
+  }
+
+  public void setAuthor(User user) {
+    this.author = user;
+  }
+  
+  public User getAuthor() {
+    return author;
   }
 }

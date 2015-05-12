@@ -173,7 +173,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
       return "application/index";
     } else {
       boolean newVacation = StringUtils.isBlank(vacation.getId());
-      if (!newVacation) {
+      if (newVacation) {
+        vacation.setAuthor(getConnectedUser());
+      } else {
         vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
                                                            : State.REQUESTED_SUBSTITUTE);
       }
