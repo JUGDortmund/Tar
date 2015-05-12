@@ -20,6 +20,8 @@ public class MailServiceDummyImpl implements MailService {
   @Autowired
   private CustomMailProperties customMailProperties;
 
+  private MailMessageComposer mailMessageComposer;
+
   @Override
   public void sendSimpleMail(MailObject mail) {
     if(mail.sendToAdditionalRecipient()) {
@@ -27,6 +29,8 @@ public class MailServiceDummyImpl implements MailService {
     }
     LOG.info(
         "Mail to be send:\n {}",mail.toString());
+    LOG.info(
+        "Mail Text:\n {}",mailMessageComposer.composeSimpleMailMessage(mail).getText());
   }
 
   @Override
@@ -36,5 +40,7 @@ public class MailServiceDummyImpl implements MailService {
     }
     LOG.info(
         "HTML mail to be send:\n {}",mail.toString());
+    LOG.info(
+        "Mail Text:\n {}",mailMessageComposer.composeSimpleMailMessage(mail).getText());
   }
 }

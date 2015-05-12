@@ -12,7 +12,7 @@
 
 	<p> <span th:text="${employee}">Welt!</span> hat Urlaub beantragt. Hier sind die Details: </p>
 	
-	<p> <b>Name des Projektleiters:</b> <span th:text="${manager}">Max Mustermann</span> </p>
+	<p> <b>Name des Vorgesetzten:</b> <span th:text="${manager}">Max Mustermann</span> </p>
 
 	<p> <b>Name des Stellvertreters:</b> <span th:text="${#strings.isEmpty(substitute) ? '-': substitute }">Max Mustermann</span> </p>
 
