@@ -20,7 +20,7 @@ public class VacationModifiedMail implements MailObject {
 
   public VacationModifiedMail(Vacation vacation) {
     values.put("employee", vacation.getUser().getFirstname());
-    values.put("manager", vacation.getManager().getFullname());
+    values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
     values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
