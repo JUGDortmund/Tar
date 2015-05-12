@@ -1,5 +1,7 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.utils.ConversionUtils;
+
 import de.maredit.tar.models.Vacation;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -21,8 +23,9 @@ public class VacationModifiedMail implements MailObject {
     values.put("manager", vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
-    values.put("fromDate", vacation.getFrom());
-    values.put("toDate", vacation.getTo());
+    values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
+    values.put("toDate",
+               ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
