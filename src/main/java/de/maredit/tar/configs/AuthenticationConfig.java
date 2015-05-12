@@ -1,7 +1,7 @@
 package de.maredit.tar.configs;
 
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import de.maredit.tar.providers.ApplicationAuthenticationProvider;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +12,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebMvcSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
 
@@ -39,7 +40,6 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
         .and()
         .logout()
         .permitAll();
-    http.csrf().disable();
   }
 
   @Autowired
