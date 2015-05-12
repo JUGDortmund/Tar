@@ -1,7 +1,6 @@
 package de.maredit.tar.controllers;
 
 import de.maredit.tar.models.CalendarEvent;
-import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.properties.VersionProperties;
@@ -50,7 +49,6 @@ public class CalendarController {
 	@RequestMapping("/calendar")
 	public String calendar(Model model) {
 		List<Vacation> vacations = this.vacationRepository.findAll();
-		User user = applicationController.getConnectedUser();
 		
 		model.addAttribute("vacations", vacations);
 		model.addAttribute("loginUser", applicationController.getConnectedUser());

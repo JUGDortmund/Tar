@@ -75,6 +75,7 @@ public class UserSyncTask {
     user.setUsername(resultEntry.getUsername());
     user.setFirstname(resultEntry.getFirstname());
     user.setLastname(resultEntry.getLastname());
+    user.setPhoto(resultEntry.getPhoto().getBytes());
   }
 
 }
