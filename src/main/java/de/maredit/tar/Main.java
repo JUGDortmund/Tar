@@ -24,8 +24,6 @@ public class Main {
 		springApplication.addListeners(new StartupListener(),
 				new ContextListener());
 		springApplication.run(args);
-
-		LOG.debug("App-Version: {}", versionProvider.getApplicationVersion());
 	}
 
 }

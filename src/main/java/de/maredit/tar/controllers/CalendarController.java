@@ -4,6 +4,8 @@ import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
+import de.maredit.tar.properties.VersionProperties;
+import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.VacationRepository;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,8 +23,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static java.util.stream.Collectors.toList;
 
@@ -40,14 +39,23 @@ public class CalendarController {
 	@Autowired
 	private VacationRepository vacationRepository;
 
+	@Autowired
 	private ApplicationController applicationController;
-
+	
+	@Autowired
+	private VersionProperties versionProperties;
+	
+	private VersionProvider versionProvider = new VersionProvider();
+	
 	@RequestMapping("/calendar")
 	public String calendar(Model model) {
 		List<Vacation> vacations = this.vacationRepository.findAll();
 		User user = applicationController.getConnectedUser();
+		
 		model.addAttribute("vacations", vacations);
-		model.addAttribute("loginUser", user);
+		model.addAttribute("selectedUser", user);
+		model.addAttribute("appVersion", versionProvider.getApplicationVersion());
+		model.addAttribute("buildnumber", versionProperties.getBuild());
 
 		return "application/calendar";
 	}

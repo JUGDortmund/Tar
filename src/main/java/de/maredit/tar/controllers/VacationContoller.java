@@ -7,6 +7,7 @@ import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.properties.VersionProperties;
+import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
@@ -24,14 +25,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,6 +69,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 	@Autowired
 	private ApplicationController applicationController;
 
+	private VersionProvider versionProvider = new VersionProvider();
+
 	@InitBinder("vacation")
 	protected void initBinder(WebDataBinder binder) {
 		binder.addValidators(new VacationValidator());
@@ -87,12 +87,15 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 						State.CANCELED);
 		List<User> managerList = getManagerList();
 		List<Vacation> substitutes = this.vacationRepository
-				.findVacationBySubstitute(applicationController.getConnectedUser());
+				.findVacationBySubstitute(applicationController
+						.getConnectedUser());
 		List<Vacation> substitutesForApproval = this.vacationRepository
-				.findVacationBySubstituteAndState(applicationController.getConnectedUser(),
+				.findVacationBySubstituteAndState(
+						applicationController.getConnectedUser(),
 						State.REQUESTED_SUBSTITUTE);
 		List<Vacation> approvals = this.vacationRepository
-				.findVacationByManagerAndState(applicationController.getConnectedUser(),
+				.findVacationByManagerAndState(
+						applicationController.getConnectedUser(),
 						State.WAITING_FOR_APPROVEMENT);
 
 		setVacationFormModelValues(model, user, users, vacations, managerList,
@@ -144,8 +147,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 			model.addAttribute("managers", getManagerList());
 			model.addAttribute("selectedUser", this.userRepository
 					.findByUidNumber(vacation.getUser().getUidNumber()));
-			model.addAttribute("disableInput",
-					!applicationController.getConnectedUser().equals(vacation.getUser()));
+			model.addAttribute("disableInput", !applicationController
+					.getConnectedUser().equals(vacation.getUser()));
 			return "application/vacationEdit";
 		case "approve":
 			return "application/vacationApprove";
@@ -173,12 +176,15 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 							State.CANCELED);
 			List<User> managerList = getManagerList();
 			List<Vacation> substitutes = this.vacationRepository
-					.findVacationBySubstitute(applicationController.getConnectedUser());
+					.findVacationBySubstitute(applicationController
+							.getConnectedUser());
 			List<Vacation> substitutesForApproval = this.vacationRepository
-					.findVacationBySubstituteAndState(applicationController.getConnectedUser(),
+					.findVacationBySubstituteAndState(
+							applicationController.getConnectedUser(),
 							State.REQUESTED_SUBSTITUTE);
 			List<Vacation> approvals = this.vacationRepository
-					.findVacationByManagerAndState(applicationController.getConnectedUser(),
+					.findVacationByManagerAndState(
+							applicationController.getConnectedUser(),
 							State.WAITING_FOR_APPROVEMENT);
 
 			setVacationFormModelValues(model, selectedUser, users, vacations,
@@ -216,12 +222,15 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 						State.CANCELED);
 		List<User> managerList = getManagerList();
 		List<Vacation> substitutes = this.vacationRepository
-				.findVacationBySubstitute(applicationController.getConnectedUser());
+				.findVacationBySubstitute(applicationController
+						.getConnectedUser());
 		List<Vacation> substitutesForApproval = this.vacationRepository
-				.findVacationBySubstituteAndState(applicationController.getConnectedUser(),
+				.findVacationBySubstituteAndState(
+						applicationController.getConnectedUser(),
 						State.REQUESTED_SUBSTITUTE);
 		List<Vacation> approvals = this.vacationRepository
-				.findVacationByManagerAndState(applicationController.getConnectedUser(),
+				.findVacationByManagerAndState(
+						applicationController.getConnectedUser(),
 						State.WAITING_FOR_APPROVEMENT);
 		setVacationFormModelValues(model, user, users, vacations, managerList,
 				substitutes, substitutesForApproval, approvals);
@@ -241,6 +250,8 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 		model.addAttribute("substitutesForApproval", substitutesForApproval);
 		model.addAttribute("approvals", approvals);
 
+		model.addAttribute("appVersion",
+				versionProvider.getApplicationVersion());
 		model.addAttribute("buildnumber", versionProperties.getBuild());
 	}
 
