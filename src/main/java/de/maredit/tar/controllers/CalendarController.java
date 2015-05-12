@@ -53,7 +53,7 @@ public class CalendarController {
 		User user = applicationController.getConnectedUser();
 		
 		model.addAttribute("vacations", vacations);
-		model.addAttribute("selectedUser", user);
+		model.addAttribute("loginUser", applicationController.getConnectedUser());
 		model.addAttribute("appVersion", versionProvider.getApplicationVersion());
 		model.addAttribute("buildnumber", versionProperties.getBuild());
 

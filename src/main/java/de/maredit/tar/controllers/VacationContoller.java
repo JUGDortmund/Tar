@@ -250,6 +250,7 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 		model.addAttribute("substitutesForApproval", substitutesForApproval);
 		model.addAttribute("approvals", approvals);
 
+		model.addAttribute("loginUser", applicationController.getConnectedUser());
 		model.addAttribute("appVersion",
 				versionProvider.getApplicationVersion());
 		model.addAttribute("buildnumber", versionProperties.getBuild());

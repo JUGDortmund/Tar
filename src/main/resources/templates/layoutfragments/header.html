@@ -19,21 +19,20 @@
 			<div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
 					<!-- User Account Menu -->
-					<li class="dropdown user user-menu" th:if="${selectedUser.photo != null}">
+					<li class="dropdown user user-menu" th:if="${loginUser.photo != null}">
 						<!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle"
 						data-toggle="dropdown"> <!-- The user image in the navbar--> <img
-							src="../images/logo.png"
-							th:src="@{${'data:image/jpeg;base64,'+ selectedUser.photo}}"
+							th:src="@{${'data:image/jpeg;base64,'+ loginUser.photo}}"
 							class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
 							<span class="hidden-xs"
-							th:text="${selectedUser.firstname + ' ' + selectedUser.lastname}"></span>
+							th:text="${loginUser.firstname + ' ' + loginUser.lastname}"></span>
 					</a>
 					</li>
-					<li class="dropdown user user-menu" th:if="${selectedUser.photo == null}">
+					<li class="dropdown user user-menu" th:if="${loginUser.photo == null}">
 						<!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle"
 						data-toggle="dropdown"> <!-- The user image in the navbar--> <img
 							src="../images/dummy_user_image.jpg" class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
-							<span class="hidden-xs"	th:text="${selectedUser.firstname + ' ' + selectedUser.lastname}"></span>
+							<span class="hidden-xs"	th:text="${loginUser.firstname + ' ' + loginUser.lastname}"></span>
 					</a>
 					</li>
 					<li>
