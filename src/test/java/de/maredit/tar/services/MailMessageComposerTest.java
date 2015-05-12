@@ -84,7 +84,7 @@ public class MailMessageComposerTest {
     String expectedSubString = "Hallo, <span>John Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Name des Projektleiters:</b> <span>John Surname</span>";
+    expectedSubString = "<b>Name des Vorgesetzten:</b> <span>John Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
     expectedSubString = "<b>Name des Stellvertreters:</b> <span>Luke Surname</span>";

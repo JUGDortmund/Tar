@@ -17,21 +17,25 @@ import de.maredit.tar.services.mail.MailObject;
 @Profile({"dev", "test"})
 public class MailServiceDummyImpl implements MailService {
 
+  private static final Logger LOG = LogManager.getLogger(MailServiceDummyImpl.class);
+
   @Autowired
   private MailMessageComposer mailMessageComposer;
-
-  private static final Logger LOG = LogManager.getLogger(MailServiceDummyImpl.class);
 
   @Override
   public void sendSimpleMail(MailObject mail) {
     LOG.info(
         "Mail to be send:\n {}",mail.toString());
+    LOG.info(
+        "Mail Text:\n {}",mailMessageComposer.composeSimpleMailMessage(mail).getText());
   }
 
   @Override
   public void sendMail(MailObject mail) {
     LOG.info(
         "HTML mail to be send:\n {}",mail.toString());
+    LOG.info(
+        "Mail Text:\n {}",mailMessageComposer.composeSimpleMailMessage(mail).getText());
     try {
       LOG.debug("iCal:\n{}", new String(ArrayUtils.nullToEmpty(mail.getICalAttachment()), "ISO-8859-1"));
     } catch (IOException | ValidationException e) {
