@@ -128,3 +128,83 @@
   })(jQuery);
 
 }).call(this);
+
+(function() {
+  var copyDataForEdit, copyEditedData, revertEditRow;
+
+  (function($) {
+    $('.new-form').hide();
+    $('.edit-form').hide();
+    $('button.new').click(function() {
+      var row;
+      $(this).hide();
+      revertEditRow();
+      row = $(this).closest('tr').siblings('.new-form');
+      return row.show();
+    });
+    $('button.save-new').click(function() {
+      var formRow, newRow;
+      formRow = $(this).closest('tr');
+      newRow = formRow.siblings().last().clone();
+      copyEditedData(formRow, newRow, true);
+      newRow.insertAfter(formRow);
+      $(this).closest('table').find('button.new').show();
+      return formRow.hide();
+    });
+    $('a .glyphicon-pencil').click(function() {
+      var destinationRow, sourceRow;
+      $('.new-form').hide();
+      revertEditRow();
+      destinationRow = $(this).closest('tr').siblings('.edit-form');
+      sourceRow = $(this).closest('tr');
+      copyDataForEdit(sourceRow, destinationRow);
+      destinationRow.insertAfter(sourceRow);
+      sourceRow.addClass('invisible-for-edit');
+      sourceRow.hide();
+      destinationRow.show();
+      return $('button.new').show();
+    });
+    return $('button.save-edit').click(function() {
+      var destinationRow, sourceRow;
+      sourceRow = $(this).closest('tr');
+      destinationRow = $(this).closest('tr').siblings('.invisible-for-edit');
+      copyEditedData(sourceRow, destinationRow, false);
+      destinationRow.removeClass('invisible-for-edit');
+      sourceRow.hide();
+      return destinationRow.show();
+    });
+  })(jQuery);
+
+  copyDataForEdit = function(sourceRow, destinationRow) {
+    var daysLeft, daysYear, year;
+    year = sourceRow.find('.year').html();
+    daysYear = sourceRow.find('.days-year').html();
+    daysLeft = sourceRow.find('.days-left').html();
+    destinationRow.find('.year').html(year);
+    destinationRow.find('.days-year input').val(daysYear);
+    return destinationRow.find('.days-left').html(daysLeft);
+  };
+
+  copyEditedData = function(sourceRow, destinationRow, fullCopy) {
+    var daysLeft, daysYear, year;
+    daysYear = sourceRow.find('.days-year input').val();
+    destinationRow.find('.days-year').html(daysYear);
+    if (fullCopy) {
+      year = sourceRow.find('.year select').val();
+      daysLeft = sourceRow.find('.days-left').html();
+      destinationRow.find('.year').html(year);
+      return destinationRow.find('.days-left').html(daysLeft);
+    }
+  };
+
+  revertEditRow = function() {
+    var oldRow;
+    $('.edit-form').hide();
+    oldRow = $('.invisible-for-edit');
+    if (oldRow.html() !== void 0) {
+      oldRow.removeClass('invisible-for-edit');
+      return oldRow.show();
+    }
+  };
+
+}).call(this);
