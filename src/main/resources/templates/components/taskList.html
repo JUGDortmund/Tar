@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="taskList">
-<div class="panel panel-default module list-panel">
+<div class="panel panel-default approve-vacation module dashboard-panel">
     <div class="panel-heading">Aufgaben</div>
-    <div class="panel-body task-list">
+    <div class="panel-body">
         <div class="list-group">
             <h3 class="list-group-item">Vertretungen</h3>
             <a th:each="substitute : ${substitutesForApproval}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='substitute')}">
