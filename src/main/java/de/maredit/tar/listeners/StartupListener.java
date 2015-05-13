@@ -8,13 +8,15 @@ import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
 
 public class StartupListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
   private ConfigurableEnvironment environment;
-  
+
   @Override
   public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
     this.environment = event.getEnvironment();
-    Boolean embeddedMongo = this.environment.getProperty("spring.data.mongodb.embedded", Boolean.class);
+    Boolean embeddedMongo =
+        this.environment.getProperty("spring.data.mongodb.embedded", Boolean.class);
     if (embeddedMongo != null && embeddedMongo.booleanValue()) {
-      EmbeddedMongo.DB.port(this.environment.getProperty("spring.data.mongodb.port", Integer.class)).start();
+      EmbeddedMongo.DB
+          .port(this.environment.getProperty("spring.data.mongodb.port", Integer.class)).start();
     }
   }
 }

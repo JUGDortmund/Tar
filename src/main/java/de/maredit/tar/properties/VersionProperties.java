@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "spring.number")
 public class VersionProperties {
 
-	private String build;
-	
-	public String getBuild(){
-		return build;
-	}
-	
-	public void setBuild(String build){
-		this.build = build;
-	}
+  private String build;
+
+  public String getBuild() {
+    return build;
+  }
+
+  public void setBuild(String build) {
+    this.build = build;
+  }
 }

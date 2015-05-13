@@ -32,79 +32,74 @@ import static java.util.stream.Collectors.toList;
 @Controller
 public class CalendarController {
 
-	private static final Logger LOG = LogManager
-			.getLogger(CalendarController.class);
+  private static final Logger LOG = LogManager.getLogger(CalendarController.class);
 
-	@Autowired
-	private VacationRepository vacationRepository;
+  @Autowired
+  private VacationRepository vacationRepository;
 
-	@Autowired
-	private ApplicationController applicationController;
-	
-	@Autowired
-	private VersionProperties versionProperties;
-	
-	private VersionProvider versionProvider = new VersionProvider();
-	
-	@RequestMapping("/calendar")
-	public String calendar(Model model) {
-		List<Vacation> vacations = this.vacationRepository.findAll();
-		
-		model.addAttribute("vacations", vacations);
-		model.addAttribute("loginUser", applicationController.getConnectedUser());
-		model.addAttribute("appVersion", versionProvider.getApplicationVersion());
-		model.addAttribute("buildnumber", versionProperties.getBuild());
+  @Autowired
+  private ApplicationController applicationController;
 
-		return "application/calendar";
-	}
+  @Autowired
+  private VersionProperties versionProperties;
 
-	@RequestMapping(value = "/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public List<CalendarEvent> getCalendarElements(
-			@RequestParam(value = "start") String start,
-			@RequestParam(value = "end") String end,
-			@RequestParam(value = "showApproved", defaultValue = "true") Boolean showApproved,
-			@RequestParam(value = "showPending", defaultValue = "false") Boolean showPending,
-			@RequestParam(value = "showCanceled", defaultValue = "false") Boolean showCanceled,
-			@RequestParam(value = "showRejected", defaultValue = "false") Boolean showRejected) {
-		LocalDate startDate = LocalDate.parse(start,
-				DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		LocalDate endDate = LocalDate.parse(end,
-				DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-		LOG.debug("Selecting vacation data from " + startDate + " to "
-				+ endDate);
+  private VersionProvider versionProvider = new VersionProvider();
 
-		List<State> states = new ArrayList<State>();
-		if (showApproved) {
-			states.add(State.APPROVED);
-		}
-		if (showPending) {
-			states.add(State.WAITING_FOR_APPROVEMENT);
-			states.add(State.REQUESTED_SUBSTITUTE);
-		}
-		if (showCanceled) {
-			states.add(State.CANCELED);
-		}
-		if (showRejected) {
-			states.add(State.REJECTED);
-		}
+  @RequestMapping("/calendar")
+  public String calendar(Model model) {
+    List<Vacation> vacations = this.vacationRepository.findAll();
 
-		List<Vacation> vacations = this.vacationRepository
-				.findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(
-						startDate, endDate, states, startDate, endDate, states);
+    model.addAttribute("vacations", vacations);
+    model.addAttribute("loginUser", applicationController.getConnectedUser());
+    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
+    model.addAttribute("buildnumber", versionProperties.getBuild());
 
-		List<CalendarEvent> calendarEvents = vacations
-				.stream()
-				.map(vacation -> {
-					CalendarEvent calendarEvent = new CalendarEvent(vacation);
-					LOG.debug("added CalendarEvent '"
-							+ calendarEvent.getTitle() + "' [start: "
-							+ calendarEvent.getStart() + " - end: "
-							+ calendarEvent.getEnd() + "] - "
-							+ calendarEvent.getState());
-					return calendarEvent;
-				}).collect(toList());
+    return "application/calendar";
+  }
 
-		return calendarEvents;
-	}
+  @RequestMapping(value = "/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public List<CalendarEvent> getCalendarElements(@RequestParam(value = "start") String start,
+      @RequestParam(value = "end") String end,
+      @RequestParam(value = "showApproved", defaultValue = "true") Boolean showApproved,
+      @RequestParam(value = "showPending", defaultValue = "false") Boolean showPending,
+      @RequestParam(value = "showCanceled", defaultValue = "false") Boolean showCanceled,
+      @RequestParam(value = "showRejected", defaultValue = "false") Boolean showRejected) {
+    LocalDate startDate = LocalDate.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    LocalDate endDate = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    LOG.debug("Selecting vacation data from " + startDate + " to " + endDate);
+
+    List<State> states = new ArrayList<State>();
+    if (showApproved) {
+      states.add(State.APPROVED);
+    }
+    if (showPending) {
+      states.add(State.WAITING_FOR_APPROVEMENT);
+      states.add(State.REQUESTED_SUBSTITUTE);
+    }
+    if (showCanceled) {
+      states.add(State.CANCELED);
+    }
+    if (showRejected) {
+      states.add(State.REJECTED);
+    }
+
+    List<Vacation> vacations =
+        this.vacationRepository.findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(startDate,
+            endDate, states, startDate, endDate, states);
+
+    List<CalendarEvent> calendarEvents =
+        vacations
+            .stream()
+            .map(
+                vacation -> {
+                  CalendarEvent calendarEvent = new CalendarEvent(vacation);
+                  LOG.debug("added CalendarEvent '" + calendarEvent.getTitle() + "' [start: "
+                      + calendarEvent.getStart() + " - end: " + calendarEvent.getEnd() + "] - "
+                      + calendarEvent.getState());
+                  return calendarEvent;
+                }).collect(toList());
+
+    return calendarEvents;
+  }
 }

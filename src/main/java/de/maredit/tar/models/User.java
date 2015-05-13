@@ -76,16 +76,16 @@ public class User {
   public void setMail(String mail) {
     this.mail = mail;
   }
-  
-  	public String getPhoto() {
-		return userImage;
-	}
 
-	public void setPhoto(byte[] imageData) {
-		if (imageData != null) {
-			this.userImage = Base64.encode(imageData);
-		} 
-	}
+  public String getPhoto() {
+    return userImage;
+  }
+
+  public void setPhoto(byte[] imageData) {
+    if (imageData != null) {
+      this.userImage = Base64.encode(imageData);
+    }
+  }
 
   @Override
   public boolean equals(Object obj) {

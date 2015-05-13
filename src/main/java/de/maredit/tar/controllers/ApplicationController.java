@@ -13,28 +13,26 @@ import de.maredit.tar.repositories.UserRepository;
 
 @Controller
 public class ApplicationController {
-	
-	@Autowired
-	private UserRepository userRepository;
 
-	@SuppressWarnings("unused")
-	private static final Logger LOG = LogManager
-			.getLogger(ApplicationController.class);
+  @Autowired
+  private UserRepository userRepository;
 
-	@RequestMapping("/login")
-	public String login() {
-		return "login";
-	}
+  @SuppressWarnings("unused")
+  private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
 
-	public User getConnectedUser() {
-		Authentication auth = SecurityContextHolder.getContext()
-				.getAuthentication();
-		if (!auth.isAuthenticated()) {
-			return null;
-		}
-		User user = this.userRepository.findUserByUsername(auth.getName());
+  @RequestMapping("/login")
+  public String login() {
+    return "login";
+  }
 
-		return user;
-		
-	}
+  public User getConnectedUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (!auth.isAuthenticated()) {
+      return null;
+    }
+    User user = this.userRepository.findUserByUsername(auth.getName());
+
+    return user;
+
+  }
 }

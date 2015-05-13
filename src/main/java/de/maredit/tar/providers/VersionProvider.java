@@ -7,22 +7,21 @@ import org.apache.logging.log4j.LogManager;
 
 public final class VersionProvider {
 
-	private static final Logger LOG = LogManager
-			.getLogger(VersionProvider.class);
+  private static final Logger LOG = LogManager.getLogger(VersionProvider.class);
 
-	private String appVersion;
+  private String appVersion;
 
-	public VersionProvider() {
-		ResourceBundle resourceBundle;
-		try {
-			resourceBundle = ResourceBundle.getBundle("version");
-			appVersion = resourceBundle.getString("version");
-		} catch (MissingResourceException e) {
-			LOG.debug("Resource bundle 'pom' was not found");
-		}
-	}
+  public VersionProvider() {
+    ResourceBundle resourceBundle;
+    try {
+      resourceBundle = ResourceBundle.getBundle("version");
+      appVersion = resourceBundle.getString("version");
+    } catch (MissingResourceException e) {
+      LOG.debug("Resource bundle 'pom' was not found");
+    }
+  }
 
-	public String getApplicationVersion() {
-		return appVersion;
-	}
+  public String getApplicationVersion() {
+    return appVersion;
+  }
 }

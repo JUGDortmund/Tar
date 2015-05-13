@@ -36,162 +36,148 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
-@Profile({ "prod", "serviceTest" })
+@Profile({"prod", "serviceTest"})
 public class LdapServiceImpl implements LdapService {
 
-	public static final int NUM_CONNECTIONS = 10;
+  public static final int NUM_CONNECTIONS = 10;
 
-	private static final Pattern UID_PATTERN = Pattern.compile("uid=(\\w+)");
+  private static final Pattern UID_PATTERN = Pattern.compile("uid=(\\w+)");
 
-	@Autowired
-	private LdapProperties ldapProperties;
-	
-	private static final Logger LOG = LogManager
-			.getLogger(LdapServiceImpl.class);
+  @Autowired
+  private LdapProperties ldapProperties;
 
-	private LDAPConnectionPool connectionPool;
+  private static final Logger LOG = LogManager.getLogger(LdapServiceImpl.class);
 
-	@PostConstruct
-	public void init() throws LDAPException, GeneralSecurityException {
-		LDAPConnection ldapConnection = null;
-		if (ldapProperties.isDisableSSL()) {
-			ldapConnection = new LDAPConnection(ldapProperties.getHost(),
-					ldapProperties.getPort());
-		} else {
-			ldapConnection = new LDAPConnection(new SSLUtil(
-					new TrustAllTrustManager()).createSSLSocketFactory(),
-					ldapProperties.getHost(), ldapProperties.getPort());
-		}
+  private LDAPConnectionPool connectionPool;
 
-		connectionPool = new LDAPConnectionPool(ldapConnection, NUM_CONNECTIONS);
-	}
+  @PostConstruct
+  public void init() throws LDAPException, GeneralSecurityException {
+    LDAPConnection ldapConnection = null;
+    if (ldapProperties.isDisableSSL()) {
+      ldapConnection = new LDAPConnection(ldapProperties.getHost(), ldapProperties.getPort());
+    } else {
+      ldapConnection =
+          new LDAPConnection(new SSLUtil(new TrustAllTrustManager()).createSSLSocketFactory(),
+              ldapProperties.getHost(), ldapProperties.getPort());
+    }
 
-	@PreDestroy
-	public void destroy() throws LDAPException, GeneralSecurityException {
-		connectionPool.close();
-	}
+    connectionPool = new LDAPConnectionPool(ldapConnection, NUM_CONNECTIONS);
+  }
 
-	@Override
-	public List<User> getLdapUserList() throws LDAPException {
-		List<User> users = new ArrayList<>();
-		LDAPConnection ldapConnection = connectionPool.getConnection();
-		try {
-			ldapConnection.bind(ldapProperties.getReadUser(),
-					ldapProperties.getReadPassword());
-			// get value list with userDN
-			SearchResultEntry searchResultEntry = ldapConnection
-					.getEntry(ldapProperties.getApplicationUserDN());
-			String[] members = searchResultEntry
-					.getAttributeValues(FIELD_MEMBER);
+  @PreDestroy
+  public void destroy() throws LDAPException, GeneralSecurityException {
+    connectionPool.close();
+  }
 
-			for (String member : members) {
-				SearchResultEntry userEntry = ldapConnection.getEntry(member);
-				if (userEntry != null) {
-					users.add(createUser(userEntry));
-				}
-			}
-		} catch (LDAPException e) {
-			connectionPool.releaseConnectionAfterException(ldapConnection, e);
-			throw e;
-		}
-		connectionPool.releaseConnection(ldapConnection);
-		return users;
+  @Override
+  public List<User> getLdapUserList() throws LDAPException {
+    List<User> users = new ArrayList<>();
+    LDAPConnection ldapConnection = connectionPool.getConnection();
+    try {
+      ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
+      // get value list with userDN
+      SearchResultEntry searchResultEntry =
+          ldapConnection.getEntry(ldapProperties.getApplicationUserDN());
+      String[] members = searchResultEntry.getAttributeValues(FIELD_MEMBER);
 
-	}
+      for (String member : members) {
+        SearchResultEntry userEntry = ldapConnection.getEntry(member);
+        if (userEntry != null) {
+          users.add(createUser(userEntry));
+        }
+      }
+    } catch (LDAPException e) {
+      connectionPool.releaseConnectionAfterException(ldapConnection, e);
+      throw e;
+    }
+    connectionPool.releaseConnection(ldapConnection);
+    return users;
 
-	@Override
-	public Set<String> getLdapSupervisorList() throws LDAPException {
-		Set<String> manager = new HashSet<>();
-		LDAPConnection ldapConnection = connectionPool.getConnection();
-		try {
-			ldapConnection.bind(ldapProperties.getReadUser(),
-					ldapProperties.getReadPassword());
-			// get value list with userDN
-			SearchResultEntry searchResultEntry = ldapConnection
-					.getEntry(ldapProperties.getApplicationSupervisorDN());
+  }
 
-			String[] memberUids = searchResultEntry
-					.getAttributeValues(FIELD_MEMBER);
+  @Override
+  public Set<String> getLdapSupervisorList() throws LDAPException {
+    Set<String> manager = new HashSet<>();
+    LDAPConnection ldapConnection = connectionPool.getConnection();
+    try {
+      ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
+      // get value list with userDN
+      SearchResultEntry searchResultEntry =
+          ldapConnection.getEntry(ldapProperties.getApplicationSupervisorDN());
 
-			for (String member : memberUids) {
-				Matcher m = UID_PATTERN.matcher(member);
-				if (m.find()) {
-					manager.add(m.group(1));
-				}
-			}
-		} catch (LDAPException e) {
-			LOG.error("Error reading user list from LDAP", e);
-			connectionPool.releaseConnectionAfterException(ldapConnection, e);
-			throw e;
-		}
-		connectionPool.releaseConnection(ldapConnection);
-		return manager;
-	}
+      String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBER);
 
-	@Override
-	public boolean authenticateUser(String uid, String password)
-			throws LDAPException {
-		try {
-			BindResult bindResult = connectionPool.bind(ldapProperties
-					.getUserBindDN().replace("$username", uid), password);
+      for (String member : memberUids) {
+        Matcher m = UID_PATTERN.matcher(member);
+        if (m.find()) {
+          manager.add(m.group(1));
+        }
+      }
+    } catch (LDAPException e) {
+      LOG.error("Error reading user list from LDAP", e);
+      connectionPool.releaseConnectionAfterException(ldapConnection, e);
+      throw e;
+    }
+    connectionPool.releaseConnection(ldapConnection);
+    return manager;
+  }
 
-			return bindResult.getResultCode().equals(ResultCode.SUCCESS);
-		} catch (LDAPException e) {
-			if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS)) {
-				return false;
-			}
-			throw e;
-		}
-	}
+  @Override
+  public boolean authenticateUser(String uid, String password) throws LDAPException {
+    try {
+      BindResult bindResult =
+          connectionPool.bind(ldapProperties.getUserBindDN().replace("$username", uid), password);
 
-	@Override
-	public List<String> getUserGroups(String uid) throws LDAPException {
-		List<String> groups = new ArrayList<>();
-		LDAPConnection ldapConnection = connectionPool.getConnection();
-		try {
-			SearchResult searchResults = searchForLdapGroups(uid,
-					ldapConnection);
+      return bindResult.getResultCode().equals(ResultCode.SUCCESS);
+    } catch (LDAPException e) {
+      if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS)) {
+        return false;
+      }
+      throw e;
+    }
+  }
 
-			if (searchResults.getEntryCount() > 0) {
-				for (SearchResultEntry entry : searchResults.getSearchEntries()) {
-					groups.add(entry.getAttribute(FIELD_CN).getValue());
-				}
-			}
-		} catch (LDAPException e) {
-			connectionPool.releaseConnectionAfterException(ldapConnection, e);
-			throw e;
-		}
-		connectionPool.releaseConnection(ldapConnection);
-		return groups;
-	}
+  @Override
+  public List<String> getUserGroups(String uid) throws LDAPException {
+    List<String> groups = new ArrayList<>();
+    LDAPConnection ldapConnection = connectionPool.getConnection();
+    try {
+      SearchResult searchResults = searchForLdapGroups(uid, ldapConnection);
 
-	private SearchResult searchForLdapGroups(String uid,
-			LDAPConnection ldapConnection) throws LDAPException,
-			LDAPSearchException {
-		ldapConnection.bind(ldapProperties.getReadUser(),
-				ldapProperties.getReadPassword());
-		SearchRequest searchRequest = new SearchRequest(
-				ldapProperties.getGroupLookUpDN(),
-				SearchScope.SUBORDINATE_SUBTREE, Filter.createEqualityFilter(
-						ldapProperties.getGroupLookUpAttribute(),
-						ldapProperties.getUserBindDN()
-								.replace("$username", uid)));
-		SearchResult searchResults = ldapConnection.search(searchRequest);
-		return searchResults;
-	}
+      if (searchResults.getEntryCount() > 0) {
+        for (SearchResultEntry entry : searchResults.getSearchEntries()) {
+          groups.add(entry.getAttribute(FIELD_CN).getValue());
+        }
+      }
+    } catch (LDAPException e) {
+      connectionPool.releaseConnectionAfterException(ldapConnection, e);
+      throw e;
+    }
+    connectionPool.releaseConnection(ldapConnection);
+    return groups;
+  }
 
-	private User createUser(SearchResultEntry resultEntry) {
-		User user = new User();
-		user.setMail(resultEntry.getAttributeValue(LdapService.FIELD_MAIL));
-		user.setUidNumber(resultEntry
-				.getAttributeValue(LdapService.FIELD_UIDNUMBER));
-		user.setUsername(resultEntry.getAttributeValue(LdapService.FIELD_UID));
-		user.setFirstname(resultEntry.getAttributeValue(LdapService.FIELD_CN));
-		user.setLastname(resultEntry.getAttributeValue(LdapService.FIELD_SN));
-		user.setPhoto(resultEntry
-				.getAttributeValueBytes(LdapService.FIELD_PHOTO));
-		user.setActive(Boolean.TRUE);
+  private SearchResult searchForLdapGroups(String uid, LDAPConnection ldapConnection)
+      throws LDAPException, LDAPSearchException {
+    ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
+    SearchRequest searchRequest =
+        new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
+            Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(), ldapProperties
+                .getUserBindDN().replace("$username", uid)));
+    SearchResult searchResults = ldapConnection.search(searchRequest);
+    return searchResults;
+  }
 
-		return user;
-	}
+  private User createUser(SearchResultEntry resultEntry) {
+    User user = new User();
+    user.setMail(resultEntry.getAttributeValue(LdapService.FIELD_MAIL));
+    user.setUidNumber(resultEntry.getAttributeValue(LdapService.FIELD_UIDNUMBER));
+    user.setUsername(resultEntry.getAttributeValue(LdapService.FIELD_UID));
+    user.setFirstname(resultEntry.getAttributeValue(LdapService.FIELD_CN));
+    user.setLastname(resultEntry.getAttributeValue(LdapService.FIELD_SN));
+    user.setPhoto(resultEntry.getAttributeValueBytes(LdapService.FIELD_PHOTO));
+    user.setActive(Boolean.TRUE);
+
+    return user;
+  }
 }

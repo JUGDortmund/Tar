@@ -19,17 +19,13 @@ public class MailServiceDummyImpl implements MailService {
 
   @Override
   public void sendSimpleMail(MailObject mail) {
-    LOG.info(
-        "Mail to be send:\n {}",mail.toString());
-    LOG.info(
-        "Mail Text:\n {}",mailMessageComposer.composeSimpleMailMessage(mail).getText());
+    LOG.info("Mail to be send:\n {}", mail.toString());
+    LOG.info("Mail Text:\n {}", mailMessageComposer.composeSimpleMailMessage(mail).getText());
   }
 
   @Override
   public void sendMail(MailObject mail) {
-    LOG.info(
-        "HTML mail to be send:\n {}",mail.toString());
-    LOG.info(
-        "Mail Text:\n {}",mailMessageComposer.composeSimpleMailMessage(mail).getText());
+    LOG.info("HTML mail to be send:\n {}", mail.toString());
+    LOG.info("Mail Text:\n {}", mailMessageComposer.composeSimpleMailMessage(mail).getText());
   }
 }
