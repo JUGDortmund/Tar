@@ -28,13 +28,13 @@ authenticate:
 groups:
   user1:
     - userGroup
-    - tar-user
+    - tar-users
   user2:
     - userGroup
-    - tar-user
+    - tar-users
   supervisor:
     - supervisorGroup
-    - tar-supervisor
+    - tar-supervisors
     
 --- ##
 supervisors:

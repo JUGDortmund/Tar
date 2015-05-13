@@ -21,6 +21,10 @@
 
 	<p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
 
+	<th:block th:if="${modifiedBy} != null">
+	<p> Der Urlaub wurde ge&auml;ndert von: <span th:text="${modifiedBy}">Bearbeiter</span></p>
+	</th:block>
+
 	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
 </body>
 </html>

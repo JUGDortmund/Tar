@@ -49,6 +49,7 @@
       $vacationDetail.find('.manager').text( managerText )
       $vacationDetail.show()
       $('#sidebar').addClass('active')
+
   $('#calendarFilter .checkbox input').on 'click', ->
     $('#calendar').fullCalendar( 'refetchEvents')
 )(jQuery);
