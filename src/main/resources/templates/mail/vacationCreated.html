@@ -5,25 +5,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<p>
-		Hallo, <span th:text="${manager}">Welt!</span>!<br />
-		<th:block th:if="${not #strings.isEmpty(substitute)}">Hallo, <span th:text="${substitute}">Welt!</span>!</th:block>
-	</p>
+    <p>
+        Hallo, <span th:text="${manager}">Welt!</span>!<br />
+        <th:block th:if="${not #strings.isEmpty(substitute)}">Hallo, <span th:text="${substitute}">Welt!</span>!</th:block>
+    </p>
 
-	<p> <span th:text="${employee}">Welt!</span> hat Urlaub beantragt. Hier sind die Details: </p>
-	
-	<p> <b>Name des Vorgesetzten:</b> <span th:text="${manager}">Max Mustermann</span> </p>
+    <p> <span th:text="${employee}">Welt!</span> hat Urlaub beantragt. Hier sind die Details: </p>
+    
+    <p> <b>Name des Vorgesetzten:</b> <span th:text="${manager}">Max Mustermann</span> </p>
 
-	<p> <b>Name des Stellvertreters:</b> <span th:text="${#strings.isEmpty(substitute) ? '-': substitute }">Max Mustermann</span> </p>
+    <p> <b>Name des Stellvertreters:</b> <span th:text="${#strings.isEmpty(substitute) ? '-': substitute }">Max Mustermann</span> </p>
 
-	<p> <b>Beantragte Urlaubszeit:</b> <ul>
-		<li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
-		<li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
+    <p> <b>Beantragte Urlaubszeit:</b> <ul>
+        <li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
+        <li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
 
-	<p> <b>Summe der Urlaubstage:</b> <span th:text="${totalDays}">Tage</span> </p>
+    <p> <b>Summe der Urlaubstage:</b> <span th:text="${totalDays}">Tage</span> </p>
 
-	<p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
+    <p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
 
-	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team (i.A. von <span th:text="${employee}">Welt</span>) </em> </p>
+    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team (i.A. von <span th:text="${employee}">Welt</span>) </em> </p>
 </body>
 </html>
