@@ -19,36 +19,36 @@ import de.maredit.tar.repositories.UserRepository;
 @ActiveProfiles("test")
 public class UserTest {
 
-	UserRepository userRepository = Mockito.mock(UserRepository.class);
-	
-	private long counter = 0;
-	private User user = null;
-	private String uidNumber = "jd001";
+  UserRepository userRepository = Mockito.mock(UserRepository.class);
+  
+  private long counter = 0;
+  private User user = null;
+  private String uidNumber = "jd001";
 
-	@Before
-	public void setup() {
-		when(userRepository.count()).thenReturn(counter++).thenReturn(counter++);
-		user = new User();
-		user.setFirstname("John");
-		user.setLastname("Deer");
-		user.setUidNumber(uidNumber);
-		user.setActive(Boolean.TRUE);
-		user.setUsername("jdeer");
-		when(userRepository.findOne(uidNumber)).thenReturn(user);
-	}
+  @Before
+  public void setup() {
+    when(userRepository.count()).thenReturn(counter++).thenReturn(counter++);
+    user = new User();
+    user.setFirstname("John");
+    user.setLastname("Deer");
+    user.setUidNumber(uidNumber);
+    user.setActive(Boolean.TRUE);
+    user.setUsername("jdeer");
+    when(userRepository.findOne(uidNumber)).thenReturn(user);
+  }
 
-	@Test
-	public void userModel() {
-		long previousCount = userRepository.count();
-		userRepository.save(user);
-		assertEquals("User count should have increased!", previousCount + 1, userRepository.count());
-		
-		User user = userRepository.findOne(uidNumber);
-		assertEquals("John", user.getFirstname());
-		assertEquals("Deer", user.getLastname());
-		assertEquals(Boolean.TRUE, user.isActive());
-		
-		user.setActive(Boolean.FALSE);
-		assertEquals(Boolean.FALSE, user.isActive());
-	}
+  @Test
+  public void userModel() {
+    long previousCount = userRepository.count();
+    userRepository.save(user);
+    assertEquals("User count should have increased!", previousCount + 1, userRepository.count());
+    
+    User user = userRepository.findOne(uidNumber);
+    assertEquals("John", user.getFirstname());
+    assertEquals("Deer", user.getLastname());
+    assertEquals(Boolean.TRUE, user.isActive());
+    
+    user.setActive(Boolean.FALSE);
+    assertEquals(Boolean.FALSE, user.isActive());
+  }
 }

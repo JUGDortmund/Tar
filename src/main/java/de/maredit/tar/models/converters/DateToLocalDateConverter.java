@@ -15,7 +15,7 @@ public class DateToLocalDateConverter implements Converter<Date, LocalDate> {
 
   @Override
   public LocalDate convert(Date date) {
-    return date == null ? null : LocalDateTime
-        .ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault()).toLocalDate();
+    return date == null ? null : LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()),
+        ZoneId.systemDefault()).toLocalDate();
   }
 }

@@ -7,6 +7,8 @@ import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
+import de.maredit.tar.properties.VersionProperties;
+import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
@@ -26,8 +28,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,6 +66,15 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @Autowired
   private LdapService ldapService;
 
+  @Autowired
+  private VersionProperties versionProperties;
+
+  @Autowired
+  private ApplicationController applicationController;
+
+  @Autowired
+  private VersionProvider versionProvider;
+
   @ModelAttribute("vacation")
   public Vacation getVacation(@RequestParam(value = "id", required = false) String id) {
     if (StringUtils.isBlank(id)) {
@@ -84,7 +93,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
   public String index(HttpServletRequest request, Model model,
                       @ModelAttribute("vacation") Vacation vacation) {
 
-    vacation.setUser(getConnectedUser());
+    vacation.setUser(applicationController.getConnectedUser());
     User selectedUser = getUser(request);
     setIndexModelValues(model, selectedUser);
 
@@ -98,8 +107,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
 
-    MailObject
-        mail =
+    MailObject mail =
         (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
     this.mailService.sendMail(mail);
 
@@ -113,8 +121,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
 
-    MailObject
-        mail =
+    MailObject mail =
         (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
     this.mailService.sendMail(mail);
 
@@ -149,7 +156,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @RequestMapping("/newVacation")
   public String newVacation(@ModelAttribute("vacation") Vacation vacation, Model model) {
-    vacation.setUser(getConnectedUser());
+    vacation.setUser(applicationController.getConnectedUser());
     model.addAttribute("managers", getManagerList());
     model.addAttribute("users", getSortedUserList());
     model.addAttribute("vacation", vacation);
@@ -174,7 +181,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
     } else {
       boolean newVacation = StringUtils.isBlank(vacation.getId());
       if (newVacation) {
-        vacation.setAuthor(getConnectedUser());
+        vacation.setAuthor(applicationController.getConnectedUser());
       } else {
         vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
                                                            : State.REQUESTED_SUBSTITUTE);
@@ -182,7 +189,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
       this.vacationRepository.save(vacation);
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation)
                                             : new VacationModifiedMail(vacation,
-                                                                       getConnectedUser()));
+                                                                       applicationController
+                                                                           .getConnectedUser()));
       return "redirect:/";
     }
   }
@@ -209,8 +217,11 @@ public class VacationController extends WebMvcConfigurerAdapter {
     List<Vacation> substitutes = getSubstitutesForUser(selectedUser);
 
     List<Vacation>
-        substitutesForApproval = getVacationsForSubstituteApprovalForUser(getConnectedUser());
-    List<Vacation> approvals = getVacationsForApprovalForUser(getConnectedUser());
+        substitutesForApproval =
+        getVacationsForSubstituteApprovalForUser(applicationController.getConnectedUser());
+    List<Vacation>
+        approvals =
+        getVacationsForApprovalForUser(applicationController.getConnectedUser());
 
     model.addAttribute("users", users);
     model.addAttribute("vacations", vacations);
@@ -219,28 +230,32 @@ public class VacationController extends WebMvcConfigurerAdapter {
     model.addAttribute("substitutes", substitutes);
     model.addAttribute("substitutesForApproval", substitutesForApproval);
     model.addAttribute("approvals", approvals);
+
+    model.addAttribute("loginUser", applicationController.getConnectedUser());
+    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
+    model.addAttribute("buildnumber", versionProperties.getBuild());
   }
 
   private List<User> getSortedUserList() {
     List<User> userList = new ArrayList<User>();
+    userList = userRepository.findAll();
     userList =
-        userRepository.findAll();
-    userList =
-        userList.stream().filter(e -> e.isActive())
-            .sorted((e1, e2) -> e1.getLastname().toUpperCase()
-                .compareTo(e2.getLastname().toUpperCase()))
-            .collect(Collectors.toList());
+        userList
+            .stream()
+            .filter(e -> e.isActive())
+            .sorted(
+                (e1, e2) -> e1.getLastname().toUpperCase()
+                    .compareTo(e2.getLastname().toUpperCase())).collect(Collectors.toList());
     return userList;
   }
 
   private List<User> getManagerList() {
     List<User> managerList = new ArrayList<User>();
     try {
+      managerList = userRepository.findByUsernames(ldapService.getLdapSupervisorList());
       managerList =
-          userRepository.findByUsernames(ldapService.getLdapSupervisorList());
-      managerList =
-          managerList.stream().filter(e -> e.isActive()).sorted((e1, e2) -> e1.getLastname()
-              .compareTo(e2.getLastname()))
+          managerList.stream().filter(e -> e.isActive())
+              .sorted((e1, e2) -> e1.getLastname().compareTo(e2.getLastname()))
               .collect(Collectors.toList());
 
     } catch (LDAPException e) {
@@ -249,21 +264,15 @@ public class VacationController extends WebMvcConfigurerAdapter {
     return managerList;
   }
 
-  private User getConnectedUser() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    User user = this.userRepository.findUserByUsername(auth.getName());
-
-    return user;
-  }
-
   private User getUser(HttpServletRequest request) {
     User user = null;
     Object selected = request.getParameter("selected");
     if (selected == null) {
-      user = getConnectedUser();
+      user = applicationController.getConnectedUser();
     } else {
       user = this.userRepository.findUserByUsername(String.valueOf(selected));
     }
+
     return user;
   }
 

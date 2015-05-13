@@ -22,10 +22,10 @@ public class VacationValidator implements Validator {
         && vacation.getTo().isBefore(vacation.getFrom())) {
       errors.rejectValue("to", "to.before.from", "Ende-Termin liegt vor Anfangs-Termin");
     }
-    if (vacation.getSubstitute() != null && vacation.getUser().getUidNumber()
-        .equals(vacation.getSubstitute().getUidNumber())) {
+    if (vacation.getSubstitute() != null
+        && vacation.getUser().getUidNumber().equals(vacation.getSubstitute().getUidNumber())) {
       errors.rejectValue("substitute", "substitute.is.user",
-                         "Vertretung darf nicht Antragssteller sein");
+          "Vertretung darf nicht Antragssteller sein");
     }
   }
 }

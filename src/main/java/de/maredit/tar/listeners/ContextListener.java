@@ -22,15 +22,14 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
   public void onApplicationEvent(ContextRefreshedEvent event) {
     UserSyncTask userSyncTask = event.getApplicationContext().getBean(UserSyncTask.class);
     userSyncTask.syncLdapUser();
-
+    
     if (event.getApplicationContext().getEnvironment()
         .getProperty("spring.data.mongodb.preload", Boolean.class)) {
       UserRepository userRepository = event.getApplicationContext().getBean(UserRepository.class);
-      VacationRepository
-          vacationRepository =
+      VacationRepository vacationRepository =
           event.getApplicationContext().getBean(VacationRepository.class);
       LdapService ldapService = event.getApplicationContext().getBean(LdapService.class);
-
+      
       User manager = null;
 
       try {
