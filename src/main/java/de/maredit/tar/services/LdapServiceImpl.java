@@ -16,7 +16,6 @@ import com.unboundid.util.ssl.TrustAllTrustManager;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.properties.LdapProperties;
-import de.maredit.tar.properties.VersionProperties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

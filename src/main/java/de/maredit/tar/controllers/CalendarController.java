@@ -43,7 +43,8 @@ public class CalendarController {
   @Autowired
   private VersionProperties versionProperties;
 
-  private VersionProvider versionProvider = new VersionProvider();
+  @Autowired
+  private VersionProvider versionProvider;
 
   @RequestMapping("/calendar")
   public String calendar(Model model) {

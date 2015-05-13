@@ -10,14 +10,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import de.maredit.tar.listeners.StartupListener;
-import de.maredit.tar.providers.VersionProvider;
 
 @SpringBootApplication
 @EnableScheduling
 public class Main {
   private static final Logger LOG = LogManager.getLogger(Main.class);
-
-  public static VersionProvider versionProvider = new VersionProvider();
 
   public static void main(String[] args) {
     SpringApplication springApplication = new SpringApplication(Main.class);

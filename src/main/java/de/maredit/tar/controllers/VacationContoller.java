@@ -67,8 +67,9 @@ public class VacationContoller extends WebMvcConfigurerAdapter {
 
   @Autowired
   private ApplicationController applicationController;
-
-  private VersionProvider versionProvider = new VersionProvider();
+  
+  @Autowired
+  private VersionProvider versionProvider;
 
   @InitBinder("vacation")
   protected void initBinder(WebDataBinder binder) {

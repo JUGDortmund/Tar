@@ -1,10 +1,14 @@
 package de.maredit.tar.providers;
 
+import org.springframework.stereotype.Component;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+@Component
 public final class VersionProvider {
 
   private static final Logger LOG = LogManager.getLogger(VersionProvider.class);
