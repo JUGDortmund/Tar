@@ -31,6 +31,7 @@ public class MailMessageComposerTest {
   @Before
   public void setup() {
     standardVacation.setUser(createDummyUser("Mark"));
+    standardVacation.setAuthor(createDummyUser("Mark"));
     standardVacation.setSubstitute(createDummyUser("Luke"));
     standardVacation.setManager(createDummyUser("John"));
     standardVacation.setFrom(LocalDate.of(2015, 04, 27));
