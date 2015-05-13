@@ -23,7 +23,10 @@
 	<p> <b>Summe der Urlaubstage:</b> <span th:text="${totalDays}">Tage</span> </p>
 
 	<p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
-
+	
+	<th:block th:if="${not #strings.isEmpty(createdBy)}">
+	<p> <b>Angelegt von:</b> <span th:text="${createdBy}">createdBy</span> </p>
+	</th:block>
 	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team (i.A. von <span th:text="${employee}">Welt</span>) </em> </p>
 </body>
 </html>
