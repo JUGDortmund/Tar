@@ -2,6 +2,8 @@ package de.maredit.tar.services.mail;
 
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.utils.ConversionUtils;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
@@ -22,8 +24,9 @@ public class VacationModifiedMail implements MailObject {
     values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
-    values.put("fromDate", vacation.getFrom());
-    values.put("toDate", vacation.getTo());
+    values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
+    values.put("toDate",
+               ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     if (!user.equals(vacation.getUser())) {
@@ -34,7 +37,6 @@ public class VacationModifiedMail implements MailObject {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
     }
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getManager()));
-
   }
 
   @Override
@@ -70,9 +72,9 @@ public class VacationModifiedMail implements MailObject {
   @Override
   public String toString() {
     return "VacationModifiedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-        + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
+           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+           + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
   }
 
 }
