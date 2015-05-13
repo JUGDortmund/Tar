@@ -29,6 +29,9 @@ public class VacationCreateMail implements MailObject {
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
+    if (!vacation.getAuthor().equals(vacation.getUser())) {
+      values.put("createdBy", vacation.getAuthor().getFullname());
+    }
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getSubstitute()));

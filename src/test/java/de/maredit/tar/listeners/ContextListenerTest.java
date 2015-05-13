@@ -20,11 +20,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import de.maredit.tar.Main;
-import de.maredit.tar.listeners.ContextListener;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.LdapService;
 import de.maredit.tar.tasks.UserSyncTask;
 import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
 
@@ -41,7 +41,10 @@ public class ContextListenerTest {
   
   @Autowired
   private UserSyncTask userSyncTask;
-  
+
+  @Autowired
+  private LdapService ldapServcie;
+
   private ContextRefreshedEvent event = Mockito.mock(ContextRefreshedEvent.class);
   private UserSyncTask mockedUserSyncTask = Mockito.mock(UserSyncTask.class);
   private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
@@ -59,7 +62,8 @@ public class ContextListenerTest {
     when(event.getApplicationContext().getEnvironment()).thenReturn(environment);
     when(event.getApplicationContext().getEnvironment().getProperty("spring.data.mongodb.preload", Boolean.class)).thenReturn(true);
     when(event.getApplicationContext().getBean(UserRepository.class)).thenReturn(userRepository);
-    when(event.getApplicationContext().getBean(VacationRepository.class)).thenReturn(vacationRepository);
+    when(event.getApplicationContext().getBean(VacationRepository.class)).thenReturn( vacationRepository);
+    when(event.getApplicationContext().getBean(LdapService.class)).thenReturn(ldapServcie);
     
     this.userSyncTask.syncLdapUser();
 

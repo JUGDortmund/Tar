@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class AuthorityMappingService {
 
   private Map<String, List<String>> groups;
-
+  
   public Map<String, List<String>> getGroups() {
     return groups;
   }
