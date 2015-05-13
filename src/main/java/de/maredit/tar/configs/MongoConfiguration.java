@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.convert.CustomConversions;
 
@@ -25,7 +24,6 @@ import de.maredit.tar.properties.MongoProperties;
  */
 
 @Configuration
-@Profile("!serviceTest")
 public class MongoConfiguration extends AbstractMongoConfiguration {
 
   @Autowired

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import de.maredit.tar.services.mail.MailObject;
 
 @Service
-@Profile({"dev", "test"})
+@Profile({"dummyMailService"})
 public class MailServiceDummyImpl implements MailService {
 
   private static final Logger LOG = LogManager.getLogger(MailServiceDummyImpl.class);
