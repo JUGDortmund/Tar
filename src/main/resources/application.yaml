@@ -5,7 +5,7 @@ spring:
 ##### 
 spring:
   profiles: dummyServices
-spring.profiles.include: dummyLdapService, dummyMailService
+spring.profiles.include: dummyLdapService,dummyMailService
 ---
 ##### Development configuration #####
 spring:
