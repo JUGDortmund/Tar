@@ -17,10 +17,12 @@ spring:
   mail:
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
+  number:
+    build: "0001"
 ---
 ##### Demo configuration #####
 spring:
-  profiles: demo
+  profiles: demo  
   data:
     mongodb:
       host: localhost

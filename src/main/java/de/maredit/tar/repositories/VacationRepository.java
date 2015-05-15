@@ -25,4 +25,3 @@ public interface VacationRepository extends MongoRepository<Vacation, String> {
       LocalDate startFrom, LocalDate endFrom, List<State> states, LocalDate startTo,
       LocalDate endTo, List<State> states1);
 }
-

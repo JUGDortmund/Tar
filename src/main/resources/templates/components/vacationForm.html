@@ -209,14 +209,16 @@ edit-vacation, approve-vacation  -->
                 </th:block>
                 <!--/* edit */-->
                 <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
-                    <a th:href="@{/cancelVacation(id=${vacation.id})}"
-                       onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
-                       class="btn btn-danger pull-right">
-                        stornieren
-                    </a>
-                    <button type="submit" class="btn btn-success">
-                        ändern
-                    </button>
+                    <th:block th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
+                        <a th:href="@{/cancelVacation(id=${vacation.id})}"
+                           onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
+                           class="btn btn-danger pull-right">
+                            stornieren
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            ändern
+                        </button>
+                    </th:block>
                 </th:block>
 
                 <!--/* substitute */-->

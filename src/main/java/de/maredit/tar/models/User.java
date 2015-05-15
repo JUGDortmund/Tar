@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 
+import com.unboundid.util.Base64;
+
 public class User {
 
   @Id
@@ -14,6 +16,7 @@ public class User {
   private String lastname;
   private String username;
   private String mail;
+  private String userImage = null;
   private boolean active;
 
   public User() {}
@@ -72,6 +75,16 @@ public class User {
 
   public void setMail(String mail) {
     this.mail = mail;
+  }
+
+  public String getPhoto() {
+    return userImage;
+  }
+
+  public void setPhoto(byte[] imageData) {
+    if (imageData != null) {
+      this.userImage = Base64.encode(imageData);
+    }
   }
 
   @Override
