@@ -11,4 +11,6 @@ spring:
     port: 25
     username: no-reply@maredit.de
     password: lkvSdsE9YroldisNLVtdpVO4
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
 spring.profiles.include: dummyLdapService

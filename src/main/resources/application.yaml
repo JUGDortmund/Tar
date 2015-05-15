@@ -19,6 +19,9 @@ spring:
       embedded: true
       preload: true
       database: tar-dev
+  mail:
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
   number:
     build: "0001"
 spring.profiles.include: dummyServices
@@ -35,4 +38,7 @@ spring:
       embedded: true
       preload: true
       database: tar-test
+  mail:
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
 spring.profiles.include: dummyServices
