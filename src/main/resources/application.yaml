@@ -14,6 +14,9 @@ spring:
       database: tar-dev
       embedded: true
       preload: true
+  mail:
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
   number:
     build: "0001"
 ---
@@ -32,6 +35,8 @@ spring:
     port: 25
     username: no-reply@maredit.de
     password: lkvSdsE9YroldisNLVtdpVO4
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
 ---
 ##### Test configuration #####
 spring:
@@ -45,6 +50,9 @@ spring:
       database: tar-test
       embedded: true
       preload: true
+  mail:
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
 ---
 ##### Service test configuration #####
 spring:
@@ -63,6 +71,8 @@ spring:
     port: 1600
     username:
     password:
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
   ldap:
     host: localhost
     port: 1600
@@ -102,3 +112,5 @@ spring:
     port: 25
     username: no-reply@maredit.de
     password: lkvSdsE9YroldisNLVtdpVO4
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
