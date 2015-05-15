@@ -21,7 +21,7 @@
             <div class="row">
                 <div th:class="${#fields.hasErrors('user')}? 'col-xs-12 form-group has-error' : 'col-xs-12 form-group'">
                     <label for="employee">Mitarbeiter *</label>
-                    <!-- 					<input type="text" class="form-control" disabled="disabled" th:value="${vacation.user.lastname +', '+ vacation.user.firstname}" th:field="*{user}" /> -->
+                    <!--                     <input type="text" class="form-control" disabled="disabled" th:value="${vacation.user.lastname +', '+ vacation.user.firstname}" th:field="*{user}" /> -->
                     <select class="form-control" style="width: 100%;" name="employee" id="employee"
                             th:field="*{user}" th:readonly="${true}" th:if="${!disableInput}">
                         <option th:value="${vacation.user.id}" th:selected="true"

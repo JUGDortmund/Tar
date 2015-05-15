@@ -19,6 +19,8 @@ spring:
       embedded: true
       preload: true
       database: tar-dev
+  number:
+    build: "0001"
 spring.profiles.include: dummyServices
 ---
 ##### Test configuration #####

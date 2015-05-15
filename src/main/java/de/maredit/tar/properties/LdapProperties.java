@@ -22,11 +22,11 @@ public class LdapProperties {
   private String readPassword;
 
   private String groupLookUpDN;
-  
+
   private String groupLookUpAttribute;
-  
+
   private String userBindDN;
-  
+
   private boolean disableSSL;
 
   public String getHost() {

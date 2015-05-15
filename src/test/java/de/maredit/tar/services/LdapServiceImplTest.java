@@ -96,5 +96,4 @@ public class LdapServiceImplTest {
     assertEquals(1, users.size());
     Assert.assertTrue(users.contains("supervisor"));
   }
-
 }

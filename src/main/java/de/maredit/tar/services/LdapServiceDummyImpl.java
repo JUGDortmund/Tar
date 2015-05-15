@@ -18,7 +18,7 @@ import de.maredit.tar.models.User;
 public class LdapServiceDummyImpl implements LdapService {
 
   private List<User> users;
-  
+
   private List<String> supervisors;
 
   private Map<String, String> authenticate;
