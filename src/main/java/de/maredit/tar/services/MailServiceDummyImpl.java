@@ -6,13 +6,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile({"dev", "test"})
-@EnableConfigurationProperties(CustomMailProperties.class)
+@Profile({"dummyMailService"})
 public class MailServiceDummyImpl implements MailService {
 
   private static final Logger LOG = LogManager.getLogger(MailServiceDummyImpl.class);
@@ -20,6 +18,7 @@ public class MailServiceDummyImpl implements MailService {
   @Autowired
   private CustomMailProperties customMailProperties;
 
+  @Autowired
   private MailMessageComposer mailMessageComposer;
 
   @Override

@@ -13,7 +13,7 @@ import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 
 @Service
-@Profile({"dev", "demo", "test"})
+@Profile({"dummyLdapService"})
 @ConfigurationProperties(locations = "classpath:dummy-user.yaml")
 public class LdapServiceDummyImpl implements LdapService {
 

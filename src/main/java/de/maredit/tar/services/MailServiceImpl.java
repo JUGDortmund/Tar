@@ -1,7 +1,7 @@
 package de.maredit.tar.services;
 
-import javax.annotation.PostConstruct;
-
+import de.maredit.tar.properties.CustomMailProperties;
+import de.maredit.tar.services.mail.MailObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,11 +14,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import de.maredit.tar.properties.CustomMailProperties;
-import de.maredit.tar.services.mail.MailObject;
+import javax.annotation.PostConstruct;
 
 @Service
-@Profile({"prod", "demo", "serviceTest"})
+@Profile({"!dummyMailService"})
 @EnableConfigurationProperties(CustomMailProperties.class)
 public class MailServiceImpl implements MailService {
 
