@@ -5,7 +5,7 @@ spring:
       port: 28018
       database: tar-demo
       embedded: true
-      preload: true
+      preload: false
   mail:
     host: postfix.maredit.net
     port: 25
