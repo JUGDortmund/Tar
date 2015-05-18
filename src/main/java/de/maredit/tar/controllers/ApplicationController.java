@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import de.maredit.tar.models.User;
+import de.maredit.tar.properties.VersionProperties;
+import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
 
 @Controller
@@ -17,6 +19,12 @@ public class ApplicationController {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private VersionProperties versionProperties;
+
+  @Autowired
+  private VersionProvider versionProvider;
 
   @SuppressWarnings("unused")
   private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
@@ -29,6 +37,10 @@ public class ApplicationController {
   @RequestMapping("/overview")
   public String overview(Model model) {
     model.addAttribute("something", 94);
+    model.addAttribute("loginUser", getConnectedUser());
+    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
+    model.addAttribute("buildnumber", versionProperties.getBuild());
+
     return "application/overview";
   }
 
