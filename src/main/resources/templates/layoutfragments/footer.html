@@ -3,14 +3,21 @@
 
 <body>
 
-<footer class="main-footer" th:fragment="footer">
-    <!-- To the right -->
-    <div class="pull-right hidden-xs">
-        Anything you want
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
-</footer>
+    <footer class="main-footer" th:fragment="footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs" th:if="${buildnumber != null}">
+            <span th:text="${appVersion}"></span> - <span
+                th:text="${buildnumber}"></span>
+        </div>
+        <div class="pull-right hidden-xs" th:if="${buildnumber == null}">
+            <span th:text="${appVersion}"></span>
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2015 <a href="http://www.maredit.de">maredit
+                GmbH</a>
+        </strong>
+
+    </footer>
 
 </body>
 

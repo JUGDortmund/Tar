@@ -8,7 +8,7 @@
                 <div class="form-group">
                     <label for="selectedEmployee">Mitarbeiter</label>
                     <select class="form-control autosubmit" style="width: 100%;" name="selected" id="selected">
-	                    <option th:each="user : ${users}"
+                        <option th:each="user : ${users}"
                                 th:value="${user.username}"
                                 th:selected="${selectedUser.username == user.username}"
                                 th:text="${user.lastname +', '+ user.firstname}">
@@ -16,14 +16,14 @@
                     </select>
                 </div>
             </form>
-			<div th:if="${vacations.size() > 0}">
+            <div th:if="${vacations.size() > 0}">
                 <h3 class="list-group-item">Urlaube</h3>
-			    <a th:each="vacation : ${vacations}" class="list-group-item" th:href="@{/vacation(id=${vacation.id},action='edit')}">
-			        <span th:text="${vacation.from +' - '  + vacation.to}"></span>
-			        <span th:class="${'glyphicon ' + vacation.state.get()}" aria-hidden="true"></span>
-			    </a>
-			</div>
-			<div class="list-group">
+                <a th:each="vacation : ${vacations}" class="list-group-item" th:href="@{/vacation(id=${vacation.id},action='edit')}">
+                    <span th:text="${vacation.from +' - '  + vacation.to}"></span>
+                    <span th:class="${'glyphicon ' + vacation.state.get()}" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="list-group">
                 <h3 class="list-group-item">Vertretungen</h3>
                 <a th:each="substitute : ${substitutes}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='view')}">
                     <span th:text="${substitute.from +' - '  + substitute.to}"></span>

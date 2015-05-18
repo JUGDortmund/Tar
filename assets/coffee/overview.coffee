@@ -36,7 +36,6 @@
     destinationRow.removeClass('invisible-for-edit')
     sourceRow.hide()
     destinationRow.show()
-
 )(jQuery);
 
 copyDataForEdit = (sourceRow, destinationRow) ->

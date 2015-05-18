@@ -13,7 +13,6 @@ public class LocalDateToStringConverter implements Converter<LocalDate, String> 
 
   @Override
   public String convert(LocalDate localDate) {
-    return localDate.format(DateTimeFormatter.ofLocalizedDate(
-        FormatStyle.MEDIUM));
+    return localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
   }
 }

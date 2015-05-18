@@ -2,6 +2,11 @@ spring:
   profiles:
     active: dev
 ---
+##### 
+spring:
+  profiles: dummyServices
+spring.profiles.include: dummyLdapService,dummyMailService
+---
 ##### Development configuration #####
 spring:
   profiles: dev
@@ -11,25 +16,15 @@ spring:
     mongodb:
       host: localhost
       port: 28018
+      embedded: true
+      preload: true
       database: tar-dev
-      embedded: true
-      preload: true
----
-##### Demo configuration #####
-spring:
-  profiles: demo
-  data:
-    mongodb:
-      host: localhost
-      port: 28018
-      database: tar-demo
-      embedded: true
-      preload: true
   mail:
-    host: postfix.maredit.net
-    port: 25
-    username: no-reply@maredit.de
-    password: lkvSdsE9YroldisNLVtdpVO4
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
+  number:
+    build: "0001"
+spring.profiles.include: dummyServices
 ---
 ##### Test configuration #####
 spring:
@@ -40,63 +35,10 @@ spring:
     mongodb:
       host: localhost
       port: 28018
+      embedded: true
+      preload: true
       database: tar-test
-      embedded: true
-      preload: true
----
-##### Service test configuration #####
-spring:
-  profiles: serviceTest
-  thymeleaf:
-    cache: false  
-  data:
-    mongodb:
-      host: localhost
-      port: 28018
-      database: tar-serviceTest
-      embedded: true
-      preload: true
   mail:
-    host: localhost
-    port: 1600
-    username:
-    password:
-  ldap:
-    host: localhost
-    port: 1600
-    userLookUpDN: ou=users,o=maredit,dc=de
-    applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
-    applicationSupervisorDN: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
-    readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
-    readPassword: read
-    groupLookUpDN: ou=services,o=maredit,dc=de
-    groupLookUpAttribute: member
-    userBindDN: uid=$username,ou=users,o=maredit,dc=de
-    disableSSL: true
----
-##### Production configuration #####
-spring:
-  profiles: prod
-  data:
-    mongodb:
-      host: tar-db.maredit.net
-      port: 27017
-      database: tar-prod
-      embedded: false
-      preload: false 
-  ldap:
-    host: ldap-master.maredit.net
-    port: 636
-    userLookUpDN: ou=users,o=maredit,dc=de
-    applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
-    applicationSupervisorDN: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
-    readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
-    readPassword: 7Ey8vHzPPZrdWA
-    groupLookUpDN: ou=services,o=maredit,dc=de
-    groupLookUpAttribute: member
-    userBindDN: uid=$username,ou=users,o=maredit,dc=de
-  mail:
-    host: postfix.maredit.net
-    port: 25
-    username: no-reply@maredit.de
-    password: lkvSdsE9YroldisNLVtdpVO4
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
+spring.profiles.include: dummyServices

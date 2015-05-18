@@ -9,8 +9,7 @@ import java.time.format.FormatStyle;
  */
 public class ConversionUtils {
 
-  public static String convertLocalDateToString(LocalDate localDate){
-    return localDate.format(DateTimeFormatter.ofLocalizedDate(
-        FormatStyle.MEDIUM));
+  public static String convertLocalDateToString(LocalDate localDate) {
+    return localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
   }
 }

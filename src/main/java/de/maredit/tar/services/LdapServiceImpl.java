@@ -1,6 +1,5 @@
 package de.maredit.tar.services;
 
-
 import com.unboundid.ldap.sdk.BindResult;
 import com.unboundid.ldap.sdk.Filter;
 import com.unboundid.ldap.sdk.LDAPConnection;
@@ -14,8 +13,10 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
+
 import de.maredit.tar.models.User;
 import de.maredit.tar.properties.LdapProperties;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
-@Profile({"prod", "serviceTest"})
+@Profile({"!dummyLdapService"})
 public class LdapServiceImpl implements LdapService {
 
   public static final int NUM_CONNECTIONS = 10;
-  
+
   private static final Pattern UID_PATTERN = Pattern.compile("uid=(\\w+)");
 
   @Autowired
@@ -104,7 +105,7 @@ public class LdapServiceImpl implements LdapService {
           ldapConnection.getEntry(ldapProperties.getApplicationSupervisorDN());
 
       String[] memberUids = searchResultEntry.getAttributeValues(FIELD_MEMBER);
-      
+
       for (String member : memberUids) {
         Matcher m = UID_PATTERN.matcher(member);
         if (m.find()) {
@@ -160,10 +161,8 @@ public class LdapServiceImpl implements LdapService {
     ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
     SearchRequest searchRequest =
         new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,
-                          Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(),
-                                                      ldapProperties
-                                                          .getUserBindDN()
-                                                          .replace("$username", uid)));
+            Filter.createEqualityFilter(ldapProperties.getGroupLookUpAttribute(), ldapProperties
+                .getUserBindDN().replace("$username", uid)));
     SearchResult searchResults = ldapConnection.search(searchRequest);
     return searchResults;
   }
@@ -175,7 +174,9 @@ public class LdapServiceImpl implements LdapService {
     user.setUsername(resultEntry.getAttributeValue(LdapService.FIELD_UID));
     user.setFirstname(resultEntry.getAttributeValue(LdapService.FIELD_CN));
     user.setLastname(resultEntry.getAttributeValue(LdapService.FIELD_SN));
+    user.setPhoto(resultEntry.getAttributeValueBytes(LdapService.FIELD_PHOTO));
     user.setActive(Boolean.TRUE);
+
     return user;
   }
 }
