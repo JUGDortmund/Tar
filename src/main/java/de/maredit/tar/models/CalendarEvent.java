@@ -1,5 +1,8 @@
 package de.maredit.tar.models;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -7,6 +10,8 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class CalendarEvent {
+
+  private static final Logger LOG = LogManager.getLogger(CalendarEvent.class);
 
   private String start;
   private String end;
@@ -27,19 +32,28 @@ public class CalendarEvent {
   private Boolean allDay;
 
   public CalendarEvent(Vacation vacation) {
+    if(vacation.getUser() != null) {
+      this.setTitle("Urlaub " + vacation.getUser().getUsername().substring(0, 3));
+      this.setUserName(vacation.getUser().getUsername());
+      this.setUserFirstName(vacation.getUser().getFirstname());
+      this.setUserLastName(vacation.getUser().getLastname());
+    }else {
+      LOG.error("Provided user is null for vacation ID {}", vacation.getId());
+    }
+    if (vacation.getManager() != null) {
+      this.setManagerFirstName(vacation.getManager().getFirstname());
+      this.setManagerLastName(vacation.getManager().getLastname());
+    } else {
+      LOG.error("Provided manager is null for vacation ID {}", vacation.getId());
+    }
     this.setStart(vacation.getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     this.setEnd(vacation.getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-    this.setTitle("Urlaub " + vacation.getUser().getUsername().substring(0, 3));
+
     this.setState(vacation.getState().get());
-    this.setUserName(vacation.getUser().getUsername());
-    this.setUserFirstName(vacation.getUser().getFirstname());
-    this.setUserLastName(vacation.getUser().getLastname());
     if (vacation.getSubstitute() != null) {
       this.setSubstituteFirstName(vacation.getSubstitute().getFirstname());
       this.setSubstituteLastName(vacation.getSubstitute().getLastname());
     }
-    this.setManagerFirstName(vacation.getManager().getFirstname());
-    this.setManagerLastName(vacation.getManager().getLastname());
     this.allDay = true;
   }
 
