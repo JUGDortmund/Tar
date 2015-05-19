@@ -39,9 +39,7 @@ public class VacationModifiedMail implements MailObject {
                ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    if (!user.equals(vacation.getUser())) {
-      values.put("modifiedBy", user.getFullname());
-    }
+    values.put("modifiedBy", user.getFullname());
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));

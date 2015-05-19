@@ -5,83 +5,83 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<p> Hallo, <span th:text="${employee}">Welt!</span> </p>
+    <p> Hallo, <span th:text="${employee}">Welt!</span> </p>
 
-	<p> Dein Urlaubsantrag wurde ge&auml;ndert! Hier sind die Details: </p>
+    <p> Dein Urlaubsantrag wurde ge&auml;ndert! Hier sind die Details: </p>
 
-	<table>
-		<thead>
-			<td/>
-			<td><b>Alter Wert</b></td>
-			<td><b>Neuer Wert</b></td>
-		</thead>
-		<tr>
-			<td>
-				<b>Name des Vorgesetzten:</b>
-			</td>
-			<td>
-				<span th:text="${manager_old}">Max Mustermann</span>
-			</td>
-			<td>
-				<span th:text="${manager}">Max Mustermann</span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<b>Name des Stellvertreters:</b>
-			</td>
-			<td>
-				<span th:text="${substitute_old}">Max Mustermann</span>
-			</td>
-			<td>
-				<span th:text="${substitute}">Max Mustermann</span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<b>Beantragte Urlaubszeit:</b>
-			</td>
-			<td>
-				<ul>
-					<li>Von: <span th:text="${fromDate_old}">vonDatum</span> </li>
-					<li>Bis: <span th:text="${toDate_old}">bisDatum</span> </li>
-				</ul>
-			</td>
-			<td>
-				<ul>
-					<li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
-					<li>Bis: <span th:text="${toDate}">bisDatum</span> </li>
-				</ul>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<b>Beantragte Urlaubstage:</b>
-			</td>
-			<td>
-				<span th:text="${totalDays_old}">Tage</span>
-			</td>
-			<td>
-				<span th:text="${totalDays}">Tage</span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<b>Beantragte Resturlaubstage:</b>
-			</td>
-			<td>
-				<span th:text="${leftDays_old}">Tage</span>
-			</td>
-			<td>
-				<span th:text="${leftDays}">Tage</span>
-			</td>
-		</tr>
-	</table>
+    <table>
+        <thead>
+        	<tr>
+                <td/>
+                <td><b>Alter Wert</b></td>
+                <td><b>Neuer Wert</b></td>
+            </tr>
+        </thead>
+        <tr>
+            <td>
+                <b>Name des Vorgesetzten:</b>
+            </td>
+            <td>
+                <span th:text="${manager_old}">Max Mustermann</span>
+            </td>
+            <td>
+                <span th:text="${manager}">Max Mustermann</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Name des Stellvertreters:</b>
+            </td>
+            <td>
+                <span th:text="${substitute_old}">Max Mustermann</span>
+            </td>
+            <td>
+                <span th:text="${substitute}">Max Mustermann</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Beantragte Urlaubszeit:</b>
+            </td>
+            <td>
+                <ul>
+                    <li>Von: <span th:text="${fromDate_old}">vonDatum</span> </li>
+                    <li>Bis: <span th:text="${toDate_old}">bisDatum</span> </li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
+                    <li>Bis: <span th:text="${toDate}">bisDatum</span> </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Beantragte Urlaubstage:</b>
+            </td>
+            <td>
+                <span th:text="${totalDays_old}">Tage</span>
+            </td>
+            <td>
+                <span th:text="${totalDays}">Tage</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>Beantragte Resturlaubstage:</b>
+            </td>
+            <td>
+                <span th:text="${leftDays_old}">Tage</span>
+            </td>
+            <td>
+                <span th:text="${leftDays}">Tage</span>
+            </td>
+        </tr>
+    </table>
 
-	<th:block th:if="${modifiedBy} != null">
-		<p> Der Urlaub wurde ge&auml;ndert von: <span th:text="${modifiedBy}">Bearbeiter</span></p>
-	</th:block>
+    <p> Der Urlaub wurde ge&auml;ndert von: <span th:text="${modifiedBy}">Bearbeiter</span></p>
 
-	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
 </body>
 </html>

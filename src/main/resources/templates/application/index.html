@@ -4,7 +4,7 @@
       layout:decorator="layout">
 
     <div layout:fragment="content">
-		<section class="content-header">
+        <section class="content-header">
           <div class="container-fluid">
             <div class="row">
               <div class="col-xs-12">
@@ -20,21 +20,21 @@
           <div class="vacation-button">
               <a class="btn btn-info" id="newVacation" href="/newVacation">neuer Urlaub</a>
           </div>
-        	<div class="container-fluid">
-            	<div class="row">
-	            	<div class="col-md-4" th:include="components/taskList :: taskList">
-	            		taskList
-	            	</div>
-	            	
-	            	<div class="col-md-4" th:include="components/vacationList :: vacationList">
-						vacationList
-        			</div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4" th:include="components/taskList :: taskList">
+                        taskList
+                    </div>
+                    
+                    <div class="col-md-4" th:include="components/vacationList :: vacationList">
+                        vacationList
+                    </div>
 
-            		<div class="col-md-4" id="vacation-form-panel" th:include="components/vacationForm :: vacationForm">
-						vacationForm
-              		</div>
-        		</div>
-        	</div>
+                    <div class="col-md-4" id="vacation-form-panel" th:include="components/vacationForm :: vacationForm">
+                        vacationForm
+                      </div>
+                </div>
+            </div>
             
         </section>
 
