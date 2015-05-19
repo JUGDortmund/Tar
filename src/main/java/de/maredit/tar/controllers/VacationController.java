@@ -180,6 +180,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
       return "application/index";
     } else {
       boolean newVacation = StringUtils.isBlank(vacation.getId());
+      Vacation vacationBeforeChange = newVacation ? null : vacationRepository.findOne(vacation.getId());
+
       if (newVacation) {
         vacation.setAuthor(applicationController.getConnectedUser());
       } else {
@@ -188,7 +190,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
       }
       this.vacationRepository.save(vacation);
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation)
-                                            : new VacationModifiedMail(vacation,
+                                            : new VacationModifiedMail(vacation, vacationBeforeChange,
                                                                        applicationController
                                                                            .getConnectedUser()));
       return "redirect:/";
