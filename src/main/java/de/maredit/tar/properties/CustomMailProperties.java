@@ -1,10 +1,13 @@
 package de.maredit.tar.properties;
 
-import org.springframework.boot.autoconfigure.mail.MailProperties;
+
+import org.springframework.stereotype.Component;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@Component
 @ConfigurationProperties(prefix = "spring.mail")
-public class CustomMailProperties extends MailProperties {
+public class CustomMailProperties {
 
   private String[] additionalRecipients;
 

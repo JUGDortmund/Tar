@@ -13,4 +13,4 @@ spring:
     password: lkvSdsE9YroldisNLVtdpVO4
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
-spring.profiles.include: dummyLdapService
+spring.profiles.include: dummyLdapService,smtpMailService

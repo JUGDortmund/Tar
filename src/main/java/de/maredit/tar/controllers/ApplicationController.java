@@ -1,5 +1,6 @@
 package de.maredit.tar.controllers;
 
+import microsoft.exchange.webservices.data.core.ExchangeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 
@@ -17,11 +17,14 @@ public class ApplicationController {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private ExchangeService service;
+
   @SuppressWarnings("unused")
   private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
 
   @RequestMapping("/login")
-  public String login() {
+  public String login() throws Exception {
     return "login";
   }
 

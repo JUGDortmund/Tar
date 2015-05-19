@@ -22,6 +22,10 @@ spring:
   mail:
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
+  exchange:
+    service: https://mac.hex2013.com/EWS/Exchange.asmx
+    user:
+    password:
   number:
     build: "0001"
 spring.profiles.include: dummyServices

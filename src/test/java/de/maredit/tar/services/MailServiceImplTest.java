@@ -31,7 +31,7 @@ public class MailServiceImplTest {
   private static final Logger LOG = LogManager.getLogger(MailServiceImplTest.class);
 
   @Autowired
-  private MailServiceImpl mailService;
+  private MailServiceSmtpImpl mailService;
 
   private MailObject mailObject;
 
