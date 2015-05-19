@@ -1,6 +1,7 @@
 package de.maredit.tar.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.validation.constraints.DecimalMin;
@@ -29,7 +30,7 @@ public class Vacation {
 
   @NotNull
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
-  private LocalDate created;
+  private LocalDateTime created;
 
   @DBRef
   @NotNull
@@ -43,10 +44,10 @@ public class Vacation {
   private User manager;
 
   @DecimalMin("0.5")
-  private float days;
+  private double days;
 
   @Min(0)
-  private float daysLeft;
+  private double daysLeft;
 
   @NotNull
   private State state;
@@ -54,7 +55,7 @@ public class Vacation {
   private User author;
 
   public Vacation() {
-    this.created = LocalDate.now();
+    this.created = LocalDateTime.now();
     this.state = State.WAITING_FOR_APPROVEMENT;
   }
 
@@ -69,7 +70,7 @@ public class Vacation {
     this.daysLeft = daysLeft;
 
     this.state = substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
-    this.created = LocalDate.now();
+    this.created = LocalDateTime.now();
   }
 
   public String getId() {
@@ -88,19 +89,19 @@ public class Vacation {
     this.state = state;
   }
 
-  public float getDaysLeft() {
+  public double getDaysLeft() {
     return daysLeft;
   }
 
-  public void setDaysLeft(float daysLeft) {
+  public void setDaysLeft(double daysLeft) {
     this.daysLeft = daysLeft;
   }
 
-  public float getDays() {
+  public double getDays() {
     return days;
   }
 
-  public void setDays(float days) {
+  public void setDays(double days) {
     this.days = days;
   }
 
@@ -145,11 +146,11 @@ public class Vacation {
     this.from = from;
   }
 
-  public LocalDate getCreated() {
+  public LocalDateTime getCreated() {
     return created;
   }
 
-  public void setCreated(LocalDate created) {
+  public void setCreated(LocalDateTime created) {
     this.created = created;
   }
 

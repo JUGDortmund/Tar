@@ -10,7 +10,6 @@
                 <div class="col-xs-12">
                     <h1>
                         Urlaubsverwaltung
-                        <small>Übersicht Urlaubsanspruch</small>
                     </h1>
                 </div>
             </div>
@@ -21,40 +20,42 @@
             <div class="row">
 
                 <div class="col-xs-12 col-sm-8 module employee-overview">
+
                     <div class="panel-group" id="accordion" role="tablist">
                         <!-- ein mitarbeiter -->
-                        <div class="panel">
+                        <div class="panel" th:each="userAccount, iterator : ${userAccounts}">
 
-                            <div class="panel-heading" id="headingOne">
+                            <div class="panel-heading" th:id="|heading${iterator.index}|">
                                 <div class="progress-group">
-                                    <span class="progress-text">Björn Prenger</span>
+                                    <span class="progress-text" th:text="${userAccount.user.lastname + ', ' + userAccount.user.firstname}">Username</span>
                                     <span class="progress-number">
-                                        12/30
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                        <b><span th:text="${{userAccount.totalDays}}">30</span></b>
+                                        <span>Gesamt</span>
+                                        <a data-toggle="collapse" data-parent="#accordion" th:href="|#collapse${iterator.index}|">
                                             <span class="glyphicon glyphicon-info-sign"></span>
                                         </a>
                                     </span>
 
                                     <div class="progress">
-                                        <div class="progress-bar" style="width: 35%;">
-                                            <span>12</span>
+                                        <div class="progress-bar progress-bar-success" th:style="|width: ${userAccount.approvedVacationDays/userAccount.totalDays * 100}%;|">
+                                            <span th:text="${{userAccount.approvedVacationDays}}">genehmigte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-warning progress-bar-striped"
-                                             style="width: 60%;">
-                                            <span>18</span>
+                                             th:style="|width: ${userAccount.pendingVacationDays/userAccount.totalDays * 100}%;|">
+                                            <span th:text="${{userAccount.pendingVacationDays}}">beantragte Urlaubstage</span>
                                         </div>
-                                        <div class="progress-bar progress-bar-success"
-                                             style="width: 5%;">
-                                            <span>2</span>
+                                        <div class="progress-bar progress-bar-empty"
+                                             th:style="|width: ${userAccount.openVacationDays/userAccount.totalDays * 100}%;|">
+                                            <span th:text="${{userAccount.openVacationDays}}">noch verfügbare Urlaubstage</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="collapse1" class="panel-collapse collapse">
+                            <div th:id="|collapse${iterator.index}|" class="panel-collapse collapse">
                                 <div class="panel-body">
 
-                                    <table class="table table-hover table-condensed">
+                                    <!--/* <table class="table table-hover table-condensed">
                                         <tr>
                                             <th>Jahr</th>
                                             <th>Anspruch</th>
@@ -132,7 +133,7 @@
                                                 <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
                                             </td>
                                         </tr>
-                                    </table>
+                                    </table> */-->
 
                                 </div>
                             </div>

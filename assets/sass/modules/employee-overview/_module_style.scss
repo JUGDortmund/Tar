@@ -3,22 +3,19 @@
 		margin-left: 10px;
 	}
 
-	th, td {
-		text-align: center;
-	}
-
-	select, input, button {
-		max-width: 80px;
-		display: inline;
-	}
-
 	.glyphicon {
 		&.pending {
 			vertical-align: middle;
 			color: $vacation-pending;
+
 			&:before {
 				content:"\231b";
 			}
 		}
+	}
+
+	.progress-bar-empty {
+		background-color: transparent;
+		color: black;
 	}
 }

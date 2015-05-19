@@ -46,16 +46,16 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
 
         Vacation v1 =
             new Vacation(user, LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(
-                1).plusDays(15), manager, manager, 15, 5);
+                1).plusDays(1), manager, manager, 2, 13);
         v1.setState(State.WAITING_FOR_APPROVEMENT);
         Vacation v2 =
-            new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(20),
-                         manager, manager, 15, 5);
+            new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(2),
+                         manager, manager, 3, 10);
         v2.setState(State.REQUESTED_SUBSTITUTE);
         Vacation
             v3 =
             new Vacation(user, LocalDate.now().plusWeeks(2), LocalDate.now().plusWeeks(2).plusDays(
-                15), manager, manager, 15, 5);
+                4), manager, manager, 5, 5);
         v3.setState(State.APPROVED);
         vacationRepository.save(v1);
         vacationRepository.save(v2);

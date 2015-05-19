@@ -34,16 +34,6 @@ public class ApplicationController {
     return "login";
   }
 
-  @RequestMapping("/overview")
-  public String overview(Model model) {
-    model.addAttribute("something", 94);
-    model.addAttribute("loginUser", getConnectedUser());
-    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
-    model.addAttribute("buildnumber", versionProperties.getBuild());
-
-    return "application/overview";
-  }
-
   public User getConnectedUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (!auth.isAuthenticated()) {
