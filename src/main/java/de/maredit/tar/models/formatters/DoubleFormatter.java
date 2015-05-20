@@ -13,8 +13,7 @@ public class DoubleFormatter implements Formatter<Double> {
 
   @Override
   public Double parse(String text, Locale locale) throws ParseException {
-    NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
-    return numberFormat.parse(text).doubleValue();
+    return Double.parseDouble(text);
   }
 
   @Override
