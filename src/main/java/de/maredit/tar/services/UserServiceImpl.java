@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,12 +47,14 @@ public class UserServiceImpl implements UserService {
   public UserAccount getUserAccountForYear(User user, int year) {
     UserAccount account = new UserAccount();
     List<Vacation> vacations = getVacationsForUserAndYear(user, year);
+    List<Vacation> previousVacations = getVacationsForUserAndYear(user, year - 1);
 
     account.setUser(user);
     account.setVacations(vacations);
     account.setApprovedVacationDays(getApprovedVacationDays(vacations));
     account.setPendingVacationDays(getPendingVacationDays(vacations));
     account.setOpenVacationDays(getOpenVacationDays(vacations));
+    account.setPreviousYearOpenVacationDays(getPreviousYearOpenVacationDays(previousVacations));
 
     return account;
   }
@@ -76,6 +79,8 @@ public class UserServiceImpl implements UserService {
 
   /**
    * Helper method to retrieve the amount of approved vacation days for a list of vacations.
+   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   *
    * @param vacations the list to analyze
    * @return the amount of approved vacation days
    */
@@ -85,8 +90,10 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * Helper method to retrieve the amount of pending vacation days (which are already planned but not accepted yet)
-   * for a list of vacations.
+   * Helper method to retrieve the amount of pending vacation days (which are already planned but
+   * not accepted yet) for a list of vacations.
+   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   *
    * @param vacations the list to analyze
    * @return the amount of pending vacation days
    */
@@ -98,15 +105,39 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * Helper method to retrieve the amount of open vacation days (which can still be planned) for a list of vacations.
+   * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
+   * list of vacations.
+   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   *
    * @param vacations the list to analyze
    * @return the amount of open vacation days
    */
   private double getOpenVacationDays(List<Vacation> vacations) {
-    return vacations.stream()
-        .filter(vacation -> vacation.getCreated().getYear() == LocalDate.now().getYear())
-        .filter(vacation -> vacation.getState() != State.CANCELED
-                            && vacation.getState() != State.REJECTED)
-        .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated())).get().getDaysLeft();
+    Optional result =
+        vacations.stream()
+            .filter(vacation -> vacation.getCreated().getYear() == LocalDate.now().getYear())
+            .filter(vacation -> vacation.getState() != State.CANCELED
+                                && vacation.getState() != State.REJECTED)
+        .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
+
+    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
+  }
+
+  /**
+   * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
+   * list of vacations.
+   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   *
+   * @param vacations the list to analyze
+   * @return the amount of open vacation days
+   */
+  private double getPreviousYearOpenVacationDays(List<Vacation> vacations) {
+    Optional result =
+        vacations.stream()
+            .filter(vacation -> vacation.getState() != State.CANCELED
+                                && vacation.getState() != State.REJECTED)
+            .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
+
+    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
   }
 }

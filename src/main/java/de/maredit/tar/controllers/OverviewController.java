@@ -1,5 +1,6 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.models.User;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.services.UserService;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by czillmann on 19.05.15.
@@ -39,9 +41,10 @@ public class OverviewController {
     model.addAttribute("appVersion", versionProvider.getApplicationVersion());
     model.addAttribute("buildnumber", versionProperties.getBuild());
 
+    List<User> users = userService.getSortedUserList();
+    model.addAttribute("users", users);
     model.addAttribute("userAccounts", userService.getUserAccountsForYear(
-        userService.getSortedUserList(), LocalDate.now().getYear()));
-
+        users, LocalDate.now().getYear()));
 
     return "application/overview";
   }

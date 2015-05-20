@@ -12,6 +12,7 @@ public class UserAccount {
   private double openVacationDays;
   private double pendingVacationDays;
   private double approvedVacationDays;
+  private double previousYearOpenVacationDays;
 
   public double getTotalDays() {
     double totalDays = getApprovedVacationDays() + getPendingVacationDays() + getOpenVacationDays();
@@ -56,5 +57,13 @@ public class UserAccount {
 
   public void setApprovedVacationDays(double approvedVacationDays) {
     this.approvedVacationDays = approvedVacationDays;
+  }
+
+  public double getPreviousYearOpenVacationDays() {
+    return previousYearOpenVacationDays;
+  }
+
+  public void setPreviousYearOpenVacationDays(double previousYearOpenVacationDays) {
+    this.previousYearOpenVacationDays = previousYearOpenVacationDays;
   }
 }

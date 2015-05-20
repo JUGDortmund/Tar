@@ -133,3 +133,14 @@
   })(jQuery);
 
 }).call(this);
+
+(function() {
+  (function($) {
+    $('[data-toggle="tooltip"]').tooltip();
+    return $('.tag-filter').select2({
+      tags: true,
+      allowClear: true
+    });
+  })(jQuery);
+
+}).call(this);
