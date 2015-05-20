@@ -1,5 +1,8 @@
 package de.maredit.tar.services;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.services.mail.MailObject;
 import org.apache.commons.lang3.ArrayUtils;
@@ -37,6 +40,9 @@ public class MailServiceSmtpImpl implements MailService {
       if(mail.sendToAdditionalRecipient()) {
         mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalRecipients()));
       }
+      if (customMailProperties.getSender() != null) {
+        msg.setFrom(customMailProperties.getSender());
+      }
       this.mailSender.send(msg);
     } catch (MailException ex) {
       LOG.error("Error sending mail", ex);
@@ -49,9 +55,13 @@ public class MailServiceSmtpImpl implements MailService {
       if(mail.sendToAdditionalRecipient()) {
         mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalRecipients()));
       }
-      mailSender.send(mailMessageComposer.composeMimeMailMessage(mail,
-          mailSender.createMimeMessage()));
-    } catch (MailException ex) {
+      MimeMessage msg = mailMessageComposer.composeMimeMailMessage(mail,
+          mailSender.createMimeMessage());
+      if (customMailProperties.getSender() != null) {
+        msg.setFrom(customMailProperties.getSender());
+      }
+      mailSender.send(msg);
+    } catch (MailException | MessagingException ex) {
       LOG.error("Error sending mail", ex);
     }
   }

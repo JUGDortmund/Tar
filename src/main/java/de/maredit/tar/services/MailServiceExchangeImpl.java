@@ -1,5 +1,10 @@
 package de.maredit.tar.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import microsoft.exchange.webservices.data.exception.ServiceLocalException;
+import microsoft.exchange.webservices.data.property.complex.EmailAddress;
 import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.services.mail.MailObject;
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -19,6 +24,8 @@ import java.util.Arrays;
 @Profile({"exchangeMailService"})
 public class MailServiceExchangeImpl implements MailService {
 
+  private static final Logger LOG = LogManager.getLogger(MailServiceExchangeImpl.class);
+
   @Autowired
   private ExchangeService exchangeService;
   
@@ -28,49 +35,45 @@ public class MailServiceExchangeImpl implements MailService {
   @Autowired
   public SpringTemplateEngine templateEngine;
 
-  // @Override
   @Override
   public void sendMail(MailObject mail) {
     try {
-      EmailMessage msg = new EmailMessage(exchangeService);
-      if (mail.sendToAdditionalRecipient()) {
-        mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(),
-            customMailProperties.getAdditionalRecipients()));
-      }
-      msg.setSubject(mail.getSubject());
+      EmailMessage msg = buildBaseMail(mail);
       msg.setBody(MessageBody.getMessageBodyFromText(prepareMailBody(mail, mail.getHtmlTemplate())));
-      EmailAddressCollection toRecipients = msg.getToRecipients();
-      Arrays.stream(mail.getToRecipients()).forEach(adress -> toRecipients.add(adress));
-      if (mail.getCCRecipients() != null) {
-        EmailAddressCollection ccRecipients = msg.getCcRecipients();
-        Arrays.stream(mail.getCCRecipients()).forEach(adress -> ccRecipients.add(adress));
-      }
       msg.send();
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.error("Error sending mail", e);
     }
   }
 
   @Override
   public void sendSimpleMail(MailObject mail) {
     try {
-      EmailMessage msg = new EmailMessage(exchangeService);
-      if (mail.sendToAdditionalRecipient()) {
-        mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(),
-            customMailProperties.getAdditionalRecipients()));
-      }
-      msg.setSubject(mail.getSubject());
+      EmailMessage msg = buildBaseMail(mail);
       msg.setBody(MessageBody.getMessageBodyFromText(prepareMailBody(mail, mail.getTemplate())));
-      EmailAddressCollection toRecipients = msg.getToRecipients();
-      Arrays.stream(mail.getToRecipients()).forEach(adress -> toRecipients.add(adress));
-      if (mail.getCCRecipients() != null) {
-        EmailAddressCollection ccRecipients = msg.getCcRecipients();
-        Arrays.stream(mail.getCCRecipients()).forEach(adress -> ccRecipients.add(adress));
-      }
       msg.send();
     } catch (Exception e) {
-      e.printStackTrace();
+      LOG.error("Error sending mail", e);
     }
+  }
+
+  private EmailMessage buildBaseMail(MailObject mail) throws Exception, ServiceLocalException {
+    EmailMessage msg = new EmailMessage(exchangeService);
+    if (mail.sendToAdditionalRecipient()) {
+      mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(),
+          customMailProperties.getAdditionalRecipients()));
+    }
+    msg.setSubject(mail.getSubject());
+    EmailAddressCollection toRecipients = msg.getToRecipients();
+    Arrays.stream(mail.getToRecipients()).forEach(adress -> toRecipients.add(adress));
+    if (mail.getCCRecipients() != null) {
+      EmailAddressCollection ccRecipients = msg.getCcRecipients();
+      Arrays.stream(mail.getCCRecipients()).forEach(adress -> ccRecipients.add(adress));
+    }
+    if (customMailProperties.getSender() != null) {
+      msg.setSender(new EmailAddress(customMailProperties.getSender()));
+    }
+    return msg;
   }
 
   private String prepareMailBody(MailObject mail, String templateName) {
