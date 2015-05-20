@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
+
 /**
  * Created by czillmann on 19.05.15.
  */
@@ -37,7 +39,8 @@ public class OverviewController {
     model.addAttribute("appVersion", versionProvider.getApplicationVersion());
     model.addAttribute("buildnumber", versionProperties.getBuild());
 
-    model.addAttribute("userAccounts", userService.getUserAccounts(userService.getSortedUserList()));
+    model.addAttribute("userAccounts", userService.getUserAccountsForYear(
+        userService.getSortedUserList(), LocalDate.now().getYear()));
 
 
     return "application/overview";

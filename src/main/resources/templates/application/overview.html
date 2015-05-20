@@ -8,8 +8,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-12">
-                    <h1>
-                        Urlaubsverwaltung
+                    <h1 th:inline="text">
+                        Übersicht Resturlaube [[${#dates.year(#dates.createNow())}]]
                     </h1>
                 </div>
             </div>
@@ -31,9 +31,12 @@
                                     <span class="progress-number">
                                         <b><span th:text="${{userAccount.totalDays}}">30</span></b>
                                         <span>Gesamt</span>
+                                        <!-- /*
+                                        This is for TAR-130 to open the collapse-panel for more details
                                         <a data-toggle="collapse" data-parent="#accordion" th:href="|#collapse${iterator.index}|">
                                             <span class="glyphicon glyphicon-info-sign"></span>
                                         </a>
+                                        */-->
                                     </span>
 
                                     <div class="progress">
@@ -55,85 +58,32 @@
                             <div th:id="|collapse${iterator.index}|" class="panel-collapse collapse">
                                 <div class="panel-body">
 
-                                    <!--/* <table class="table table-hover table-condensed">
+                                    <!--/*
+                                    This is fpr TAR-130 more details for vacations of user in current year
+                                    <table class="table table-hover table-condensed">
                                         <tr>
-                                            <th>Jahr</th>
-                                            <th>Anspruch</th>
-                                            <th>Rest Vorjahr</th>
-                                            <th>
-                                                <button class="btn btn-info new" name="new" id="new" type="submit">
-                                                    Neu
-                                                </button>
-                                            </th>
-                                        </tr>
-                                        <tr class="new-form">
-                                            <td class="year">
-                                                <select class="form-control" id="year" name="year">
-                                                    <option>2016</option>
-                                                </select>
-                                            </td>
-                                            <td class="days-year">
-                                                <input class="form-control" id="yearDays" name="yearDays"
-                                                       type="number" step="0.5" value="30"/>
-                                            </td>
-                                            <td class="days-left"></td>
-                                            <td>
-                                                <button class="btn btn-info save-new" name="save-new" type="submit">
-                                                    Speichern
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr class="edit-form">
-                                            <td class="year">
-                                               YEAR
-                                            </td>
-                                            <td class="days-year">
-                                                <input class="form-control" id="yearDays"
-                                                       type="number" step="0.5" value="30"/>
-                                            </td>
-                                            <td class="days-left">
-                                                REST
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-info save-edit" name="save-edit" type="submit">
-                                                    Speichern
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="year">2016</td>
-                                            <td class="days-year">30</td>
-                                            <td class="days-left"><span class="glyphicon pending"></span></td>
-                                            <td>
-                                                <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                                            </td>
+                                            <th>Buchungstext</th>
+                                            <th>Urlaub von</th>
+                                            <th>Urlaub bis</th>
+                                            <th>Urlaubstage</th>
+                                            <th>Saldo</th>
                                         </tr>
                                         <tr>
-                                            <td class="year">2015</td>
-                                            <td class="days-year">30</td>
-                                            <td class="days-left">-</td>
-                                            <td>
-                                                <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                                            </td>
+                                            <td>Gutschrift Jahresurlaub 2015</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>30</td>
+                                            <td>30</td>
                                         </tr>
                                         <tr>
-                                            <td class="year">2014</td>
-                                            <td class="days-year">29</td>
-                                            <td class="days-left">-</td>
-                                            <td>
-                                                <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                                            </td>
+                                            <td>Gutschrift Resturlaub 2014</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>5</td>
+                                            <td>35</td>
                                         </tr>
-                                        <tr>
-                                            <td class="year">2013</td>
-                                            <td class="days-year">28</td>
-                                            <td class="days-left">-</td>
-                                            <td>
-                                                <a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
-                                            </td>
-                                        </tr>
-                                    </table> */-->
+                                    </table>
+                                    */-->
 
                                 </div>
                             </div>
