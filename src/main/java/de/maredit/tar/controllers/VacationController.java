@@ -22,6 +22,7 @@ import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
 
+import org.apache.catalina.util.URLEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -169,6 +172,14 @@ public class VacationController extends WebMvcConfigurerAdapter {
   public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation,
                              BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
+
+    URL url = null;
+    try {
+      url = new URL(request.getRequestURL().toString());
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
@@ -189,8 +200,10 @@ public class VacationController extends WebMvcConfigurerAdapter {
                                                            : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation)
-                                            : new VacationModifiedMail(vacation, vacationBeforeChange,
+      String urlToVacation = String.format("%s//%s/vacation?id=%s", url.getProtocol(), url.getAuthority(), vacation.getId());
+
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, urlToVacation)
+                                            : new VacationModifiedMail(vacation, urlToVacation, vacationBeforeChange,
                                                                        applicationController
                                                                            .getConnectedUser()));
       return "redirect:/";

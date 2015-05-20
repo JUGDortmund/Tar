@@ -44,17 +44,17 @@ public class MailMessageComposerTest {
     String[] expectedArray = {/* User */"Mark@maredit.de", /* Substitute */"Luke@maredit.de", /* Manager */
     "John@maredit.de"};
 
-    String[] actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation)).getTo();
+    String[] actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation, "http:www.maredit.de")).getTo();
     assertEquals(expectedArray[1], actualArray[0]);
     assertEquals(expectedArray[2], actualArray[1]);
 
-    actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation)).getCc();
+    actualArray = mailComposer.composeSimpleMailMessage(new VacationCreateMail(vacation, "http:www.maredit.de")).getCc();
     assertEquals(expectedArray[0], actualArray[0]);
   }
 
   @Test
   public void changedMailAdressesInComposedMail() {
-    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
+    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation, "http:www.maredit.de"));
 
     assertEquals("Mark@maredit.de", mailMessage.getCc()[0]);
     assertEquals("Luke@maredit.de", mailMessage.getTo()[0]);
@@ -63,7 +63,7 @@ public class MailMessageComposerTest {
     standardVacation.getUser().setMail("JohnnyEnglish@maredit.de");
     standardVacation.getManager().setMail("manager@maredit.de");
     standardVacation.getSubstitute().setMail("substitute@maredit.de");
-    mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
+    mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation, "http:www.maredit.de"));
 
     assertEquals("JohnnyEnglish@maredit.de", mailMessage.getCc()[0]);
     assertEquals("substitute@maredit.de", mailMessage.getTo()[0]);
@@ -77,7 +77,7 @@ public class MailMessageComposerTest {
     standardVacation.setDays(13);
     standardVacation.setDaysLeft(11);
 
-    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation));
+    SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation, "http:www.maredit.de"));
     String actualBodyText = mailMessage.getText();
 
     String errorMessage = "Expected substring not found in body text: ";
