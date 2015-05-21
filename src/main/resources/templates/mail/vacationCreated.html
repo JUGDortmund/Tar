@@ -29,7 +29,7 @@
     </th:block>
 
     <p>
-        &lt;<a th:href="${urlToVacation}">Hier</a>&gt; geht es zum Urlaubsantrag!
+        &lt;<a th:href="@{${urlToVacation}(id=${id}, action='view')}">Hier</a>&gt; geht es zum Urlaubsantrag!
     </p>
 
     <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team (i.A. von <span th:text="${employee}">Welt</span>) </em> </p>

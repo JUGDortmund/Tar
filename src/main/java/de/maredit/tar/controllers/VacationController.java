@@ -7,6 +7,7 @@ import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
+import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
@@ -22,7 +23,6 @@ import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
 
-import org.apache.catalina.util.URLEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,8 +40,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,9 +47,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-/**
- * Created by czillmann on 22.04.15.
- */
 @Controller
 public class VacationController extends WebMvcConfigurerAdapter {
 
@@ -71,6 +66,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private VersionProperties versionProperties;
+
+  @Autowired
+  private CustomMailProperties customMailProperties;
 
   @Autowired
   private ApplicationController applicationController;
@@ -109,9 +107,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                              @RequestParam(value = "approve") boolean approve) {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
-
     MailObject mail =
-        (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
+        (approve ? new SubstitutionApprovedMail(vacation, customMailProperties.getUrlToVacation()) : new SubstitutionRejectedMail(vacation, customMailProperties.getUrlToVacation()));
     this.mailService.sendMail(mail);
 
     return "redirect:/";
@@ -123,9 +120,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                          @RequestParam(value = "approve") boolean approve) {
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
-
     MailObject mail =
-        (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
+        (approve ? new VacationApprovedMail(vacation, customMailProperties.getUrlToVacation()) : new VacationDeclinedMail(vacation, customMailProperties.getUrlToVacation()));
     this.mailService.sendMail(mail);
 
     return "redirect:/";
@@ -173,13 +169,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
                              BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
 
-    URL url = null;
-    try {
-      url = new URL(request.getRequestURL().toString());
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    }
-
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
@@ -200,10 +189,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                                                            : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
-      String urlToVacation = String.format("%s//%s/vacation?id=%s", url.getProtocol(), url.getAuthority(), vacation.getId());
-
-      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, urlToVacation)
-                                            : new VacationModifiedMail(vacation, urlToVacation, vacationBeforeChange,
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation())
+                                            : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), vacationBeforeChange,
                                                                        applicationController
                                                                            .getConnectedUser()));
       return "redirect:/";
@@ -213,7 +200,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String cancelVacation(@ModelAttribute("vacation") Vacation vacation) {
-
     VacationCanceledMail mail = new
         VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);

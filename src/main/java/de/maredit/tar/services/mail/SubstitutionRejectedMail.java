@@ -18,7 +18,7 @@ public class SubstitutionRejectedMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public SubstitutionRejectedMail(Vacation vacation) {
+  public SubstitutionRejectedMail(Vacation vacation, String urlToVacation) {
     values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
@@ -27,6 +27,8 @@ public class SubstitutionRejectedMail implements MailObject {
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
+    values.put("id", vacation.getId());
+    values.put("urlToVacation", urlToVacation);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));

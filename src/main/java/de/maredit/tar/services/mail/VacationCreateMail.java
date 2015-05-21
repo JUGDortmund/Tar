@@ -32,6 +32,7 @@ public class VacationCreateMail implements MailObject {
     if (!vacation.getAuthor().equals(vacation.getUser())) {
       values.put("createdBy", vacation.getAuthor().getFullname());
     }
+    values.put("id", vacation.getId());
     values.put("urlToVacation", urlToVacation);
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {

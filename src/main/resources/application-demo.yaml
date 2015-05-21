@@ -13,4 +13,5 @@ spring:
     password: lkvSdsE9YroldisNLVtdpVO4
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
+    urlToVacation: https://dev.tar.maredit.net
 spring.profiles.include: dummyLdapService

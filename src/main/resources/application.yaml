@@ -22,6 +22,7 @@ spring:
   mail:
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
+    urlToVacation: http://localhost:8080
   number:
     build: "0001"
 spring.profiles.include: dummyServices
