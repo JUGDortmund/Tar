@@ -8,7 +8,7 @@
             <h3 class="list-group-item">Vertretungen</h3>
             <a th:each="substitute : ${substitutesForApproval}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='substitute')}">
                 <span th:text="${substitute.from + ' - '  + substitute.to}"></span>
-                <strong th:text="${substitute.user.firstname + ' - ' + substitute.user.lastname}"></strong>
+                <strong th:text="${substitute.user.lastname + ', ' + substitute.user.firstname}"></strong>
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             </a>
         </div>
@@ -17,7 +17,7 @@
             <h3 class="list-group-item">Ausstehende Genehmigungen</h3>
             <a th:each="approval : ${approvals}" class="list-group-item" th:href="@{/vacation(id=${approval.id},action='approve')}">
                 <span th:text="${approval.from + ' - '  + approval.to}"></span>
-                <strong th:text="${approval.user.firstname + ' - ' + approval.user.lastname}"></strong>
+                <strong th:text="${approval.user.lastname + ', ' + approval.user.firstname}"></strong>
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             </a>
         </div>
