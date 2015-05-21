@@ -29,19 +29,22 @@ public class MailServiceImpl implements MailService {
 
   @Autowired
   private CustomMailProperties customMailProperties;
+  
+  @Autowired
+  private MailProperties mailProperties;
 
   private JavaMailSender mailSender;
 
   @PostConstruct
   public void init() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    if (customMailProperties != null && customMailProperties.getHost() != null) {
-      mailSender.setHost(customMailProperties.getHost());
-      if (customMailProperties.getPort() != null) {
-        mailSender.setPort(customMailProperties.getPort());
+    if (mailProperties != null && mailProperties.getHost() != null) {
+      mailSender.setHost(mailProperties.getHost());
+      if (mailProperties.getPort() != null) {
+        mailSender.setPort(mailProperties.getPort());
       }
-      mailSender.setUsername(customMailProperties.getUsername());
-      mailSender.setPassword(customMailProperties.getPassword());
+      mailSender.setUsername(mailProperties.getUsername());
+      mailSender.setPassword(mailProperties.getPassword());
       this.mailSender = mailSender;
     }
   }
