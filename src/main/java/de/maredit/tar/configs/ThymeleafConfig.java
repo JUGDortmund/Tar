@@ -1,6 +1,7 @@
 package de.maredit.tar.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
@@ -33,5 +34,10 @@ public class ThymeleafConfig {
       }
       engine.addDialect(new SpringSecurityDialect());
       return engine;
+  }
+
+  @Bean
+  public MailProperties mailProperties() {
+    return new MailProperties();
   }
 }

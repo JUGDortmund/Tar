@@ -26,7 +26,6 @@ public class VacationApprovedMail implements MailObject {
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    values.put("id", vacation.getId());
     values.put("urlToVacation", urlToVacation);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {

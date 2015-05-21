@@ -28,9 +28,6 @@ public class MailServiceImpl implements MailService {
   private MailMessageComposer mailMessageComposer;
 
   @Autowired
-  private MailProperties mailProperties;
-
-  @Autowired
   private CustomMailProperties customMailProperties;
 
   private JavaMailSender mailSender;
@@ -38,13 +35,13 @@ public class MailServiceImpl implements MailService {
   @PostConstruct
   public void init() {
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    if (mailProperties != null && mailProperties.getHost() != null) {
-      mailSender.setHost(mailProperties.getHost());
-      if (mailProperties.getPort() != null) {
-        mailSender.setPort(mailProperties.getPort());
+    if (customMailProperties != null && customMailProperties.getHost() != null) {
+      mailSender.setHost(customMailProperties.getHost());
+      if (customMailProperties.getPort() != null) {
+        mailSender.setPort(customMailProperties.getPort());
       }
-      mailSender.setUsername(mailProperties.getUsername());
-      mailSender.setPassword(mailProperties.getPassword());
+      mailSender.setUsername(customMailProperties.getUsername());
+      mailSender.setPassword(customMailProperties.getPassword());
       this.mailSender = mailSender;
     }
   }
