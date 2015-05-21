@@ -52,6 +52,8 @@ public class Vacation {
   private State state;
 
   private User author;
+  
+  private String appointmentId;
 
   public Vacation() {
     this.created = LocalDate.now();
@@ -173,18 +175,26 @@ public class Vacation {
     return Objects.hashCode(this.id);
   }
 
-  @Override
-  public String toString() {
-    return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
-        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", daysLeft="
-        + daysLeft + ", state=" + state + "]";
-  }
-
   public void setAuthor(User user) {
     this.author = user;
   }
   
   public User getAuthor() {
     return author;
+  }
+
+  public String getAppointmentId() {
+    return appointmentId;
+  }
+
+  public void setAppointmentId(String appointmentId) {
+    this.appointmentId = appointmentId;
+  }
+
+  @Override
+  public String toString() {
+    return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
+        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", daysLeft="
+        + daysLeft + ", state=" + state + "]";
   }
 }

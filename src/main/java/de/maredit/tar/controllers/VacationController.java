@@ -1,7 +1,8 @@
 package de.maredit.tar.controllers;
 
-import com.unboundid.ldap.sdk.LDAPException;
+import de.maredit.tar.services.CalendarService;
 
+import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
@@ -21,7 +22,6 @@ import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,6 +65,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private LdapService ldapService;
+  
+  @Autowired
+  private CalendarService calendarService;
 
   @Autowired
   private VersionProperties versionProperties;
@@ -118,7 +121,12 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation,
                          @RequestParam(value = "approve") boolean approve) {
-    vacation.setState((approve) ? State.APPROVED : State.REJECTED);
+    if (approve) {
+      vacation.setState(State.APPROVED);
+      vacation.setAppointmentId(calendarService.createAppointment(vacation));
+    } else {
+      vacation.setState(State.REJECTED);
+    }
     this.vacationRepository.save(vacation);
 
     MailObject mail =
@@ -185,6 +193,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
       } else {
         vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
                                                            : State.REQUESTED_SUBSTITUTE);
+        calendarService.deleteAppointment(vacation);
+        vacation.setAppointmentId(null);
       }
       this.vacationRepository.save(vacation);
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation)
@@ -202,6 +212,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
     VacationCanceledMail mail = new
         VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);
+    calendarService.deleteAppointment(vacation);
+    vacation.setAppointmentId(null);
     this.vacationRepository.save(vacation);
     this.mailService.sendMail(mail);
 

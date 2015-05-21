@@ -29,3 +29,4 @@ spring:
     groupLookUpAttribute: member
     userBindDN: uid=$username,ou=users,o=maredit,dc=de
     disableSSL: true
+spring.profiles.include: dummyCalendarService,smtpMailService

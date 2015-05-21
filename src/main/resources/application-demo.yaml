@@ -7,10 +7,10 @@ spring:
       embedded: true
       preload: false
   mail:
-    host: postfix.maredit.net
-    port: 25
-    username: no-reply@maredit.de
-    password: lkvSdsE9YroldisNLVtdpVO4
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
-spring.profiles.include: dummyLdapService,smtpMailService
+  exchange:
+    service: https://mac.hex2013.com/EWS/Exchange.asmx
+    user: no-reply@maredit.de
+    password: lkvSdsE9YroldisNLVtdpVO4
+spring.profiles.include: dummyLdapService,exchangeMailService,dummyCalendarService
