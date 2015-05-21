@@ -1,7 +1,6 @@
 package de.maredit.tar.controllers;
 
 import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
@@ -21,7 +20,6 @@ import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -279,8 +278,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
   private List<Vacation> getSubstitutesForUser(User user) {
     List<Vacation>
         substitutes =
-        this.vacationRepository.findVacationBySubstituteAndStateNotOrderByFromAsc(
-            user, State.CANCELED);
+        this.vacationRepository.findVacationBySubstituteAndStateNotAndToAfterOrderByFromAsc(
+            user, State.CANCELED, LocalDate.now());
     return substitutes;
   }
 
