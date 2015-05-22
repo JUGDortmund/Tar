@@ -1,5 +1,7 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.beans.NavigationBean;
+
 import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
@@ -67,6 +69,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private VersionProperties versionProperties;
+  
+  @Autowired
+  private NavigationBean navigationBean;
 
   @Autowired
   private ApplicationController applicationController;
@@ -92,6 +97,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
   public String index(HttpServletRequest request, Model model,
                       @ModelAttribute("vacation") Vacation vacation) {
 
+    navigationBean.setActiveComponent(NavigationBean.VACATION_PAGE);
     vacation.setUser(applicationController.getConnectedUser());
     User selectedUser = getUser(request);
     setIndexModelValues(model, selectedUser);
