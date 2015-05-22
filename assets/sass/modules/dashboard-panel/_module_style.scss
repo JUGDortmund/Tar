@@ -81,7 +81,14 @@
 	.glyphicon {
 		float: right;
 
-		&.pending {
+		&.pending-substitute {
+			color: $vacation-pending;
+			&:before {
+				content:"\e008";
+			}
+		}
+
+		&.pending-approvement {
 			color: $vacation-pending;
 			&:before {
 				content:"\231b";
