@@ -78,7 +78,7 @@ public class UserSyncTask {
     user.setFirstname(resultEntry.getFirstname());
     user.setLastname(resultEntry.getLastname());
     try {
-      user.setPhoto(Optional.ofNullable(resultEntry.getPhoto()).orElse(StringUtils.EMPTY).getBytes("UTF8"));
+      user.setPhoto(Optional.ofNullable(resultEntry.getUserImage()).orElse(StringUtils.EMPTY).getBytes("UTF8"));
     } catch (UnsupportedEncodingException e) {
       LOG.error("Failed to sync utf-8 user photo", e);
     }

@@ -212,10 +212,10 @@ edit-vacation, approve-vacation  -->
                     <th:block th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
                         <a th:href="@{/cancelVacation(id=${vacation.id})}"
                            onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
-                           class="btn btn-danger pull-right">
+                           class="btn btn-danger">
                             stornieren
                         </a>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-success pull-right">
                             ändern
                         </button>
                     </th:block>

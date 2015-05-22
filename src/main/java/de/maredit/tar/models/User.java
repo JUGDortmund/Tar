@@ -77,7 +77,7 @@ public class User {
     this.mail = mail;
   }
 
-  public String getPhoto() {
+  public String getUserImage() {
     return userImage;
   }
 
@@ -85,6 +85,10 @@ public class User {
     if (imageData != null) {
       this.userImage = Base64.encode(imageData);
     }
+  }
+  
+  public void setUserImage(String userImage) {
+    this.userImage = userImage;
   }
 
   @Override
