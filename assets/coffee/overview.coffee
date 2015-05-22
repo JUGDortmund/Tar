@@ -1,9 +1,21 @@
 # document ready
 (($) ->
    $('[data-toggle="tooltip"]').tooltip()
+   $('#employees').select2()
+   $('.select2-search__field').focus();
 
-   $('.tag-filter').select2({
-      tags: true,
-      allowClear: true
-   })
+   $('#employees').on 'select2:unselecting', (e) ->
+      $(this).data 'state', 'unselected'
+      return
+
+   $('#employees').on 'select2:opening ', (e) ->
+      if ($(this).data('state') == 'unselected')
+         $(this).removeData 'state'
+         e.preventDefault()
+      return
+
+   $('#clear').on 'click', (e) ->
+      $('#employees').val(null).trigger('change')
+      return
+
 )(jQuery);

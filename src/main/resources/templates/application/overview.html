@@ -50,21 +50,21 @@
 
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success"
-                                             th:style="|width: ${userAccount.approvedVacationDays/userAccount.totalDays * 100}%;|"
+                                             th:style="|width: ${userAccount.totalDays &lt;= 0 ? 0 : userAccount.approvedVacationDays/userAccount.totalDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             title="genehmigte Urlaubstage">
+                                             th:title="|genehmigte Urlaubstage: ${{userAccount.approvedVacationDays}}|">
                                             <span th:text="${{userAccount.approvedVacationDays}}">genehmigte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-warning progress-bar-striped"
-                                             th:style="|width: ${userAccount.pendingVacationDays/userAccount.totalDays * 100}%;|"
+                                             th:style="|width: ${userAccount.totalDays &lt;= 0 ? 0 : userAccount.pendingVacationDays/userAccount.totalDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             title="beantragte Urlaubstage">
+                                             th:title="|beantragte Urlaubstage: ${{userAccount.pendingVacationDays}}|">
                                             <span th:text="${{userAccount.pendingVacationDays}}">beantragte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-empty"
-                                             th:style="|width: ${userAccount.openVacationDays/userAccount.totalDays * 100}%;|"
+                                             th:style="|width: ${userAccount.totalDays &lt;= 0 ? 0 : userAccount.openVacationDays/userAccount.totalDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             title="noch verfügbare Urlaubstage">
+                                             th:title="|noch verfügbare Urlaubstage: ${{userAccount.openVacationDays}}|">
                                             <span th:text="${{userAccount.openVacationDays}}">noch verfügbare Urlaubstage</span>
                                         </div>
                                     </div>
@@ -117,19 +117,11 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">Info-Panel</div>
                         <div class="panel-body">
-                            <div class="list-group module employee-filter" id="employee-filter">
-                                <h3 class="list-group-item">
-                                    Mitarbeiter
-                                </h3>
-
-                                <select class="form-control tag-filter" style="width: 100%;" multiple="multiple"
-                                        name="employee" id="employee" data-placeholder="Filtern nach..">
-                                    <option th:each="user : ${users}"
-                                            th:value="${user.id}"
-                                            th:text="${user.lastname +', '+ user.firstname}">
-                                    </option>
-                                </select>
-                            </div>
+                            <form th:action="@{/overview}" role="form" method="post">
+                                <div th:include="components/employeeFilter :: employeeFilter">
+                                    employeeFilter
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
