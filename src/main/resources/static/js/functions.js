@@ -138,6 +138,7 @@
   (function($) {
     $('[data-toggle="tooltip"]').tooltip();
     $('#employees').select2();
+    $('#employees').off('select2-opening');
     $('.select2-search__field').focus();
     $('#employees').on('select2:unselecting', function(e) {
       $(this).data('state', 'unselected');

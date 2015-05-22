@@ -1,7 +1,7 @@
 package de.maredit.tar.controllers;
 
 import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserAccount;
+import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
@@ -39,21 +39,18 @@ public class OverviewController {
   @Autowired
   private UserService userService;
 
-  @Autowired
-  private UserRepository userRepository;
-
   @RequestMapping("/overview")
   public String overview(Model model,
                          @RequestParam(value = "employees", required = false) ArrayList<User> filteredUsers) {
     LOG.trace("Filtered users: {}", filteredUsers);
     List<User> allUsers = userService.getSortedUserList();
-    List<UserAccount> userAccounts = null;
+    List<UserVacationAccount> userVacationAccounts = null;
     if (filteredUsers == null || filteredUsers.isEmpty()) {
-      userAccounts = userService.getUserAccountsForYear(
+      userVacationAccounts = userService.getUserVacationAccountsForYear(
           allUsers, LocalDate.now().getYear());
       filteredUsers = new ArrayList<User>();
     } else {
-      userAccounts = userService.getUserAccountsForYear(
+      userVacationAccounts = userService.getUserVacationAccountsForYear(
           filteredUsers, LocalDate.now().getYear());
     }
 
@@ -62,7 +59,7 @@ public class OverviewController {
     model.addAttribute("buildnumber", versionProperties.getBuild());
     model.addAttribute("users", allUsers);
     model.addAttribute("filteredUsers", filteredUsers);
-    model.addAttribute("userAccounts", userAccounts);
+    model.addAttribute("userVacationAccounts", userVacationAccounts);
 
     return "application/overview";
   }

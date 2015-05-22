@@ -1,7 +1,7 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserAccount;
+import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
@@ -44,28 +44,29 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserAccount getUserAccountForYear(User user, int year) {
-    UserAccount account = new UserAccount();
+  public UserVacationAccount getUserVacationAccountForYear(User user, int year) {
+    UserVacationAccount vacationAccount = new UserVacationAccount();
     List<Vacation> vacations = getVacationsForUserAndYear(user, year);
     List<Vacation> previousVacations = getVacationsForUserAndYear(user, year - 1);
 
-    account.setUser(user);
-    account.setVacations(vacations);
-    account.setApprovedVacationDays(getApprovedVacationDays(vacations));
-    account.setPendingVacationDays(getPendingVacationDays(vacations));
-    account.setOpenVacationDays(getOpenVacationDays(vacations));
-    account.setPreviousYearOpenVacationDays(getPreviousYearOpenVacationDays(previousVacations));
+    vacationAccount.setUser(user);
+    vacationAccount.setVacations(vacations);
+    vacationAccount.setApprovedVacationDays(getApprovedVacationDays(vacations));
+    vacationAccount.setPendingVacationDays(getPendingVacationDays(vacations));
+    vacationAccount.setOpenVacationDays(getOpenVacationDays(vacations));
+    vacationAccount
+        .setPreviousYearOpenVacationDays(getPreviousYearOpenVacationDays(previousVacations));
 
-    return account;
+    return vacationAccount;
   }
 
   @Override
-  public List<UserAccount> getUserAccountsForYear(List<User> users, int year) {
-    List<UserAccount> accounts = new ArrayList<UserAccount>();
+  public List<UserVacationAccount> getUserVacationAccountsForYear(List<User> users, int year) {
+    List<UserVacationAccount> vacationAccounts = new ArrayList<UserVacationAccount>();
     for (User user : users) {
-      accounts.add(getUserAccountForYear(user, year));
+      vacationAccounts.add(getUserVacationAccountForYear(user, year));
     }
-    return accounts;
+    return vacationAccounts;
   }
 
   @Override
@@ -79,7 +80,8 @@ public class UserServiceImpl implements UserService {
 
   /**
    * Helper method to retrieve the amount of approved vacation days for a list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is
+   * done!
    *
    * @param vacations the list to analyze
    * @return the amount of approved vacation days
@@ -92,7 +94,8 @@ public class UserServiceImpl implements UserService {
   /**
    * Helper method to retrieve the amount of pending vacation days (which are already planned but
    * not accepted yet) for a list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   * !!!!! WARNING: Those methods do have to be changed,
+   * as soon as automatic calculation of vacation is done!
    *
    * @param vacations the list to analyze
    * @return the amount of pending vacation days
@@ -107,7 +110,8 @@ public class UserServiceImpl implements UserService {
   /**
    * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
    * list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic
+   * calculation of vacation is done!
    *
    * @param vacations the list to analyze
    * @return the amount of open vacation days
@@ -118,7 +122,7 @@ public class UserServiceImpl implements UserService {
             .filter(vacation -> vacation.getCreated().getYear() == LocalDate.now().getYear())
             .filter(vacation -> vacation.getState() != State.CANCELED
                                 && vacation.getState() != State.REJECTED)
-        .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
+            .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
 
     return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
   }
@@ -126,7 +130,8 @@ public class UserServiceImpl implements UserService {
   /**
    * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
    * list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is done!
+   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic
+   * calculation of vacation is done!
    *
    * @param vacations the list to analyze
    * @return the amount of open vacation days

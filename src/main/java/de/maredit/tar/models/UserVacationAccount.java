@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by czillmann on 19.05.15.
  */
-public class UserAccount {
+public class UserVacationAccount {
 
   private User user;
   private List<Vacation> vacations;
