@@ -1,13 +1,12 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.beans.NavigationBean;
-
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.VacationRepository;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +46,8 @@ public class CalendarController {
   @Autowired
   private VersionProvider versionProvider;
 
-  @Autowired
-  private NavigationBean navigationBean;
-
   @RequestMapping("/calendar")
   public String calendar(Model model) {
-    navigationBean.setActiveComponent(NavigationBean.CALENDAR_PAGE);
     List<Vacation> vacations = this.vacationRepository.findAll();
 
     model.addAttribute("vacations", vacations);
