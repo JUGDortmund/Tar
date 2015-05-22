@@ -1,7 +1,7 @@
 package de.maredit.tar.models.enums;
 
 public enum State {
-  REQUESTED_SUBSTITUTE("pending"), WAITING_FOR_APPROVEMENT("pending"), APPROVED("approved"), REJECTED(
+  REQUESTED_SUBSTITUTE("pending-substitute"), WAITING_FOR_APPROVEMENT("pending-approvement"), APPROVED("approved"), REJECTED(
       "rejected"), ERROR("error"), CANCELED("canceled");
 
   private final String value;
