@@ -9,14 +9,13 @@ Embedded MongoDB runs on port 28018 (when in dev profile)
 The application defines five configuration environments (called "Profiles" in Spring context): _dev_, _demo_, _test_, _seviceTest_ and _prod_. Each individual profile can be configured by editing the application.yml in src/main/resources.
 
 By default, the application runs in _dev_ profile. This is configured in the first lines in application.yml. For each profile a seperate configuration file has to be named with a starting
-"application-" and the profile name. To disable connections to external services, include "dummyServices" in profile. It can be specified by "dummyLdapService" and "dummyMailService".
+"application-" and the profile name. To disable connections to external services, include "dummyServices" in profile. It can be specified by "dummyLdapService", "dummyCalenderService" and "dummyMailService".
 
 The default profile can be overwritten by setting the following system property from the command line:
 
 	-Dspring.profiles.active=
 
-To overwrite the active profile is recommended when using prod oder demo environment.
-The demo profile uses dummy users and sends every mail to adresses at "mailinator.com". 
+To overwrite the active profile is recommended when using other profiles than "localDev" environment.
 
 To use the _test_ profile, all test classes have to use the following annotation:
 
@@ -28,7 +27,7 @@ To use the _serviceTest_ profile, all test classes which are used to test extern
 
 ## Login
 
-When starting the application in _dev_ or _dummy_ profile, the authentication is using a local user management with defined users in _dummy-user.yaml_.
+When starting the application in a profiles that uses the dummyLdapService (like _localDev_, _dev_ or _stage_), the authentication is using a local user management with defined users in _dummy-user.yaml_.
 There are only three users "user1", "user2" and "supervisor" with password "login". When using other profiles, the LDAP-authentication is required and a group-mapping to application authorities in the _group-mapping.yaml_ has to be configured.
 
 
