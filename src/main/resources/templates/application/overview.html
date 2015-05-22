@@ -18,9 +18,11 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-
                 <div class="col-xs-12 col-sm-8 module employee-overview">
-
+                    <p class="pull-right visible-xs info-toggle">
+                        <button type="button" class="btn btn-primary btn-xs offcanvas-toggle" data-toggle="filter">Filter</button>
+                    </p>
+                    
                     <div class="panel-group" id="accordion" role="tablist">
                         <!-- ein mitarbeiter -->
                         <div class="panel" th:each="userVacationAccount, iterator : ${userVacationAccounts}">
