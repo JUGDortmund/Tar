@@ -22,21 +22,35 @@
 				th:text="#{field.newVacation}"></th></a>
 		</div>
 		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-4" th:include="components/taskList :: taskList">
+
+			<div class="row"
+				th:with="colClass=${ ( substitutesForApproval.size() + approvals.size() ) > 0} ? col-md-4 : col-md-6">
+
+				<div class="col-md-4" th:include="components/taskList :: taskList"
+					th:if="${ ( substitutesForApproval.size() + approvals.size() ) > 0}">
 					taskList</div>
 
-				<div class="col-md-4"
+				<div th:class="${colClass}"
 					th:include="components/vacationList :: vacationList">
 					vacationList</div>
 
-				<div class="col-md-4" id="vacation-form-panel"
+				<div th:class="${colClass}" id="vacation-form-panel"
 					th:include="components/vacationForm :: vacationForm">
 					vacationForm</div>
+
 			</div>
+
 		</div>
 
 	</section>
+
+	<div class="col-md-4" id="vacation-form-panel"
+		th:include="components/vacationForm :: vacationForm">
+		vacationForm</div>
+</div>
+</div>
+
+</section>
 
 </div>
 

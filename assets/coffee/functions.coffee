@@ -23,6 +23,8 @@ refreshVacationForm = (data) ->
      "autoclose" : true
   }) 
 
+  $('[data-toggle="tooltip"]').tooltip()
+
   $('.panel-default select').select2()
 
   $('.autosubmit').on 'change', ->
