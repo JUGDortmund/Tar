@@ -37,7 +37,6 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
       UserRepository userRepository = event.getApplicationContext().getBean(UserRepository.class);
       ProtocolItemRepository protocolItemRepository = event.getApplicationContext().getBean(ProtocolItemRepository.class);
       CommentItemRepository commentItemRepository = event.getApplicationContext().getBean(CommentItemRepository.class);
-      TimelineItemRepository timelineItemRepository = event.getApplicationContext().getBean(TimelineItemRepository.class);
       VacationRepository vacationRepository =
           event.getApplicationContext().getBean(VacationRepository.class);
       LdapService ldapService = event.getApplicationContext().getBean(LdapService.class);
@@ -89,12 +88,6 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         commentItem.setText("TEST TEXT FUER KOMMENTAR!!!!111eins");
         commentItem.setModifed(LocalDateTime.now());
         commentItemRepository.save(commentItem);
-
-        List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
-        allTimeline.addAll(commentItemRepository.findAllByVacation(v1));
-        allTimeline.addAll(protocolItemRepository.findAllByVacation(v1));
-
-        System.out.println("------->  ANZAHL DER EINTRÄGE: " + allTimeline.size());
       }
     }
   }

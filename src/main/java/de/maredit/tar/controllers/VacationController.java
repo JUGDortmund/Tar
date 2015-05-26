@@ -2,6 +2,7 @@ package de.maredit.tar.controllers;
 
 import com.unboundid.ldap.sdk.LDAPException;
 
+import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
@@ -9,6 +10,8 @@ import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
+import de.maredit.tar.repositories.CommentItemRepository;
+import de.maredit.tar.repositories.ProtocolItemRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
@@ -61,6 +64,12 @@ public class VacationController extends WebMvcConfigurerAdapter {
   private UserRepository userRepository;
 
   @Autowired
+  private ProtocolItemRepository protocolItemRepository;
+
+  @Autowired
+  private CommentItemRepository commentItemRepository;
+
+  @Autowired
   private MailService mailService;
 
   @Autowired
@@ -98,33 +107,36 @@ public class VacationController extends WebMvcConfigurerAdapter {
     setIndexModelValues(model, selectedUser);
 
     model.addAttribute("formMode", FormMode.NEW);
+    model.addAttribute("timeLineItems", new ArrayList<TimelineItem>());
     return "application/index";
   }
 
   @RequestMapping("/substitution")
   public String substitution(@ModelAttribute("vacation") Vacation vacation,
-                             @RequestParam(value = "approve") boolean approve) {
+                             @RequestParam(value = "approve") boolean approve, Model model) {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
 
     MailObject mail =
         (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
     this.mailService.sendMail(mail);
-
+    List<TimelineItem> allTimeline = getTimelineItems(vacation);
+    model.addAttribute("timeLineItems", allTimeline);
     return "redirect:/";
   }
 
   @RequestMapping("/approval")
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation,
-                         @RequestParam(value = "approve") boolean approve) {
+                         @RequestParam(value = "approve") boolean approve, Model model) {
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
 
     MailObject mail =
         (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
     this.mailService.sendMail(mail);
-
+    List<TimelineItem> allTimeline = getTimelineItems(vacation);
+    model.addAttribute("timeLineItems", allTimeline);
     return "redirect:/";
   }
 
@@ -132,6 +144,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
   public String vacation(@ModelAttribute("vacation") Vacation vacation,
                          @RequestParam(value = "action", required = false) String action,
                          Model model) {
+    List<TimelineItem> allTimeline = getTimelineItems(vacation);
+    model.addAttribute("timeLineItems", allTimeline);
     switch (action) {
       case "edit":
         model.addAttribute("users", getSortedUserList());
@@ -206,6 +220,13 @@ public class VacationController extends WebMvcConfigurerAdapter {
     this.mailService.sendMail(mail);
 
     return "redirect:/";
+  }
+
+  private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
+    List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
+    allTimeline.addAll(commentItemRepository.findAllByVacation(vacation));
+    allTimeline.addAll(protocolItemRepository.findAllByVacation(vacation));
+    return allTimeline;
   }
 
   private void setIndexModelValues(Model model, User selectedUser) {

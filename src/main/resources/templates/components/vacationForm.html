@@ -260,17 +260,11 @@ edit-vacation, approve-vacation  -->
                     <div class="box-header ui-sortable-handle">
                         <i class="fa fa-comments-o"></i>
 
-                        <h3 class="box-title">Letzte Aktivitäten <a class="flip">more..</a></h3>
+                        <h3 class="box-title">Letzte Aktivitäten</h3>
 
-                        <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
-                            <button type="button" class="btn btn-default btn-sm flip">
-                                more
-                            </button>
-                        </div>
                     </div>
                     <div class="panel-body slimScrollDiv">
                         <ul class="timeline">
-
                             <!-- timeline time label -->
                             <li class="time-label">
                                 <span class="bg-red">
@@ -279,7 +273,18 @@ edit-vacation, approve-vacation  -->
                             </li>
                             <!-- /.timeline-label -->
 
-                            <!-- timeline item -->
+                            <!-- timeline items -->
+                            <li th:each="timeLineItem : ${timeLineItems}">
+                                <th:block th:switch="${timeLineItem}">
+                                    <!--/* new */-->
+                                    <th:block th:case="${timeLineItem instanceof T(de.maredit.tar.models.ProtocolItem)">
+
+                                    </th:block>
+                                </th:block>
+                            </li>
+
+
+
                             <li>
                                 <!-- timeline icon -->
                                 <i class="glyphicon glyphicon-user bg-blue"></i>
@@ -293,25 +298,6 @@ edit-vacation, approve-vacation  -->
                                 </div>
                             </li>
                             <!-- END timeline item -->
-
-                            <!-- timeline item -->
-                            <li>
-                                <!-- timeline icon -->
-                                <i class="fa fa-envelope bg-blue"></i>
-
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                                    <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
-                                        Kommentar hinzugefügt</h3>
-
-                                    <div class="timeline-body">
-                                        "Brauche dringend Urlaub..."
-                                    </div>
-                                </div>
-                            </li>
-                            <!-- END timeline item -->
-
 
 
 
