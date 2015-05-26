@@ -192,55 +192,75 @@ edit-vacation, approve-vacation  -->
 
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-xs-12 form-group">
-                    <label for="comment">Kommentar</label>
-                    <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
+                    <th:block th:switch="${formMode}">
+                        <!--/* new */-->
+                        <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).NEW}">
+                            <button type="submit" class="btn btn-success pull-right">
+                                beantragen
+                            </button>
+                        </th:block>
+                        <!--/* edit */-->
+                        <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
+                            <th:block th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
+                                <a th:href="@{/cancelVacation(id=${vacation.id})}"
+                                   onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
+                                   class="btn btn-danger">
+                                    stornieren
+                                </a>
+                                <button type="submit" class="btn btn-success pull-right">
+                                    ändern
+                                </button>
+                            </th:block>
+                        </th:block>
+
+                        <!--/* substitute */-->
+                        <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
+                            <a th:href="@{/substitution(id=${vacation.id}, approve=false)}"
+                               onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
+                               class="btn btn-danger">ablehnen</a>
+                            <a th:href="@{/substitution(id=${vacation.id}, approve=true)}"
+                               onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
+                               class="btn btn-success pull-right">Vertretung annehmen</a>
+                        </th:block>
+                        <!--/* manager */-->
+                        <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL}">
+                            <a th:href="@{/approval(id=${vacation.id}, approve=false)}"
+                               onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');"
+                               class="btn btn-danger">ablehnen</a>
+                            <a th:href="@{/approval(id=${vacation.id}, approve=true)}"
+                               onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');"
+                               class="btn btn-success pull-right">Urlaub genehmigen</a>
+                        </th:block>
+                    </th:block>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <div class="box box-solid bg-light-blue-gradient collapsed-box">
+                        <div class="box-header">
+                            <!-- tools box -->
+                            <div class="pull-right box-tools">
+                                <button style="margin-right: 5px;" title="" data-toggle="tooltip" data-widget="collapse" class="btn btn-primary btn-sm pull-right" data-original-title="Collapse">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div><!-- /. tools -->
 
-            <th:block th:switch="${formMode}">
-                <!--/* new */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).NEW}">
-                    <button type="submit" class="btn btn-success pull-right">
-                        beantragen
-                    </button>
-                </th:block>
-                <!--/* edit */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
-                    <th:block th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
-                        <a th:href="@{/cancelVacation(id=${vacation.id})}"
-                           onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
-                           class="btn btn-danger">
-                            stornieren
-                        </a>
-                        <button type="submit" class="btn btn-success pull-right">
-                            ändern
-                        </button>
-                    </th:block>
-                </th:block>
+                            <i class="fa fa-map-marker"></i>
+                            <h3 class="box-title">
+                                Kommentare und &Auml;nderungen
+                            </h3>
+                        </div>
+                        <div class="box-body" style="display: none;">
+                            <div style="height: 250px; width: 100%;" id="world-map"></div>
+                        </div>
+                        <div class="box-footer no-border" style="display: none;">
 
-                <!--/* substitute */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
-                    <a th:href="@{/substitution(id=${vacation.id}, approve=false)}"
-                       onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
-                       class="btn btn-danger">ablehnen</a>
-                    <a th:href="@{/substitution(id=${vacation.id}, approve=true)}"
-                       onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
-                       class="btn btn-success pull-right">Vertretung annehmen</a>
-                </th:block>
-                <!--/* manager */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL}">
-                    <a th:href="@{/approval(id=${vacation.id}, approve=false)}"
-                       onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');"
-                       class="btn btn-danger">ablehnen</a>
-                    <a th:href="@{/approval(id=${vacation.id}, approve=true)}"
-                       onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');"
-                       class="btn btn-success pull-right">Urlaub genehmigen</a>
-                </th:block>
-            </th:block>
-
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
     <!-- panel-body end -->

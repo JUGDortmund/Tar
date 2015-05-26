@@ -157,7 +157,7 @@ public class LdapServiceImpl implements LdapService {
   }
 
   private SearchResult searchForLdapGroups(String uid, LDAPConnection ldapConnection)
-      throws LDAPException, LDAPSearchException {
+      throws LDAPException {
     ldapConnection.bind(ldapProperties.getReadUser(), ldapProperties.getReadPassword());
     SearchRequest searchRequest =
         new SearchRequest(ldapProperties.getGroupLookUpDN(), SearchScope.SUBORDINATE_SUBTREE,

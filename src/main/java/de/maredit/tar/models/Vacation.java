@@ -162,10 +162,7 @@ public class Vacation {
       return false;
     }
     final Vacation other = (Vacation) obj;
-    if (!Objects.equals(this.id, other.id)) {
-      return false;
-    }
-    return true;
+    return Objects.equals(this.id, other.id);
   }
 
   @Override

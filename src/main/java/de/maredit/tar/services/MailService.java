@@ -7,8 +7,8 @@ import de.maredit.tar.services.mail.MailObject;
 @Service
 public interface MailService {
 
-  public void sendMail(MailObject mail);
+  void sendMail(MailObject mail);
 
-  public void sendSimpleMail(MailObject mail);
+  void sendSimpleMail(MailObject mail);
 
 }
