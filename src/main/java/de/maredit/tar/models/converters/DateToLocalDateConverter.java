@@ -16,7 +16,6 @@ public class DateToLocalDateConverter implements Converter<Date, LocalDate> {
 
   @Override
   public LocalDate convert(Date date) {
-    System.out.println(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     return date == null ? null : date.toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
   }
 }
