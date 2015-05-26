@@ -12,6 +12,6 @@ import org.springframework.core.convert.converter.Converter;
 public class LocalDateTimeToDateConverter implements Converter<LocalDateTime, Date> {
 
   public Date convert(LocalDateTime source) {
-    return source == null?null:Date.from(source.atZone(ZoneId.systemDefault()).toInstant());
+    return source == null ? null : Date.from(source.atZone(ZoneId.systemDefault()).toInstant());
   }
 }

@@ -41,11 +41,9 @@ public class VacationApprovedMail implements MailObject {
     values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
-    values.put("manager", vacation.getManager() == null ? "" : vacation.getManager()
-        .getFullname());
+    values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
     values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
-    values.put("toDate",
-               ConversionUtils.convertLocalDateToString(vacation.getTo()));
+    values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
@@ -77,6 +75,16 @@ public class VacationApprovedMail implements MailObject {
     user.getParameters().add(new Cn(vacation.getUser().getFullname()));
     meeting.getProperties().add(user);
     ical.getComponents().add(meeting);
+  }
+
+  @Override
+  public void setCcRecipients(String[] ccRecipients) {
+    this.ccRecipients = ccRecipients;
+  }
+
+  @Override
+  public boolean sendToAdditionalRecipient() {
+    return true;
   }
 
   @Override
@@ -121,8 +129,8 @@ public class VacationApprovedMail implements MailObject {
   @Override
   public String toString() {
     return "VacationApprovedMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-           + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
+        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+        + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
   }
 }

@@ -21,6 +21,12 @@ public interface MailObject {
 
   String[] getToRecipients();
 
+  default void setCcRecipients(String[] ccRecipients) {};
+
+  default boolean sendToAdditionalRecipient() {
+    return false;
+  }
+
   default String retrieveMail(User user) {
     String mail = "";
     if (user != null && user.getMail() != null) {

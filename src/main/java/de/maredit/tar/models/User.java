@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 
+import com.unboundid.util.Base64;
+
 public class User {
 
   @Id
@@ -14,6 +16,7 @@ public class User {
   private String lastname;
   private String username;
   private String mail;
+  private String userImage = null;
   private boolean active;
 
   public User() {}
@@ -74,6 +77,20 @@ public class User {
     this.mail = mail;
   }
 
+  public String getUserImage() {
+    return userImage;
+  }
+
+  public void setPhoto(byte[] imageData) {
+    if (imageData != null) {
+      this.userImage = Base64.encode(imageData);
+    }
+  }
+  
+  public void setUserImage(String userImage) {
+    this.userImage = userImage;
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -100,8 +117,6 @@ public class User {
 
   @Override
   public String toString() {
-    return "User [id=" + id + ", uidNumber=" + uidNumber + ", firstname=" + firstname
-        + ", lastname=" + lastname + ", username=" + username + ", mail=" + mail + ", active="
-        + active + "]";
+    return id;
   }
 }

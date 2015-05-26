@@ -26,10 +26,12 @@ public class VacationCreateMail implements MailObject {
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
     values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
-    values.put("toDate",
-               ConversionUtils.convertLocalDateToString(vacation.getTo()));
+    values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
+    if (!vacation.getAuthor().equals(vacation.getUser())) {
+      values.put("createdBy", vacation.getAuthor().getFullname());
+    }
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getSubstitute()));
@@ -70,8 +72,8 @@ public class VacationCreateMail implements MailObject {
   @Override
   public String toString() {
     return "VacationCreateMail [getTemplate()=" + getTemplate() + ", getHtmlTemplate()="
-           + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
-           + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
-           + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
+        + getHtmlTemplate() + ", getValues()=" + getValues() + ", getCCRecipients()="
+        + Arrays.toString(getCCRecipients()) + ", getSubject()=" + getSubject()
+        + ", getToRecipients()=" + Arrays.toString(getToRecipients()) + "]";
   }
 }

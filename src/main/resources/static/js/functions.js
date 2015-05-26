@@ -79,16 +79,20 @@
 }).call(this);
 
 (function() {
-  var refreshVacationForm;
+  var refreshVacationForm, scrollToVacationForm;
 
-  refreshVacationForm = function(data) {
-    var $myForm, clientWidth;
+  scrollToVacationForm = function() {
+    var clientWidth;
     clientWidth = document.documentElement.clientWidth;
-    if (clientWidth < 770) {
-      $('html, body').animate({
-        scrollTop: ($('.vacation-form').offset().top)
+    if (clientWidth < 761) {
+      return $('html, body').animate({
+        scrollTop: ($('#vacation-form-panel').offset().top)
       }, 'slow');
     }
+  };
+
+  refreshVacationForm = function(data) {
+    var $myForm;
     $myForm = $('#vacation-form-panel');
     $myForm.html(data).hide().fadeIn(800);
     $('.panel-default').matchHeight();
@@ -96,7 +100,8 @@
       "format": "dd.mm.yyyy",
       "autoclose": true
     });
-    return $myForm.find('select').select2();
+    $myForm.find('select').select2();
+    return scrollToVacationForm();
   };
 
   (function($) {
@@ -104,6 +109,7 @@
       "format": "dd.mm.yyyy",
       "autoclose": true
     });
+    $('[data-toggle="tooltip"]').tooltip();
     $('.panel-default select').select2();
     $('.autosubmit').on('change', function() {
       return $(this).closest('form').submit();
@@ -112,7 +118,7 @@
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
     });
-    return $('.vacation-list a, .task-list a').click(function() {
+    return $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
       $.ajax({
         url: $(this).attr('href'),
         dataType: "html",
