@@ -98,7 +98,7 @@ public class UserServiceImplTest {
     List<Vacation>
         borderVacations =
         userService.getVacationsForUserAndYear(user1, 2013);
-    assertEquals(2, borderVacations.size());
+    assertEquals(3, borderVacations.size());
 
   }
 
@@ -251,6 +251,7 @@ public class UserServiceImplTest {
   private List<Vacation> createVacationsWithBorderDates(){
     LocalDate date = LocalDate.of(2013, Month.JANUARY, 1);
     LocalDate firstDayOfYear = date.with(TemporalAdjusters.firstDayOfYear());
+    LocalDate firstDayOfNextYear = date.with(TemporalAdjusters.firstDayOfYear()).plusYears(1);
     LocalDate lastDayOfYear = date.with(TemporalAdjusters.lastDayOfYear());
 
     List<Vacation> vacations = new ArrayList<Vacation>();
@@ -267,7 +268,16 @@ public class UserServiceImplTest {
         new Vacation(user1,lastDayOfYear, lastDayOfYear,
                      null, user1, 0.5, 4.5);
     vacation2.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
+    vacation2.setState(State.APPROVED);
     vacations.add(vacation2);
+
+    Vacation
+        vacation3 =
+        new Vacation(user1,lastDayOfYear, firstDayOfNextYear,
+                     null, user1, 0.5, 4.5);
+    vacation3.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
+    vacation3.setState(State.APPROVED);
+    vacations.add(vacation3);
     return vacations;
   }
 }
