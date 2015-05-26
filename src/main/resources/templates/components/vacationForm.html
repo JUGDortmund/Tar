@@ -262,9 +262,7 @@ edit-vacation, approve-vacation  -->
 
                             <!-- timeline time label -->
                             <li class="time-label">
-                                <span class="bg-yellow">
-                                    10 Feb. 2014
-                                </span>
+                                <span class="bg-yellow">10 Feb. 2014</span>
                             </li>
                             <!-- /.timeline-label -->
 
@@ -274,11 +272,8 @@ edit-vacation, approve-vacation  -->
                                 <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
 
                                 <div class="timeline-item">
-                                    <span class="time"><i class="glyphicon glyphicon-time"></i> 12:05</span>
-
                                     <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
                                         Urlaubsantrag erstellt</h3>
-
                                 </div>
                             </li>
                             <!-- END timeline item -->
@@ -289,8 +284,6 @@ edit-vacation, approve-vacation  -->
                                 <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
 
                                 <div class="timeline-item">
-                                    <span class="time"><i class="glyphicon glyphicon-time"></i> 12:05</span>
-
                                     <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
                                         Kommentar hinzugefügt</h3>
 
@@ -302,14 +295,12 @@ edit-vacation, approve-vacation  -->
                             <!-- END timeline item -->
 
 
-
-
                             <!--/* item to flip the panel */-->
                             <li>
                                 <i class="item-icon glyphicon glyphicon-option-horizontal bg-blue"></i>
 
                                 <div class="timeline-item">
-                                    <h3 class="timeline-header"><button class="flip btn bg-blue">more..</button></h3>
+                                    <h3 class="timeline-header"><button id="more-activities" class="flip btn bg-blue">show more</button></h3>
                                 </div>
                             </li>
                             <!--/* end item to flip the panel */-->
@@ -322,7 +313,6 @@ edit-vacation, approve-vacation  -->
     <div class="panel module dashboard-panel face back invisible"
          th:classappend="${formMode.value}">
         <div class="panel-heading">Urlaubsformular Kommentare</div>
-        <div class="flip">test</div>
         <div class="panel-body">
             <div th:include="components/activities :: activities">
                 activities

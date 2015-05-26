@@ -8,57 +8,83 @@
         <input class="form-control" placeholder="Add comment.."/>
 
         <div class="input-group-btn">
-            <button class="btn btn-success">Add
-            </button>
+            <button class="btn btn-success">Add</button>
         </div>
     </div>
+    <div class="panel-body">
+        <ul class="timeline">
 
-    <ul class="timeline">
+            <!-- timeline time label -->
+            <li class="time-label">
+                <span class="bg-yellow">10 Feb. 2014</span>
+            </li>
+            <!-- /.timeline-label -->
 
-        <!-- timeline time label -->
-        <li class="time-label">
-            <span class="bg-red">
-                10 Feb. 2014
-            </span>
-        </li>
-        <!-- /.timeline-label -->
+            <!-- timeline item -->
+            <li>
+                <!-- timeline icon -->
+                <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
 
-        <!-- timeline item -->
-        <li>
-            <!-- timeline icon -->
-            <i class="glyphicon glyphicon-user bg-blue"></i>
-
-            <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
-                    Urlaubsantrag erstellt</h3>
-
-            </div>
-        </li>
-        <!-- END timeline item -->
-
-        <!-- timeline item -->
-        <li>
-            <!-- timeline icon -->
-            <i class="fa fa-envelope bg-blue"></i>
-
-            <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
-                    Kommentar hinzugefügt</h3>
-
-                <div class="timeline-body">
-                    "Brauche dringend Urlaub..."
+                <div class="timeline-item">
+                    <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
+                        Urlaubsantrag erstellt</h3>
                 </div>
-            </div>
-        </li>
-        <!-- END timeline item -->
+            </li>
+            <!-- END timeline item -->
+
+            <!-- timeline item -->
+            <li>
+                <!-- timeline icon -->
+                <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
+
+                <div class="timeline-item">
+                    <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
+                        Kommentar hinzugefügt</h3>
+                    <div class="timeline-body">
+                        "Brauche dringend Urlaub..."
+                    </div>
+                </div>
+            </li>
+            <!-- END timeline item -->
 
 
-    </ul>
+            <!-- timeline item -->
+            <li>
+                <!-- timeline icon -->
+                <i class="item-icon glyphicon glyphicon-remove bg-blue"></i>
+                <div class="timeline-item">
+                    <h3 class="timeline-header"><a href="#">Claudine Zillmann</a> hat den Urlaubsantrag abgelehnt</h3>
+
+                </div>
+            </li>
+            <!-- END timeline item -->
 
 
+            <!-- timeline item -->
+            <li>
+                <!-- timeline icon -->
+                <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
+                <div class="timeline-item">
+                    <h3 class="timeline-header"><a href="#">Claudine Zillmann</a> hat einen Kommentar hinzugefügt</h3>
+                    <div class="timeline-body">
+                        "Kannste knicken!"
+                    </div>
+                </div>
+            </li>
+            <!-- END timeline item -->
+
+
+            <!--/* item to flip the panel */-->
+            <li>
+                <i class="item-icon glyphicon glyphicon-arrow-left bg-blue"></i>
+
+                <div class="timeline-item">
+                    <h3 class="timeline-header"><button id="more-activities" class="flip btn bg-blue">back</button></h3>
+                </div>
+            </li>
+            <!--/* end item to flip the panel */-->
+        </ul>
+
+    </div>
 </body>
 </html>

@@ -31,10 +31,6 @@
 				content: "\e137";
 			}
 		}
-
-		h3 {
-			color: $task-primary;
-		}
 	}
 
 	&.edit-vacation {
@@ -46,10 +42,6 @@
 			&:after {
 				content: "\e109";
 			}
-		}
-
-		h3 {
-			color: $vacation-edit-primary;
 		}
 	}
 
@@ -107,18 +99,16 @@
 		}
 	}
 
-	.timeline {
-		.item-icon {
-			margin-top: 10px;
-        }
-
-		.timeline-item > .time {
-		 	padding-top: 0px;
-		}
+	.timeline .item-icon {
+		margin-top: 10px;
 	}
 
-	.box > .box-header{
-		background-color: #f5f5f5;
-		font-size: 16px;
+	.box {
+		margin-top: 10px;
+
+		> .box-header{
+			background-color: #f5f5f5;
+			font-size: 16px;
+		}
 	}
 }
