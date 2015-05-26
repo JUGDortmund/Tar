@@ -53,7 +53,7 @@ public class MailMessageComposer {
     messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
     if (attachments != null) {
       for (Attachment attachment : attachments) {
-        messageHelper.addAttachment(attachment.getMimeType(), new ByteArrayDataSource(attachment.getData(), attachment.getMimeType()));
+        messageHelper.addAttachment(attachment.getFilename(), new ByteArrayDataSource(attachment.getData(), attachment.getMimeType()));
       }
     }
     return message;

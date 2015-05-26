@@ -43,7 +43,7 @@ public class MailServiceExchangeImpl implements MailService {
       msg.setBody(MessageBody.getMessageBodyFromText(prepareMailBody(mail, mail.getHtmlTemplate())));
       if (attachments != null) {
         for (Attachment attachment : attachments) {
-          msg.getAttachments().addFileAttachment(attachment.getMimeType(), attachment.getData());
+          msg.getAttachments().addFileAttachment(attachment.getFilename(), attachment.getData());
         }
       }
       msg.send();
