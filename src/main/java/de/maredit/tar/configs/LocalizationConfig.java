@@ -23,7 +23,7 @@ public class LocalizationConfig extends WebMvcConfigurerAdapter {
   @Bean(name = "localeResolver")
   public CookieLocaleResolver localeResolver() {
     CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-    Locale defaultLocale = new Locale("en");
+    Locale defaultLocale = new Locale("de");
     localeResolver.setDefaultLocale(defaultLocale);
     return localeResolver;
   }

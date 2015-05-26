@@ -3,248 +3,236 @@
 
 <body th:fragment="vacationForm">
 
-<!-- Possible additional classes for vacation-form:
+	<!-- Possible additional classes for vacation-form:
 edit-vacation, approve-vacation  -->
-<div class="panel panel-default module dashboard-panel"
-     th:classappend="${formMode.value}">
-    <div class="panel-heading">Urlaubsformular</div>
-    <div class="panel-body">
+	<div class="panel panel-default module dashboard-panel"
+		th:classappend="${formMode.value}">
+		<div class="panel-heading">
+			<th th:text="#{field.vacationForm}"></th>
+		</div>
+		<div class="panel-body">
 
-        <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form"
-              th:with="editable=
+			<form th:action="@{/saveVacation}" th:object="${vacation}"
+				method="post" role="form"
+				th:with="editable=
                     ${(formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT)
                         and (#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
-            <input type="hidden" th:field="*{id}"/>
+				<input type="hidden" th:field="*{id}" />
 
-            <!-- Error-handling: show alert box, when validation fails  -->
-            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
-                <ul>
-                    <li th:each="err : ${#fields.detailedErrors()}"
-                        th:text="${err.fieldName +' '+ err.message}">Input is incorrect
-                    </li>
-                </ul>
-            </div>
+				<!-- Error-handling: show alert box, when validation fails  -->
+				<div class="alert alert-danger" role="alert"
+					th:if="${#fields.hasErrors('*')}">
+					<ul>
+						<li th:each="err : ${#fields.detailedErrors()}"
+							th:text="${err.fieldName +' '+ err.message}">Input is
+							incorrect</li>
+					</ul>
+				</div>
 
-            <div class="row">
-                <div class="col-xs-12 form-group"
-                     th:classappend="${#fields.hasErrors('user')}? 'has-error'">
+				<div class="row">
+					<div class="col-xs-12 form-group"
+						th:classappend="${#fields.hasErrors('user')}? 'has-error'">
 
-                    <label for="employee">
-                        Mitarbeiter
-                        <span th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">*</span>
-                    </label>
+						<label for="employee" th:text="#{field.employee}"> <span
+							th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">*</span>
+						</label>
 
-                    <th:block th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
-                        <select class="form-control" style="width: 100%;" name="employee"
-                                id="employee"
-                                th:field="*{user}">
-                            <option th:each="user : ${users}"
-                                    th:value="${user.id}"
-                                    th:text="${user.lastname +', '+ user.firstname}">
-                            </option>
-                        </select>
-                    </th:block>
-                    <th:block th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
-                        <input type="text" class="form-control"
-                               th:value="*{user.lastname + ', ' + user.firstname}"
-                               disabled="disabled"/>
-                        <input type="hidden" th:field="*{user}"/>
-                    </th:block>
+						<th:block
+							th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
+							<select class="form-control" style="width: 100%;" name="employee"
+								id="employee" th:field="*{user}">
+								<option th:each="user : ${users}" th:value="${user.id}"
+									th:text="${user.lastname +', '+ user.firstname}"></option>
+							</select>
+						</th:block>
+						<th:block
+							th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
+							<input type="text" class="form-control"
+								th:value="*{user.lastname + ', ' + user.firstname}"
+								disabled="disabled" />
+							<input type="hidden" th:field="*{user}" />
+						</th:block>
 
-                </div>
-            </div>
+					</div>
+				</div>
 
-            <div class="row">
-                <div class="col-xs-6 form-group"
-                     th:classappend="${#fields.hasErrors('from')}? 'has-error'">
-                    <label for="dateFrom">
-                        von
-                        <span th:if="${editable}">*</span>
-                    </label>
+				<div class="row">
+					<div class="col-xs-6 form-group"
+						th:classappend="${#fields.hasErrors('from')}? 'has-error'">
+						<label for="dateFrom" th:text="#{field.dateFrom}"> <span
+							th:if="${editable}">*</span>
+						</label>
 
-                    <th:block th:if="${editable}">
-                        <div class="input-group date">
-                            <input type="text" class="form-control" name="dateFrom" id="dateFrom"
-                                   th:field="*{from}"/>
-                            <span class="input-group-addon"><i
-                                    class="glyphicon glyphicon-th"></i></span>
-                        </div>
-                    </th:block>
-                    <th:block th:unless="${editable}">
-                        <input type="text" class="form-control" th:field="*{from}"
-                               disabled="disabled"/>
-                    </th:block>
-                </div>
+						<th:block th:if="${editable}">
+							<div class="input-group date">
+								<input type="text" class="form-control" name="dateFrom"
+									id="dateFrom" th:field="*{from}" /> <span
+									class="input-group-addon"><i
+									class="glyphicon glyphicon-th"></i></span>
+							</div>
+						</th:block>
+						<th:block th:unless="${editable}">
+							<input type="text" class="form-control" th:field="*{from}"
+								disabled="disabled" />
+						</th:block>
+					</div>
 
-                <div class="col-xs-6 form-group"
-                     th:classappend="${#fields.hasErrors('to')}? 'has-error'">
-                    <label for="dateTo">
-                        bis
-                        <span th:if="${editable}">*</span>
-                    </label>
+					<div class="col-xs-6 form-group"
+						th:classappend="${#fields.hasErrors('to')}? 'has-error'">
+						<label for="dateTo" th:text="#{field.dateTo}"> <span
+							th:if="${editable}">*</span>
+						</label>
 
-                    <th:block th:if="${editable}">
-                        <div class="input-group date">
-                            <input type="text" class="form-control" name="dateTo" id="dateTo"
-                                   th:field="*{to}"/>
-                            <span class="input-group-addon"><i
-                                    class="glyphicon glyphicon-th"></i></span>
-                        </div>
-                    </th:block>
-                    <th:block th:unless="${editable}">
-                        <input type="text" class="form-control" th:field="*{to}"
-                               disabled="disabled"/>
-                    </th:block>
-                </div>
-            </div>
+						<th:block th:if="${editable}">
+							<div class="input-group date">
+								<input type="text" class="form-control" name="dateTo"
+									id="dateTo" th:field="*{to}" /> <span class="input-group-addon"><i
+									class="glyphicon glyphicon-th"></i></span>
+							</div>
+						</th:block>
+						<th:block th:unless="${editable}">
+							<input type="text" class="form-control" th:field="*{to}"
+								disabled="disabled" />
+						</th:block>
+					</div>
+				</div>
 
-            <div class="row">
-                <div class="col-xs-6 form-group"
-                     th:classappend="${#fields.hasErrors('days')}? 'has-error'">
-                    <label for="vacationDays">
-                        Anzahl Urlaubstage
-                        <span th:if="${editable}">*</span>
-                    </label>
+				<div class="row">
+					<div class="col-xs-6 form-group"
+						th:classappend="${#fields.hasErrors('days')}? 'has-error'">
+						<label for="vacationDays" th:text="#{field.vacationDays}">
+							<span th:if="${editable}">*</span>
+						</label>
 
-                    <th:block th:if="${editable}">
-                        <input type="number" class="form-control" name="vacationDays"
-                               id="vacationDays"
-                               step="0.5"
-                               th:field="*{days}"/>
-                    </th:block>
-                    <th:block th:unless="${editable}">
-                        <input class="form-control" name="vacationDays"
-                               type="number" disabled="disabled"
-                               th:field="*{days}"/>
-                    </th:block>
+						<th:block th:if="${editable}">
+							<input type="number" class="form-control" name="vacationDays"
+								id="vacationDays" step="0.5" th:field="*{days}" />
+						</th:block>
+						<th:block th:unless="${editable}">
+							<input class="form-control" name="vacationDays" type="number"
+								disabled="disabled" th:field="*{days}" />
+						</th:block>
 
-                </div>
+					</div>
 
-                <div class="col-xs-6 form-group"
-                     th:classappend="${#fields.hasErrors('daysLeft')}? 'has-error'">
-                    <label for="daysLeft">
-                        Verbleibende Urlaubstage
-                        <span th:if="${editable}">*</span>
-                    </label>
-                    <th:block th:if="${editable}">
-                        <input type="number" class="form-control" name="daysLeft" id="daysLeft"
-                               step="0.5"
-                               th:field="*{daysLeft}"/>
-                    </th:block>
-                    <th:block th:unless="${editable}">
-                        <input class="form-control" name="vacationDays"
-                               type="number" disabled="disabled"
-                               th:field="*{daysLeft}"/>
-                    </th:block>
-                </div>
-            </div>
+					<div class="col-xs-6 form-group"
+						th:classappend="${#fields.hasErrors('daysLeft')}? 'has-error'">
+						<label for="daysLeft" th:text="#{field.vacationDaysLeft}">
+							<span th:if="${editable}">*</span>
+						</label>
+						<th:block th:if="${editable}">
+							<input type="number" class="form-control" name="daysLeft"
+								id="daysLeft" step="0.5" th:field="*{daysLeft}" />
+						</th:block>
+						<th:block th:unless="${editable}">
+							<input class="form-control" name="vacationDays" type="number"
+								disabled="disabled" th:field="*{daysLeft}" />
+						</th:block>
+					</div>
+				</div>
 
-            <div class="row">
-                <div class="col-xs-12 form-group"
-                     th:classappend="${#fields.hasErrors('substitute')}? 'has-error'">
-                    <label for="replacement">Vertreter</label>
+				<div class="row">
+					<div class="col-xs-12 form-group"
+						th:classappend="${#fields.hasErrors('substitute')}? 'has-error'">
+						<label for="replacement" th:text="#{field.replacement}"></label>
 
-                    <th:block th:if="${editable}">
-                        <select class="form-control" style="width: 100%;" name="replacement"
-                                id="replacement"
-                                th:field="*{substitute}">
-                            <option value="" selected="selected">- Vertreter auswählen -</option>
-                            <option th:each="substitute : ${users}"
-                                    th:value="${substitute.id}"
-                                    th:text="${substitute.lastname +', '+ substitute.firstname}">
-                            </option>
-                        </select>
-                    </th:block>
-                    <th:block
-                            th:unless="${editable}">
-                        <input type="text" class="form-control"
-                               th:value="*{substitute != null ? substitute.lastname + ', ' + substitute.firstname : ''}"
-                               disabled="disabled"/>
-                    </th:block>
-                </div>
-            </div>
+						<th:block th:if="${editable}">
+							<select class="form-control" style="width: 100%;"
+								name="replacement" id="replacement" th:field="*{substitute}">
+								<option value="" selected="selected">-
+									<th th:text="#{field.selectReplacement}"></th> -
+								</option>
+								<option th:each="substitute : ${users}"
+									th:value="${substitute.id}"
+									th:text="${substitute.lastname +', '+ substitute.firstname}">
+								</option>
+							</select>
+						</th:block>
+						<th:block th:unless="${editable}">
+							<input type="text" class="form-control"
+								th:value="*{substitute != null ? substitute.lastname + ', ' + substitute.firstname : ''}"
+								disabled="disabled" />
+						</th:block>
+					</div>
+				</div>
 
-            <div class="row">
-                <div class="col-xs-12 form-group"
-                     th:classappend="${#fields.hasErrors('manager')}? 'has-error'">
-                    <label for="superior">
-                        Zuständiger Vorgesetzter
-                        <span th:if="${editable}">*</span>
-                    </label>
+				<div class="row">
+					<div class="col-xs-12 form-group"
+						th:classappend="${#fields.hasErrors('manager')}? 'has-error'">
+						<label for="superior" th:text="#{field.superior}"> <span
+							th:if="${editable}">*</span>
+						</label>
 
-                    <th:block th:if="${editable}">
-                        <select class="form-control" style="width: 100%;" name="superior"
-                                id="superior"
-                                th:field="*{manager}">
-                            <option value="" selected="selected">- Vorgesetzten auswählen -</option>
-                            <option th:each="manager : ${managers}"
-                                    th:value="${manager.id}"
-                                    th:text="${manager.lastname +', '+ manager.firstname}">
-                            </option>
-                        </select>
-                    </th:block>
-                    <th:block
-                            th:unless="${editable}">
-                        <input type="text" class="form-control"
-                               th:value="*{manager.lastname +', '+ manager.firstname}"
-                               disabled="disabled"/>
-                    </th:block>
+						<th:block th:if="${editable}">
+							<select class="form-control" style="width: 100%;" name="superior"
+								id="superior" th:field="*{manager}">
+								<option value="" selected="selected">- <th th:text="#{field.selectSuperior}"></th> -</option>
+								<option th:each="manager : ${managers}" th:value="${manager.id}"
+									th:text="${manager.lastname +', '+ manager.firstname}">
+								</option>
+							</select>
+						</th:block>
+						<th:block th:unless="${editable}">
+							<input type="text" class="form-control"
+								th:value="*{manager.lastname +', '+ manager.firstname}"
+								disabled="disabled" />
+						</th:block>
 
-                </div>
-            </div>
+					</div>
+				</div>
 
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    <label for="comment">Kommentar</label>
-                    <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
-                </div>
-            </div>
+				<div class="row">
+					<div class="col-xs-12 form-group">
+						<label for="comment" th:text="#{field.comment}"></label>
+						<textarea class="form-control" rows="5" name="comment"
+							id="comment"></textarea>
+					</div>
+				</div>
 
-            <th:block th:switch="${formMode}">
-                <!--/* new */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).NEW}">
-                    <button type="submit" class="btn btn-success pull-right">
-                        beantragen
-                    </button>
-                </th:block>
-                <!--/* edit */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
-                    <th:block th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
-                        <a th:href="@{/cancelVacation(id=${vacation.id})}"
-                           onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
-                           class="btn btn-danger">
-                            stornieren
-                        </a>
-                        <button type="submit" class="btn btn-success pull-right">
-                            ändern
-                        </button>
-                    </th:block>
-                </th:block>
+				<th:block th:switch="${formMode}">
+					<!--/* new */-->
+					<th:block th:case="${T(de.maredit.tar.models.enums.FormMode).NEW}">
+						<button type="submit" class="btn btn-success pull-right">
+							<th th:text="#{field.applyFor}"></th></button>
+					</th:block>
+					<!--/* edit */-->
+					<th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
+						<th:block
+							th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
+							<a th:href="@{/cancelVacation(id=${vacation.id})}"
+								onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
+								class="btn btn-danger"> <th th:text="#{field.cancel}"></th> </a>
+							<button type="submit" class="btn btn-success pull-right">
+								<th th:text="#{field.change}"></th></button>
+						</th:block>
+					</th:block>
 
-                <!--/* substitute */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
-                    <a th:href="@{/substitution(id=${vacation.id}, approve=false)}"
-                       onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
-                       class="btn btn-danger">ablehnen</a>
-                    <a th:href="@{/substitution(id=${vacation.id}, approve=true)}"
-                       onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
-                       class="btn btn-success pull-right">Vertretung annehmen</a>
-                </th:block>
-                <!--/* manager */-->
-                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL}">
-                    <a th:href="@{/approval(id=${vacation.id}, approve=false)}"
-                       onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');"
-                       class="btn btn-danger">ablehnen</a>
-                    <a th:href="@{/approval(id=${vacation.id}, approve=true)}"
-                       onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');"
-                       class="btn btn-success pull-right">Urlaub genehmigen</a>
-                </th:block>
-            </th:block>
+					<!--/* substitute */-->
+					<th:block
+						th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
+						<a th:href="@{/substitution(id=${vacation.id}, approve=false)}"
+							onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
+							class="btn btn-danger"><th th:text="#{field.reject}"></th></a>
+						<a th:href="@{/substitution(id=${vacation.id}, approve=true)}"
+							onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
+							class="btn btn-success pull-right"><th th:text="#{field.reject}"></th></a>
+					</th:block>
+					<!--/* manager */-->
+					<th:block
+						th:case="${T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL}">
+						<a th:href="@{/approval(id=${vacation.id}, approve=false)}"
+							onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');"
+							class="btn btn-danger"><th th:text="#{field.acceptRepresetation}"></th></a>
+						<a th:href="@{/approval(id=${vacation.id}, approve=true)}"
+							onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');"
+							class="btn btn-success pull-right"><th th:text="#{field.acceptVacation}"></th></a>
+					</th:block>
+				</th:block>
 
-        </form>
-    </div>
-    <!-- panel-body end -->
-</div>
+			</form>
+		</div>
+		<!-- panel-body end -->
+	</div>
 
 </body>
 </html>

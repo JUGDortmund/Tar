@@ -52,26 +52,24 @@
 								</div>
 								<div class="list-group-item checkbox filter-pending">
 									<label> <input type="checkbox" id="showPending"
-										th:text="#{field.approvedVacations}" />
+										th:text="#{field.vacationsApplied}" />
 									</label>
 								</div>
-								<div class="
-										list-group-item checkboxfilter-cancelled">
+								<div class="list-group-item checkbox filter-cancelled">
 									<label> <input type="checkbox" id="showCanceled"
-										th:text="#{field.approvedVacations}" />
+										th:text="#{field.canceledVacations}" />
 									</label>
 								</div>
-								<div class="
-											list-group-item checkboxfilter-rejected">
+								<div class="list-group-item checkbox filter-rejected">
 									<label> <input type="checkbox" id="showRejected"
-										th:text="#{field.approvedVacations}" />
+										th:text="#{field.rejectedVacations}" />
 									</label>
 								</div>
 							</div>
 
 							<div class="
 												list-group" id="vacationDetail">
-								<h3 class="list-group-item">Urlaubsdetails</h3>
+								<h3 class="list-group-item"><th th:text="#{field.vacationDetails}"></th></h3>
 								<div class="list-group-item module vacation-detail">
 									<ul>
 										<li><strong>Mitarbeiter:</strong></li>
