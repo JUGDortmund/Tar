@@ -70,8 +70,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<Vacation> getVacationsForUserAndYear(User user, int year) {
-    LocalDate startOfYear = LocalDate.ofYearDay(year, 1).with(TemporalAdjusters.firstDayOfYear());
-    LocalDate endOfYear = LocalDate.ofYearDay(year, 1).with(TemporalAdjusters.lastDayOfYear());
+    LocalDate startOfYear = LocalDate.now().withYear(year).with(
+        TemporalAdjusters.firstDayOfYear()).minusDays(1);
+    LocalDate endOfYear = LocalDate.now().withYear(year).with(
+        TemporalAdjusters.lastDayOfYear()).plusDays(1);
 
     return this.vacationRepository.findVacationByUserAndFromBetweenOrUserAndToBetween(
         user, startOfYear, endOfYear, user, startOfYear, endOfYear);

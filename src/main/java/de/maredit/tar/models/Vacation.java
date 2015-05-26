@@ -60,7 +60,7 @@ public class Vacation {
   }
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
-      float days, float daysLeft) {
+      double days, double daysLeft) {
     this.user = user;
     this.from = from;
     this.to = to;

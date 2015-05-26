@@ -22,6 +22,8 @@ import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +50,6 @@ public class UserServiceImplTest {
   @BeforeClass
   public static void init() {
     EmbeddedMongo.DB.port(28018).start();
-
   }
 
   @AfterClass
@@ -58,6 +59,8 @@ public class UserServiceImplTest {
 
   @Before
   public void setup() {
+    userRepository.deleteAll();
+    vacationRepository.deleteAll();
     userRepository.save(createDummyUserList());
     vacationRepository.save(createDummyVactions());
   }
@@ -86,6 +89,17 @@ public class UserServiceImplTest {
                  v.getTo().getYear() == LocalDate.now().getYear()
       );
     }
+  }
+
+
+  @Test
+  public void testGetVacationsForUserAndYear() {
+    vacationRepository.save(createVacationsWithBorderDates());
+    List<Vacation>
+        borderVacations =
+        userService.getVacationsForUserAndYear(user1, 2013);
+    assertEquals(2, borderVacations.size());
+
   }
 
   @Test
@@ -133,9 +147,10 @@ public class UserServiceImplTest {
 
   @Test
   public void testGetUserVacationAccountsForYear() {
+    List<User> users = userRepository.findAll();
     List<UserVacationAccount> accounts =
         userService
-            .getUserVacationAccountsForYear(createDummyUserList(), LocalDate.now().getYear());
+            .getUserVacationAccountsForYear(users, LocalDate.now().getYear());
 
     Assert.notNull(accounts);
     Assert.notEmpty(accounts);
@@ -146,7 +161,6 @@ public class UserServiceImplTest {
     List<User> dummys = new ArrayList<User>();
 
     user1 = new User();
-    user1.setId("01");
     user1.setActive(Boolean.TRUE);
     user1.setFirstname("Xena");
     user1.setLastname("Xantippe");
@@ -154,7 +168,6 @@ public class UserServiceImplTest {
     dummys.add(user1);
 
     user2 = new User();
-    user2.setId("02");
     user2.setActive(Boolean.TRUE);
     user2.setFirstname("Toni");
     user2.setLastname("Test");
@@ -162,7 +175,6 @@ public class UserServiceImplTest {
     dummys.add(user2);
 
     User user3 = new User();
-    user3.setId("03");
     user3.setActive(Boolean.TRUE);
     user3.setFirstname("Anna");
     user3.setLastname("an den Anonyma");
@@ -170,7 +182,6 @@ public class UserServiceImplTest {
     dummys.add(user3);
 
     User user4 = new User();
-    user4.setId("04");
     user4.setActive(Boolean.TRUE);
     user4.setFirstname("Otto");
     user4.setLastname("Zuletzt");
@@ -178,7 +189,6 @@ public class UserServiceImplTest {
     dummys.add(user4);
 
     User user5 = new User();
-    user5.setId("05");
     user5.setActive(Boolean.FALSE);
     user5.setFirstname("Ina");
     user5.setLastname("Inaktiv");
@@ -187,6 +197,8 @@ public class UserServiceImplTest {
 
     return dummys;
   }
+
+
 
   private List<Vacation> createDummyVactions() {
     List<Vacation> vacations = new ArrayList<Vacation>();
@@ -198,7 +210,6 @@ public class UserServiceImplTest {
                      null, user1, 4, 26);
     vacation1.setCreated(LocalDateTime.now().withMonth(3).minusDays(10));
     vacation1.setState(State.APPROVED);
-    vacation1.setId("01-01");
     vacations.add(vacation1);
     Vacation
         vacation2 =
@@ -206,7 +217,6 @@ public class UserServiceImplTest {
                      LocalDate.now().withMonth(4).plusDays(18),
                      null, user1, 4, 22);
     vacation2.setCreated(LocalDateTime.now().withMonth(3).minusDays(8));
-    vacation2.setId("01-02");
     vacations.add(vacation2);
     Vacation
         vacation3 =
@@ -216,7 +226,6 @@ public class UserServiceImplTest {
                          1).plusDays(18),
                      null, user1, 4, 2);
     vacation3.setCreated(LocalDateTime.now().withMonth(3).minusYears(1));
-    vacation3.setId("01-03");
     vacations.add(vacation3);
 
     Vacation
@@ -226,7 +235,6 @@ public class UserServiceImplTest {
                      null, user1, 2, 24);
     vacation4.setCreated(LocalDateTime.now().withMonth(3).minusDays(5));
     vacation4.setState(State.REJECTED);
-    vacation4.setId("01-04");
     vacations.add(vacation4);
 
     Vacation
@@ -235,8 +243,31 @@ public class UserServiceImplTest {
                      null, user1, 1, 25);
     vacation5.setCreated(LocalDateTime.now().withMonth(3).minusDays(2));
     vacation5.setState(State.CANCELED);
-    vacation5.setId("01-05");
     vacations.add(vacation5);
+    return vacations;
+  }
+
+
+  private List<Vacation> createVacationsWithBorderDates(){
+    LocalDate date = LocalDate.of(2013, Month.JANUARY, 1);
+    LocalDate firstDayOfYear = date.with(TemporalAdjusters.firstDayOfYear());
+    LocalDate lastDayOfYear = date.with(TemporalAdjusters.lastDayOfYear());
+
+    List<Vacation> vacations = new ArrayList<Vacation>();
+
+    Vacation
+        vacation1 =
+        new Vacation(user1, firstDayOfYear, firstDayOfYear,
+                     null, user1, 1, 29);
+    vacation1.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(1));
+    vacation1.setState(State.APPROVED);
+    vacations.add(vacation1);
+    Vacation
+        vacation2 =
+        new Vacation(user1,lastDayOfYear, lastDayOfYear,
+                     null, user1, 0.5, 4.5);
+    vacation2.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
+    vacations.add(vacation2);
     return vacations;
   }
 }
