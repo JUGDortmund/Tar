@@ -6,10 +6,22 @@
 Embedded MongoDB runs on port 28018 (when in dev profile)
 
 ## Configuration
-The application defines five configuration environments (called "Profiles" in Spring context): _dev_, _demo_, _test_, _seviceTest_ and _prod_. Each individual profile can be configured by editing the application.yml in src/main/resources.
+The application defines three basic configuration environments (called "Profiles" in Spring context): _localDev_, _test_, _seviceTest_. The basic profiles are stored in _application.yaml_ in src/main/resources and are configured to ensure local development and testing. By default, the application runs in _localDev_ profile.
 
-By default, the application runs in _dev_ profile. This is configured in the first lines in application.yml. For each profile a seperate configuration file has to be named with a starting
-"application-" and the profile name. To disable connections to external services, include "dummyServices" in profile. It can be specified by "dummyLdapService", "dummyCalenderService" and "dummyMailService".
+For other profiles a seperate configuration file named with a starting "application-" and the profile name is needed. To disable connections to external services, include "dummyServices" in profile. It can be separated into "dummyLdapService", "dummyCalenderService" and "dummyMailService".
+The mail service always has to be specified.
+
+Overview of services:
+Mail:
+	- dummyMailService
+	- smtpMailService
+	- exchangeMailService
+Calendar:
+	- dummyCalendarService
+	- exchangeCalendarService (default)
+Ldap (Authorisation):
+	- dummyLdapService
+	- ldapService (default)
 
 The default profile can be overwritten by setting the following system property from the command line:
 
