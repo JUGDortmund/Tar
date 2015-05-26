@@ -61,7 +61,10 @@ public class MailMessageComposer {
         messageHelper.setCc(mail.getCCRecipients());
       }
       messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
-      messageHelper.addAttachment("vacation.ics", new ByteArrayResource(mail.getICalAttachment()));
+      byte[] iCalAttachment = mail.getICalAttachment();
+      if (iCalAttachment != null) {
+        messageHelper.addAttachment("vacation.ics", new ByteArrayResource(iCalAttachment));
+      }
     } catch (MessagingException | IOException | ValidationException e) {
       LOG.error("Error creating mail", e);
     }
