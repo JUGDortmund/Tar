@@ -2,10 +2,10 @@ package de.maredit.tar.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import javax.validation.constraints.NotNull;
 
@@ -55,5 +55,21 @@ public class TimelineItem {
 
   public void setVacation(Vacation vacation) {
     this.vacation = vacation;
+  }
+
+  public CommentItem getCommentItem(){
+    return (CommentItem)this;
+  }
+
+  public StateItem getStateItem(){
+    return (StateItem)this;
+  }
+
+  public ProtocolItem getProtocolItem(){
+    return (ProtocolItem)this;
+  }
+
+  public LocalTime getCreatedTime(){
+    return this.created.toLocalTime();
   }
 }

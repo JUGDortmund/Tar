@@ -267,19 +267,113 @@ edit-vacation, approve-vacation  -->
                         <ul class="timeline">
                             <!-- timeline time label -->
                             <li class="time-label">
-                                <span class="bg-red">
-                                    10 Feb. 2014
-                                </span>
+                                <span class="bg-yellow">10 Feb. 2014</span>
                             </li>
                             <!-- /.timeline-label -->
 
                             <!-- timeline items -->
                             <li th:each="timeLineItem : ${timeLineItems}">
-                                <th:block th:switch="${timeLineItem}">
-                                    <!--/* new */-->
-                                    <th:block th:case="${timeLineItem instanceof T(de.maredit.tar.models.ProtocolItem)">
+                                <th:block th:switch="${timeLineItem.class.name}">
+                                    <!-- Case State -->
+                                    <th:block th:case="de.maredit.tar.models.StateItem">
+                                        <!-- Switch newState -->
+                                        <th:block th:switch="${timeLineItem.stateItem.newState}">
+                                            <!-- State REQUESTED_SUBSTITUTE -->
+                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).REQUESTED_SUBSTITUTE}">
+                                                <th:block th:if="${timeLineItem.stateItem.oldState == null}">
+                                                    <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
+
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fa fa-clock-o" th:text="${timeLineItem.createdTime}"></i> 12:05</span>
+                                                        <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
+                                                            Urlaubsantrag erstellt</h3>
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
+                                                    <i class="item-icon glyphicon pending bg-blue"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fa fa-clock-o" th:text="${timeLineItem.createdTime}"></i> 12:05</span>
+                                                        <h3 class="timeline-header"><span th:text="timeLineItem.author.fullname">Pascal Plewa</span> hat den
+                                                            Urlaubsantrag geändert</h3>
+                                                    </div>
+                                                </th:block>
+                                            </th:block>
+                                            <!-- .State REQUESTED_SUBSTITUTE -->
+
+                                            <!-- State WAITING_FOR_APPROVEMENT -->
+                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).WAITING_FOR_APPROVEMENT}">
+                                                <th:block th:if="${timeLineItem.stateItem.oldState == null}">
+                                                    <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fa fa-clock-o" th:text="${timeLineItem.createdTime}"></i> 12:05</span>
+                                                        <h3 class="timeline-header"><span th:text="timeLineItem.author.fullname">Pascal Plewa</span> hat einen
+                                                            Urlaubsantrag erstellt</h3>
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
+                                                    <i class="item-icon glyphicon pending bg-blue"></i>
+                                                    <div class="timeline-item">
+                                                        <span class="time"><i class="fa fa-clock-o" th:text="${timeLineItem.createdTime}"></i> 12:05</span>
+                                                        <h3 class="timeline-header"><span th:text="timeLineItem.author.fullname">Pascal Plewa</span> hat den
+                                                            Urlaubsantrag geändert</h3>
+                                                    </div>
+                                                </th:block>
+                                            </th:block>
+                                            <!-- .State WAITING_FOR_APPROVEMENT -->
+
+                                            <!-- State APPROVED -->
+                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).APPROVED}">
+                                                <i class="item-icon glyphicon approved bg-blue"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fa fa-clock-o" th:text="${timeLineItem.createdTime}"></i> 12:05</span>
+                                                    <h3 class="timeline-header"><span th:text="timeLineItem.author.fullname">Pascal Plewa</span> hat einen
+                                                        Urlaubsantrag genehmigt</h3>
+                                                </div>
+                                            </th:block>
+                                            <!-- .State .APPROVED -->
+
+                                            <!-- State REJECTED -->
+                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).REJECTED}">
+                                                <i class="item-icon glyphicon rejected bg-blue"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fa fa-clock-o" th:text="${timeLineItem.createdTime}"></i> 12:05</span>
+                                                    <h3 class="timeline-header"><span th:text="timeLineItem.author.fullname">Pascal Plewa</span> hat einen
+                                                        Urlaubsantrag abgelehnt</h3>
+                                                </div>
+                                            </th:block>
+                                            <!-- .State REJECTED -->
+
+                                            <!-- State CANCELED -->
+                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).CANCELED}">
+                                                <i class="item-icon glyphicon rejected bg-blue"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fa fa-clock-o" th:text="${timeLineItem.createdTime}"></i> 12:05</span>
+                                                    <h3 class="timeline-header"><span th:text="timeLineItem.author.fullname">Pascal Plewa</span> hat einen
+                                                        Urlaubsantrag abgelehnt</h3>
+                                                </div>
+                                            </th:block>
+                                            <!-- .State CANCELED -->
+
+                                        </th:block>
+                                        <!-- .Switch newState -->
+                                    </th:block>
+                                    <!-- .Case State -->
+
+                                    <!-- Case Protocol -->
+                                    <th:block th:case="de.maredit.tar.models.ProtocolItem">
 
                                     </th:block>
+                                    <!-- .Case Protocol -->
+
+                                    <!-- Case Comment -->
+                                    <th:block th:case="de.maredit.tar.models.CommentItem">
+                                        <i class="item-icon glyphicon rejected bg-blue"></i>
+                                        <div class="timeline-item">
+                                            <h3 class="timeline-header"><span th:text="timeLineItem.author.fullname">Pascal Plewa</span> hat einen
+                                                Urlaubsantrag abgelehnt</h3>
+                                        </div>
+                                    </th:block>
+                                    <!-- .Case Comment -->
                                 </th:block>
                             </li>
 

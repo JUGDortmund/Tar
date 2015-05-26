@@ -5,12 +5,14 @@ import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.Protocol;
 import de.maredit.tar.models.ProtocolItem;
+import de.maredit.tar.models.StateItem;
 import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;
+import de.maredit.tar.repositories.StateItemRepository;
 import de.maredit.tar.repositories.TimelineItemRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
@@ -37,6 +39,7 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
       UserRepository userRepository = event.getApplicationContext().getBean(UserRepository.class);
       ProtocolItemRepository protocolItemRepository = event.getApplicationContext().getBean(ProtocolItemRepository.class);
       CommentItemRepository commentItemRepository = event.getApplicationContext().getBean(CommentItemRepository.class);
+      StateItemRepository stateItemRepository = event.getApplicationContext().getBean(StateItemRepository.class);
       VacationRepository vacationRepository =
           event.getApplicationContext().getBean(VacationRepository.class);
       LdapService ldapService = event.getApplicationContext().getBean(LdapService.class);
@@ -88,6 +91,14 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         commentItem.setText("TEST TEXT FUER KOMMENTAR!!!!111eins");
         commentItem.setModifed(LocalDateTime.now());
         commentItemRepository.save(commentItem);
+
+        StateItem stateItem = new StateItem();
+        stateItem.setVacation(v1);
+        stateItem.setAuthor(user);
+        stateItem.setCreated(LocalDateTime.now());
+        stateItem.setOldState(null);
+        stateItem.setNewState(State.WAITING_FOR_APPROVEMENT);
+        stateItemRepository.save(stateItem);
       }
     }
   }

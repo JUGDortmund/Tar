@@ -12,6 +12,7 @@ import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;
+import de.maredit.tar.repositories.StateItemRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
@@ -68,6 +69,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private CommentItemRepository commentItemRepository;
+
+  @Autowired
+  private StateItemRepository stateItemRepository;
 
   @Autowired
   private MailService mailService;
@@ -226,6 +230,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
     List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
     allTimeline.addAll(commentItemRepository.findAllByVacation(vacation));
     allTimeline.addAll(protocolItemRepository.findAllByVacation(vacation));
+    allTimeline.addAll(stateItemRepository.findAllByVacation(vacation));
     return allTimeline;
   }
 
