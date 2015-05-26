@@ -1,5 +1,7 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.services.calendar.CalendarItem;
+
 import de.maredit.tar.models.Vacation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +15,7 @@ public class CalendarServiceDummyImpl implements CalendarService{
   private static final Logger LOG = LogManager.getLogger(CalendarServiceDummyImpl.class);
   
   @Override
-  public String createAppointment(Vacation vacation) {
+  public CalendarItem createAppointment(Vacation vacation) {
     LOG.info("Creating appointment for vacation of {} from {} to {}", vacation.getUser().getFullname(), vacation.getFrom(), vacation.getTo());
     return null;
   }

@@ -1,7 +1,8 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.services.CalendarService;
+import de.maredit.tar.services.calendar.CalendarItem;
 
+import de.maredit.tar.services.CalendarService;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
@@ -121,9 +122,12 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation,
                          @RequestParam(value = "approve") boolean approve) {
+
+    CalendarItem appointment = null;
     if (approve) {
       vacation.setState(State.APPROVED);
-      vacation.setAppointmentId(calendarService.createAppointment(vacation));
+      appointment = calendarService.createAppointment(vacation);
+      vacation.setAppointmentId(appointment.getAppointmentId());
     } else {
       vacation.setState(State.REJECTED);
     }
@@ -131,7 +135,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
     MailObject mail =
         (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
-    this.mailService.sendMail(mail);
+    this.mailService.sendMail(mail, appointment.getMailAttachment());
 
     return "redirect:/";
   }

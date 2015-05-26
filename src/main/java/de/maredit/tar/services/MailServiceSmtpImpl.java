@@ -1,5 +1,7 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.services.mail.Attachment;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
@@ -50,13 +52,13 @@ public class MailServiceSmtpImpl implements MailService {
   }
 
   @Override
-  public void sendMail(MailObject mail) {
+  public void sendMail(MailObject mail, Attachment... attachments) {
     try {
       if(mail.sendToAdditionalRecipient()) {
         mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalRecipients()));
       }
       MimeMessage msg = mailMessageComposer.composeMimeMailMessage(mail,
-          mailSender.createMimeMessage());
+          mailSender.createMimeMessage(), attachments);
       if (customMailProperties.getSender() != null) {
         msg.setFrom(customMailProperties.getSender());
       }

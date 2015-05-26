@@ -1,8 +1,9 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.services.mail.Attachment;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.EmailAddress;
 import de.maredit.tar.properties.CustomMailProperties;
@@ -36,10 +37,15 @@ public class MailServiceExchangeImpl implements MailService {
   public SpringTemplateEngine templateEngine;
 
   @Override
-  public void sendMail(MailObject mail) {
+  public void sendMail(MailObject mail, Attachment... attachments) {
     try {
       EmailMessage msg = buildBaseMail(mail);
       msg.setBody(MessageBody.getMessageBodyFromText(prepareMailBody(mail, mail.getHtmlTemplate())));
+      if (attachments != null) {
+        for (Attachment attachment : attachments) {
+          msg.getAttachments().addFileAttachment(attachment.getMimeType(), attachment.getData());
+        }
+      }
       msg.send();
     } catch (Exception e) {
       LOG.error("Error sending mail", e);

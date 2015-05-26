@@ -1,5 +1,7 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.services.calendar.CalendarItem;
+
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.properties.ExchangeProperties;
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -48,7 +50,7 @@ public class CalendarServiceExchangeImpl implements CalendarService {
    * @see de.maredit.tar.services.CalendarService#createAppointment(de.maredit.tar.models.Vacation)
    */
   @Override
-  public String createAppointment(Vacation vacation) {
+  public CalendarItem createAppointment(Vacation vacation) {
     try {
       Folder folder = getCaldendarFolder();
       TimeZoneDefinition timezone = new OlsonTimeZoneDefinition(TimeZone.getDefault());
@@ -65,7 +67,7 @@ public class CalendarServiceExchangeImpl implements CalendarService {
       appointment.setEndTimeZone(timezone);
       appointment.getRequiredAttendees().add(vacation.getUser().getMail());
       appointment.save(folder.getId(), SendInvitationsMode.SendToAllAndSaveCopy);
-      return appointment.getId().toString();
+      return new CalendarItem(appointment.getId().toString());
     } catch (Exception e) {
       LOG.error("Error creating appointment in Exchange", e);
     }
