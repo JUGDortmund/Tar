@@ -18,7 +18,6 @@
 	}
 
 	h3 {
-		background-color: $white;
 		font-size: 16px;
 	}
 
@@ -79,8 +78,6 @@
 	}
 
 	.glyphicon {
-		float: right;
-
 		&.pending {
 			color: $vacation-pending;
 			&:before {
@@ -110,4 +107,18 @@
 		}
 	}
 
+	.timeline {
+		.item-icon {
+			margin-top: 10px;
+        }
+
+		.timeline-item > .time {
+		 	padding-top: 0px;
+		}
+	}
+
+	.box > .box-header{
+		background-color: #f5f5f5;
+		font-size: 16px;
+	}
 }
