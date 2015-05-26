@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<body th:fragment="activities">
+
+    <div class="input-group">
+        <input class="form-control" placeholder="Add comment.."/>
+
+        <div class="input-group-btn">
+            <button class="btn btn-success">Add
+            </button>
+        </div>
+    </div>
+
+    <ul class="timeline">
+
+        <!-- timeline time label -->
+        <li class="time-label">
+            <span class="bg-red">
+                10 Feb. 2014
+            </span>
+        </li>
+        <!-- /.timeline-label -->
+
+        <!-- timeline item -->
+        <li>
+            <!-- timeline icon -->
+            <i class="glyphicon glyphicon-user bg-blue"></i>
+
+            <div class="timeline-item">
+                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+
+                <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
+                    Urlaubsantrag erstellt</h3>
+
+            </div>
+        </li>
+        <!-- END timeline item -->
+
+        <!-- timeline item -->
+        <li>
+            <!-- timeline icon -->
+            <i class="fa fa-envelope bg-blue"></i>
+
+            <div class="timeline-item">
+                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+
+                <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
+                    Kommentar hinzugefügt</h3>
+
+                <div class="timeline-body">
+                    "Brauche dringend Urlaub..."
+                </div>
+            </div>
+        </li>
+        <!-- END timeline item -->
+
+
+    </ul>
+
+
+</body>
+</html>
