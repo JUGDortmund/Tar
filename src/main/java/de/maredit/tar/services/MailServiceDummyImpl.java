@@ -1,8 +1,6 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.services.mail.MailObject;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
