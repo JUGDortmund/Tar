@@ -22,7 +22,7 @@
                     <p class="pull-right visible-xs info-toggle">
                         <button type="button" class="btn btn-primary btn-xs offcanvas-toggle" data-toggle="filter">Filter</button>
                     </p>
-                    
+
                     <div class="panel-group" id="accordion" role="tablist">
                         <!-- ein mitarbeiter -->
                         <div class="panel" th:each="userVacationAccount, iterator : ${userVacationAccounts}">
@@ -33,7 +33,7 @@
                                           th:text="${userVacationAccount.user.lastname + ', ' + userVacationAccount.user.firstname}">Username</span>
                                     <span class="progress-number">
                                         <b>
-                                            <span th:text="${{userVacationAccount.totalDays}}"
+                                            <span th:text="${{userVacationAccount.totalDays-userVacationAccount.previousYearOpenVacationDays}}"
                                                   data-toggle="tooltip" data-placement="top"
                                                   title="Jahres-Gesamtanspruch">30</span>
                                             <span th:if="${userVacationAccount.previousYearOpenVacationDays > 0}"

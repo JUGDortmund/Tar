@@ -31,15 +31,14 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<User> getSortedUserList() {
-    List<User> userList = new ArrayList<User>();
-    userList = userRepository.findAll();
+    List<User> userList = userRepository.findAll();
     userList =
         userList
             .stream()
             .filter(e -> e.isActive())
             .sorted(
-                (e1, e2) -> e1.getLastname().toUpperCase()
-                    .compareTo(e2.getLastname().toUpperCase())).collect(Collectors.toList());
+                (e1, e2) -> e1.getLastname().toLowerCase()
+                    .compareTo(e2.getLastname().toLowerCase())).collect(Collectors.toList());
     return userList;
   }
 

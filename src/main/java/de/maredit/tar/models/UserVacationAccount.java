@@ -15,7 +15,7 @@ public class UserVacationAccount {
   private double previousYearOpenVacationDays;
 
   public double getTotalDays() {
-    double totalDays = getApprovedVacationDays() + getPendingVacationDays() + getOpenVacationDays();
+    double totalDays = getApprovedVacationDays() + getPendingVacationDays() + getOpenVacationDays() + getPreviousYearOpenVacationDays();
     return totalDays;
   }
 
