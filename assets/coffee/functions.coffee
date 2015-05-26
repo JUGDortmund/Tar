@@ -3,6 +3,18 @@ scrollToVacationForm = ->
   clientWidth = document.documentElement.clientWidth;
   if clientWidth < 761 then $('html, body').animate({ scrollTop: ($('#vacation-form-panel').offset().top)}, 'slow')
 
+#Activate Flip-Toggle
+activateToggle = () ->
+  $('.flip').click ->
+       $('.card').toggleClass 'flipped'
+       setTimeout (->
+         $('.card .front').toggleClass 'invisible'
+         $('.card .back').toggleClass 'invisible'
+         return
+       ), 180
+       return
+
+
 # Ajax form refresh:
 refreshVacationForm = (data) ->
   $myForm = $('#vacation-form-panel')
@@ -14,6 +26,8 @@ refreshVacationForm = (data) ->
   })
   $myForm.find('select').select2()
   scrollToVacationForm()
+  activateToggle()
+
 
 # document ready 
 (($) ->
@@ -29,6 +43,8 @@ refreshVacationForm = (data) ->
     $(this).closest('form').submit()
   
   $('.panel-default').matchHeight()
+
+  activateToggle()
 
   $('[data-toggle="filter"]').click ->
     $('.offcanvas-filter').toggleClass 'active'

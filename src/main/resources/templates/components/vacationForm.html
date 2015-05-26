@@ -6,10 +6,7 @@
 <!-- Possible additional classes for vacation-form:
 edit-vacation, approve-vacation  -->
 
-
-
 <div class="card">
-
 
     <div class="panel panel-default module dashboard-panel face front"
          th:classappend="${formMode.value}">
@@ -257,23 +254,15 @@ edit-vacation, approve-vacation  -->
 
                 </form>
                 <div class="box">
-                    <div class="box-header ui-sortable-handle">
-                        <i class="fa fa-comments-o"></i>
-
-                        <h3 class="box-title">Letzte Aktivitäten <a class="flip">more..</a></h3>
-
-                        <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
-                            <button type="button" class="btn btn-default btn-sm flip">
-                                more
-                            </button>
-                        </div>
+                    <div class="box-header">
+                        <h3 class="box-title">Letzte Aktivitäten</h3>
                     </div>
-                    <div class="panel-body slimScrollDiv">
+                    <div class="panel-body">
                         <ul class="timeline">
 
                             <!-- timeline time label -->
                             <li class="time-label">
-                                <span class="bg-red">
+                                <span class="bg-yellow">
                                     10 Feb. 2014
                                 </span>
                             </li>
@@ -282,10 +271,10 @@ edit-vacation, approve-vacation  -->
                             <!-- timeline item -->
                             <li>
                                 <!-- timeline icon -->
-                                <i class="glyphicon glyphicon-user bg-blue"></i>
+                                <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
 
                                 <div class="timeline-item">
-                                    <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+                                    <span class="time"><i class="glyphicon glyphicon-time"></i> 12:05</span>
 
                                     <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
                                         Urlaubsantrag erstellt</h3>
@@ -297,10 +286,10 @@ edit-vacation, approve-vacation  -->
                             <!-- timeline item -->
                             <li>
                                 <!-- timeline icon -->
-                                <i class="fa fa-envelope bg-blue"></i>
+                                <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
 
                                 <div class="timeline-item">
-                                    <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+                                    <span class="time"><i class="glyphicon glyphicon-time"></i> 12:05</span>
 
                                     <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
                                         Kommentar hinzugefügt</h3>
@@ -315,16 +304,15 @@ edit-vacation, approve-vacation  -->
 
 
 
-                            <!-- timeline item -->
+                            <!--/* item to flip the panel */-->
                             <li>
-                                <!-- timeline icon -->
-                                <i class="glyphicon glyphicon-option-horizontal bg-blue"></i>
+                                <i class="item-icon glyphicon glyphicon-option-horizontal bg-blue"></i>
 
                                 <div class="timeline-item">
                                     <h3 class="timeline-header"><button class="flip btn bg-blue">more..</button></h3>
                                 </div>
                             </li>
-                            <!-- END timeline item -->
+                            <!--/* end item to flip the panel */-->
                         </ul>
                 </div>
                 </div>
