@@ -13,66 +13,125 @@
     </div>
     <div class="panel-body">
         <ul class="timeline">
-
             <!-- timeline time label -->
             <li class="time-label">
-                <span class="bg-yellow">10 Feb. 2014</span>
+                <span class="bg-yellow">Timeline</span>
             </li>
             <!-- /.timeline-label -->
 
-            <!-- timeline item -->
-            <li>
-                <!-- timeline icon -->
-                <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
+            <!-- timeline items -->
+            <li th:each="timeLineItem : ${timeLineItems}">
+                <th:block th:switch="${timeLineItem.class.name}">
+                    <!-- Case State -->
+                    <th:block th:case="de.maredit.tar.models.StateItem">
+                        <!-- Switch newState -->
+                        <th:block th:switch="${timeLineItem.stateItem.newState}">
+                            <!-- State REQUESTED_SUBSTITUTE -->
+                            <th:block th:case="${T(de.maredit.tar.models.enums.State).REQUESTED_SUBSTITUTE}">
+                                <th:block th:if="${timeLineItem.stateItem.oldState == null}">
+                                    <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
 
-                <div class="timeline-item">
-                    <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
-                        Urlaubsantrag erstellt</h3>
-                </div>
+                                    <div class="timeline-item">
+                                        <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
+                                        <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
+                                            Urlaubsantrag erstellt</h3>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
+                                    <i class="item-icon glyphicon pending bg-blue"></i>
+                                    <div class="timeline-item">
+                                        <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
+                                        <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat den
+                                            Urlaubsantrag geändert</h3>
+                                    </div>
+                                </th:block>
+                            </th:block>
+                            <!-- .State REQUESTED_SUBSTITUTE -->
+
+                            <!-- State WAITING_FOR_APPROVEMENT -->
+                            <th:block th:case="${T(de.maredit.tar.models.enums.State).WAITING_FOR_APPROVEMENT}">
+                                <th:block th:if="${timeLineItem.stateItem.oldState == null}">
+                                    <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
+                                    <div class="timeline-item">
+                                        <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
+                                        <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
+                                            Urlaubsantrag erstellt</h3>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
+                                    <i class="item-icon glyphicon pending bg-blue"></i>
+                                    <div class="timeline-item">
+                                        <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
+                                        <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat den
+                                            Urlaubsantrag geändert</h3>
+                                    </div>
+                                </th:block>
+                            </th:block>
+                            <!-- .State WAITING_FOR_APPROVEMENT -->
+
+                            <!-- State APPROVED -->
+                            <th:block th:case="${T(de.maredit.tar.models.enums.State).APPROVED}">
+                                <i class="item-icon glyphicon approved bg-blue"></i>
+                                <div class="timeline-item">
+                                    <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
+                                    <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
+                                        Urlaubsantrag genehmigt</h3>
+                                </div>
+                            </th:block>
+                            <!-- .State .APPROVED -->
+
+                            <!-- State REJECTED -->
+                            <th:block th:case="${T(de.maredit.tar.models.enums.State).REJECTED}">
+                                <i class="item-icon glyphicon rejected bg-blue"></i>
+                                <div class="timeline-item">
+                                    <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
+                                    <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
+                                        Urlaubsantrag abgelehnt</h3>
+                                </div>
+                            </th:block>
+                            <!-- .State REJECTED -->
+
+                            <!-- State CANCELED -->
+                            <th:block th:case="${T(de.maredit.tar.models.enums.State).CANCELED}">
+                                <i class="item-icon glyphicon rejected bg-blue"></i>
+                                <div class="timeline-item">
+                                    <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o" ></i> 12:05</span>
+                                    <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
+                                        Urlaubsantrag storniert</h3>
+                                </div>
+                            </th:block>
+                            <!-- .State CANCELED -->
+
+                        </th:block>
+                        <!-- .Switch newState -->
+                    </th:block>
+                    <!-- .Case State -->
+
+                    <!-- Case Protocol -->
+                    <th:block th:case="de.maredit.tar.models.ProtocolItem">
+                        <i class="item-icon glyphicon glyphicon-pencil bg-blue"></i>
+                        <div class="timeline-item">
+                            <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
+                            <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat den Wert f&uuml;r
+                                <b><span th:text="${timeLineItem.protocolItem.fieldName}"></span></b> ge&auml;ndert</h3>
+                        </div>
+                    </th:block>
+                    <!-- .Case Protocol -->
+
+                    <!-- Case Comment -->
+                    <th:block th:case="de.maredit.tar.models.CommentItem">
+                        <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
+                        <div class="timeline-item">
+                            <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i> 12:05</span>
+                            <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
+                                Kommentar verfasst</h3>
+                            <div class="timeline-body" th:text="${timeLineItem.commentItem.text}">Comment Text</div>
+                        </div>
+
+                    </th:block>
+                    <!-- .Case Comment -->
+                </th:block>
             </li>
-            <!-- END timeline item -->
-
-            <!-- timeline item -->
-            <li>
-                <!-- timeline icon -->
-                <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
-
-                <div class="timeline-item">
-                    <h3 class="timeline-header"><a href="#">Pascal Plewa</a> hat einen
-                        Kommentar hinzugefügt</h3>
-                    <div class="timeline-body">
-                        "Brauche dringend Urlaub..."
-                    </div>
-                </div>
-            </li>
-            <!-- END timeline item -->
-
-
-            <!-- timeline item -->
-            <li>
-                <!-- timeline icon -->
-                <i class="item-icon glyphicon glyphicon-remove bg-blue"></i>
-                <div class="timeline-item">
-                    <h3 class="timeline-header"><a href="#">Claudine Zillmann</a> hat den Urlaubsantrag abgelehnt</h3>
-
-                </div>
-            </li>
-            <!-- END timeline item -->
-
-
-            <!-- timeline item -->
-            <li>
-                <!-- timeline icon -->
-                <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
-                <div class="timeline-item">
-                    <h3 class="timeline-header"><a href="#">Claudine Zillmann</a> hat einen Kommentar hinzugefügt</h3>
-                    <div class="timeline-body">
-                        "Kannste knicken!"
-                    </div>
-                </div>
-            </li>
-            <!-- END timeline item -->
-
 
             <!--/* item to flip the panel */-->
             <li>
@@ -82,7 +141,8 @@
                     <h3 class="timeline-header"><button id="more-activities" class="flip btn bg-blue">back</button></h3>
                 </div>
             </li>
-            <!--/* end item to flip the panel */-->
+
+            <!-- END timeline item -->
         </ul>
 
     </div>

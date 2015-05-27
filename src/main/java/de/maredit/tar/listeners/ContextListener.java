@@ -92,6 +92,14 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         commentItem.setModifed(LocalDateTime.now());
         commentItemRepository.save(commentItem);
 
+        CommentItem commentItem2 = new CommentItem();
+        commentItem2.setVacation(v1);
+        commentItem2.setAuthor(user);
+        commentItem2.setCreated(LocalDateTime.now());
+        commentItem2.setText("zweiter Text");
+        commentItem2.setModifed(LocalDateTime.now());
+        commentItemRepository.save(commentItem2);
+
         StateItem stateItem = new StateItem();
         stateItem.setVacation(v1);
         stateItem.setAuthor(user);
