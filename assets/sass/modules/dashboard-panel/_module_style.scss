@@ -57,7 +57,6 @@
 		}
 	}
 
-
 	@media (max-width: 760px) {
 		.btn {
 			width: 100%;
@@ -104,16 +103,19 @@
 	.timeline .item-icon {
 		margin-top: 10px;
 
-		&:new {
+		&.new {
 			background-color: $vacation-new-primary;
+			color: $white;
 		}
 
-		&:edit-vacation {
+		&.edit-vacation {
 			background-color: $vacation-edit-primary;
+			color: $white;
 		}
 
-		&:approve-vacation {
+		&.approve-vacation {
 			background-color: $task-primary;
+			color: $white;
 		}
 	}
 
