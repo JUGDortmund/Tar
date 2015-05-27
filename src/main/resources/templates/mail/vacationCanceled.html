@@ -5,18 +5,18 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <p> Hallo, <span th:text="${employee}">Welt!</span> </p>
+    <p> <th th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> </p>
 
-    <p> Du hast einen Urlaub storniert! Hier sind die Details: </p>
+    <p> <th th:text="#{mail.text.cancel.vacation}"/></p>
     
-    <p> <b>Name des Vorgesetzten:</b> <span th:text="${manager}">Max Mustermann</span> </p>
+    <p> <b><th th:text="#{mail.superior}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
 
-    <p> <b>Name des Stellvertreters:</b> <span th:text="${substitute}">Max Mustermann</span> </p>
+    <p> <b><th th:text="#{mail.replacement}"/></b> <span th:text="${substitute}">Max Mustermann</span> </p>
 
-    <p> <b>Beantragte Urlaubszeit:</b> <ul>
-        <li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
-        <li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
+    <p> <b><th th:text="#{mail.vacation.time}"/></b> <ul>
+        <li><th th:text="#{mail.dateFrom}"></th> <span th:text="${fromDate}">vonDatum</span> </li>
+        <li><th th:text="#{mail.dateTo}"></th> <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
 
-    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+    <p> <th th:text="#{mail.signature}"></th> </p>
 </body>
 </html>

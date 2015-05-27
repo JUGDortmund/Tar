@@ -8,10 +8,14 @@ refreshVacationForm = (data) ->
   $myForm = $('#vacation-form-panel')
   $myForm.html(data).hide().fadeIn( 800 )
   $('.panel-default').matchHeight()
-  $myForm.find('.input-group.date').datepicker({
-    "format" : "dd.mm.yyyy"
-    "autoclose" : true
-  })
+  $myForm.find('.input-group.date').each -> 
+    $this = $(this)
+    $this.datepicker({
+      # convert from java simpledate to date format of datepicker api
+      "format" : $this.data('dateformat').replace(/M/g, 'm')
+      "autoclose" : true
+      "language" : $this.data('lang')
+    })
   $myForm.find('select').select2()
   scrollToVacationForm()
 

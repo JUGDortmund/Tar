@@ -5,26 +5,26 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<p> Hallo, <span th:text="${employee}">Welt!</span> </p>
+	<p> <th th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> </p>
 
-	<p> Dein Urlaubsantrag wurde ge&auml;ndert! Hier sind die Details: </p>
+	<p> <th th:text="#{mail.text.change.vacation}"/> </p>
 	
-	<p> <b>Name des Vorgesetzten:</b> <span th:text="${manager}">Max Mustermann</span> </p>
+	<p> <b><th th:text="#{mail.superior}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
 
-	<p> <b>Name des Stellvertreters:</b> <span th:text="${substitute}">Max Mustermann</span> </p>
+	<p> <b><th th:text="#{mail.replacement}"/></b> <span th:text="${substitute}">Max Mustermann</span> </p>
 
-	<p> <b>Beantragte Urlaubszeit:</b> <ul>
-		<li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
-		<li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
+    <p> <b><th th:text="#{mail.vacation.time}"/></b> <ul>
+        <li><th th:text="#{mail.dateFrom}"></th> <span th:text="${fromDate}">vonDatum</span> </li>
+        <li><th th:text="#{mail.dateTo}"></th> <span th:text="${toDate}">bisDatum</span> </li> </ul> 
 
-	<p> <b>Summe der Urlaubstage:</b> <span th:text="${totalDays}">Tage</span> </p>
+	<p> <b><th th:text="#{mail.totalDays}"/></b> <span th:text="${totalDays}">Tage</span> </p>
 
-	<p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
+	<p> <b><th th:text="#{mail.leftDays}"/></b> <span th:text="${leftDays}">restTage</span> </p>
 
 	<th:block th:if="${modifiedBy} != null">
-		<p> Der Urlaub wurde ge&auml;ndert von: <span th:text="${modifiedBy}">Bearbeiter</span></p>
+		<p> <th th:text="#{mail.modifiedBy}"/> <span th:text="${modifiedBy}">Bearbeiter</span></p>
 	</th:block>
 
-	<p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+	<p> <th th:text="#{mail.signature}"/> </p>
 </body>
 </html>

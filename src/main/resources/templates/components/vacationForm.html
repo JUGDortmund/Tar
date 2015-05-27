@@ -64,7 +64,7 @@ edit-vacation, approve-vacation  -->
 						</label>
 
 						<th:block th:if="${editable}">
-							<div class="input-group date">
+							<div class="input-group date" th:attr="data-lang=${#locale.language},data-dateformat=${dateFormat}">
 								<input type="text" class="form-control" name="dateFrom"
 									id="dateFrom" th:field="*{from}" /> <span
 									class="input-group-addon"><i
@@ -84,9 +84,10 @@ edit-vacation, approve-vacation  -->
 						</label>
 
 						<th:block th:if="${editable}">
-							<div class="input-group date">
+							<div class="input-group date"  th:attr="data-lang=${#locale.language},data-dateformat=${dateFormat}">
 								<input type="text" class="form-control" name="dateTo"
-									id="dateTo" th:field="*{to}" /> <span class="input-group-addon"><i
+									id="dateTo" th:field="*{to}" /> <span
+									class="input-group-addon"><i
 									class="glyphicon glyphicon-th"></i></span>
 							</div>
 						</th:block>
@@ -166,7 +167,9 @@ edit-vacation, approve-vacation  -->
 						<th:block th:if="${editable}">
 							<select class="form-control" style="width: 100%;" name="superior"
 								id="superior" th:field="*{manager}">
-								<option value="" selected="selected">- <th th:text="#{field.selectSuperior}"></th> -</option>
+								<option value="" selected="selected">-
+									<th th:text="#{field.selectSuperior}"></th> -
+								</option>
 								<option th:each="manager : ${managers}" th:value="${manager.id}"
 									th:text="${manager.lastname +', '+ manager.firstname}">
 								</option>
@@ -188,22 +191,26 @@ edit-vacation, approve-vacation  -->
 							id="comment"></textarea>
 					</div>
 				</div>
-
 				<th:block th:switch="${formMode}">
 					<!--/* new */-->
 					<th:block th:case="${T(de.maredit.tar.models.enums.FormMode).NEW}">
 						<button type="submit" class="btn btn-success pull-right">
-							<th th:text="#{field.applyFor}"></th></button>
+							<th th:text="#{field.applyFor}"></th>
+						</button>
 					</th:block>
 					<!--/* edit */-->
 					<th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
 						<th:block
 							th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
 							<a th:href="@{/cancelVacation(id=${vacation.id})}"
-								onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
-								class="btn btn-danger"> <th th:text="#{field.cancel}"></th> </a>
+								th:attr="data-message=#{message.cancel.vacation}"
+								onclick="return confirm(this.getAttribute('data-message'));"
+								class="btn btn-danger">
+								<th th:text="#{field.cancel}"></th>
+							</a>
 							<button type="submit" class="btn btn-success pull-right">
-								<th th:text="#{field.change}"></th></button>
+								<th th:text="#{field.change}"></th>
+							</button>
 						</th:block>
 					</th:block>
 
@@ -211,21 +218,28 @@ edit-vacation, approve-vacation  -->
 					<th:block
 						th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
 						<a th:href="@{/substitution(id=${vacation.id}, approve=false)}"
-							onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
+							th:attr="data-message=#{message.reject.replacement}"
+							onclick="return confirm(this.getAttribute('data-message'));"
 							class="btn btn-danger"><th th:text="#{field.reject}"></th></a>
 						<a th:href="@{/substitution(id=${vacation.id}, approve=true)}"
-							onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
-							class="btn btn-success pull-right"><th th:text="#{field.reject}"></th></a>
+							th:attr="data-message=#{message.accept.replacement}"
+							onclick="return confirm(this.getAttribute('data-message'));"
+							class="btn btn-success pull-right"><th
+							th:text="#{field.reject}"></th></a>
 					</th:block>
 					<!--/* manager */-->
 					<th:block
 						th:case="${T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL}">
 						<a th:href="@{/approval(id=${vacation.id}, approve=false)}"
-							onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');"
-							class="btn btn-danger"><th th:text="#{field.acceptRepresetation}"></th></a>
+							th:attr="data-message=#{message.reject.vacation}"
+							onclick="return confirm(this.getAttribute('data-message'));"
+							class="btn btn-danger"><th
+							th:text="#{field.acceptRepresetation}"></th></a>
 						<a th:href="@{/approval(id=${vacation.id}, approve=true)}"
-							onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');"
-							class="btn btn-success pull-right"><th th:text="#{field.acceptVacation}"></th></a>
+							th:attr="data-message=#{message.accept.vacation}"
+							onclick="return confirm(this.getAttribute('data-message'));"
+							class="btn btn-success pull-right"><th
+							th:text="#{field.acceptVacation}"></th></a>
 					</th:block>
 				</th:block>
 
