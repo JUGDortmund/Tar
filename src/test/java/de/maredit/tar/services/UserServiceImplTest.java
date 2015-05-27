@@ -50,6 +50,11 @@ public class UserServiceImplTest {
   @BeforeClass
   public static void init() {
     EmbeddedMongo.DB.port(28018).start();
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   @AfterClass
@@ -245,8 +250,7 @@ public class UserServiceImplTest {
     return vacations;
   }
 
-
-  private List<Vacation> createVacationsWithBorderDates(){
+  private List<Vacation> createVacationsWithBorderDates() {
     LocalDate date = LocalDate.of(2013, Month.JANUARY, 1);
     LocalDate firstDayOfYear = date.with(TemporalAdjusters.firstDayOfYear());
     LocalDate firstDayOfNextYear = date.with(TemporalAdjusters.firstDayOfYear()).plusYears(1);
@@ -263,7 +267,7 @@ public class UserServiceImplTest {
     vacations.add(vacation1);
     Vacation
         vacation2 =
-        new Vacation(user1,lastDayOfYear, lastDayOfYear,
+        new Vacation(user1, lastDayOfYear, lastDayOfYear,
                      null, user1, 0.5, 4.5);
     vacation2.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
     vacation2.setState(State.APPROVED);
@@ -271,7 +275,7 @@ public class UserServiceImplTest {
 
     Vacation
         vacation3 =
-        new Vacation(user1,lastDayOfYear, firstDayOfNextYear,
+        new Vacation(user1, lastDayOfYear, firstDayOfNextYear,
                      null, user1, 2, 2.5);
     vacation3.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
     vacation3.setState(State.APPROVED);
