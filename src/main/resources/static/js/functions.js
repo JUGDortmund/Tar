@@ -120,6 +120,7 @@
       "format": "dd.mm.yyyy",
       "autoclose": true
     });
+    $('[data-toggle="tooltip"]').tooltip();
     $('.panel-default select').select2();
     $('.autosubmit').on('change', function() {
       return $(this).closest('form').submit();
