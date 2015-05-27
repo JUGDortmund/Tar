@@ -103,6 +103,18 @@
 
 	.timeline .item-icon {
 		margin-top: 10px;
+
+		&:new {
+			background-color: $vacation-new-primary;
+		}
+
+		&:edit-vacation {
+			background-color: $vacation-edit-primary;
+		}
+
+		&:approve-vacation {
+			background-color: $task-primary;
+		}
 	}
 
 	.box {
