@@ -22,14 +22,17 @@
             <!-- timeline items -->
             <li th:each="timeLineItem : ${timeLineItems}">
                 <th:block th:switch="${timeLineItem.class.name}">
+
                     <!-- Case State -->
                     <th:block th:case="de.maredit.tar.models.StateItem">
+
                         <!-- Switch newState -->
                         <th:block th:switch="${timeLineItem.stateItem.newState}">
+
                             <!-- State REQUESTED_SUBSTITUTE -->
                             <th:block th:case="${T(de.maredit.tar.models.enums.State).REQUESTED_SUBSTITUTE}">
                                 <th:block th:if="${timeLineItem.stateItem.oldState == null}">
-                                    <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
+                                    <i class="item-icon glyphicon glyphicon-new-window new"></i>
 
                                     <div class="timeline-item">
                                         <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
@@ -38,7 +41,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
-                                    <i class="item-icon glyphicon pending bg-blue"></i>
+                                    <i class="item-icon glyphicon pending approve-vacation"></i>
                                     <div class="timeline-item">
                                         <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
                                         <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat den
@@ -51,7 +54,7 @@
                             <!-- State WAITING_FOR_APPROVEMENT -->
                             <th:block th:case="${T(de.maredit.tar.models.enums.State).WAITING_FOR_APPROVEMENT}">
                                 <th:block th:if="${timeLineItem.stateItem.oldState == null}">
-                                    <i class="item-icon glyphicon glyphicon-new-window bg-blue"></i>
+                                    <i class="item-icon glyphicon glyphicon-new-window approve-vacation"></i>
                                     <div class="timeline-item">
                                         <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
                                         <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
@@ -59,7 +62,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
-                                    <i class="item-icon glyphicon pending bg-blue"></i>
+                                    <i class="item-icon glyphicon pending approve-vacation"></i>
                                     <div class="timeline-item">
                                         <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
                                         <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat den
@@ -71,7 +74,7 @@
 
                             <!-- State APPROVED -->
                             <th:block th:case="${T(de.maredit.tar.models.enums.State).APPROVED}">
-                                <i class="item-icon glyphicon approved bg-blue"></i>
+                                <i class="item-icon glyphicon approved bg-green"></i>
                                 <div class="timeline-item">
                                     <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i></span>
                                     <h3 class="timeline-header"><span th:text="${timeLineItem.author.fullname}">Pascal Plewa</span> hat einen
