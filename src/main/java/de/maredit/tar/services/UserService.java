@@ -24,6 +24,13 @@ public interface UserService {
   public List<User> getSortedUserList();
 
   /**
+   * returns a list of users, which are managers and sorted by lastname
+   *
+   * @return the list of managers
+   */
+  public List<User> getManagerList();
+
+  /**
    * returns a userVacationAccount, which cumulates all user data for a specific user in a specific
    * year.
    *

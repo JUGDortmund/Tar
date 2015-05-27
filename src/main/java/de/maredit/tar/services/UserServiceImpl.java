@@ -1,5 +1,7 @@
 package de.maredit.tar.services;
 
+import com.unboundid.ldap.sdk.LDAPException;
+
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
@@ -7,6 +9,8 @@ import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +27,17 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+  private static final Logger LOG = LogManager.getLogger(UserServiceImpl.class);
+
   @Autowired
   private UserRepository userRepository;
 
   @Autowired
   private VacationRepository vacationRepository;
+
+  @Autowired
+  private LdapService ldapService;
+
 
   @Override
   public List<User> getSortedUserList() {
@@ -40,6 +50,21 @@ public class UserServiceImpl implements UserService {
                 (e1, e2) -> e1.getLastname().toLowerCase()
                     .compareTo(e2.getLastname().toLowerCase())).collect(Collectors.toList());
     return userList;
+  }
+
+  public List<User> getManagerList(){
+    List<User> managerList = new ArrayList<User>();
+    try {
+      managerList = userRepository.findByUsernames(ldapService.getLdapSupervisorList());
+      managerList =
+          managerList.stream().filter(e -> e.isActive())
+              .sorted((e1, e2) -> e1.getLastname().compareTo(e2.getLastname()))
+              .collect(Collectors.toList());
+
+    } catch (LDAPException e) {
+      LOG.error("Error while reading manager list for vacation form", e);
+    }
+    return managerList;
   }
 
   @Override
