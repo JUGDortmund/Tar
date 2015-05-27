@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,7 @@ import javax.validation.Valid;
  * Created by czillmann on 22.04.15.
  */
 @Controller
-public class VacationController extends WebMvcConfigurerAdapter {
+public class VacationController extends AbstractBaseController {
 
   private static final Logger LOG = LogManager.getLogger(VacationController.class);
 

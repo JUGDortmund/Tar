@@ -12,7 +12,7 @@ import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 
 @Controller
-public class ApplicationController {
+public class ApplicationController extends AbstractBaseController{
 
   @Autowired
   private UserRepository userRepository;
