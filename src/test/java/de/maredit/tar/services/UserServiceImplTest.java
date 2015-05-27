@@ -198,8 +198,6 @@ public class UserServiceImplTest {
     return dummys;
   }
 
-
-
   private List<Vacation> createDummyVactions() {
     List<Vacation> vacations = new ArrayList<Vacation>();
 
@@ -274,7 +272,7 @@ public class UserServiceImplTest {
     Vacation
         vacation3 =
         new Vacation(user1,lastDayOfYear, firstDayOfNextYear,
-                     null, user1, 0.5, 4.5);
+                     null, user1, 2, 2.5);
     vacation3.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
     vacation3.setState(State.APPROVED);
     vacations.add(vacation3);
