@@ -107,6 +107,39 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         stateItem.setOldState(null);
         stateItem.setNewState(State.WAITING_FOR_APPROVEMENT);
         stateItemRepository.save(stateItem);
+
+        StateItem stateItem2 = new StateItem();
+        stateItem2.setVacation(v2);
+        stateItem2.setAuthor(user);
+        stateItem2.setCreated(LocalDateTime.now());
+        stateItem2.setOldState(null);
+        stateItem2.setNewState(State.REJECTED);
+        stateItemRepository.save(stateItem2);
+
+        StateItem stateItem3 = new StateItem();
+        stateItem3.setVacation(v2);
+        stateItem3.setAuthor(user);
+        stateItem3.setCreated(LocalDateTime.now());
+        stateItem3.setOldState(null);
+        stateItem3.setNewState(State.REQUESTED_SUBSTITUTE);
+        stateItemRepository.save(stateItem3);
+
+        stateItem3 = new StateItem();
+        stateItem3.setVacation(v2);
+        stateItem3.setAuthor(user);
+        stateItem3.setCreated(LocalDateTime.now());
+        stateItem3.setOldState(State.REQUESTED_SUBSTITUTE);
+        stateItem3.setNewState(State.WAITING_FOR_APPROVEMENT);
+        stateItemRepository.save(stateItem3);
+
+        stateItem3 = new StateItem();
+        stateItem3.setVacation(v2);
+        stateItem3.setAuthor(user);
+        stateItem3.setCreated(LocalDateTime.now());
+        stateItem3.setOldState(State.WAITING_FOR_APPROVEMENT);
+        stateItem3.setNewState(State.APPROVED);
+        stateItemRepository.save(stateItem3);
+
       }
     }
   }

@@ -2,6 +2,7 @@ package de.maredit.tar.controllers;
 
 import com.unboundid.ldap.sdk.LDAPException;
 
+import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
@@ -43,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -116,10 +118,11 @@ public class VacationController extends WebMvcConfigurerAdapter {
   }
 
   @RequestMapping("/substitution")
-  public String substitution(@ModelAttribute("vacation") Vacation vacation,
+  public String substitution(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
                              @RequestParam(value = "approve") boolean approve, Model model) {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
+    saveComment(comment, vacation);
 
     MailObject mail =
         (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
@@ -131,16 +134,27 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @RequestMapping("/approval")
   @PreAuthorize("hasRole('SUPERVISOR')")
-  public String approval(@ModelAttribute("vacation") Vacation vacation,
+  public String approval(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
                          @RequestParam(value = "approve") boolean approve, Model model) {
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
+    saveComment(comment, vacation);
 
     MailObject mail =
         (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
     this.mailService.sendMail(mail);
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
+    return "redirect:/";
+  }
+
+  @RequestMapping(value="/addComment", method = RequestMethod.POST)
+  public String addComment(@ModelAttribute("id") String id, @ModelAttribute("comment") String comment) {
+    if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(comment)){
+      Vacation vacation = vacationRepository.findOne(id);
+      saveComment(comment, vacation);
+    }
+
     return "redirect:/";
   }
 
@@ -184,7 +198,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
-  public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation,
+  public String saveVacation(@ModelAttribute("comment") String comment, @ModelAttribute("vacation") @Valid Vacation vacation,
                              BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
     if (bindingResult.hasErrors()) {
@@ -205,6 +219,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                                                            : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
+      saveComment(comment, vacation);
+
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation)
                                             : new VacationModifiedMail(vacation,
                                                                        applicationController
@@ -226,11 +242,31 @@ public class VacationController extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
 
+  private void saveComment(@ModelAttribute("comment") String comment,
+                           @ModelAttribute("vacation") @Valid Vacation vacation) {
+    if(StringUtils.isNotBlank(comment)) {
+      CommentItem commentItem = new CommentItem();
+      commentItem.setModifed(LocalDateTime.now());
+      commentItem.setCreated(LocalDateTime.now());
+      commentItem.setText(comment);
+      commentItem.setAuthor(applicationController.getConnectedUser());
+      commentItem.setVacation(vacation);
+      commentItemRepository.save(commentItem);
+    }
+  }
+
   private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
     List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
     allTimeline.addAll(commentItemRepository.findAllByVacation(vacation));
     allTimeline.addAll(protocolItemRepository.findAllByVacation(vacation));
     allTimeline.addAll(stateItemRepository.findAllByVacation(vacation));
+
+    allTimeline =
+        allTimeline
+            .stream()
+            .sorted(
+                (e1, e2) -> e2.getCreated()
+                    .compareTo(e1.getCreated())).collect(Collectors.toList());
     return allTimeline;
   }
 
