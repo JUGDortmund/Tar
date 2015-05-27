@@ -279,7 +279,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
     List<Vacation>
         substitutes =
         this.vacationRepository.findVacationBySubstituteAndStateNotAndToAfterOrderByFromAsc(
-            user, State.CANCELED, LocalDate.now());
+            user, State.CANCELED, LocalDate.now().minusDays(1));
     return substitutes;
   }
 
