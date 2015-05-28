@@ -6,6 +6,7 @@ import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
+import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
@@ -46,9 +47,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-/**
- * Created by czillmann on 22.04.15.
- */
 @Controller
 public class VacationController extends WebMvcConfigurerAdapter {
 
@@ -71,6 +69,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private VersionProperties versionProperties;
+
+  @Autowired
+  private CustomMailProperties customMailProperties;
 
   @Autowired
   private ApplicationController applicationController;
@@ -109,9 +110,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                              @RequestParam(value = "approve") boolean approve) {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
-
     MailObject mail =
-        (approve ? new SubstitutionApprovedMail(vacation) : new SubstitutionRejectedMail(vacation));
+        (approve ? new SubstitutionApprovedMail(vacation, customMailProperties.getUrlToVacation()) : new SubstitutionRejectedMail(vacation, customMailProperties.getUrlToVacation()));
     this.mailService.sendMail(mail);
 
     return "redirect:/";
@@ -123,9 +123,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                          @RequestParam(value = "approve") boolean approve) throws SocketException {
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
-
     MailObject mail =
-        (approve ? new VacationApprovedMail(vacation) : new VacationDeclinedMail(vacation));
+        (approve ? new VacationApprovedMail(vacation, customMailProperties.getUrlToVacation()) : new VacationDeclinedMail(vacation, customMailProperties.getUrlToVacation()));
     this.mailService.sendMail(mail);
 
     return "redirect:/";
@@ -172,6 +171,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
   public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation,
                              BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
+
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
@@ -183,6 +183,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
       return "application/index";
     } else {
       boolean newVacation = StringUtils.isBlank(vacation.getId());
+      Vacation vacationBeforeChange = newVacation ? null : vacationRepository.findOne(vacation.getId());
+
       if (newVacation) {
         vacation.setAuthor(applicationController.getConnectedUser());
       } else {
@@ -190,8 +192,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                                                            : State.REQUESTED_SUBSTITUTE);
       }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation)
-                                            : new VacationModifiedMail(vacation,
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation())
+                                            : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), vacationBeforeChange,
                                                                        applicationController
                                                                            .getConnectedUser()));
       return "redirect:/";
@@ -201,7 +203,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String cancelVacation(@ModelAttribute("vacation") Vacation vacation) {
-
     VacationCanceledMail mail = new
         VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);

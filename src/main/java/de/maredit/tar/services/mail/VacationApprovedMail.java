@@ -37,7 +37,7 @@ public class VacationApprovedMail implements MailObject {
   private String[] toRecipients;
   private Calendar ical;
 
-  public VacationApprovedMail(Vacation vacation) throws SocketException {
+  public VacationApprovedMail(Vacation vacation, String urlToVacation) throws SocketException {
     values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
@@ -46,6 +46,7 @@ public class VacationApprovedMail implements MailObject {
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
+    values.put("urlToVacation", urlToVacation);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
@@ -116,7 +117,7 @@ public class VacationApprovedMail implements MailObject {
   public String[] getToRecipients() {
     return toRecipients;
   }
-  
+
   @Override
   public byte[] getICalAttachment() throws IOException, ValidationException{
     ByteArrayOutputStream outStream = new ByteArrayOutputStream();
