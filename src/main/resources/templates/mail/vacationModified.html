@@ -82,6 +82,12 @@
 
     <p> Der Urlaub wurde ge&auml;ndert von: <span th:text="${modifiedBy}">Bearbeiter</span></p>
 
+    <th:block th:if="${not #strings.isEmpty(comment)}">
+        <p> <b>Kommentar:</b><br/>
+        <span th:text="${comment}">KOMMENTAR</span>
+        </p>
+    </th:block>
+
     <p>
         &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
     </p>

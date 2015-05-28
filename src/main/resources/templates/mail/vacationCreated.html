@@ -28,6 +28,12 @@
         <p> <b>Angelegt von:</b> <span th:text="${createdBy}">createdBy</span> </p>
     </th:block>
 
+    <th:block th:if="${not #strings.isEmpty(comment)}">
+        <p> <b>Kommentar:</b><br/>
+        <span th:text="${comment}">KOMMENTAR</span>
+        </p>
+    </th:block>
+
     <p>
         &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
     </p>

@@ -18,7 +18,7 @@ public class VacationDeclinedMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public VacationDeclinedMail(Vacation vacation, String urlToVacation) {
+  public VacationDeclinedMail(Vacation vacation, String urlToVacation, String comment) {
     values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
@@ -28,6 +28,7 @@ public class VacationDeclinedMail implements MailObject {
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     values.put("urlToVacation", urlToVacation);
+    values.put("comment", comment);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));
