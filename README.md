@@ -13,13 +13,18 @@ The mail service always has to be specified.
 
 Overview of services:
 Mail:
+
 - dummyMailService
 - smtpMailService
 - exchangeMailService
+
 Calendar:
+
 - dummyCalendarService
 - exchangeCalendarService (default)
+
 Ldap (Authorisation):
+
 - dummyLdapService
 - ldapService (default)
 
