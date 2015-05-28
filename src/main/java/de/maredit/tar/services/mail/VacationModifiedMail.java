@@ -19,7 +19,17 @@ public class VacationModifiedMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public VacationModifiedMail(Vacation vacation, User user) {
+  public VacationModifiedMail(Vacation vacation, String urlToVacation, Vacation vacationBeforeChange, User user) {
+    values.put("employee_old", vacationBeforeChange.getUser().getFirstname());
+    values.put("manager_old", vacationBeforeChange.getManager() == null ? "" : vacationBeforeChange.getManager().getFullname());
+    values.put("substitute_old", vacationBeforeChange.getSubstitute() == null ? "" : vacationBeforeChange.getSubstitute()
+        .getFullname());
+    values.put("fromDate_old", ConversionUtils.convertLocalDateToString(vacationBeforeChange.getFrom()));
+    values.put("toDate_old",
+               ConversionUtils.convertLocalDateToString(vacationBeforeChange.getTo()));
+    values.put("totalDays_old", vacationBeforeChange.getDays());
+    values.put("leftDays_old", vacationBeforeChange.getDaysLeft());
+
     values.put("employee", vacation.getUser().getFirstname());
     values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
@@ -29,9 +39,8 @@ public class VacationModifiedMail implements MailObject {
                ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
-    if (!user.equals(vacation.getUser())) {
-      values.put("modifiedBy", user.getFullname());
-    }
+    values.put("modifiedBy", user.getFullname());
+    values.put("urlToVacation", urlToVacation);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));

@@ -22,14 +22,14 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
   public void onApplicationEvent(ContextRefreshedEvent event) {
     UserSyncTask userSyncTask = event.getApplicationContext().getBean(UserSyncTask.class);
     userSyncTask.syncLdapUser();
-    
+
     if (event.getApplicationContext().getEnvironment()
         .getProperty("spring.data.mongodb.preload", Boolean.class)) {
       UserRepository userRepository = event.getApplicationContext().getBean(UserRepository.class);
       VacationRepository vacationRepository =
           event.getApplicationContext().getBean(VacationRepository.class);
       LdapService ldapService = event.getApplicationContext().getBean(LdapService.class);
-      
+
       User manager = null;
 
       try {
@@ -43,19 +43,28 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
 
       List<User> users = userRepository.findAll();
       for (User user : users) {
-
         Vacation v1 =
             new Vacation(user, LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(
-                1).plusDays(15), manager, manager, 15, 5);
+                1).plusDays(1), manager, manager, 2, 28);
         v1.setState(State.WAITING_FOR_APPROVEMENT);
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
         Vacation v2 =
-            new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(20),
-                         manager, manager, 15, 5);
+            new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(8),
+                         manager, manager, 4, 24);
         v2.setState(State.REQUESTED_SUBSTITUTE);
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
         Vacation
             v3 =
             new Vacation(user, LocalDate.now().plusWeeks(2), LocalDate.now().plusWeeks(2).plusDays(
-                15), manager, manager, 15, 5);
+                4), manager, manager, 5, 19);
         v3.setState(State.APPROVED);
         vacationRepository.save(v1);
         vacationRepository.save(v2);
