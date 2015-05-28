@@ -31,8 +31,8 @@
     }
 
     .back {
-      -webkit-transform: rotatey(-180deg);
-      transform: rotatey(-180deg);
+      -webkit-transform: rotatey(-180deg) translateZ(1px);
+      transform: rotatey(-180deg) translateZ(1px);
     }
 }
 
