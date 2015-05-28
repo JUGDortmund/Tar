@@ -4,8 +4,10 @@
 
 <body th:fragment="activities">
 
-    <form th:action="@{/addComment}" method="post" role="form">
-
+    <form th:if="${ (vacation.user.username == #authentication.name) ||
+                    (vacation.substitute.username == #authentication.name) ||
+                    (#authorization.expression('hasRole(''SUPERVISOR'')'))  }"
+          th:action="@{/addComment}" method="post" role="form">
 
         <div class="input-group">
             <input class="form-control" type="text" placeholder="Add comment.." name="comment" id="comment"/>

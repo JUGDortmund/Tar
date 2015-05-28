@@ -199,7 +199,12 @@ edit-vacation, approve-vacation  -->
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row"
+                         th:if="${
+                                editable ||
+                                formMode == T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL ||
+                                formMode == T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL
+                                }">
                         <div class="col-xs-12 form-group">
                             <label for="comment">Kommentar</label>
                             <textarea class="form-control" rows="2" name="comment" id="comment" path="comment"></textarea>
