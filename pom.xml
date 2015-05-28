@@ -93,7 +93,7 @@
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>de.maredit.tar.Main</mainClass>
-                                    <Implementation-Build>${buildNumber}</Implementation-Build>
+                                    <Build-Number>${buildNumber}</Build-Number>
                                 </transformer>
                             </transformers>
                             <keepDependenciesWithProvidedScope>true
