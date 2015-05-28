@@ -17,6 +17,12 @@
         <li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
         <li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
 
+    <th:block th:if="${not #strings.isEmpty(comment)}">
+        <p> <b>Kommentar:</b><br/>
+        <span th:text="${comment}">KOMMENTAR</span>
+        </p>
+    </th:block>
+
     <p>
         &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
     </p>

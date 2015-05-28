@@ -1,18 +1,18 @@
 package de.maredit.tar.repositories;
 
-import java.util.List;
-import java.util.Set;
+import de.maredit.tar.models.User;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import de.maredit.tar.models.User;
+import java.util.List;
+import java.util.Set;
 
 public interface UserRepository extends MongoRepository<User, String> {
-  public User findUserByUsername(String username);
+  User findUserByUsername(String username);
 
-  public User findByUidNumber(String uidNumber);
+  User findByUidNumber(String uidNumber);
 
   @Query("{'username' : {$in: ?0}}")
-  public List<User> findByUsernames(Set<String> usernames);
+  List<User> findByUsernames(Set<String> usernames);
 }

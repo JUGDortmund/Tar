@@ -1,5 +1,7 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.models.CommentItem;
+import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.services.calendar.CalendarItem;
 import de.maredit.tar.services.CalendarService;
@@ -11,11 +13,15 @@ import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
+import de.maredit.tar.repositories.CommentItemRepository;
+import de.maredit.tar.repositories.ProtocolItemRepository;
+import de.maredit.tar.repositories.StateItemRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.MailService;
 import de.maredit.tar.services.UserService;
+import de.maredit.tar.services.mail.CommentAddedMail;
 import de.maredit.tar.services.mail.MailObject;
 import de.maredit.tar.services.mail.SubstitutionApprovedMail;
 import de.maredit.tar.services.mail.SubstitutionRejectedMail;
@@ -41,10 +47,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.beans.PropertyEditorSupport;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -59,6 +68,15 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private ProtocolItemRepository protocolItemRepository;
+
+  @Autowired
+  private CommentItemRepository commentItemRepository;
+
+  @Autowired
+  private StateItemRepository stateItemRepository;
 
   @Autowired
   private MailService mailService;
@@ -100,15 +118,15 @@ public class VacationController extends WebMvcConfigurerAdapter {
     binder.addValidators(new VacationValidator());
     binder.registerCustomEditor(String.class, "id", new StringTrimmerEditor(true));
     binder.registerCustomEditor(User.class, new PropertyEditorSupport() {
-      
+
       @Override
       public String getAsText() {
         if (getValue() == null) {
           return "";
         }
-        return ((User)getValue()).getId();
+        return ((User) getValue()).getId();
       }
-      
+
       @Override
       public void setAsText(String text) throws IllegalArgumentException {
         if (StringUtils.isNotBlank(text)) {
@@ -128,25 +146,31 @@ public class VacationController extends WebMvcConfigurerAdapter {
     setIndexModelValues(model, selectedUser);
 
     model.addAttribute("formMode", FormMode.NEW);
+    model.addAttribute("timeLineItems", new ArrayList<TimelineItem>());
     return "application/index";
   }
 
-  @RequestMapping("/substitution")
-  public String substitution(@ModelAttribute("vacation") Vacation vacation,
-                             @RequestParam(value = "approve") boolean approve) {
+  @RequestMapping(value="/substitution", method = RequestMethod.POST)
+  public String substitution(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
+                             @ModelAttribute("approve") String approval, Model model) {
+    boolean approve = Boolean.valueOf(approval);
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
+    saveComment(comment, vacation);
     MailObject mail =
-        (approve ? new SubstitutionApprovedMail(vacation, customMailProperties.getUrlToVacation()) : new SubstitutionRejectedMail(vacation, customMailProperties.getUrlToVacation()));
+        (approve ? new SubstitutionApprovedMail(vacation, customMailProperties.getUrlToVacation(), comment) : new SubstitutionRejectedMail(vacation, customMailProperties.getUrlToVacation(), comment));
     this.mailService.sendMail(mail);
-
+    List<TimelineItem> allTimeline = getTimelineItems(vacation);
+    model.addAttribute("timeLineItems", allTimeline);
     return "redirect:/";
   }
 
-  @RequestMapping("/approval")
+  @RequestMapping(value="/approval", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR')")
-  public String approval(@ModelAttribute("vacation") Vacation vacation,
-                         @RequestParam(value = "approve") boolean approve) throws SocketException {
+  public String approval(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
+                         @ModelAttribute("approve") String approval, Model model) throws SocketException {
+    boolean approve = Boolean.valueOf(approval);
+    vacation.setState((approve) ? State.APPROVED : State.REJECTED);
 
     CalendarItem appointment = null;
     if (approve) {
@@ -156,11 +180,24 @@ public class VacationController extends WebMvcConfigurerAdapter {
     } else {
       vacation.setState(State.REJECTED);
     }
-    this.vacationRepository.save(vacation);
-    MailObject mail =
-        (approve ? new VacationApprovedMail(vacation, customMailProperties.getUrlToVacation()) : new VacationDeclinedMail(vacation, customMailProperties.getUrlToVacation()));
-    this.mailService.sendMail(mail, appointment.getMailAttachment());
 
+    this.vacationRepository.save(vacation);
+    saveComment(comment, vacation);
+    MailObject mail =
+        (approve ? new VacationApprovedMail(vacation, customMailProperties.getUrlToVacation(), comment) : new VacationDeclinedMail(vacation, customMailProperties.getUrlToVacation(), comment));
+    this.mailService.sendMail(mail);
+    List<TimelineItem> allTimeline = getTimelineItems(vacation);
+    model.addAttribute("timeLineItems", allTimeline);
+    return "redirect:/";
+  }
+
+  @RequestMapping(value="/addComment", method = RequestMethod.POST)
+  public String addComment(@ModelAttribute("id") String id, @ModelAttribute("comment") String comment) {
+    if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(comment)){
+      Vacation vacation = vacationRepository.findOne(id);
+      final CommentItem commentItem = saveComment(comment, vacation);
+      this.mailService.sendMail(new CommentAddedMail(vacation, customMailProperties.getUrlToVacation(), commentItem));
+    }
     return "redirect:/";
   }
 
@@ -168,6 +205,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
   public String vacation(@ModelAttribute("vacation") Vacation vacation,
                          @RequestParam(value = "action", required = false) String action,
                          Model model) {
+    List<TimelineItem> allTimeline = getTimelineItems(vacation);
+    model.addAttribute("timeLineItems", allTimeline);
     switch (action) {
       case "edit":
         model.addAttribute("users", userService.getSortedUserList());
@@ -202,8 +241,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
-  public String saveVacation(@ModelAttribute("vacation") @Valid Vacation vacation,
-                             BindingResult bindingResult, Model model,
+  public String saveVacation(@ModelAttribute("comment") String comment,
+                             @ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
 
     boolean newVacation = StringUtils.isBlank(vacation.getId());
@@ -233,19 +272,21 @@ public class VacationController extends WebMvcConfigurerAdapter {
         vacation.setAppointmentId(null);
       }
       this.vacationRepository.save(vacation);
-      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation())
-                                            : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), vacationBeforeChange,
+      saveComment(comment, vacation);
+
+      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation(), comment)
+                                            : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
                                                                        applicationController
                                                                            .getConnectedUser()));
-      return "redirect:/";
     }
+    return "redirect:/";
   }
 
-  @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
+  @RequestMapping(value = "/cancelVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
-  public String cancelVacation(@ModelAttribute("vacation") Vacation vacation) {
+  public String cancelVacation(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment) {
     VacationCanceledMail mail = new
-        VacationCanceledMail(vacation);
+        VacationCanceledMail(vacation, comment);
     vacation.setState(State.CANCELED);
     calendarService.deleteAppointment(vacation);
     vacation.setAppointmentId(null);
@@ -253,6 +294,37 @@ public class VacationController extends WebMvcConfigurerAdapter {
     this.mailService.sendMail(mail);
 
     return "redirect:/";
+  }
+
+  private CommentItem saveComment(@ModelAttribute("comment") String comment,
+                           @ModelAttribute("vacation") @Valid Vacation vacation) {
+    if(StringUtils.isNotBlank(comment)) {
+      CommentItem commentItem = new CommentItem();
+      commentItem.setModifed(LocalDateTime.now());
+      commentItem.setCreated(LocalDateTime.now());
+      commentItem.setText(comment);
+      commentItem.setAuthor(applicationController.getConnectedUser());
+      commentItem.setVacation(vacation);
+      commentItemRepository.save(commentItem);
+      return commentItem;
+    } else {
+      return null;
+    }
+  }
+
+  private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
+    List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
+    allTimeline.addAll(commentItemRepository.findAllByVacation(vacation));
+    allTimeline.addAll(protocolItemRepository.findAllByVacation(vacation));
+    allTimeline.addAll(stateItemRepository.findAllByVacation(vacation));
+
+    allTimeline =
+        allTimeline
+            .stream()
+            .sorted(
+                (e1, e2) -> e2.getCreated()
+                    .compareTo(e1.getCreated())).collect(Collectors.toList());
+    return allTimeline;
   }
 
   private void setIndexModelValues(Model model, User selectedUser) {

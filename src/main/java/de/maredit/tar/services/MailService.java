@@ -10,6 +10,6 @@ public interface MailService {
 
   public void sendMail(MailObject mail, Attachment... attachments);
 
-  public void sendSimpleMail(MailObject mail);
+  void sendSimpleMail(MailObject mail);
 
 }
