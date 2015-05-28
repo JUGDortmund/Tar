@@ -117,8 +117,10 @@ public class User {
 
   @Override
   public String toString() {
-    return "User [id=" + id + ", uidNumber=" + uidNumber + ", firstname=" + firstname
-        + ", lastname=" + lastname + ", username=" + username + ", mail=" + mail + ", active="
-        + active + "]";
+    //TODO Fix data binding to use standard "toString" method
+    return id;
+//    return "User [id=" + id + ", uidNumber=" + uidNumber + ", firstname=" + firstname
+//        + ", lastname=" + lastname + ", username=" + username + ", mail=" + mail + ", active="
+//        + active + "]";
   }
 }
