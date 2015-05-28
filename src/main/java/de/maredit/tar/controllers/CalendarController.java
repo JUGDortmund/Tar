@@ -1,12 +1,11 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.beans.NavigationBean;
+import static java.util.stream.Collectors.toList;
 
+import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
-import de.maredit.tar.properties.VersionProperties;
-import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.VacationRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 /**
  * Created by czillmann on 29.04.15.
  */
@@ -42,12 +39,6 @@ public class CalendarController {
   private ApplicationController applicationController;
 
   @Autowired
-  private VersionProperties versionProperties;
-
-  @Autowired
-  private VersionProvider versionProvider;
-
-  @Autowired
   private NavigationBean navigationBean;
 
   @RequestMapping("/calendar")
@@ -57,8 +48,6 @@ public class CalendarController {
 
     model.addAttribute("vacations", vacations);
     model.addAttribute("loginUser", applicationController.getConnectedUser());
-    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
-    model.addAttribute("buildnumber", versionProperties.getBuild());
 
     return "application/calendar";
   }

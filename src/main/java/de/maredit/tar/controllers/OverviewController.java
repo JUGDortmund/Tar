@@ -3,10 +3,7 @@ package de.maredit.tar.controllers;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.properties.VersionProperties;
-import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.services.UserService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +28,6 @@ public class OverviewController {
   private ApplicationController applicationController;
 
   @Autowired
-  private VersionProperties versionProperties;
-
-  @Autowired
-  private VersionProvider versionProvider;
-
-  @Autowired
   private UserService userService;
 
   @Autowired
@@ -59,8 +50,6 @@ public class OverviewController {
     }
 
     model.addAttribute("loginUser", applicationController.getConnectedUser());
-    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
-    model.addAttribute("buildnumber", versionProperties.getBuild());
     model.addAttribute("users", allUsers);
     model.addAttribute("filteredUsers", filteredUsers);
     model.addAttribute("userVacationAccounts", userVacationAccounts);

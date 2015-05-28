@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import java.net.URISyntaxException;
 
 @Configuration
-@Profile({"exchangeMailService", "!dummyCalendarService"})
+@Profile({"exchangeMailService", "exchangeCalendarService"})
 public class ExchangeConfig {
   
   @Autowired
