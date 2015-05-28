@@ -1,5 +1,7 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.beans.NavigationBean;
+
 import de.maredit.tar.services.calendar.CalendarItem;
 
 import de.maredit.tar.services.CalendarService;
@@ -73,6 +75,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private VersionProperties versionProperties;
+  
+  @Autowired
+  private NavigationBean navigationBean;
 
   @Autowired
   private CustomMailProperties customMailProperties;
@@ -101,6 +106,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
   public String index(HttpServletRequest request, Model model,
                       @ModelAttribute("vacation") Vacation vacation) {
 
+    navigationBean.setActiveComponent(NavigationBean.VACATION_PAGE);
     vacation.setUser(applicationController.getConnectedUser());
     User selectedUser = getUser(request);
     setIndexModelValues(model, selectedUser);
