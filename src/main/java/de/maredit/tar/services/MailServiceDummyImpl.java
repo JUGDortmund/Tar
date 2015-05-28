@@ -1,15 +1,14 @@
 package de.maredit.tar.services;
 
-import java.io.IOException;
+import de.maredit.tar.services.mail.Attachment;
 
-import net.fortuna.ical4j.model.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import de.maredit.tar.services.mail.MailObject;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
 @Service
 @Profile({"dummyMailService"})
 public class MailServiceDummyImpl implements MailService {
@@ -26,13 +25,8 @@ public class MailServiceDummyImpl implements MailService {
   }
 
   @Override
-  public void sendMail(MailObject mail) {
+  public void sendMail(MailObject mail, Attachment... attachments) {
     LOG.info("HTML mail to be send:\n {}", mail.toString());
     LOG.info("Mail Text:\n {}", mailMessageComposer.composeSimpleMailMessage(mail).getText());
-    try {
-      LOG.debug("iCal:\n{}", new String(ArrayUtils.nullToEmpty(mail.getICalAttachment()), "ISO-8859-1"));
-    } catch (IOException | ValidationException e) {
-      LOG.error("Error creating iCal", e);
-    }
   }
 }
