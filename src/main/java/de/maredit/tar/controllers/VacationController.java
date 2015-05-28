@@ -117,9 +117,10 @@ public class VacationController extends WebMvcConfigurerAdapter {
     return "application/index";
   }
 
-  @RequestMapping("/substitution")
+  @RequestMapping(value="/substitution", method = RequestMethod.POST)
   public String substitution(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
-                             @RequestParam(value = "approve") boolean approve, Model model) {
+                             @ModelAttribute("approve") String approval, Model model) {
+    boolean approve = Boolean.valueOf(approval);
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
     saveComment(comment, vacation);
@@ -132,10 +133,11 @@ public class VacationController extends WebMvcConfigurerAdapter {
     return "redirect:/";
   }
 
-  @RequestMapping("/approval")
+  @RequestMapping(value="/approval", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
-                         @RequestParam(value = "approve") boolean approve, Model model) {
+                         @ModelAttribute("approve") String approval, Model model) {
+    boolean approve = Boolean.valueOf(approval);
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
     this.vacationRepository.save(vacation);
     saveComment(comment, vacation);
@@ -198,8 +200,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
-  public String saveVacation(@ModelAttribute("comment") String comment, @ModelAttribute("vacation") @Valid Vacation vacation,
-                             BindingResult bindingResult, Model model,
+  public String saveVacation(@ModelAttribute("comment") String comment,
+                             @ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
@@ -209,7 +211,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
       setIndexModelValues(model, selectedUser);
       model.addAttribute("formMode", FormMode.EDIT);
-      return "application/index";
     } else {
       boolean newVacation = StringUtils.isBlank(vacation.getId());
       if (newVacation) {
@@ -225,11 +226,11 @@ public class VacationController extends WebMvcConfigurerAdapter {
                                             : new VacationModifiedMail(vacation,
                                                                        applicationController
                                                                            .getConnectedUser()));
-      return "redirect:/";
     }
+    return "redirect:/";
   }
 
-  @RequestMapping(value = "/cancelVacation", method = RequestMethod.GET)
+  @RequestMapping(value = "/cancelVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String cancelVacation(@ModelAttribute("vacation") Vacation vacation) {
 
