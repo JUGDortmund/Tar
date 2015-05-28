@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface VacationRepository extends MongoRepository<Vacation, String> {
 
-  public List<Vacation> findVacationByUserOrderByFromAsc(User user);
-
   public List<Vacation> findVacationBySubstituteAndState(User user, State state);
   
   public List<Vacation> findVacationByManagerAndState(User user, State state);
@@ -24,4 +22,8 @@ public interface VacationRepository extends MongoRepository<Vacation, String> {
   public List<Vacation> findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(
       LocalDate startFrom, LocalDate endFrom, List<State> states, LocalDate startTo,
       LocalDate endTo, List<State> states1);
+
+  public List<Vacation> findVacationByUserAndFromBetweenOrUserAndToBetween(
+      User user, LocalDate startFrom, LocalDate endFrom, User userAgain, LocalDate startTo,
+      LocalDate endTo);
 }

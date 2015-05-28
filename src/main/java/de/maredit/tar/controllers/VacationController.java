@@ -12,6 +12,7 @@ import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.MailService;
+import de.maredit.tar.services.UserService;
 import de.maredit.tar.services.mail.MailObject;
 import de.maredit.tar.services.mail.SubstitutionApprovedMail;
 import de.maredit.tar.services.mail.SubstitutionRejectedMail;
@@ -64,6 +65,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private LdapService ldapService;
+
+  @Autowired
+  private UserService userService;
 
   @Autowired
   private VersionProperties versionProperties;
@@ -133,8 +137,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
                          Model model) {
     switch (action) {
       case "edit":
-        model.addAttribute("users", getSortedUserList());
-        model.addAttribute("managers", getManagerList());
+        model.addAttribute("users", userService.getSortedUserList());
+        model.addAttribute("managers", userService.getManagerList());
         model.addAttribute("formMode", FormMode.EDIT);
         break;
       case "approve":
@@ -156,8 +160,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @RequestMapping("/newVacation")
   public String newVacation(@ModelAttribute("vacation") Vacation vacation, Model model) {
     vacation.setUser(applicationController.getConnectedUser());
-    model.addAttribute("managers", getManagerList());
-    model.addAttribute("users", getSortedUserList());
+    model.addAttribute("managers", userService.getManagerList());
+    model.addAttribute("users", userService.getSortedUserList());
     model.addAttribute("vacation", vacation);
     model.addAttribute("formMode", FormMode.NEW);
     return "components/vacationForm";
@@ -209,8 +213,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   private void setIndexModelValues(Model model, User selectedUser) {
 
-    List<User> users = getSortedUserList();
-    List<User> managerList = getManagerList();
+    List<User> users = userService.getSortedUserList();
+    List<User> managerList = userService.getManagerList();
 
     List<Vacation> vacations = getVacationsForUser(selectedUser);
     List<Vacation> substitutes = getSubstitutesForUser(selectedUser);
@@ -233,34 +237,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
     model.addAttribute("loginUser", applicationController.getConnectedUser());
     model.addAttribute("appVersion", versionProvider.getApplicationVersion());
     model.addAttribute("buildnumber", versionProperties.getBuild());
-  }
-
-  private List<User> getSortedUserList() {
-    List<User> userList = new ArrayList<User>();
-    userList = userRepository.findAll();
-    userList =
-        userList
-            .stream()
-            .filter(e -> e.isActive())
-            .sorted(
-                (e1, e2) -> e1.getLastname().toUpperCase()
-                    .compareTo(e2.getLastname().toUpperCase())).collect(Collectors.toList());
-    return userList;
-  }
-
-  private List<User> getManagerList() {
-    List<User> managerList = new ArrayList<User>();
-    try {
-      managerList = userRepository.findByUsernames(ldapService.getLdapSupervisorList());
-      managerList =
-          managerList.stream().filter(e -> e.isActive())
-              .sorted((e1, e2) -> e1.getLastname().compareTo(e2.getLastname()))
-              .collect(Collectors.toList());
-
-    } catch (LDAPException e) {
-      LOG.error("Error while reading manager list for vacation form", e);
-    }
-    return managerList;
   }
 
   private User getUser(HttpServletRequest request) {
