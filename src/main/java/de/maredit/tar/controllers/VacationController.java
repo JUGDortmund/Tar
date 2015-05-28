@@ -1,9 +1,7 @@
 package de.maredit.tar.controllers;
 
 import de.maredit.tar.beans.NavigationBean;
-
 import de.maredit.tar.services.calendar.CalendarItem;
-
 import de.maredit.tar.services.CalendarService;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
@@ -44,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.time.LocalDate;
+import java.beans.PropertyEditorSupport;
 import java.net.SocketException;
 import java.util.List;
 
@@ -100,6 +99,23 @@ public class VacationController extends WebMvcConfigurerAdapter {
   protected void initBinder(WebDataBinder binder) {
     binder.addValidators(new VacationValidator());
     binder.registerCustomEditor(String.class, "id", new StringTrimmerEditor(true));
+    binder.registerCustomEditor(User.class, new PropertyEditorSupport() {
+      
+      @Override
+      public String getAsText() {
+        if (getValue() == null) {
+          return "";
+        }
+        return ((User)getValue()).getId();
+      }
+      
+      @Override
+      public void setAsText(String text) throws IllegalArgumentException {
+        if (StringUtils.isNotBlank(text)) {
+          setValue(userRepository.findOne(text));
+        }
+      }
+    });
   }
 
   @RequestMapping("/")
