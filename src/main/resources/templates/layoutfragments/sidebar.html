@@ -11,9 +11,9 @@
             <ul class="sidebar-menu">
 
                 <!-- Optionally, you can add icons to the links -->
-                <li class="active"><a href="/"><span>Urlaubsplanung</span></a></li>
-                <li><a href="/calendar"><span>Kalender</span></a></li>
-                <li><a href="/overview"><span>Übersicht Resturlaube</span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).VACATION_PAGE ? 'active' : ''}"><a href="/"><span>Urlaubsplanung</span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).CALENDAR_PAGE ? 'active' : ''}"><a href="/calendar"><span>Kalender</span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).OVERVIEW_PAGE ? 'active' : ''}"><a href="/overview"><span>Übersicht Resturlaube</span></a></li>
         </ul>
         <!-- /.sidebar-menu -->
         </section>
