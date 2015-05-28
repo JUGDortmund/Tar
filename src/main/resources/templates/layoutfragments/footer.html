@@ -5,12 +5,9 @@
 
     <footer class="main-footer" th:fragment="footer">
         <!-- To the right -->
-        <div class="pull-right hidden-xs" th:if="${buildnumber != null}">
-            <span th:text="${appVersion}"></span> - <span
-                th:text="${buildnumber}"></span>
-        </div>
-        <div class="pull-right hidden-xs" th:if="${buildnumber == null}">
-            <span th:text="${appVersion}"></span>
+        <div class="pull-right hidden-xs">
+            <span th:text="${@versionBean.applicationVersion}"></span> - Rev: <span
+                th:text="${@versionBean.revision}"></span>
         </div>
         <!-- Default to the left -->
         <strong>Copyright &copy; 2015 <a href="http://www.maredit.de">maredit

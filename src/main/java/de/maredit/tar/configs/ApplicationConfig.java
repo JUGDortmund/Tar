@@ -1,5 +1,8 @@
 package de.maredit.tar.configs;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+
+import de.maredit.tar.beans.VersionBean;
 import de.maredit.tar.beans.NavigationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,5 +17,11 @@ public class ApplicationConfig {
   @Scope(value=WebApplicationContext.SCOPE_SESSION, proxyMode=ScopedProxyMode.TARGET_CLASS)
   public NavigationBean navigationBean() {
     return new NavigationBean();
+  }
+
+  @Bean
+  @Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON)
+  public VersionBean versionBean() {
+    return new VersionBean();
   }
 }

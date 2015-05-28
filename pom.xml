@@ -149,8 +149,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <doCheck>true</doCheck>
+                    <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
+                    <shortRevisionLength>6</shortRevisionLength>
                 </configuration>
             </plugin>
         </plugins>

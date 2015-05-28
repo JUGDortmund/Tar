@@ -9,8 +9,6 @@ import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.properties.CustomMailProperties;
-import de.maredit.tar.properties.VersionProperties;
-import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
@@ -73,9 +71,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
   private UserService userService;
 
   @Autowired
-  private VersionProperties versionProperties;
-  
-  @Autowired
   private NavigationBean navigationBean;
 
   @Autowired
@@ -83,9 +78,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private ApplicationController applicationController;
-
-  @Autowired
-  private VersionProvider versionProvider;
 
   @ModelAttribute("vacation")
   public Vacation getVacation(@RequestParam(value = "id", required = false) String id) {
@@ -279,8 +271,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
     model.addAttribute("approvals", approvals);
 
     model.addAttribute("loginUser", applicationController.getConnectedUser());
-    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
-    model.addAttribute("buildnumber", versionProperties.getBuild());
   }
 
   private User getUser(HttpServletRequest request) {
