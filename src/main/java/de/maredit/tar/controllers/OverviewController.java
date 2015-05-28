@@ -1,5 +1,6 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.properties.VersionProperties;
@@ -39,9 +40,13 @@ public class OverviewController {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private NavigationBean navigationBean;
+
   @RequestMapping("/overview")
   public String overview(Model model,
                          @RequestParam(value = "employees", required = false) ArrayList<User> filteredUsers) {
+    navigationBean.setActiveComponent(NavigationBean.OVERVIEW_PAGE);
     LOG.trace("Filtered users: {}", filteredUsers);
     List<User> allUsers = userService.getSortedUserList();
     List<UserVacationAccount> userVacationAccounts = null;
