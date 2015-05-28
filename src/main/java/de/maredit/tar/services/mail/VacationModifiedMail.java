@@ -19,7 +19,7 @@ public class VacationModifiedMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public VacationModifiedMail(Vacation vacation, String urlToVacation, Vacation vacationBeforeChange, User user) {
+  public VacationModifiedMail(Vacation vacation, String urlToVacation, String comment, Vacation vacationBeforeChange, User user) {
     values.put("employee_old", vacationBeforeChange.getUser().getFirstname());
     values.put("manager_old", vacationBeforeChange.getManager() == null ? "" : vacationBeforeChange.getManager().getFullname());
     values.put("substitute_old", vacationBeforeChange.getSubstitute() == null ? "" : vacationBeforeChange.getSubstitute()
@@ -41,6 +41,7 @@ public class VacationModifiedMail implements MailObject {
     values.put("leftDays", vacation.getDaysLeft());
     values.put("modifiedBy", user.getFullname());
     values.put("urlToVacation", urlToVacation);
+    values.put("comment", comment);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));

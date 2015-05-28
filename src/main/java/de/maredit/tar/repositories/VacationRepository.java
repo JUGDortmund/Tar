@@ -11,21 +11,23 @@ import java.util.List;
 
 public interface VacationRepository extends MongoRepository<Vacation, String> {
 
-  public List<Vacation> findVacationBySubstituteAndState(User user, State state);
-  
-  public List<Vacation> findVacationByManagerAndState(User user, State state);
+  List<Vacation> findVacationByUserOrderByFromAsc(User user);
 
-  public List<Vacation> findVacationByUserAndStateNotOrderByFromAsc(User user, State state);
+  List<Vacation> findVacationBySubstituteAndState(User user, State state);
 
-  public List<Vacation> findVacationBySubstituteAndStateNotOrderByFromAsc(User user, State state);
+  List<Vacation> findVacationByManagerAndState(User user, State state);
 
-  public List<Vacation> findVacationBySubstituteAndStateNotAndToAfterOrderByFromAsc(User user, State state, LocalDate endDate);
+  List<Vacation> findVacationByUserAndStateNotOrderByFromAsc(User user, State state);
 
-  public List<Vacation> findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(
+  List<Vacation> findVacationBySubstituteAndStateNotOrderByFromAsc(User user, State state);
+
+  List<Vacation> findVacationBySubstituteAndStateNotAndToAfterOrderByFromAsc(User user, State state, LocalDate endDate);
+
+  List<Vacation> findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(
       LocalDate startFrom, LocalDate endFrom, List<State> states, LocalDate startTo,
       LocalDate endTo, List<State> states1);
 
-  public List<Vacation> findVacationByUserAndFromBetweenOrUserAndToBetween(
+  List<Vacation> findVacationByUserAndFromBetweenOrUserAndToBetween(
       User user, LocalDate startFrom, LocalDate endFrom, User userAgain, LocalDate startTo,
       LocalDate endTo);
 }

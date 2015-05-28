@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:remove="all">Template for Vacation Application</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p>
+        Hallo, <span th:text="${employee}">Welt!</span>!<br />
+    </p>
+
+    <p> Dein Urlaub vom <span th:text="${fromDate}">FROM</span> bis <span th:text="${toDate}">TO</span> wurde von <span th:text="${author}">AUTHOR</span> kommentiert: </p>
+    
+    <p><span th:text="${text}"></span></p>
+
+    <p>
+        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+    </p>
+
+    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+</body>
+</html>

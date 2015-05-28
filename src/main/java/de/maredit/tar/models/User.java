@@ -100,10 +100,7 @@ public class User {
       return false;
     }
     final User other = (User) obj;
-    if (!Objects.equals(this.uidNumber, other.uidNumber)) {
-      return false;
-    }
-    return true;
+    return Objects.equals(this.uidNumber, other.uidNumber);
   }
 
   @Override

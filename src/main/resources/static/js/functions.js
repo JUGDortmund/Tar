@@ -79,7 +79,7 @@
 }).call(this);
 
 (function() {
-  var refreshVacationForm, scrollToVacationForm;
+  var activateToggle, refreshVacationForm, scrollToVacationForm;
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -89,6 +89,16 @@
         scrollTop: ($('#vacation-form-panel').offset().top)
       }, 'slow');
     }
+  };
+
+  activateToggle = function() {
+    return $('.flip').click(function() {
+      $('.card').toggleClass('flipped');
+      setTimeout((function() {
+        $('.card .front').toggleClass('invisible');
+        $('.card .back').toggleClass('invisible');
+      }), 180);
+    });
   };
 
   refreshVacationForm = function(data) {
@@ -101,7 +111,8 @@
       "autoclose": true
     });
     $myForm.find('select').select2();
-    return scrollToVacationForm();
+    scrollToVacationForm();
+    return activateToggle();
   };
 
   (function($) {
@@ -115,6 +126,7 @@
       return $(this).closest('form').submit();
     });
     $('.panel-default').matchHeight();
+    activateToggle();
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
     });

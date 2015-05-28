@@ -18,7 +18,7 @@ public class VacationApprovedMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public VacationApprovedMail(Vacation vacation, String urlToVacation) throws SocketException {
+  public VacationApprovedMail(Vacation vacation, String urlToVacation, String comment) throws SocketException {
     values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
@@ -28,6 +28,7 @@ public class VacationApprovedMail implements MailObject {
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", vacation.getDaysLeft());
     values.put("urlToVacation", urlToVacation);
+    values.put("comment", comment);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));

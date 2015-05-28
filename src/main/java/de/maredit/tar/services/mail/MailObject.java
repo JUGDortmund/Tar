@@ -18,7 +18,7 @@ public interface MailObject {
 
   String[] getToRecipients();
 
-  default void setCcRecipients(String[] ccRecipients) {};
+  default void setCcRecipients(String[] ccRecipients) {}
 
   default boolean sendToAdditionalRecipient() {
     return false;
