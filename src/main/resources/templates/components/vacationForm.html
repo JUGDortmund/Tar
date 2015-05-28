@@ -263,6 +263,7 @@ edit-vacation, approve-vacation  -->
                     </div>
 
                 </form>
+                <th:block th:if="${!#lists.isEmpty(timeLineItems)}">
                 <div class="box">
                     <div class="box-header ui-sortable-handle">
                         <i class="fa fa-comments-o"></i>
@@ -397,7 +398,6 @@ edit-vacation, approve-vacation  -->
                                 </th:block>
                             </li>
 
-                            <th:block th:if="${!#lists.isEmpty(timeLineItems)}">
                             <!-- timeline item -->
                             <li>
                                 <!-- timeline icon -->
@@ -408,11 +408,13 @@ edit-vacation, approve-vacation  -->
                                 </div>
                             </li>
                             <!-- END timeline item -->
-                            </th:block>
+
                         </ul>
                     </div>
                 </div>
+                </th:block>
             </div>
+
     </div>
 
     <div class="panel module dashboard-panel face back invisible"
