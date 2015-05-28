@@ -5,7 +5,6 @@ import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.properties.VersionProperties;
 import de.maredit.tar.providers.VersionProvider;
-import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.UserService;
 
 import org.apache.logging.log4j.LogManager;

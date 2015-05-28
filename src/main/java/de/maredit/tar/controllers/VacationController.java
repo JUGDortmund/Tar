@@ -1,8 +1,8 @@
 package de.maredit.tar.controllers;
 
 import de.maredit.tar.beans.NavigationBean;
-
-import com.unboundid.ldap.sdk.LDAPException;
+import de.maredit.tar.services.calendar.CalendarItem;
+import de.maredit.tar.services.CalendarService;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.FormMode;
@@ -42,10 +42,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.time.LocalDate;
+import java.beans.PropertyEditorSupport;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -66,6 +65,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private LdapService ldapService;
+  
+  @Autowired
+  private CalendarService calendarService;
 
   @Autowired
   private UserService userService;
@@ -97,6 +99,23 @@ public class VacationController extends WebMvcConfigurerAdapter {
   protected void initBinder(WebDataBinder binder) {
     binder.addValidators(new VacationValidator());
     binder.registerCustomEditor(String.class, "id", new StringTrimmerEditor(true));
+    binder.registerCustomEditor(User.class, new PropertyEditorSupport() {
+      
+      @Override
+      public String getAsText() {
+        if (getValue() == null) {
+          return "";
+        }
+        return ((User)getValue()).getId();
+      }
+      
+      @Override
+      public void setAsText(String text) throws IllegalArgumentException {
+        if (StringUtils.isNotBlank(text)) {
+          setValue(userRepository.findOne(text));
+        }
+      }
+    });
   }
 
   @RequestMapping("/")
@@ -128,11 +147,19 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation,
                          @RequestParam(value = "approve") boolean approve) throws SocketException {
-    vacation.setState((approve) ? State.APPROVED : State.REJECTED);
+
+    CalendarItem appointment = null;
+    if (approve) {
+      vacation.setState(State.APPROVED);
+      appointment = calendarService.createAppointment(vacation);
+      vacation.setAppointmentId(appointment.getAppointmentId());
+    } else {
+      vacation.setState(State.REJECTED);
+    }
     this.vacationRepository.save(vacation);
     MailObject mail =
         (approve ? new VacationApprovedMail(vacation, customMailProperties.getUrlToVacation()) : new VacationDeclinedMail(vacation, customMailProperties.getUrlToVacation()));
-    this.mailService.sendMail(mail);
+    this.mailService.sendMail(mail, appointment.getMailAttachment());
 
     return "redirect:/";
   }
@@ -202,6 +229,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
       } else {
         vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
                                                            : State.REQUESTED_SUBSTITUTE);
+        calendarService.deleteAppointment(vacation);
+        vacation.setAppointmentId(null);
       }
       this.vacationRepository.save(vacation);
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation())
@@ -218,6 +247,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
     VacationCanceledMail mail = new
         VacationCanceledMail(vacation);
     vacation.setState(State.CANCELED);
+    calendarService.deleteAppointment(vacation);
+    vacation.setAppointmentId(null);
     this.vacationRepository.save(vacation);
     this.mailService.sendMail(mail);
 
