@@ -15,6 +15,8 @@ public class CustomMailProperties {
 
   private String[] additionalRecipients;
 
+  private String urlToVacation;
+
   public String[] getAdditionalRecipients() {
     return additionalRecipients;
   }
@@ -37,5 +39,13 @@ public class CustomMailProperties {
 
   public void setPrefix(String prefix) {
     this.prefix = prefix;
+  }
+
+  public String getUrlToVacation() {
+    return urlToVacation;
+  }
+
+  public void setUrlToVacation(String urlToVacation) {
+    this.urlToVacation = urlToVacation;
   }
 }

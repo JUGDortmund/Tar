@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Service
-@Profile("!dummyCalendarService")
+@Profile("exchangeCalendarService")
 public class CalendarServiceExchangeImpl implements CalendarService {
 
   private static final Logger LOG = LogManager.getLogger(CalendarServiceExchangeImpl.class);

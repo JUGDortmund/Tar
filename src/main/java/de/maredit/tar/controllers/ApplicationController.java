@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import de.maredit.tar.models.User;
+import de.maredit.tar.properties.VersionProperties;
+import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.UserRepository;
 
 @Controller
@@ -15,6 +17,12 @@ public class ApplicationController {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private VersionProperties versionProperties;
+
+  @Autowired
+  private VersionProvider versionProvider;
 
   @SuppressWarnings("unused")
   private static final Logger LOG = LogManager.getLogger(ApplicationController.class);

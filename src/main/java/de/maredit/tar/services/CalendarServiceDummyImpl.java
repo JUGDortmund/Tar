@@ -17,7 +17,7 @@ public class CalendarServiceDummyImpl implements CalendarService{
   @Override
   public CalendarItem createAppointment(Vacation vacation) {
     LOG.info("Creating appointment for vacation of {} from {} to {}", vacation.getUser().getFullname(), vacation.getFrom(), vacation.getTo());
-    return null;
+    return new CalendarItem();
   }
 
   @Override
