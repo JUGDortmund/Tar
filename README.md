@@ -13,15 +13,15 @@ The mail service always has to be specified.
 
 Overview of services:
 Mail:
-	- dummyMailService
-	- smtpMailService
-	- exchangeMailService
+- dummyMailService
+- smtpMailService
+- exchangeMailService
 Calendar:
-	- dummyCalendarService
-	- exchangeCalendarService (default)
+- dummyCalendarService
+- exchangeCalendarService (default)
 Ldap (Authorisation):
-	- dummyLdapService
-	- ldapService (default)
+- dummyLdapService
+- ldapService (default)
 
 The default profile can be overwritten by setting the following system property from the command line:
 
@@ -39,7 +39,7 @@ To use the _serviceTest_ profile, all test classes which are used to test extern
 
 ## Login
 
-When starting the application in a profiles that uses the dummyLdapService (like _localDev_, _dev_ or _stage_), the authentication is using a local user management with defined users in _dummy-user.yaml_.
+When starting the application in a profile that uses the dummyLdapService (like _localDev_, _dev_ or _stage_), the authentication is using a local user management with defined users in _dummy-user.yaml_.
 There are only three users "user1", "user2" and "supervisor" with password "login". When using other profiles, the LDAP-authentication is required and a group-mapping to application authorities in the _group-mapping.yaml_ has to be configured.
 
 
