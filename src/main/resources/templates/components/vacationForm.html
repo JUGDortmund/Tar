@@ -263,7 +263,7 @@ edit-vacation, approve-vacation  -->
                     </div>
 
                 </form>
-                <th:block th:if="${!#lists.isEmpty(timeLineItems)}">
+                <th:block th:if="${formMode != T(de.maredit.tar.models.enums.FormMode).NEW}">
                 <div class="box">
                     <div class="box-header ui-sortable-handle">
                         <i class="fa fa-comments-o"></i>
