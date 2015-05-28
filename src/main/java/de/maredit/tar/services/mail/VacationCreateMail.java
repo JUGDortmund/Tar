@@ -20,7 +20,7 @@ public class VacationCreateMail implements MailObject {
   private String[] toRecipients;
 
 
-  public VacationCreateMail(Vacation vacation) {
+  public VacationCreateMail(Vacation vacation, String urlToVacation) {
     values.put("employee", vacation.getUser().getFullname());
     values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
@@ -32,6 +32,7 @@ public class VacationCreateMail implements MailObject {
     if (!vacation.getAuthor().equals(vacation.getUser())) {
       values.put("createdBy", vacation.getAuthor().getFullname());
     }
+    values.put("urlToVacation", urlToVacation);
     ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getSubstitute()));
