@@ -20,7 +20,9 @@ public interface VacationRepository extends MongoRepository<Vacation, String> {
   List<Vacation> findVacationByUserAndStateNotOrderByFromAsc(User user, State state);
 
   List<Vacation> findVacationBySubstituteAndStateNotOrderByFromAsc(User user, State state);
-  
+
+  List<Vacation> findVacationBySubstituteAndStateNotAndToAfterOrderByFromAsc(User user, State state, LocalDate endDate);
+
   List<Vacation> findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(
       LocalDate startFrom, LocalDate endFrom, List<State> states, LocalDate startTo,
       LocalDate endTo, List<State> states1);
