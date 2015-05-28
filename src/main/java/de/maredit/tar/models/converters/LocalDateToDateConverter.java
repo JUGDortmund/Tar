@@ -2,6 +2,7 @@ package de.maredit.tar.models.converters;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 import org.springframework.core.convert.converter.Converter;
@@ -14,7 +15,6 @@ public class LocalDateToDateConverter implements Converter<LocalDate, Date> {
 
   @Override
   public Date convert(LocalDate source) {
-    return source == null ? null : Date.from(source.atStartOfDay(ZoneId.systemDefault())
-        .toInstant());
+    return source == null ? null : Date.from(source.atStartOfDay().toInstant(ZoneOffset.UTC));
   }
 }

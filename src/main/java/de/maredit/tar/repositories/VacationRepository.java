@@ -14,7 +14,7 @@ public interface VacationRepository extends MongoRepository<Vacation, String> {
   List<Vacation> findVacationByUserOrderByFromAsc(User user);
 
   List<Vacation> findVacationBySubstituteAndState(User user, State state);
-  
+
   List<Vacation> findVacationByManagerAndState(User user, State state);
 
   List<Vacation> findVacationByUserAndStateNotOrderByFromAsc(User user, State state);
@@ -24,4 +24,8 @@ public interface VacationRepository extends MongoRepository<Vacation, String> {
   List<Vacation> findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(
       LocalDate startFrom, LocalDate endFrom, List<State> states, LocalDate startTo,
       LocalDate endTo, List<State> states1);
+
+  List<Vacation> findVacationByUserAndFromBetweenOrUserAndToBetween(
+      User user, LocalDate startFrom, LocalDate endFrom, User userAgain, LocalDate startTo,
+      LocalDate endTo);
 }
