@@ -14,7 +14,6 @@ activateToggle = () ->
        ), 180
        return
 
-
 # Ajax form refresh:
 refreshVacationForm = (data) ->
   $myForm = $('#vacation-form-panel')

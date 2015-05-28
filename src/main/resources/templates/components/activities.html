@@ -42,7 +42,7 @@
                                     </div>
                                 </th:block>
                                 <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
-                                    <i class="item-icon glyphicon pending edit-vacation"></i>
+                                    <i class="item-icon glyphicon pending-substiture edit-vacation"></i>
                                     <div class="timeline-item">
                                         <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
                                         <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat den
@@ -62,8 +62,15 @@
                                             Urlaubsantrag erstellt</h3>
                                     </div>
                                 </th:block>
-                                <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
-                                    <i class="item-icon glyphicon pending edit-vacation"></i>
+                                <th:block th:if="${timeLineItem.stateItem.oldState == T(de.maredit.tar.models.enums.State).REQUESTED_SUBSTITUTE}">
+                                    <i class="item-icon glyphicon pending-approvement approve-vacation"></i>
+                                    <div class="timeline-item">
+                                        <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
+                                        <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat die Vertretung angenommen</h3>
+                                    </div>
+                                </th:block>
+                                <th:block th:if="${timeLineItem.stateItem.oldState == T(de.maredit.tar.models.enums.State).APPROVED}">
+                                    <i class="item-icon glyphicon pending-approvement edit-vacation"></i>
                                     <div class="timeline-item">
                                         <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
                                         <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat den
