@@ -215,6 +215,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
                              @ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
 
+    boolean newVacation = StringUtils.isBlank(vacation.getId());
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
@@ -222,9 +223,14 @@ public class VacationController extends WebMvcConfigurerAdapter {
       User selectedUser = getUser(request);
 
       setIndexModelValues(model, selectedUser);
-      model.addAttribute("formMode", FormMode.EDIT);
+      if (newVacation) {
+        model.addAttribute("formMode", FormMode.NEW);
+      } else {
+        model.addAttribute("formMode", FormMode.EDIT);
+      }
+      return "application/index";
     } else {
-      boolean newVacation = StringUtils.isBlank(vacation.getId());
+
       Vacation vacationBeforeChange = newVacation ? null : vacationRepository.findOne(vacation.getId());
 
       if (newVacation) {
