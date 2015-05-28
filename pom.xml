@@ -19,7 +19,6 @@
         <springboot.version>1.2.3.RELEASE</springboot.version>
     </properties>
     <build>
-        <finalName>$\{project.artifactId}-$\{project.version}-r$\{buildNumber}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -94,6 +93,7 @@
                                 <transformer
                                     implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>de.maredit.tar.Main</mainClass>
+                                    <Implementation-Build>${buildNumber}</Implementation-Build>
                                 </transformer>
                             </transformers>
                             <keepDependenciesWithProvidedScope>true
@@ -109,14 +109,6 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <archive>
-                                <manifest>
-                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                </manifest>
-                                <manifestEntries>
-                                    <Implementation-Build>$\{buildNumber}</Implementation-Build>
-                                </manifestEntries>
-                            </archive>
                         </configuration>
                     </execution>
                 </executions>
