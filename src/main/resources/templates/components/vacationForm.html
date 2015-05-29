@@ -8,430 +8,315 @@ edit-vacation, approve-vacation  -->
 
 
 
-<div class="card">
-    <div class="panel panel-default module dashboard-panel face front"
-         th:classappend="${formMode.value}">
-            <div class="panel-heading">Urlaubsformular</div>
-            <div class="panel-body">
+    <div class="card">
+        <div class="panel panel-default module dashboard-panel face front"
+             th:classappend="${formMode.value}">
+                <div class="panel-heading">Urlaubsformular</div>
+                <div class="panel-body">
 
-                <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form"
-                      th:with="editable=
-                            ${(formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT)
-                                and (#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
-                    <input type="hidden" th:field="*{id}"/>
+                    <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form"
+                          th:with="editable=
+                                ${(formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT)
+                                    and (#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
+                        <input type="hidden" th:field="*{id}"/>
 
-                    <!-- Error-handling: show alert box, when validation fails  -->
-                    <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
-                        <ul>
-                            <li th:each="err : ${#fields.detailedErrors()}"
-                                th:text="${err.fieldName +' '+ err.message}">Input is incorrect
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12 form-group"
-                             th:classappend="${#fields.hasErrors('user')}? 'has-error'">
-
-                            <label for="employee">
-                                Mitarbeiter
-                                <span th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">*</span>
-                            </label>
-
-                            <th:block
-                                    th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
-                                <select class="form-control" style="width: 100%;" name="employee"
-                                        id="employee"
-                                        th:field="*{user}">
-                                    <option th:each="user : ${users}"
-                                            th:value="${user.id}"
-                                            th:text="${user.lastname +', '+ user.firstname}">
-                                    </option>
-                                </select>
-                            </th:block>
-                            <th:block
-                                    th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
-                                <input type="text" class="form-control"
-                                       th:value="*{user.lastname + ', ' + user.firstname}"
-                                       disabled="disabled"/>
-                                <input type="hidden" th:field="*{user}"/>
-                            </th:block>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-6 form-group"
-                             th:classappend="${#fields.hasErrors('from')}? 'has-error'">
-                            <label for="dateFrom">
-                                von
-                                <span th:if="${editable}">*</span>
-                            </label>
-
-                            <th:block th:if="${editable}">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control" name="dateFrom" id="dateFrom"
-                                           th:field="*{from}"/>
-                                    <span class="input-group-addon"><i
-                                            class="glyphicon glyphicon-th"></i></span>
-                                </div>
-                            </th:block>
-                            <th:block th:unless="${editable}">
-                                <input type="text" class="form-control" th:field="*{from}"
-                                       disabled="disabled"/>
-                            </th:block>
+                        <!-- Error-handling: show alert box, when validation fails  -->
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.detailedErrors()}"
+                                    th:text="${err.fieldName +' '+ err.message}">Input is incorrect
+                                </li>
+                            </ul>
                         </div>
 
-                        <div class="col-xs-6 form-group"
-                             th:classappend="${#fields.hasErrors('to')}? 'has-error'">
-                            <label for="dateTo">
-                                bis
-                                <span th:if="${editable}">*</span>
-                            </label>
+                        <div class="row">
+                            <div class="col-xs-12 form-group"
+                                 th:classappend="${#fields.hasErrors('user')}? 'has-error'">
 
-                            <th:block th:if="${editable}">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control" name="dateTo" id="dateTo"
-                                           th:field="*{to}"/>
-                                    <span class="input-group-addon"><i
-                                            class="glyphicon glyphicon-th"></i></span>
-                                </div>
-                            </th:block>
-                            <th:block th:unless="${editable}">
-                                <input type="text" class="form-control" th:field="*{to}"
-                                       disabled="disabled"/>
-                            </th:block>
-                        </div>
-                    </div>
+                                <label for="employee">
+                                    Mitarbeiter
+                                    <span th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">*</span>
+                                </label>
 
-                    <div class="row">
-                        <div class="col-xs-6 form-group"
-                             th:classappend="${#fields.hasErrors('days')}? 'has-error'">
-                            <label for="vacationDays">
-                                Anzahl Urlaubstage
-                                <span th:if="${editable}">*</span>
-                            </label>
-
-                            <th:block th:if="${editable}">
-                                <input type="number" class="form-control" name="vacationDays"
-                                       id="vacationDays"
-                                       step="0.5"
-                                       th:field="*{days}"/>
-                            </th:block>
-                            <th:block th:unless="${editable}">
-                                <input class="form-control" name="vacationDays"
-                                       type="number" disabled="disabled"
-                                       th:field="*{days}"/>
-                            </th:block>
-
-                        </div>
-
-                        <div class="col-xs-6 form-group"
-                             th:classappend="${#fields.hasErrors('daysLeft')}? 'has-error'">
-                            <label for="daysLeft">
-                                Verbleibende Urlaubstage
-                                <span th:if="${editable}">*</span>
-                            </label>
-                            <th:block th:if="${editable}">
-                                <input type="number" class="form-control" name="daysLeft" id="daysLeft"
-                                       step="0.5"
-                                       th:field="*{daysLeft}"/>
-                            </th:block>
-                            <th:block th:unless="${editable}">
-                                <input class="form-control" name="vacationDays"
-                                       type="number" disabled="disabled"
-                                       th:field="*{daysLeft}"/>
-                            </th:block>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12 form-group"
-                             th:classappend="${#fields.hasErrors('substitute')}? 'has-error'">
-                            <label for="replacement">Vertreter</label>
-
-                            <th:block th:if="${editable}">
-                                <select class="form-control" style="width: 100%;" name="replacement"
-                                        id="replacement"
-                                        th:field="*{substitute}">
-                                    <option value="" selected="selected">- Vertreter auswählen -</option>
-                                    <option th:each="substitute : ${users}"
-                                            th:value="${substitute.id}"
-                                            th:text="${substitute.lastname +', '+ substitute.firstname}">
-                                    </option>
-                                </select>
-                            </th:block>
-                            <th:block
-                                    th:unless="${editable}">
-                                <input type="text" class="form-control"
-                                       th:value="*{substitute != null ? substitute.lastname + ', ' + substitute.firstname : ''}"
-                                       disabled="disabled"/>
-                            </th:block>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12 form-group"
-                             th:classappend="${#fields.hasErrors('manager')}? 'has-error'">
-                            <label for="superior">
-                                Zuständiger Vorgesetzter
-                                <span th:if="${editable}">*</span>
-                            </label>
-
-                            <th:block th:if="${editable}">
-                                <select class="form-control" style="width: 100%;" name="superior"
-                                        id="superior"
-                                        th:field="*{manager}">
-                                    <option value="" selected="selected">- Vorgesetzten auswählen -</option>
-                                    <option th:each="manager : ${managers}"
-                                            th:value="${manager.id}"
-                                            th:text="${manager.lastname +', '+ manager.firstname}">
-                                    </option>
-                                </select>
-                            </th:block>
-                            <th:block
-                                    th:unless="${editable}">
-                                <input type="text" class="form-control"
-                                       th:value="*{manager.lastname +', '+ manager.firstname}"
-                                       disabled="disabled"/>
-                            </th:block>
-
-                        </div>
-                    </div>
-
-                    <div class="row"
-                         th:if="${
-                                editable ||
-                                formMode == T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL ||
-                                formMode == T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL
-                                }">
-                        <div class="col-xs-12 form-group">
-                            <label for="comment">Kommentar</label>
-                            <textarea class="form-control" rows="2" name="comment" id="comment" path="comment"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12 form-group">
-                            <th:block th:switch="${formMode}">
-                                <!--/* new */-->
-                                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).NEW}">
-                                    <button type="submit" class="btn btn-success pull-right">
-                                        beantragen
-                                    </button>
+                                <th:block
+                                        th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
+                                    <select class="form-control" style="width: 100%;" name="employee"
+                                            id="employee"
+                                            th:field="*{user}">
+                                        <option th:each="user : ${users}"
+                                                th:value="${user.id}"
+                                                th:text="${user.lastname +', '+ user.firstname}">
+                                        </option>
+                                    </select>
                                 </th:block>
-                                <!--/* edit */-->
-                                <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
-                                    <th:block
-                                            th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
-                                        <button type="submit" name="action" value="save" formaction="/cancelVacation"
-                                           onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
-                                           class="btn btn-danger">
-                                            stornieren
-                                        </button>
-                                        <button type="submit" class="btn btn-success pull-right" name="action" value="saveChanges">
-                                            ändern
+                                <th:block
+                                        th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
+                                    <input type="text" class="form-control"
+                                           th:value="*{user.lastname + ', ' + user.firstname}"
+                                           disabled="disabled"/>
+                                    <input type="hidden" th:field="*{user}"/>
+                                </th:block>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6 form-group"
+                                 th:classappend="${#fields.hasErrors('from')}? 'has-error'">
+                                <label for="dateFrom">
+                                    von
+                                    <span th:if="${editable}">*</span>
+                                </label>
+
+                                <th:block th:if="${editable}">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control" name="dateFrom" id="dateFrom"
+                                               th:field="*{from}"/>
+                                        <span class="input-group-addon"><i
+                                                class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${editable}">
+                                    <input type="text" class="form-control" th:field="*{from}"
+                                           disabled="disabled"/>
+                                </th:block>
+                            </div>
+
+                            <div class="col-xs-6 form-group"
+                                 th:classappend="${#fields.hasErrors('to')}? 'has-error'">
+                                <label for="dateTo">
+                                    bis
+                                    <span th:if="${editable}">*</span>
+                                </label>
+
+                                <th:block th:if="${editable}">
+                                    <div class="input-group date">
+                                        <input type="text" class="form-control" name="dateTo" id="dateTo"
+                                               th:field="*{to}"/>
+                                        <span class="input-group-addon"><i
+                                                class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${editable}">
+                                    <input type="text" class="form-control" th:field="*{to}"
+                                           disabled="disabled"/>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6 form-group"
+                                 th:classappend="${#fields.hasErrors('days')}? 'has-error'">
+                                <label for="vacationDays">
+                                    Anzahl Urlaubstage
+                                    <span th:if="${editable}">*</span>
+                                </label>
+
+                                <th:block th:if="${editable}">
+                                    <input type="number" class="form-control" name="vacationDays"
+                                           id="vacationDays"
+                                           step="0.5"
+                                           th:field="*{days}"/>
+                                </th:block>
+                                <th:block th:unless="${editable}">
+                                    <input class="form-control" name="vacationDays"
+                                           type="number" disabled="disabled"
+                                           th:field="*{days}"/>
+                                </th:block>
+
+                            </div>
+
+                            <div class="col-xs-6 form-group"
+                                 th:classappend="${#fields.hasErrors('daysLeft')}? 'has-error'">
+                                <label for="daysLeft">
+                                    Verbleibende Urlaubstage
+                                    <span th:if="${editable}">*</span>
+                                </label>
+                                <th:block th:if="${editable}">
+                                    <input type="number" class="form-control" name="daysLeft" id="daysLeft"
+                                           step="0.5"
+                                           th:field="*{daysLeft}"/>
+                                </th:block>
+                                <th:block th:unless="${editable}">
+                                    <input class="form-control" name="vacationDays"
+                                           type="number" disabled="disabled"
+                                           th:field="*{daysLeft}"/>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 form-group"
+                                 th:classappend="${#fields.hasErrors('substitute')}? 'has-error'">
+                                <label for="replacement">Vertreter</label>
+
+                                <th:block th:if="${editable}">
+                                    <select class="form-control" style="width: 100%;" name="replacement"
+                                            id="replacement"
+                                            th:field="*{substitute}">
+                                        <option value="" selected="selected">- Vertreter auswählen -</option>
+                                        <option th:each="substitute : ${users}"
+                                                th:value="${substitute.id}"
+                                                th:text="${substitute.lastname +', '+ substitute.firstname}">
+                                        </option>
+                                    </select>
+                                </th:block>
+                                <th:block
+                                        th:unless="${editable}">
+                                    <input type="text" class="form-control"
+                                           th:value="*{substitute != null ? substitute.lastname + ', ' + substitute.firstname : ''}"
+                                           disabled="disabled"/>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 form-group"
+                                 th:classappend="${#fields.hasErrors('manager')}? 'has-error'">
+                                <label for="superior">
+                                    Zuständiger Vorgesetzter
+                                    <span th:if="${editable}">*</span>
+                                </label>
+
+                                <th:block th:if="${editable}">
+                                    <select class="form-control" style="width: 100%;" name="superior"
+                                            id="superior"
+                                            th:field="*{manager}">
+                                        <option value="" selected="selected">- Vorgesetzten auswählen -</option>
+                                        <option th:each="manager : ${managers}"
+                                                th:value="${manager.id}"
+                                                th:text="${manager.lastname +', '+ manager.firstname}">
+                                        </option>
+                                    </select>
+                                </th:block>
+                                <th:block
+                                        th:unless="${editable}">
+                                    <input type="text" class="form-control"
+                                           th:value="*{manager.lastname +', '+ manager.firstname}"
+                                           disabled="disabled"/>
+                                </th:block>
+
+                            </div>
+                        </div>
+
+                        <div class="row"
+                             th:if="${
+                                    editable ||
+                                    formMode == T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL ||
+                                    formMode == T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL
+                                    }">
+                            <div class="col-xs-12 form-group">
+                                <label for="comment">Kommentar</label>
+                                <textarea class="form-control" rows="2" name="comment" id="comment" path="comment"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 form-group">
+                                <th:block th:switch="${formMode}">
+                                    <!--/* new */-->
+                                    <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).NEW}">
+                                        <button type="submit" class="btn btn-success pull-right">
+                                            beantragen
                                         </button>
                                     </th:block>
-                                </th:block>
-
-                                <!--/* substitute */-->
-                                <th:block
-                                        th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
-                                    <button type="submit" name="approve" value="false" formaction="/substitution"
-                                            onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
-                                            class="btn btn-danger">
-                                        ablehnen
-                                    </button>
-                                    <button type="submit" name="approve" value="true" formaction="/substitution"
-                                            onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
-                                            class="btn btn-success pull-right">
-                                        Vertretung annehmen
-                                    </button>
-                                </th:block>
-                                <!--/* manager */-->
-                                <th:block
-                                        th:case="${T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL}">
-                                    <button type="submit" name="approve" value="false" formaction="/approval"
-                                            onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');"
-                                            class="btn btn-danger">
-                                        ablehnen
-                                    </button>
-                                    <button type="submit" name="approve" value="true" formaction="/approval"
-                                            onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');"
-                                            class="btn btn-success pull-right">
-                                        Urlaub genehmigen
-                                    </button>
-                                </th:block>
-                            </th:block>
-                        </div>
-                    </div>
-
-                </form>
-                <th:block th:if="${formMode != T(de.maredit.tar.models.enums.FormMode).NEW}">
-                <div class="box">
-                    <div class="box-header ui-sortable-handle">
-                        <i class="fa fa-comments-o"></i>
-
-                        <h3 class="box-title">Letzte Aktivitäten</h3>
-
-                    </div>
-                    <div class="panel-body slimScrollDiv">
-                        <ul class="timeline">
-                            <!-- timeline time label -->
-                            <li class="time-label">
-                                <span class="bg-yellow">Timeline</span>
-                            </li>
-                            <!-- /.timeline-label -->
-
-                            <!-- timeline items -->
-                            <li th:each="timeLineItem,iterStat : ${timeLineItems}" th:unless="${iterStat.index > 1}">
-                                <th:block th:switch="${timeLineItem.class.name}">
-                                    <!-- Case State -->
-                                    <th:block th:case="de.maredit.tar.models.StateItem">
-                                        <!-- Switch newState -->
-                                        <th:block th:switch="${timeLineItem.stateItem.newState}">
-                                            <!-- State REQUESTED_SUBSTITUTE -->
-                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).REQUESTED_SUBSTITUTE}">
-                                                <th:block th:if="${timeLineItem.stateItem.oldState == null}">
-                                                    <i class="item-icon glyphicon glyphicon-new-window new"></i>
-                                                    <div class="timeline-item">
-                                                        <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                        <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat einen
-                                                            Urlaubsantrag erstellt</h3>
-                                                    </div>
-                                                </th:block>
-                                                <th:block th:unless="${timeLineItem.stateItem.oldState == null}">
-                                                    <i class="item-icon glyphicon pending-substitute edit-vacation"></i>
-                                                    <div class="timeline-item">
-                                                        <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                        <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat den
-                                                            Urlaubsantrag geändert. DerAntrag wartet nun auf den Vertreter.</h3>
-                                                    </div>
-                                                </th:block>
-                                            </th:block>
-                                            <!-- .State REQUESTED_SUBSTITUTE -->
-
-                                            <!-- State WAITING_FOR_APPROVEMENT -->
-                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).WAITING_FOR_APPROVEMENT}">
-                                                <th:block th:if="${timeLineItem.stateItem.oldState == null}">
-                                                    <i class="item-icon glyphicon glyphicon-new-window new"></i>
-                                                    <div class="timeline-item">
-                                                        <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                        <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat einen
-                                                            Urlaubsantrag erstellt</h3>
-                                                    </div>
-                                                </th:block>
-                                                <th:block th:if="${timeLineItem.stateItem.oldState == T(de.maredit.tar.models.enums.State).REQUESTED_SUBSTITUTE}">
-                                                    <i class="item-icon glyphicon pending-approvement approve-vacation"></i>
-                                                    <div class="timeline-item">
-                                                        <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                        <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat die Vertretung angenommen</h3>
-                                                    </div>
-                                                </th:block>
-                                                <th:block th:if="${timeLineItem.stateItem.oldState == T(de.maredit.tar.models.enums.State).APPROVED}">
-                                                    <i class="item-icon glyphicon pending-approvement edit-vacation"></i>
-                                                    <div class="timeline-item">
-                                                        <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                        <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat den
-                                                            Urlaubsantrag geändert</h3>
-                                                    </div>
-                                                </th:block>
-                                            </th:block>
-                                            <!-- .State WAITING_FOR_APPROVEMENT -->
-
-                                            <!-- State APPROVED -->
-                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).APPROVED}">
-                                                <i class="item-icon glyphicon approved approve-vacation"></i>
-                                                <div class="timeline-item">
-                                                    <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                    <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat einen
-                                                        Urlaubsantrag genehmigt</h3>
-                                                </div>
-                                            </th:block>
-                                            <!-- .State .APPROVED -->
-
-                                            <!-- State REJECTED -->
-                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).REJECTED}">
-                                                <i class="item-icon glyphicon rejected bg-red"></i>
-                                                <div class="timeline-item">
-                                                    <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                    <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat einen
-                                                        Urlaubsantrag abgelehnt</h3>
-                                                </div>
-                                            </th:block>
-                                            <!-- .State REJECTED -->
-
-                                            <!-- State CANCELED -->
-                                            <th:block th:case="${T(de.maredit.tar.models.enums.State).CANCELED}">
-                                                <i class="item-icon glyphicon rejected bg-red"></i>
-                                                <div class="timeline-item">
-                                                    <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                                    <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat einen
-                                                        Urlaubsantrag storniert</h3>
-                                                </div>
-                                            </th:block>
-                                            <!-- .State CANCELED -->
-
+                                    <!--/* edit */-->
+                                    <th:block th:case="${T(de.maredit.tar.models.enums.FormMode).EDIT}">
+                                        <th:block
+                                                th:if="${(#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
+                                            <button type="submit" name="action" value="save" formaction="/cancelVacation"
+                                               onclick="return confirm('Willst du den Urlaub wirklich stornieren?');"
+                                               class="btn btn-danger">
+                                                stornieren
+                                            </button>
+                                            <button type="submit" class="btn btn-success pull-right" name="action" value="saveChanges">
+                                                ändern
+                                            </button>
                                         </th:block>
-                                        <!-- .Switch newState -->
                                     </th:block>
-                                    <!-- .Case State -->
 
-                                    <!-- Case Protocol -->
-                                    <th:block th:case="de.maredit.tar.models.ProtocolItem">
-                                        <i class="item-icon glyphicon glyphicon-pencil edit-vacation"></i>
-                                        <div class="timeline-item">
-                                            <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                            <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat den Wert f&uuml;r
-                                            <b><span th:text="${timeLineItem.protocolItem.fieldName}"></span></b> ge&auml;ndert</h3>
-                                        </div>
+                                    <!--/* substitute */-->
+                                    <th:block
+                                            th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
+                                        <button type="submit" name="approve" value="false" formaction="/substitution"
+                                                onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
+                                                class="btn btn-danger">
+                                            ablehnen
+                                        </button>
+                                        <button type="submit" name="approve" value="true" formaction="/substitution"
+                                                onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
+                                                class="btn btn-success pull-right">
+                                            Vertretung annehmen
+                                        </button>
                                     </th:block>
-                                    <!-- .Case Protocol -->
-
-                                    <!-- Case Comment -->
-                                    <th:block th:case="de.maredit.tar.models.CommentItem">
-                                        <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
-                                        <div class="timeline-item">
-                                            <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-                                            <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat einen
-                                                Kommentar verfasst</h3>
-                                            <div class="timeline-body" th:text="${timeLineItem.commentItem.text}">Comment Text</div>
-                                        </div>
+                                    <!--/* manager */-->
+                                    <th:block
+                                            th:case="${T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL}">
+                                        <button type="submit" name="approve" value="false" formaction="/approval"
+                                                onclick="return confirm('Willst du den Urlaubsantrag wirklich ablehnen?');"
+                                                class="btn btn-danger">
+                                            ablehnen
+                                        </button>
+                                        <button type="submit" name="approve" value="true" formaction="/approval"
+                                                onclick="return confirm('Willst du den Urlaubsantrag wirklich genehmigen?');"
+                                                class="btn btn-success pull-right">
+                                            Urlaub genehmigen
+                                        </button>
                                     </th:block>
-                                    <!-- .Case Comment -->
                                 </th:block>
-                            </li>
+                            </div>
+                        </div>
 
-                            <!-- timeline item -->
-                            <li>
-                                <!-- timeline icon -->
-                                <i class="item-icon glyphicon glyphicon-option-horizontal bg-blue"></i>
+                    </form>
+                    <th:block th:if="${formMode != T(de.maredit.tar.models.enums.FormMode).NEW}">
+                    <div class="box">
+                        <div class="box-header ui-sortable-handle">
+                            <i class="fa fa-comments-o"></i>
 
-                                <div class="timeline-item">
-                                    <h3 class="timeline-header"><button id="more-activities" class="flip btn bg-blue">show more</button></h3>
-                                </div>
-                            </li>
-                            <!-- END timeline item -->
+                            <h3 class="box-title">Letzte Aktivitäten</h3>
 
-                        </ul>
+                        </div>
+                        <div class="panel-body slimScrollDiv">
+                            <ul class="timeline">
+                                <!-- timeline time label -->
+                                <li class="time-label">
+                                    <span class="bg-yellow">Timeline</span>
+                                </li>
+                                <!-- /.timeline-label -->
+
+                                <!-- timeline items -->
+                                <li th:each="timeLineItem,iterStat : ${timeLineItems}" th:unless="${iterStat.index > 1}">
+                                    <div th:replace="components/timeline/timeline :: timeline"/>
+                                </li>
+
+                                <!-- timeline item -->
+                                <li>
+                                    <!-- timeline icon -->
+                                    <i class="item-icon glyphicon glyphicon-option-horizontal bg-blue"></i>
+
+                                    <div class="timeline-item">
+                                        <h3 class="timeline-header"><button id="more-activities" class="flip btn bg-blue">show more</button></h3>
+                                    </div>
+                                </li>
+                                <!-- END timeline item -->
+
+                            </ul>
+                        </div>
                     </div>
+                    </th:block>
                 </div>
-                </th:block>
-            </div>
+        </div>
 
-    </div>
-
-    <div class="panel module dashboard-panel face back invisible"
-         th:classappend="${formMode.value}">
-        <div class="panel-heading">Urlaubsformular Kommentare</div>
-        <div class="panel-body">
-            <div th:include="components/activities :: activities">
-                activities
+        <div class="panel module dashboard-panel face back invisible"
+             th:classappend="${formMode.value}">
+            <div class="panel-heading">Urlaubsformular Kommentare</div>
+            <div class="panel-body">
+                <div th:include="components/activities :: activities">
+                    activities
+                </div>
             </div>
         </div>
-</div>
 
-</div>
+    </div>
 </body>
 </html>

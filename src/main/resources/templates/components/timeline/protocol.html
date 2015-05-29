@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body th:fragment="protocol">
+        <i class="item-icon glyphicon glyphicon-pencil edit-vacation"></i>
+        <div class="timeline-item">
+            <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
+            <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat den Wert f&uuml;r
+                <b><span th:text="${timeLineItem.protocolItem.fieldName}"></span></b> ge&auml;ndert</h3>
+        </div>
+    </body>
+</html>
+<!-- .Case Comment -->
