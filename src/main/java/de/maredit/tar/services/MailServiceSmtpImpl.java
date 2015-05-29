@@ -1,5 +1,10 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.services.mail.Attachment;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.services.mail.MailObject;
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,17 +16,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-
 @Service
-@Profile({"!dummyMailService"})
+@Profile({"smtpMailService"})
 @EnableConfigurationProperties(CustomMailProperties.class)
-public class MailServiceImpl implements MailService {
+public class MailServiceSmtpImpl implements MailService {
 
-  private static final Logger LOG = LogManager.getLogger(MailServiceImpl.class);
+  private static final Logger LOG = LogManager.getLogger(MailServiceSmtpImpl.class);
 
   @Autowired
   private MailMessageComposer mailMessageComposer;
@@ -29,21 +31,8 @@ public class MailServiceImpl implements MailService {
   @Autowired
   private CustomMailProperties customMailProperties;
 
+  @Autowired
   private JavaMailSender mailSender;
-
-  @PostConstruct
-  public void init() {
-    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    if (customMailProperties != null && customMailProperties.getHost() != null) {
-      mailSender.setHost(customMailProperties.getHost());
-      if (customMailProperties.getPort() != null) {
-        mailSender.setPort(customMailProperties.getPort());
-      }
-      mailSender.setUsername(customMailProperties.getUsername());
-      mailSender.setPassword(customMailProperties.getPassword());
-      this.mailSender = mailSender;
-    }
-  }
 
   @Override
   public void sendSimpleMail(MailObject mail) {
@@ -53,6 +42,9 @@ public class MailServiceImpl implements MailService {
       if(mail.sendToAdditionalRecipient()) {
         mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalRecipients()));
       }
+      if (customMailProperties.getSender() != null) {
+        msg.setFrom(customMailProperties.getSender());
+      }
       this.mailSender.send(msg);
     } catch (MailException ex) {
       LOG.error("Error sending mail", ex);
@@ -60,14 +52,18 @@ public class MailServiceImpl implements MailService {
   }
 
   @Override
-  public void sendMail(MailObject mail) {
+  public void sendMail(MailObject mail, Attachment... attachments) {
     try {
       if(mail.sendToAdditionalRecipient()) {
         mail.setCcRecipients(ArrayUtils.addAll(mail.getCCRecipients(), customMailProperties.getAdditionalRecipients()));
       }
-      mailSender.send(mailMessageComposer.composeMimeMailMessage(mail,
-          mailSender.createMimeMessage()));
-    } catch (MailException ex) {
+      MimeMessage msg = mailMessageComposer.composeMimeMailMessage(mail,
+          mailSender.createMimeMessage(), attachments);
+      if (customMailProperties.getSender() != null) {
+        msg.setFrom(customMailProperties.getSender());
+      }
+      mailSender.send(msg);
+    } catch (MailException | MessagingException ex) {
       LOG.error("Error sending mail", ex);
     }
   }

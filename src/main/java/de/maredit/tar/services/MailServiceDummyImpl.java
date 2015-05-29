@@ -1,8 +1,8 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.properties.CustomMailProperties;
+import de.maredit.tar.services.mail.Attachment;
+
 import de.maredit.tar.services.mail.MailObject;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class MailServiceDummyImpl implements MailService {
   }
 
   @Override
-  public void sendMail(MailObject mail) {
+  public void sendMail(MailObject mail, Attachment... attachments) {
     LOG.info("HTML mail to be send:\n {}", mail.toString());
     LOG.info("Mail Text:\n {}", mailMessageComposer.composeSimpleMailMessage(mail).getText());
   }

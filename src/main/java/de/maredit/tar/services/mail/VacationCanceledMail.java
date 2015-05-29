@@ -18,7 +18,7 @@ public class VacationCanceledMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public VacationCanceledMail(Vacation vacation) {
+  public VacationCanceledMail(Vacation vacation, String comment) {
     values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());

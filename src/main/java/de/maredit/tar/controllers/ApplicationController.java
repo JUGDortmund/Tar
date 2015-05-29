@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 
@@ -21,7 +20,7 @@ public class ApplicationController extends AbstractBaseController{
   private static final Logger LOG = LogManager.getLogger(ApplicationController.class);
 
   @RequestMapping("/login")
-  public String login() {
+  public String login() throws Exception {
     return "login";
   }
 

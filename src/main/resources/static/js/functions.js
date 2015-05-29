@@ -117,7 +117,7 @@
 }).call(this);
 
 (function() {
-  var refreshVacationForm, scrollToVacationForm;
+  var activateToggle, refreshVacationForm, scrollToVacationForm;
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -127,6 +127,16 @@
         scrollTop: ($('#vacation-form-panel').offset().top)
       }, 'slow');
     }
+  };
+
+  activateToggle = function() {
+    return $('.flip').click(function() {
+      $('.card').toggleClass('flipped');
+      setTimeout((function() {
+        $('.card .front').toggleClass('invisible');
+        $('.card .back').toggleClass('invisible');
+      }), 180);
+    });
   };
 
   refreshVacationForm = function(data) {
@@ -144,7 +154,8 @@
       });
     });
     $myForm.find('select').select2();
-    return scrollToVacationForm();
+    scrollToVacationForm();
+    return activateToggle();
   };
 
   (function($) {
@@ -158,6 +169,7 @@
       return $(this).closest('form').submit();
     });
     $('.panel-default').matchHeight();
+    activateToggle();
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
     });
@@ -173,6 +185,28 @@
         }
       });
       return false;
+    });
+  })(jQuery);
+
+}).call(this);
+
+(function() {
+  (function($) {
+    $('[data-toggle="tooltip"]').tooltip();
+    $('#employees').select2();
+    $('#employees').off('select2-opening');
+    $('.select2-search__field').focus();
+    $('#employees').on('select2:unselecting', function(e) {
+      $(this).data('state', 'unselected');
+    });
+    $('#employees').on('select2:opening ', function(e) {
+      if ($(this).data('state') === 'unselected') {
+        $(this).removeData('state');
+        e.preventDefault();
+      }
+    });
+    return $('#clear').on('click', function(e) {
+      $('#employees').val(null).trigger('change');
     });
   })(jQuery);
 

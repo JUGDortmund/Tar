@@ -1,6 +1,7 @@
 package de.maredit.tar.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.validation.constraints.DecimalMin;
@@ -29,7 +30,7 @@ public class Vacation {
 
   @NotNull
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
-  private LocalDate created;
+  private LocalDateTime created;
 
   @DBRef
   @NotNull
@@ -43,23 +44,25 @@ public class Vacation {
   private User manager;
 
   @DecimalMin("0.5")
-  private float days;
+  private double days;
 
   @Min(0)
-  private float daysLeft;
+  private double daysLeft;
 
   @NotNull
   private State state;
 
   private User author;
+  
+  private String appointmentId;
 
   public Vacation() {
-    this.created = LocalDate.now();
+    this.created = LocalDateTime.now();
     this.state = State.WAITING_FOR_APPROVEMENT;
   }
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
-      float days, float daysLeft) {
+      double days, double daysLeft) {
     this.user = user;
     this.from = from;
     this.to = to;
@@ -69,7 +72,7 @@ public class Vacation {
     this.daysLeft = daysLeft;
 
     this.state = substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
-    this.created = LocalDate.now();
+    this.created = LocalDateTime.now();
   }
 
   public String getId() {
@@ -88,19 +91,19 @@ public class Vacation {
     this.state = state;
   }
 
-  public float getDaysLeft() {
+  public double getDaysLeft() {
     return daysLeft;
   }
 
-  public void setDaysLeft(float daysLeft) {
+  public void setDaysLeft(double daysLeft) {
     this.daysLeft = daysLeft;
   }
 
-  public float getDays() {
+  public double getDays() {
     return days;
   }
 
-  public void setDays(float days) {
+  public void setDays(double days) {
     this.days = days;
   }
 
@@ -145,11 +148,11 @@ public class Vacation {
     this.from = from;
   }
 
-  public LocalDate getCreated() {
+  public LocalDateTime getCreated() {
     return created;
   }
 
-  public void setCreated(LocalDate created) {
+  public void setCreated(LocalDateTime created) {
     this.created = created;
   }
 
@@ -162,22 +165,12 @@ public class Vacation {
       return false;
     }
     final Vacation other = (Vacation) obj;
-    if (!Objects.equals(this.id, other.id)) {
-      return false;
-    }
-    return true;
+    return Objects.equals(this.id, other.id);
   }
 
   @Override
   public int hashCode() {
     return Objects.hashCode(this.id);
-  }
-
-  @Override
-  public String toString() {
-    return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
-        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", daysLeft="
-        + daysLeft + ", state=" + state + "]";
   }
 
   public void setAuthor(User user) {
@@ -186,5 +179,20 @@ public class Vacation {
   
   public User getAuthor() {
     return author;
+  }
+
+  public String getAppointmentId() {
+    return appointmentId;
+  }
+
+  public void setAppointmentId(String appointmentId) {
+    this.appointmentId = appointmentId;
+  }
+
+  @Override
+  public String toString() {
+    return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
+        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", daysLeft="
+        + daysLeft + ", state=" + state + "]";
   }
 }

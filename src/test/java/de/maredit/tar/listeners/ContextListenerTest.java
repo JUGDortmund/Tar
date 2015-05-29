@@ -22,6 +22,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.repositories.CommentItemRepository;
+import de.maredit.tar.repositories.ProtocolItemRepository;
+import de.maredit.tar.repositories.StateItemRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
@@ -38,7 +41,16 @@ public class ContextListenerTest {
   
   @Autowired
   private VacationRepository vacationRepository;
-  
+
+  @Autowired
+  private ProtocolItemRepository protocolItemRepository;
+
+  @Autowired
+  private CommentItemRepository commentItemRepository;
+
+  @Autowired
+  private StateItemRepository stateItemRepository;
+
   @Autowired
   private UserSyncTask userSyncTask;
 
@@ -53,6 +65,11 @@ public class ContextListenerTest {
   @BeforeClass
   public static void init() {
     EmbeddedMongo.DB.port(28018).start();
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
   
   @Test
@@ -60,9 +77,13 @@ public class ContextListenerTest {
     when(event.getApplicationContext()).thenReturn(applicationContext);
     when(event.getApplicationContext().getBean(UserSyncTask.class)).thenReturn(mockedUserSyncTask);
     when(event.getApplicationContext().getEnvironment()).thenReturn(environment);
-    when(event.getApplicationContext().getEnvironment().getProperty("spring.data.mongodb.preload", Boolean.class)).thenReturn(true);
+    when(event.getApplicationContext().getEnvironment().getProperty("spring.data.mongodb.preload",
+                                                                    Boolean.class)).thenReturn(true);
     when(event.getApplicationContext().getBean(UserRepository.class)).thenReturn(userRepository);
-    when(event.getApplicationContext().getBean(VacationRepository.class)).thenReturn( vacationRepository);
+    when(event.getApplicationContext().getBean(VacationRepository.class)).thenReturn(vacationRepository);
+    when(event.getApplicationContext().getBean(ProtocolItemRepository.class)).thenReturn(protocolItemRepository);
+    when(event.getApplicationContext().getBean(CommentItemRepository.class)).thenReturn(commentItemRepository);
+    when(event.getApplicationContext().getBean(StateItemRepository.class)).thenReturn(stateItemRepository);
     when(event.getApplicationContext().getBean(LdapService.class)).thenReturn(ldapServcie);
     
     this.userSyncTask.syncLdapUser();

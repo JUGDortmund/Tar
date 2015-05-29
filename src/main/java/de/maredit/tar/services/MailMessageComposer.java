@@ -1,31 +1,26 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.services.mail.Attachment;
+
 import java.util.Date;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
-
 import de.maredit.tar.services.mail.MailObject;
 
 @Component
 public class MailMessageComposer {
 
-
-  private static final Logger LOG = LogManager.getLogger(MailMessageComposer.class);
-
   @Autowired
   public SpringTemplateEngine templateEngine;
-
-  public MailMessageComposer() {}
 
   private String prepareMailBody(MailObject mail, String templateName) {
     Context ctx = new Context();
@@ -46,19 +41,22 @@ public class MailMessageComposer {
     return message;
   }
 
-
-  public MimeMessage composeMimeMailMessage(MailObject mail, MimeMessage message) {
-    try {
-      MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
-      messageHelper.setSubject(mail.getSubject());
-      messageHelper.setSentDate(new Date());
-      messageHelper.setTo(mail.getToRecipients());
-      if (mail.getCCRecipients() != null) {
-        messageHelper.setCc(mail.getCCRecipients());
+  public MimeMessage composeMimeMailMessage(MailObject mail, MimeMessage message, Attachment... attachments)
+      throws MessagingException {
+    MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+    messageHelper.setSubject(mail.getSubject());
+    messageHelper.setSentDate(new Date());
+    messageHelper.setTo(mail.getToRecipients());
+    if (mail.getCCRecipients() != null) {
+      messageHelper.setCc(mail.getCCRecipients());
+    }
+    messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
+    if (attachments != null) {
+      for (Attachment attachment : attachments) {
+        if (attachment != null) {
+          messageHelper.addAttachment(attachment.getFilename(), new ByteArrayDataSource(attachment.getData(), attachment.getMimeType()));
+        }
       }
-      messageHelper.setText(prepareMailBody(mail, mail.getHtmlTemplate()), true);
-    } catch (MessagingException e) {
-      LOG.error("Error creating mail", e);
     }
     return message;
   }

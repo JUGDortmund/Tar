@@ -5,7 +5,7 @@ spring:
 ##### 
 spring:
   profiles: dummyServices
-spring.profiles.include: dummyLdapService,dummyMailService
+spring.profiles.include: dummyLdapService,dummyMailService,dummyCalendarService
 ---
 ##### Development configuration #####
 spring:
@@ -22,8 +22,7 @@ spring:
   mail:
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
-  number:
-    build: "0001"
+    urlToVacation: http://localhost:8080
 spring.profiles.include: dummyServices
 ---
 ##### Test configuration #####
@@ -42,3 +41,36 @@ spring:
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
 spring.profiles.include: dummyServices
+---
+##### Service test configuration #####
+spring:
+  profiles: serviceTest
+  thymeleaf:
+    cache: false  
+  data:
+    mongodb:
+      host: localhost
+      port: 28018
+      database: tar-serviceTest
+      embedded: true
+      preload: true
+  mail:
+    host: localhost
+    port: 1600
+    username:
+    password:
+    additionalRecipients:
+      - mareditTarTest@dontsendmespam.de
+  ldap:
+    host: localhost
+    port: 1600
+    userLookUpDN: ou=users,o=maredit,dc=de
+    applicationUserDN: cn=tar-users,cn=tar,ou=services,o=maredit,dc=de
+    applicationSupervisorDN: cn=tar-supervisors,cn=tar,ou=services,o=maredit,dc=de
+    readUser: cn=read,cn=ldap,ou=services,o=maredit,dc=de
+    readPassword: read
+    groupLookUpDN: ou=services,o=maredit,dc=de
+    groupLookUpAttribute: member
+    userBindDN: uid=$username,ou=users,o=maredit,dc=de
+    disableSSL: true
+spring.profiles.include: dummyCalendarService,smtpMailService

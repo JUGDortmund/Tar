@@ -100,10 +100,7 @@ public class User {
       return false;
     }
     final User other = (User) obj;
-    if (!Objects.equals(this.uidNumber, other.uidNumber)) {
-      return false;
-    }
-    return true;
+    return Objects.equals(this.uidNumber, other.uidNumber);
   }
 
   @Override
@@ -117,6 +114,8 @@ public class User {
 
   @Override
   public String toString() {
-    return id;
+    return "User [id=" + id + ", uidNumber=" + uidNumber + ", firstname=" + firstname
+        + ", lastname=" + lastname + ", username=" + username + ", mail=" + mail + ", active="
+        + active + "]";
   }
 }

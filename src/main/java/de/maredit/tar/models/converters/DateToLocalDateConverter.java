@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 import org.springframework.core.convert.converter.Converter;
@@ -15,7 +16,6 @@ public class DateToLocalDateConverter implements Converter<Date, LocalDate> {
 
   @Override
   public LocalDate convert(Date date) {
-    return date == null ? null : LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()),
-        ZoneId.systemDefault()).toLocalDate();
+    return date == null ? null : date.toInstant().atOffset(ZoneOffset.UTC).toLocalDate();
   }
 }

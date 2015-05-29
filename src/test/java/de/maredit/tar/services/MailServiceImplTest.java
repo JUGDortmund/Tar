@@ -21,8 +21,6 @@ import com.dumbster.smtp.SmtpMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-import scala.util.parsing.combinator.testing.Str;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
 @ActiveProfiles("serviceTest")
@@ -31,7 +29,7 @@ public class MailServiceImplTest {
   private static final Logger LOG = LogManager.getLogger(MailServiceImplTest.class);
 
   @Autowired
-  private MailServiceImpl mailService;
+  private MailServiceSmtpImpl mailService;
 
   private MailObject mailObject;
 

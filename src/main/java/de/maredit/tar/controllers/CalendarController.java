@@ -1,12 +1,12 @@
 package de.maredit.tar.controllers;
 
+import static java.util.stream.Collectors.toList;
+
+import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
-import de.maredit.tar.properties.VersionProperties;
-import de.maredit.tar.providers.VersionProvider;
 import de.maredit.tar.repositories.VacationRepository;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Created by czillmann on 29.04.15.
@@ -41,19 +39,15 @@ public class CalendarController  extends AbstractBaseController{
   private ApplicationController applicationController;
 
   @Autowired
-  private VersionProperties versionProperties;
-
-  @Autowired
-  private VersionProvider versionProvider;
+  private NavigationBean navigationBean;
 
   @RequestMapping("/calendar")
   public String calendar(Model model) {
+    navigationBean.setActiveComponent(NavigationBean.CALENDAR_PAGE);
     List<Vacation> vacations = this.vacationRepository.findAll();
 
     model.addAttribute("vacations", vacations);
     model.addAttribute("loginUser", applicationController.getConnectedUser());
-    model.addAttribute("appVersion", versionProvider.getApplicationVersion());
-    model.addAttribute("buildnumber", versionProperties.getBuild());
 
     return "application/calendar";
   }

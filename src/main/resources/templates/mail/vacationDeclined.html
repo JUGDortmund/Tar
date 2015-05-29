@@ -17,6 +17,16 @@
         <li><th th:text="#{mail.dateFrom}"></th> <span th:text="${fromDate}">vonDatum</span> </li>
         <li><th th:text="#{mail.dateTo}"></th> <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
 
-    <p> <th th:text="#{mail.signature}"/> </p>
+    <th:block th:if="${not #strings.isEmpty(comment)}">
+        <p> <b>Kommentar:</b><br/>
+        <span th:text="${comment}">KOMMENTAR</span>
+        </p>
+    </th:block>
+
+    <p>
+        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+    </p>
+
+    <p th:text="#{mail.signature}"> Signature </p>
 </body>
 </html>

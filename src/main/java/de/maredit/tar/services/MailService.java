@@ -1,14 +1,15 @@
 package de.maredit.tar.services;
 
-import org.springframework.stereotype.Service;
+import de.maredit.tar.services.mail.Attachment;
 
+import org.springframework.stereotype.Service;
 import de.maredit.tar.services.mail.MailObject;
 
 @Service
 public interface MailService {
 
-  public void sendMail(MailObject mail);
+  public void sendMail(MailObject mail, Attachment... attachments);
 
-  public void sendSimpleMail(MailObject mail);
+  void sendSimpleMail(MailObject mail);
 
 }
