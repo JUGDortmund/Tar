@@ -6,7 +6,7 @@
 </head>
 <body>
     <p>
-        Hallo, <span th:text="${employee}">Welt!</span>!<br />
+        <th th:text="#{mail.salutation}"></th><span th:text="${employee}">Welt!</span>!<br />
     </p>
 
     <p> Dein Urlaub vom <span th:text="${fromDate}">FROM</span> bis <span th:text="${toDate}">TO</span> wurde von <span th:text="${author}">AUTHOR</span> kommentiert: </p>

@@ -10,9 +10,9 @@
 			<!-- Sidebar Menu -->
 			<ul class="sidebar-menu">
                 <!-- Optionally, you can add icons to the links -->
-                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).VACATION_PAGE ? 'active' : ''}"><a href="/"><span>Urlaubsplanung</span></a></li>
-                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).CALENDAR_PAGE ? 'active' : ''}"><a href="/calendar"><span th:text="#{field.calender}"></span>></a></li>
-                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).OVERVIEW_PAGE ? 'active' : ''}"><a href="/overview"><span>Übersicht Resturlaube</span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).VACATION_PAGE ? 'active' : ''}"><a href="/"><span th:text="#{field.vacationPlanning}"></span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).CALENDAR_PAGE ? 'active' : ''}"><a href="/calendar"><span th:text="#{field.calender}"></span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).OVERVIEW_PAGE ? 'active' : ''}"><a href="/overview"><span th:text="#{field.overview.leftDays}"></span></a></li>
         </ul>
         <!-- /.sidebar-menu -->
         </section>
