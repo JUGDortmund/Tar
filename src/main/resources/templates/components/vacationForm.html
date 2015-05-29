@@ -69,7 +69,7 @@ edit-vacation, approve-vacation  -->
                                 </label>
 
                                 <th:block th:if="${editable}">
-                                    <div class="input-group date">
+                                    <div class="input-group date dateFrom">
                                         <input type="text" class="form-control" name="dateFrom" id="dateFrom"
                                                th:field="*{from}"/>
                                         <span class="input-group-addon"><i
@@ -90,7 +90,7 @@ edit-vacation, approve-vacation  -->
                                 </label>
 
                                 <th:block th:if="${editable}">
-                                    <div class="input-group date">
+                                    <div class="input-group date dateTo">
                                         <input type="text" class="form-control" name="dateTo" id="dateTo"
                                                th:field="*{to}"/>
                                         <span class="input-group-addon"><i
