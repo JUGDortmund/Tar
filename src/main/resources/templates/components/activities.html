@@ -5,7 +5,7 @@
 <body th:fragment="activities">
 
     <form th:if="${ (vacation.user.username == #authentication.name) ||
-                    (vacation.substitute.username == #authentication.name) ||
+                    (vacation.substitute != null and vacation.substitute.username == #authentication.name) ||
                     (#authorization.expression('hasRole(''SUPERVISOR'')'))  }"
           th:action="@{/addComment}" method="post" role="form">
 
