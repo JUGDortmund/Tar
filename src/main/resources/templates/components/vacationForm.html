@@ -61,7 +61,7 @@ edit-vacation, approve-vacation  -->
                         </div>
 
                         <div class="row">
-                            <div class="col-xs-6 form-group"
+                            <div class="col-xs-6 form-group date-group"
                                  th:classappend="${#fields.hasErrors('from')}? 'has-error'">
                                 <label for="dateFrom">
                                     von
@@ -82,7 +82,7 @@ edit-vacation, approve-vacation  -->
                                 </th:block>
                             </div>
 
-                            <div class="col-xs-6 form-group"
+                            <div class="col-xs-6 form-group date-group"
                                  th:classappend="${#fields.hasErrors('to')}? 'has-error'">
                                 <label for="dateTo">
                                     bis
