@@ -135,11 +135,12 @@ public class UserServiceImplTest {
     assertEquals(4, account.getApprovedVacationDays(), 0);
     assertEquals(4, account.getPendingVacationDays(), 0);
     assertEquals(22, account.getOpenVacationDays(), 0);
-    assertEquals(2, account.getPreviousYearOpenVacationDays(), 0);
+//    assertEquals(2, account.getPreviousYearOpenVacationDays(), 0);
+    assertNull(account.getPreviousYearOpenVacationDays());
   }
 
   @Test
-  public void testGetUserVacationAccountForYearWithNoVacationData() {
+  public void testGetUserVacationAccountForYearWithDefaultVacationData() {
     UserVacationAccount
         account =
         userService.getUserVacationAccountForYear(user2, LocalDate.now().getYear());
@@ -147,7 +148,7 @@ public class UserServiceImplTest {
     assertEquals(0, account.getVacations().size());
     assertEquals(0, account.getApprovedVacationDays(), 0);
     assertEquals(0, account.getPendingVacationDays(), 0);
-    assertEquals(0, account.getOpenVacationDays(), 0);
+    assertEquals(30, account.getOpenVacationDays(), 0);
     assertNull(account.getPreviousYearOpenVacationDays());
   }
 

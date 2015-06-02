@@ -1,7 +1,5 @@
 package de.maredit.tar.models;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;

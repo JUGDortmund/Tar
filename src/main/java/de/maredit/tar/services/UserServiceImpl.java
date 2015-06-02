@@ -1,7 +1,8 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.repositories.UserVacationAccountRepository;
+import de.maredit.tar.properties.VacationProperties;
 
+import de.maredit.tar.repositories.UserVacationAccountRepository;
 import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
@@ -41,6 +42,9 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private LdapService ldapService;
 
+  @Autowired
+  private VacationProperties vacationProperties;
+
   @Override
   public List<User> getSortedUserList() {
     List<User> userList = userRepository.findAll();
@@ -54,6 +58,7 @@ public class UserServiceImpl implements UserService {
     return userList;
   }
 
+  @Override
   public List<User> getManagerList() {
     List<User> managerList = new ArrayList<User>();
     try {
@@ -74,11 +79,14 @@ public class UserServiceImpl implements UserService {
 
     UserVacationAccount vacationAccount =
         userVacationAccountRepository.findByUserAndYear(user, year);
-    // if (vacationAccount == null) {
+    if (vacationAccount == null) {
     vacationAccount = new UserVacationAccount();
-//    List<Vacation> vacations = getVacationsForUserAndYear(user, year);
+    List<Vacation> vacations = getVacationsForUserAndYear(user, year);
     vacationAccount.setUser(user);
-//    vacationAccount.setVacations(vacations);
+    vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties.getDefaultVacationDays() : user.getVacationDays());
+    vacationAccount.setVacations(vacations);
+    userVacationAccountRepository.save(vacationAccount);
+    }
     UserVacationAccount previousVacationAccount =
         userVacationAccountRepository.findByUserAndYear(user, year - 1);
     vacationAccount.setApprovedVacationDays(getApprovedVacationDays(vacationAccount.getVacations()));
