@@ -55,8 +55,10 @@
                     <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
                 </div>
             </div>
-             <a th:href="@{/substitution(id=${vacation.id}, approve=false)}" onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');" class="btn btn-danger">ablehnen</a>
-             <a th:href="@{/substitution(id=${vacation.id}, approve=true)}" onclick="return confirm('Willst du die Vertretung wirklich annehmen?');" class="btn btn-success pull-right">annehmen</a>
+             <a th:href="@{/substitution(id=${vacation.id}, approve=false)}" th:attr="data-message=#{message.reject.replacement}"
+				onclick="return confirm(this.getAttribute('data-message'));" class="btn btn-danger">ablehnen</a>
+             <a th:href="@{/substitution(id=${vacation.id}, approve=true)}" th:attr="data-message=#{message.accept.vacation}"
+				onclick="return confirm(this.getAttribute('data-message'));" class="btn btn-success pull-right">annehmen</a>
     </div>
 </div>
 </body>

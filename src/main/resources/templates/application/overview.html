@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <h1 th:inline="text">
-                        <th th:text="#{field.overview.leftDays}"></th> [[${#dates.year(#dates.createNow())}]]
+                        <th th:text="#{field.overview}"></th> [[${#dates.year(#dates.createNow())}]]
                     </h1>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                                                   data-toggle="tooltip" data-placement="top"
                                                   th:title="#{field.leftDaysLastYear}">(+0)</span>
                                         </b>
-                                        <span>Gesamt</span>
+                                        <span th:text="#{field.total}">Gesamt</span>
                                         <!-- /*
                                         This is for TAR-130 to open the collapse-panel for more details
                                         <a data-toggle="collapse" data-parent="#accordion" th:href="|#collapse${iterator.index}|">

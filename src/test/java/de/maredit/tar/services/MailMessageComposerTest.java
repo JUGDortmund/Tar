@@ -1,13 +1,14 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.services.mail.VacationCreateMail;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,7 @@ public class MailMessageComposerTest {
     assertEquals("manager@maredit.de", mailMessage.getTo()[1]);
   }
 
+  @Ignore
   @Test
   public void placeHoldersInTemplateCorrectlyReplaced() {
     standardVacation.setFrom(LocalDate.of(2015, 04, 27));

@@ -78,10 +78,12 @@
 				</div>
 			</div>
 			<a th:href="@{/substitution(id=${vacation.id}, approve=false)}"
-				onclick="return confirm('Willst du die Vertretung wirklich ablehnen?');"
+				th:attr="data-message=#{message.reject.replacement}"
+				onclick="return confirm(this.getAttribute('data-message'));"
 				class="btn btn-danger"><th th:text="#{field.reject}"></th></a> <a
 				th:href="@{/substitution(id=${vacation.id}, approve=true)}"
-				onclick="return confirm('Willst du die Vertretung wirklich annehmen?');"
+				th:attr="data-message=#{message.accept.replacement}"
+				onclick="return confirm(this.getAttribute('data-message'));"
 				class="btn btn-success pull-right"><th th:text="#{field.accept}"></th></a>
 		</div>
 	</div>

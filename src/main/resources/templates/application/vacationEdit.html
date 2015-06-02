@@ -118,7 +118,8 @@
             </div>
 
             <a th:if="${disableInput} == false" th:href="@{/cancelVacation(id=${vacation.id})}"
-               onclick="return confirm(' + #{field.cancel} +');"
+               th:attr="data-message=#{message.cancel.vacation}"
+				onclick="return confirm(this.getAttribute('data-message'));"
                class="btn btn-danger"><th th:text="#{field.cancel}"></th></a>
             <button type="submit" class="btn btn-success pull-right"
                     th:if="${disableInput} == false"><th th:text="#{field.update}"></th>

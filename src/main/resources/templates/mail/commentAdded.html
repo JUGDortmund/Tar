@@ -9,14 +9,14 @@
         <th th:text="#{mail.salutation}"></th><span th:text="${employee}">Welt!</span>!<br />
     </p>
 
-    <p> Dein Urlaub vom <span th:text="${fromDate}">FROM</span> bis <span th:text="${toDate}">TO</span> wurde von <span th:text="${author}">AUTHOR</span> kommentiert: </p>
+    <p> <th th:text="#{mail.vacation.dateFrom}"></th> <span th:text="${fromDate}">FROM</span> <th th:text="#{field.dateTo}"/> <span th:text="${toDate}">TO</span><th th:text="#{mail.text.wasCommentedBy}"/><span th:text="${author}">AUTHOR</span> </p>
     
     <p><span th:text="${text}"></span></p>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+        &lt;<a th:href="@{${urlToVacation}}"><th th:text="#{mail.urlToVacation}"/></a><th th:text="#{mail.urlToVacationText}"/>
     </p>
 
-    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+    <p> <th th:text="#{mail.signature}"></th></p>
 </body>
 </html>

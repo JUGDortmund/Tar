@@ -18,13 +18,13 @@
         <li><th th:text="#{mail.dateTo}"></th> <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
 
     <th:block th:if="${not #strings.isEmpty(comment)}">
-        <p> <b>Kommentar:</b><br/>
+        <p> <b><th th:text="#{field.comment} + ';'"></th></b><br/>
         <span th:text="${comment}">KOMMENTAR</span>
         </p>
     </th:block>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+        &lt;<a th:href="@{${urlToVacation}}"><th th:text="#{mail.urlToVacation}"/></a><th th:text="#{mail.urlToVacationText}"/>
     </p>
 
     <p th:text="#{mail.signature}">Signature</p>
