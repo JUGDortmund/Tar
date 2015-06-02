@@ -19,26 +19,31 @@ refreshVacationForm = (data) ->
   $myForm = $('#vacation-form-panel')
   $myForm.html(data).hide().fadeIn( 800 )
   $('.panel-default').matchHeight()
-  $myForm.find('.input-group.date').each -> 
-    $this = $(this)
-    $this.datepicker({
-      # convert from java simpledate to date format of datepicker api
-      "format" : $this.data('dateformat').replace(/M/g, 'm')
-      "autoclose" : true
-      "language" : $this.data('lang')
-    })
+
+  initializeDatePicker()
+
   $myForm.find('select').select2()
   scrollToVacationForm()
   activateToggle()
 
 
+initializeDatePicker = () ->
+  $('.input-group.date').datepicker({
+      format : "dd.mm.yyyy"
+      weekStart: 1
+      daysOfWeekDisabled: '0,6'
+      autoclose: true
+      todayHighlight: true
+  })
+
+  $('.input-group.date.dateFrom').datepicker().on 'changeDate', ->
+    if(isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()))
+      $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'))
+
+
 # document ready 
 (($) ->
-
-  $('.input-group.date').datepicker({
-     "format" : "dd.mm.yyyy"
-     "autoclose" : true
-  }) 
+  initializeDatePicker()
 
   $('[data-toggle="tooltip"]').tooltip()
 

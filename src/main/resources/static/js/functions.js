@@ -1,13 +1,9 @@
 (function() {
   (function($) {
-    var getCurrentCheckedStatus, selectedFormat, selectedLanguage;
-    if ($('#calendar').length > 0) {
-      getCurrentCheckedStatus = function(checkboxId) {
-        return $(checkboxId).is(':checked');
-      };
-      selectedLanguage = $('#calendar').data('lang');
-      selectedFormat = $('#calendar').data('dateformat').replace(/d/g, 'D').replace(/y/g, 'Y');
-    }
+    var getCurrentCheckedStatus;
+    getCurrentCheckedStatus = function(checkboxId) {
+      return $(checkboxId).is(':checked');
+    };
     $('#calendar').fullCalendar({
       header: {
         left: 'prev,next today',
@@ -15,7 +11,7 @@
         right: 'month,basicWeek'
       },
       defaultView: 'month',
-      lang: selectedLanguage,
+      lang: 'de',
       weekends: false,
       eventLimit: true,
       weekNumbers: true,
@@ -83,41 +79,7 @@
 }).call(this);
 
 (function() {
-  (function($) {
-    $.fn.datepicker.dates['en'] = {
-      days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      daysMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
-      months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      today: "Today",
-      clear: "Clear"
-    };
-    $.fn.datepicker.dates['de'] = {
-      days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
-      daysShort: ["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam", "Son"],
-      daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
-      months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-      monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
-      today: "Heute",
-      clear: "Löschen",
-      weekStart: 1
-    };
-    return $('.input-group.date').each(function() {
-      var $this;
-      $this = $(this);
-      return $this.datepicker({
-        "format": $this.data('dateformat').replace(/M/g, 'm'),
-        "autoclose": true,
-        "language": $this.data('lang')
-      });
-    });
-  })(jQuery);
-
-}).call(this);
-
-(function() {
-  var activateToggle, refreshVacationForm, scrollToVacationForm;
+  var activateToggle, initializeDatePicker, refreshVacationForm, scrollToVacationForm;
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -144,25 +106,29 @@
     $myForm = $('#vacation-form-panel');
     $myForm.html(data).hide().fadeIn(800);
     $('.panel-default').matchHeight();
-    $myForm.find('.input-group.date').each(function() {
-      var $this;
-      $this = $(this);
-      return $this.datepicker({
-        "format": $this.data('dateformat').replace(/M/g, 'm'),
-        "autoclose": true,
-        "language": $this.data('lang')
-      });
-    });
+    initializeDatePicker();
     $myForm.find('select').select2();
     scrollToVacationForm();
     return activateToggle();
   };
 
-  (function($) {
+  initializeDatePicker = function() {
     $('.input-group.date').datepicker({
-      "format": "dd.mm.yyyy",
-      "autoclose": true
+      format: "dd.mm.yyyy",
+      weekStart: 1,
+      daysOfWeekDisabled: '0,6',
+      autoclose: true,
+      todayHighlight: true
     });
+    return $('.input-group.date.dateFrom').datepicker().on('changeDate', function() {
+      if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+        return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
+      }
+    });
+  };
+
+  (function($) {
+    initializeDatePicker();
     $('[data-toggle="tooltip"]').tooltip();
     $('.panel-default select').select2();
     $('.autosubmit').on('change', function() {

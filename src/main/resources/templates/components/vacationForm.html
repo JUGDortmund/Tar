@@ -58,7 +58,7 @@ edit-vacation, approve-vacation  -->
                         </div>
 
                         <div class="row">
-                            <div class="col-xs-6 form-group"
+                            <div class="col-xs-6 form-group date-group"
                                  th:classappend="${#fields.hasErrors('from')}? 'has-error'">
                                 <label for="dateFrom">
                                     <th th:text="#{field.dateFrom}"></th>
@@ -66,7 +66,7 @@ edit-vacation, approve-vacation  -->
                                 </label>
 
                                 <th:block th:if="${editable}">
-                                    <div class="input-group date">
+                                    <div class="input-group date dateFrom">
                                         <input type="text" class="form-control" name="dateFrom" id="dateFrom"
                                                th:field="*{from}"/>
                                         <span class="input-group-addon"><i
@@ -79,7 +79,7 @@ edit-vacation, approve-vacation  -->
                                 </th:block>
                             </div>
 
-                            <div class="col-xs-6 form-group"
+                            <div class="col-xs-6 form-group date-group"
                                  th:classappend="${#fields.hasErrors('to')}? 'has-error'">
                                 <label for="dateTo">
                                     <th th:text="#{field.dateTo}"></th>
@@ -87,7 +87,7 @@ edit-vacation, approve-vacation  -->
                                 </label>
 
                                 <th:block th:if="${editable}">
-                                    <div class="input-group date">
+                                    <div class="input-group date dateTo">
                                         <input type="text" class="form-control" name="dateTo" id="dateTo"
                                                th:field="*{to}"/>
                                         <span class="input-group-addon"><i
