@@ -17,7 +17,7 @@ public class User {
   private String username;
   private String mail;
   private String userImage = null;
-  private Integer vacationDays;
+  private Double vacationDays;
   private boolean active;
 
   public User() {}
@@ -120,11 +120,11 @@ public class User {
         + active + "]";
   }
 
-  public Integer getVacationDays() {
+  public Double getVacationDays() {
     return vacationDays;
   }
 
-  public void setVacationDays(Integer vacationDays) {
+  public void setVacationDays(Double vacationDays) {
     this.vacationDays = vacationDays;
   }
 }

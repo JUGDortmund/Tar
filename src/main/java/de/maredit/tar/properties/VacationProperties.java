@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(locations = "classpath:vacationConfig.yaml")
 public class VacationProperties {
 
-  private int defaultVacationDays;
+  private double defaultVacationDays;
 
-  public int getDefaultVacationDays() {
+  public double getDefaultVacationDays() {
     return defaultVacationDays;
   }
 
-  public void setDefaultVacationDays(int defaultVacationDays) {
+  public void setDefaultVacationDays(double defaultVacationDays) {
     this.defaultVacationDays = defaultVacationDays;
   }
 }

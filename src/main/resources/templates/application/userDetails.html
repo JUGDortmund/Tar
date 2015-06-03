@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+
+<div layout:fragment="content">
+	<section class="content-header">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12">
+					<h1 th:inline="text">Details Benutzer [[${user.lastname + ', '
+						+ user.firstname}]]</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<form th:action="@{/saveVacation}" th:object="${user}" method="post"
+					role="form">
+					<input type="hidden" th:field="*{id}" />
+
+					<!-- Error-handling: show alert box, when validation fails  -->
+					<div class="alert alert-danger" role="alert"
+						th:if="${#fields.hasErrors('*')}">
+						<ul>
+							<li th:each="err : ${#fields.detailedErrors()}"
+								th:text="${err.fieldName +' '+ err.message}">Input is
+								incorrect</li>
+						</ul>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 form-group">
+
+							<label for="employee"> Mitarbeiter </label> <input type="text"
+								class="form-control" th:value="*{lastname + ', ' + firstname}"
+								disabled="disabled" />
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-xs-6 form-group"
+							th:classappend="${#fields.hasErrors('vacationDays')}? 'has-error'">
+							<label for="vacationDays"> Anzahl Anspruch Jahresurlaub in Tagen 
+							</label>
+
+								<input type="number" class="form-control" name="vacationDays"
+									id="vacationDays" step="0.5" th:field="*{vacationDays}" />
+
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-xs-12 form-group">
+							<button type="submit" class="btn btn-success pull-right">
+								beantragen</button>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+	</section>
+
+</div>
+</html>

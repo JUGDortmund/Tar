@@ -1,7 +1,8 @@
 package de.maredit.tar.tasks;
 
-import org.apache.commons.lang3.StringUtils;
+import de.maredit.tar.properties.VacationProperties;
 
+import org.apache.commons.lang3.StringUtils;
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.LdapService;
@@ -27,6 +28,9 @@ public class UserSyncTask {
 
   @Autowired
   private UserRepository userRepository;
+  
+  @Autowired
+  private VacationProperties vacationProperties;
 
   @Scheduled(cron = "0 0 */1 * * ?")
   public void syncLdapUser() {
@@ -77,6 +81,7 @@ public class UserSyncTask {
     user.setUsername(resultEntry.getUsername());
     user.setFirstname(resultEntry.getFirstname());
     user.setLastname(resultEntry.getLastname());
+    user.setVacationDays(vacationProperties.getDefaultVacationDays());
     try {
       user.setPhoto(Optional.ofNullable(resultEntry.getUserImage()).orElse(StringUtils.EMPTY).getBytes("UTF8"));
     } catch (UnsupportedEncodingException e) {
