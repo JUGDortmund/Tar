@@ -29,7 +29,7 @@
 
                             <div class="panel-heading" th:id="|heading${iterator.index}|">
                                 <div class="progress-group">
-                                	<a href="/userDetails" th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text" th:text="${userVacationAccount.user.lastname + ', ' + userVacationAccount.user.firstname}">Username</a>
+                                	<a th:href="@{/userDetails(user=${userVacationAccount.user.id})}" th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text" th:text="${userVacationAccount.user.lastname + ', ' + userVacationAccount.user.firstname}">Username</a>
                                     <span th:unless="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text"
                                           th:text="${userVacationAccount.user.lastname + ', ' + userVacationAccount.user.firstname}">Username</span>
                                     <span class="progress-number">

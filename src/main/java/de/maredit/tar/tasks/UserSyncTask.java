@@ -42,6 +42,7 @@ public class UserSyncTask {
       for (User user : ldapUserList) {
         User localUser = userRepository.findByUidNumber(user.getUidNumber());
         if (localUser == null) {
+          user.setVacationDays(vacationProperties.getDefaultVacationDays());
           localUser = user;
           LOG.debug("User created. username: {} / uidNumber: {}", user.getUsername(),
               user.getUidNumber());
@@ -81,7 +82,6 @@ public class UserSyncTask {
     user.setUsername(resultEntry.getUsername());
     user.setFirstname(resultEntry.getFirstname());
     user.setLastname(resultEntry.getLastname());
-    user.setVacationDays(vacationProperties.getDefaultVacationDays());
     try {
       user.setPhoto(Optional.ofNullable(resultEntry.getUserImage()).orElse(StringUtils.EMPTY).getBytes("UTF8"));
     } catch (UnsupportedEncodingException e) {

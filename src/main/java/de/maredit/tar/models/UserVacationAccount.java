@@ -1,5 +1,7 @@
 package de.maredit.tar.models;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
@@ -8,6 +10,7 @@ import java.util.List;
 /**
  * Created by czillmann on 19.05.15.
  */
+@Document
 public class UserVacationAccount {
 
   @Id
