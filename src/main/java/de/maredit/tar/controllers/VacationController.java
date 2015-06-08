@@ -16,6 +16,7 @@ import de.maredit.tar.repositories.ProtocolItemRepository;
 import de.maredit.tar.repositories.StateItemRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.HolidayService;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.MailService;
 import de.maredit.tar.services.UserService;
@@ -28,6 +29,7 @@ import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -96,6 +98,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private ApplicationController applicationController;
+  
+  @Autowired
+  private HolidayService holidayService;
 
   @ModelAttribute("vacation")
   public Vacation getVacation(@RequestParam(value = "id", required = false) String id) {
@@ -137,6 +142,7 @@ public class VacationController extends WebMvcConfigurerAdapter {
     User selectedUser = getUser(request);
     setIndexModelValues(model, selectedUser);
 
+    holidayService.getAllHolidays(2015);
     model.addAttribute("formMode", FormMode.NEW);
     model.addAttribute("timeLineItems", new ArrayList<TimelineItem>());
     return "application/index";
