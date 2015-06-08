@@ -6,5 +6,5 @@ import de.maredit.tar.models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserVacationAccountRepository extends MongoRepository<UserVacationAccount, String> {
-  UserVacationAccount findByUserAndYear(User user, int year);
+  UserVacationAccount findUserVacationAccountByUserAndYear(User user, Integer year);
 }

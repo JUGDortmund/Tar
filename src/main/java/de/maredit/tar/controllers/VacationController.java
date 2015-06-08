@@ -1,5 +1,8 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.repositories.UserVacationAccountRepository;
+
+import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.beans.NavigationBean;
@@ -87,6 +90,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private UserService userService;
+  
+  @Autowired
+  private UserVacationAccountRepository userVacationAccountRepository;
 
   @Autowired
   private NavigationBean navigationBean;
@@ -265,6 +271,12 @@ public class VacationController extends WebMvcConfigurerAdapter {
       }
       this.vacationRepository.save(vacation);
       saveComment(comment, vacation);
+      
+      if (newVacation) {
+        UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+        account.addVacation(vacation);
+        userVacationAccountRepository.save(account);
+      }
 
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation(), comment)
                                             : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
@@ -299,9 +311,8 @@ public class VacationController extends WebMvcConfigurerAdapter {
       commentItem.setVacation(vacation);
       commentItemRepository.save(commentItem);
       return commentItem;
-    } else {
-      return null;
     }
+    return null;
   }
 
   private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {

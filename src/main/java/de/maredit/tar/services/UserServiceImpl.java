@@ -78,18 +78,21 @@ public class UserServiceImpl implements UserService {
   public UserVacationAccount getUserVacationAccountForYear(User user, int year) {
 
     UserVacationAccount vacationAccount =
-        userVacationAccountRepository.findByUserAndYear(user, year);
+        userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year);
     if (vacationAccount == null) {
-    vacationAccount = new UserVacationAccount();
-    List<Vacation> vacations = getVacationsForUserAndYear(user, year);
-    vacationAccount.setUser(user);
-    vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties.getDefaultVacationDays() : user.getVacationDays());
-    vacationAccount.setVacations(vacations);
-    userVacationAccountRepository.save(vacationAccount);
+      vacationAccount = new UserVacationAccount();
+      List<Vacation> vacations = getVacationsForUserAndYear(user, year);
+      vacationAccount.setUser(user);
+      vacationAccount.setYear(year);
+      vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties
+          .getDefaultVacationDays() : user.getVacationDays());
+      vacationAccount.setVacations(vacations);
+      userVacationAccountRepository.save(vacationAccount);
     }
     UserVacationAccount previousVacationAccount =
-        userVacationAccountRepository.findByUserAndYear(user, year - 1);
-    vacationAccount.setApprovedVacationDays(getApprovedVacationDays(vacationAccount.getVacations()));
+        userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year - 1);
+    vacationAccount
+        .setApprovedVacationDays(getApprovedVacationDays(vacationAccount.getVacations()));
     vacationAccount.setPendingVacationDays(getPendingVacationDays(vacationAccount.getVacations()));
     if (previousVacationAccount != null) {
       vacationAccount.setPreviousYearOpenVacationDays(previousVacationAccount

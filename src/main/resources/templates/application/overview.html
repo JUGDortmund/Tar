@@ -36,7 +36,7 @@
                                         <b>
                                             <span th:text="${{userVacationAccount.totalVacationDays}}"
                                                   data-toggle="tooltip" data-placement="top"
-                                                  title="Jahres-Gesamtanspruch">30</span>
+                                                  title="Jahres-Gesamtanspruch">0</span>
                                             <span th:if="${userVacationAccount.previousYearOpenVacationDays > 0}"
                                                   th:text="${{'(+'+userVacationAccount.previousYearOpenVacationDays+')'}}"
                                                   data-toggle="tooltip" data-placement="top"
@@ -50,7 +50,6 @@
                                         </a>
                                         */-->
                                     </span>
-
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success"
                                              th:style="|width: ${userVacationAccount.totalVacationDays &lt;= 0 ? 0 : userVacationAccount.approvedVacationDays/userVacationAccount.totalVacationDays * 100}%;|"

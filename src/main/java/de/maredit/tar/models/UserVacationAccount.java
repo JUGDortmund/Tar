@@ -1,10 +1,12 @@
 package de.maredit.tar.models;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +17,9 @@ public class UserVacationAccount {
 
   @Id
   private String id;
+  @DBRef
   private User user;
-  private int year;
+  private Integer year;
   private double totalVacationDays;
   private Double previousYearOpenVacationDays;
   private LocalDate expiryDate;
@@ -98,5 +101,12 @@ public class UserVacationAccount {
 
   public double getOpenVacationDays() {
     return totalVacationDays - approvedVacationDays - pendingVacationDays + (previousYearOpenVacationDays == null ? 0 : previousYearOpenVacationDays);
+  }
+
+  public void addVacation(Vacation vacation) {
+    if (vacations == null) {
+      vacations = new ArrayList<>();
+    }
+    vacations.add(vacation);
   }
 }

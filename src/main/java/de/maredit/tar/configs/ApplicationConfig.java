@@ -1,9 +1,8 @@
 package de.maredit.tar.configs;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-
-import de.maredit.tar.beans.VersionBean;
 import de.maredit.tar.beans.NavigationBean;
+import de.maredit.tar.beans.VersionBean;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
