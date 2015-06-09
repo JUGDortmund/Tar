@@ -135,7 +135,6 @@ public class UserServiceImplTest {
     assertEquals(4, account.getApprovedVacationDays(), 0);
     assertEquals(4, account.getPendingVacationDays(), 0);
     assertEquals(22, account.getOpenVacationDays(), 0);
-//    assertEquals(2, account.getPreviousYearOpenVacationDays(), 0);
     assertNull(account.getPreviousYearOpenVacationDays());
   }
 
