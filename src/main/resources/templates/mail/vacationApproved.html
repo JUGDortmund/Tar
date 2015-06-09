@@ -5,26 +5,26 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <p> <th th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> <
+    <p> <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> <
 
-    <p> <th th:text="#{mail.text.accept.vacation}"/> </p>
+    <p> <th:block th:text="#{mail.text.accept.vacation}"/> </p>
     
-    <p> <b><th th:text="#{mail.superior}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.superior}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
 
-    <p> <b><th th:text="#{mail.replacement}"/></b> <span th:text="${substitute}">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.replacement}"/></b> <span th:text="${substitute}">Max Mustermann</span> </p>
 
-    <p> <b><th th:text="#{mail.vacation.time}"/></b> <ul>
-        <li><th th:text="#{mail.dateFrom}"></th> <span th:text="${fromDate}">vonDatum</span> </li>
-        <li><th th:text="#{mail.dateTo}"></th> <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
+    <p> <b><th:block th:text="#{mail.vacation.time}"/></b> <ul>
+        <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate}">vonDatum</span> </li>
+        <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
 
     <th:block th:if="${not #strings.isEmpty(comment)}">
-        <p> <b><th th:text="#{field.comment} + ';'"></th></b><br/>
+        <p> <b><th:block th:text="#{field.comment} + ';'"/></b><br/>
         <span th:text="${comment}">KOMMENTAR</span>
         </p>
     </th:block>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}"><th th:text="#{mail.urlToVacation}"/></a><th th:text="#{mail.urlToVacationText}"/>
+        &lt;<a th:href="@{${urlToVacation}}"><th:block th:text="#{mail.urlToVacation}"/></a><th:block th:text="#{mail.urlToVacationText}"/>
     </p>
 
     <p th:text="#{mail.signature}"> Signature </p>

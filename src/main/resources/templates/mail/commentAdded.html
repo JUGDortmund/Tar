@@ -6,17 +6,17 @@
 </head>
 <body>
     <p>
-        <th th:text="#{mail.salutation}"></th><span th:text="${employee}">Welt!</span>!<br />
+        <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span>!<br />
     </p>
 
-    <p> <th th:text="#{mail.vacation.dateFrom}"></th> <span th:text="${fromDate}">FROM</span> <th th:text="#{field.dateTo}"/> <span th:text="${toDate}">TO</span><th th:text="#{mail.text.wasCommentedBy}"/><span th:text="${author}">AUTHOR</span> </p>
+    <p> <th:block th:text="#{mail.vacation.dateFrom}"/> <span th:text="${fromDate}">FROM</span> <th:block th:text="#{field.dateTo}"/> <span th:text="${toDate}">TO</span><th:block th:text="#{mail.text.wasCommentedBy}"/><span th:text="${author}">AUTHOR</span> </p>
     
     <p><span th:text="${text}"></span></p>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}"><th th:text="#{mail.urlToVacation}"/></a><th th:text="#{mail.urlToVacationText}"/>
+        &lt;<a th:href="@{${urlToVacation}}"><th:block th:text="#{mail.urlToVacation}"/></a><th:block th:text="#{mail.urlToVacationText}"/>
     </p>
 
-    <p> <th th:text="#{mail.signature}"></th></p>
+    <p> <th:block th:text="#{mail.signature}"/></p>
 </body>
 </html>

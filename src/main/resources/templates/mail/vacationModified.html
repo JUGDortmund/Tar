@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <p> <th th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> </p>
+    <p> <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> </p>
 
     <p th:text="#{mail.text.change.vacation}"> Vacation details </p>
 
@@ -13,13 +13,13 @@
         <thead>
         	<tr>
                 <td/>
-                <td><b><th th:text="#{mail.oldValue}"></th></b></td>
-                <td><b><th th:text="#{mail.newValue}"></th></b></td>
+                <td><b><th:block th:text="#{mail.oldValue}"/></b></td>
+                <td><b><th:block th:text="#{mail.newValue}"/></b></td>
             </tr>
         </thead>
         <tr>
             <td>
-                <b><th th:text="#{mail.superior}"></th></b>
+                <b><th:block th:text="#{mail.superior}"/></b>
             </td>
             <td>
                 <span th:text="${manager_old}">Max Mustermann</span>
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td>
-                <b><th th:text="#{mail.replacement}"></th></b>
+                <b><th:block th:text="#{mail.replacement}"/></b>
             </td>
             <td>
                 <span th:text="${substitute_old}">Max Mustermann</span>
@@ -41,24 +41,24 @@
         </tr>
         <tr>
             <td>
-                <b><th th:text="#{mail.vacation.time}"></th></b>
+                <b><th:block th:text="#{mail.vacation.time}"/></b>
             </td>
             <td>
                 <ul>
-                    <li><th th:text="#{mail.dateFrom}"></th> <span th:text="${fromDate_old}">vonDatum</span> </li>
-                    <li><th th:text="#{mail.dateTo}"></th> <span th:text="${toDate_old}">bisDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate_old}">vonDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate_old}">bisDatum</span> </li>
                 </ul>
             </td>
             <td>
                 <ul>
-                    <li><th th:text="#{mail.dateFrom}"></th> <span th:text="${fromDate}">vonDatum</span> </li>
-                    <li><th th:text="#{mail.dateTo}"></th> <span th:text="${toDate}">bisDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate}">vonDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate}">bisDatum</span> </li>
                 </ul>
             </td>
         </tr>
         <tr>
             <td>
-                <b><th th:text="#{mail.vacation.time}"></th></b>
+                <b><th:block th:text="#{mail.vacation.time}"/></b>
             </td>
             <td>
                 <span th:text="${totalDays_old}">Tage</span>
@@ -69,7 +69,7 @@
         </tr>
         <tr>
             <td>
-                <b><th th:text="#{mail.vacation.leftDays}"></th></b>
+                <b><th:block th:text="#{mail.vacation.leftDays}"/></b>
             </td>
             <td>
                 <span th:text="${leftDays_old}">Tage</span>
@@ -80,16 +80,16 @@
         </tr>
     </table>
 
-    <p> <th th:text="#{mail.modifiedBy}"></th> <span th:text="${modifiedBy}">Bearbeiter</span></p>
+    <p> <th:block th:text="#{mail.modifiedBy}"/> <span th:text="${modifiedBy}">Bearbeiter</span></p>
 
     <th:block th:if="${not #strings.isEmpty(comment)}">
-        <p> <b><th th:text="#{field.comment} + ';'"></th></b><br/>
+        <p> <b><th:block th:text="#{field.comment} + ';'"/></b><br/>
         <span th:text="${comment}">KOMMENTAR</span>
         </p>
     </th:block>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}"><th th:text="#{mail.urlToVacation}"></th>
+        &lt;<a th:href="@{${urlToVacation}}"><th:block th:text="#{mail.urlToVacation}"/>
     </p>
 
     <p th:text="#{mail.signature}"> Signature </p>
