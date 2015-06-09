@@ -2,11 +2,13 @@ package de.maredit.tar.controllers;
 
 import static java.util.stream.Collectors.toList;
 
-import de.maredit.tar.beans.NavigationBean;
-import de.maredit.tar.models.CalendarEvent;
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.models.enums.State;
-import de.maredit.tar.repositories.VacationRepository;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import de.maredit.tar.beans.NavigationBean;
+import de.maredit.tar.models.CalendarEvent;
+import de.maredit.tar.models.CalendarHolidayEvent;
+import de.maredit.tar.models.UserHoliday;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.State;
+import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.HolidayService;
 
 /**
  * Created by czillmann on 29.04.15.
@@ -40,6 +46,9 @@ public class CalendarController {
 
   @Autowired
   private NavigationBean navigationBean;
+
+  @Autowired
+  private HolidayService holidaySerivce;
 
   @RequestMapping("/calendar")
   public String calendar(Model model) {
@@ -60,6 +69,7 @@ public class CalendarController {
       @RequestParam(value = "showPending", defaultValue = "false") Boolean showPending,
       @RequestParam(value = "showCanceled", defaultValue = "false") Boolean showCanceled,
       @RequestParam(value = "showRejected", defaultValue = "false") Boolean showRejected) {
+
     LocalDate startDate = LocalDate.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     LocalDate endDate = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     LOG.debug("Selecting vacation data from " + startDate + " to " + endDate);
@@ -83,12 +93,27 @@ public class CalendarController {
         this.vacationRepository.findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(startDate,
             endDate, states, startDate, endDate, states);
 
+    Set<UserHoliday> userHolidays = new HashSet<UserHoliday>();
+    userHolidays = holidaySerivce.getHolidayPeriodOfTime(startDate, endDate, startDate.getYear());
+
     List<CalendarEvent> calendarEvents =
         vacations
             .stream()
             .map(
                 vacation -> {
                   CalendarEvent calendarEvent = new CalendarEvent(vacation);
+                  LOG.debug("added CalendarEvent '" + calendarEvent.getTitle() + "' [start: "
+                      + calendarEvent.getStart() + " - end: " + calendarEvent.getEnd() + "] - "
+                      + calendarEvent.getState());
+                  return calendarEvent;
+                }).collect(toList());
+    
+    List<CalendarHolidayEvent> calendarHolidayEvents =
+        userHolidays
+            .stream()
+            .map(
+                userHoliday -> {
+                  CalendarHolidayEvent calendarEvent = new CalendarHolidayEvent(userHoliday);
                   LOG.debug("added CalendarEvent '" + calendarEvent.getTitle() + "' [start: "
                       + calendarEvent.getStart() + " - end: " + calendarEvent.getEnd() + "] - "
                       + calendarEvent.getState());

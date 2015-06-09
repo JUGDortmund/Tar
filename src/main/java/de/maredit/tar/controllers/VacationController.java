@@ -142,7 +142,6 @@ public class VacationController extends WebMvcConfigurerAdapter {
     User selectedUser = getUser(request);
     setIndexModelValues(model, selectedUser);
 
-    holidayService.getAllHolidays(2015);
     model.addAttribute("formMode", FormMode.NEW);
     model.addAttribute("timeLineItems", new ArrayList<TimelineItem>());
     return "application/index";

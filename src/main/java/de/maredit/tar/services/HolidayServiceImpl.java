@@ -1,58 +1,90 @@
 package de.maredit.tar.services;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameter;
 import de.jollyday.ManagerParameters;
+import de.maredit.tar.models.UserHoliday;
+import de.maredit.tar.properties.VacationProperties;
 
+/**
+ * Created by phorninge on 05.06.2015
+ */
 @Service
 public class HolidayServiceImpl implements HolidayService {
 
+  @Autowired
+  private VacationProperties properties;
+
   private static final Logger LOG = LogManager.getLogger(HolidayServiceImpl.class);
   private ManagerParameter parameters = ManagerParameters.create(HolidayCalendar.GERMANY);
-  private Set<de.jollyday.Holiday> mareditHolidays;
-  private Set<de.jollyday.Holiday> extHolidays;
-  private Set<de.jollyday.Holiday> allHolidays;
+  private List<UserHoliday> userHolidays = new ArrayList<UserHoliday>();
+  private Set<Holiday> extHolidays;
+  private Set<UserHoliday> allHolidays = new HashSet<UserHoliday>();
+  private Set<UserHoliday> periodHolidays = new HashSet<UserHoliday>();
 
   @Override
-  public Set<de.jollyday.Holiday> getAllHolidays(int year) {
+  public Set<UserHoliday> getAllHolidays(int year) {
     HolidayManager m = HolidayManager.getInstance(parameters);
     extHolidays = m.getHolidays(year, "nw");
-
-//    try {
-//      mareditHolidays = getMareditHolidays(year);
-//    } catch (MalformedURLException e) {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
+    userHolidays = properties.getUserHolidays();
 
     for (de.jollyday.Holiday h : extHolidays) {
-      LOG.debug("Holiday: {}", h.getDate());
-      allHolidays.add(h);
+      allHolidays.add(addUserHoliday(h));
     }
+    allHolidays.addAll(userHolidays);
 
-    for (de.jollyday.Holiday mH : allHolidays) {
-      LOG.debug("All Maredit Holiday: {}", mH.getDate());
-    }
-
-    return extHolidays;
+    return allHolidays;
   }
 
-  private Set<de.jollyday.Holiday> getMareditHolidays(int year) throws MalformedURLException {
-    URL url = new URL("**resources/maredit-holidays.xml");
-    ManagerParameter parameters = ManagerParameters.create(url);
-    HolidayManager manager = HolidayManager.getInstance(parameters);
+  @Override
+  public Set<UserHoliday> getHolidayPeriodOfTime(LocalDate startDate, LocalDate endDate, int year) {
 
-    Set<de.jollyday.Holiday> holidays = manager.getHolidays(year);
+    periodHolidays.clear();
+    HolidayManager m = HolidayManager.getInstance(parameters);
+    extHolidays = m.getHolidays(startDate, endDate, "nw");
+    userHolidays = properties.getUserHolidays();
 
-    return holidays;
+    for (de.jollyday.Holiday h : extHolidays) {
+      periodHolidays.add(addUserHoliday(h));
+    }
+
+    for (UserHoliday uH : userHolidays) {
+      if (!uH.getDate().startsWith(year + "")) {
+        String[] parts = uH.getDate().split("-");
+        String monthSplit = parts[1];
+        String daySplit = parts[2];
+
+        uH.setDate(year + "-" + monthSplit + "-" + daySplit);
+      }
+
+      if (!startDate.isBefore(startDate) && !endDate.isAfter(endDate)) {
+        periodHolidays.add(uH);
+      }
+    }
+
+    return periodHolidays;
+  }
+
+
+  private UserHoliday addUserHoliday(de.jollyday.Holiday holiday) {
+    UserHoliday uHoliday = new UserHoliday();
+    uHoliday.setDate(holiday.getDate().toString());
+    uHoliday.setValence(1);
+    uHoliday.setDescription(holiday.getDescription());
+
+    return uHoliday;
   }
 }
