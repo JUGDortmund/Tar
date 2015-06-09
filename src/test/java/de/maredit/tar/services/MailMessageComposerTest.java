@@ -71,7 +71,6 @@ public class MailMessageComposerTest {
     assertEquals("manager@maredit.de", mailMessage.getTo()[1]);
   }
 
-  @Ignore
   @Test
   public void placeHoldersInTemplateCorrectlyReplaced() {
     standardVacation.setFrom(LocalDate.of(2015, 04, 27));
@@ -84,25 +83,25 @@ public class MailMessageComposerTest {
 
     String errorMessage = "Expected substring not found in body text: ";
 
-    String expectedSubString = "Hallo, <span>John Surname</span>";
+    String expectedSubString = "<th>Hallo, </th> <span>John Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Name des Vorgesetzten:</b> <span>John Surname</span>";
+    expectedSubString = "<b><th>Name des Vorgesetzten:</th></b> <span>John Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Name des Stellvertreters:</b> <span>Luke Surname</span>";
+    expectedSubString = "<b><th>Name des Stellvertreters:</th></b> <span>Luke Surname</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "Von: <span>27.04.2015</span>";
+    expectedSubString = "<th>Von:</th><span>27.04.2015</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "Bis: <span>30.05.2016</span>";
+    expectedSubString = "<th>Bis:</th> <span>30.05.2016</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Summe der Urlaubstage:</b> <span>13.0</span>";
+    expectedSubString = "<b><th>Summe der Urlaubstage:</th></b> <span>13.0</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
 
-    expectedSubString = "<b>Summe der Resturlaubstage:</b> <span>11.0</span>";
+    expectedSubString = "<b><th>Summe der Resturlaubstage:</th></b> <span>11.0</span>";
     assertTrue(errorMessage + expectedSubString, actualBodyText.contains(expectedSubString));
   }
 
