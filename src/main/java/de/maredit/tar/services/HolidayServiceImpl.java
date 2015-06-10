@@ -62,15 +62,10 @@ public class HolidayServiceImpl implements HolidayService {
     }
 
     for (UserHoliday uH : userHolidays) {
-      if (!uH.getDate().startsWith(year + "")) {
-        String[] parts = uH.getDate().split("-");
-        String monthSplit = parts[1];
-        String daySplit = parts[2];
-        uH.setDate(year + "-" + monthSplit + "-" + daySplit);
-      }
-
+      UserHoliday userHoliday = new UserHoliday(uH);
+      userHoliday.setDate(year + "-" + uH.getDate());
       if (!startDate.isBefore(startDate) && !endDate.isAfter(endDate)) {
-        periodHolidays.add(uH);
+        periodHolidays.add(userHoliday);
       }
     }
 
