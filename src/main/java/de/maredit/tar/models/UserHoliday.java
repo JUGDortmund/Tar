@@ -11,6 +11,15 @@ public class UserHoliday {
   private String date;
   private double valence;
   private String description;
+  
+  public UserHoliday() {
+  }
+  
+  public UserHoliday(UserHoliday userHoliday) {
+    date = userHoliday.date;
+    valence = userHoliday.valence;
+    description = userHoliday.description;
+  }
 
   public String getDate() {
     return date;
@@ -34,6 +43,12 @@ public class UserHoliday {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  @Override
+  public String toString() {
+    return "UserHoliday [date=" + date + ", valence=" + valence + ", description=" + description
+        + "]";
   }
 
   @Override

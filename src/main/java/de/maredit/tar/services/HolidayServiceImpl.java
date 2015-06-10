@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
@@ -30,28 +29,21 @@ public class HolidayServiceImpl implements HolidayService {
 
   private static final Logger LOG = LogManager.getLogger(HolidayServiceImpl.class);
   private ManagerParameter parameters = ManagerParameters.create(HolidayCalendar.GERMANY);
-  private List<UserHoliday> userHolidays = new ArrayList<UserHoliday>();
-  private Set<Holiday> extHolidays;
-  private Set<UserHoliday> allHolidays = new HashSet<UserHoliday>();
-  private Set<UserHoliday> periodHolidays = new HashSet<UserHoliday>();
 
   @Override
   public Set<UserHoliday> getAllHolidays(int year) {
     HolidayManager m = HolidayManager.getInstance(parameters);
-    extHolidays = m.getHolidays(year, "nw");
-    userHolidays = properties.getUserHolidays();
+    Set<Holiday> extHolidays = m.getHolidays(year, "nw");
+    Set<UserHoliday> allHolidays = new HashSet<>();
+    List<UserHoliday> userHolidays = properties.getUserHolidays();
 
     for (de.jollyday.Holiday h : extHolidays) {
       allHolidays.add(addUserHoliday(h));
     }
     for (UserHoliday uH : userHolidays) {
-
-      if (!uH.getDate().startsWith(year + "")) {
-        String[] parts = uH.getDate().split("-");
-        String monthSplit = parts[1];
-        String daySplit = parts[2];
-        uH.setDate(year + "-" + monthSplit + "-" + daySplit);
-      }
+      UserHoliday userHoliday = new UserHoliday(uH);
+      userHoliday.setDate(year + "-" + uH.getDate());
+      allHolidays.add(userHoliday);
     }
 
     return allHolidays;
@@ -60,10 +52,10 @@ public class HolidayServiceImpl implements HolidayService {
   @Override
   public Set<UserHoliday> getHolidayPeriodOfTime(LocalDate startDate, LocalDate endDate, int year) {
 
-    periodHolidays.clear();
+    Set<UserHoliday> periodHolidays = new HashSet<UserHoliday>();
     HolidayManager m = HolidayManager.getInstance(parameters);
-    extHolidays = m.getHolidays(startDate, endDate, "nw");
-    userHolidays = properties.getUserHolidays();
+    Set<Holiday> extHolidays = m.getHolidays(startDate, endDate, "nw");
+    List<UserHoliday> userHolidays = properties.getUserHolidays();
 
     for (de.jollyday.Holiday h : extHolidays) {
       periodHolidays.add(addUserHoliday(h));
