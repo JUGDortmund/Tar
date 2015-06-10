@@ -79,7 +79,7 @@
 }).call(this);
 
 (function() {
-  var activateToggle, refreshVacationForm, scrollToVacationForm;
+  var activateToggle, initializeDatePicker, refreshVacationForm, scrollToVacationForm;
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -106,20 +106,29 @@
     $myForm = $('#vacation-form-panel');
     $myForm.html(data).hide().fadeIn(800);
     $('.panel-default').matchHeight();
-    $myForm.find('.input-group.date').datepicker({
-      "format": "dd.mm.yyyy",
-      "autoclose": true
-    });
+    initializeDatePicker();
     $myForm.find('select').select2();
     scrollToVacationForm();
     return activateToggle();
   };
 
-  (function($) {
+  initializeDatePicker = function() {
     $('.input-group.date').datepicker({
-      "format": "dd.mm.yyyy",
-      "autoclose": true
+      format: "dd.mm.yyyy",
+      weekStart: 1,
+      daysOfWeekDisabled: '0,6',
+      autoclose: true,
+      todayHighlight: true
     });
+    return $('.input-group.date.dateFrom').datepicker().on('changeDate', function() {
+      if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+        return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
+      }
+    });
+  };
+
+  (function($) {
+    initializeDatePicker();
     $('[data-toggle="tooltip"]').tooltip();
     $('.panel-default select').select2();
     $('.autosubmit').on('change', function() {
