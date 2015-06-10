@@ -44,7 +44,15 @@ public class HolidayServiceImpl implements HolidayService {
     for (de.jollyday.Holiday h : extHolidays) {
       allHolidays.add(addUserHoliday(h));
     }
-    allHolidays.addAll(userHolidays);
+    for (UserHoliday uH : userHolidays) {
+
+      if (!uH.getDate().startsWith(year + "")) {
+        String[] parts = uH.getDate().split("-");
+        String monthSplit = parts[1];
+        String daySplit = parts[2];
+        uH.setDate(year + "-" + monthSplit + "-" + daySplit);
+      }
+    }
 
     return allHolidays;
   }
@@ -66,7 +74,6 @@ public class HolidayServiceImpl implements HolidayService {
         String[] parts = uH.getDate().split("-");
         String monthSplit = parts[1];
         String daySplit = parts[2];
-
         uH.setDate(year + "-" + monthSplit + "-" + daySplit);
       }
 

@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CalendarEvent;
-import de.maredit.tar.models.CalendarHolidayEvent;
 import de.maredit.tar.models.UserHoliday;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
@@ -93,9 +92,6 @@ public class CalendarController {
         this.vacationRepository.findVacationByFromBetweenAndStateInOrToBetweenAndStateIn(startDate,
             endDate, states, startDate, endDate, states);
 
-    Set<UserHoliday> userHolidays = new HashSet<UserHoliday>();
-    userHolidays = holidaySerivce.getHolidayPeriodOfTime(startDate, endDate, startDate.getYear());
-
     List<CalendarEvent> calendarEvents =
         vacations
             .stream()
@@ -107,19 +103,24 @@ public class CalendarController {
                       + calendarEvent.getState());
                   return calendarEvent;
                 }).collect(toList());
-    
-    List<CalendarHolidayEvent> calendarHolidayEvents =
+
+    Set<UserHoliday> userHolidays = new HashSet<UserHoliday>();
+    userHolidays = holidaySerivce.getHolidayPeriodOfTime(startDate, endDate, startDate.getYear());
+
+    List<CalendarEvent> calendarHolidayEvents =
         userHolidays
             .stream()
             .map(
                 userHoliday -> {
-                  CalendarHolidayEvent calendarEvent = new CalendarHolidayEvent(userHoliday);
+                  CalendarEvent calendarEvent = new CalendarEvent(userHoliday);
                   LOG.debug("added CalendarEvent '" + calendarEvent.getTitle() + "' [start: "
-                      + calendarEvent.getStart() + " - end: " + calendarEvent.getEnd() + "] - "
+                      + calendarEvent.getStart() + " - end: " + calendarEvent.getEnd() + calendarEvent.getType() + "] - "
                       + calendarEvent.getState());
                   return calendarEvent;
                 }).collect(toList());
 
+    calendarEvents.addAll(calendarHolidayEvents);
+    
     return calendarEvents;
   }
 }

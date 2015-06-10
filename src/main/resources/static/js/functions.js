@@ -8,13 +8,14 @@
       header: {
         left: 'prev,next today',
         center: 'title',
-        right: 'month,basicWeek'
+        right: 'month,agendaWeek'
       },
       defaultView: 'month',
       lang: 'de',
-      weekends: false,
+      weekends: true,
       eventLimit: true,
       weekNumbers: true,
+      firstDay: 1,
       eventSources: [
         {
           url: '/calendar',
@@ -46,29 +47,36 @@
             eventData.color = '#00f';
         }
         eventData.displayedEnd = moment(eventData.end);
-        eventData.end = moment(eventData.end).add(1, 'days');
+        if (eventData.allDay) {
+          eventData.end = moment(eventData.end).add(1, 'days');
+        }
         return eventData;
       },
       eventClick: function(calEvent, jsEvent, view) {
         var $vacationDetail, managerText, substituteText;
-        $vacationDetail = $('#vacationDetail');
-        $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
-        $vacationDetail.find('.state').text(calEvent.state);
-        $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
-        if ((calEvent.substituteFirstName != null) && (calEvent.substituteLastName != null)) {
-          substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName;
+        if (calEvent.type === 'VACATION') {
+          $vacationDetail = $('#vacationDetail');
+          $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
+          $vacationDetail.find('.state').text(calEvent.state);
+          $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
+          if ((calEvent.substituteFirstName != null) && (calEvent.substituteLastName != null)) {
+            substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName;
+          } else {
+            substituteText = '-';
+          }
+          $vacationDetail.find('.substitute').text(substituteText);
+          if ((calEvent.managerFirstName != null) && (calEvent.managerLastName != null)) {
+            managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName;
+          } else {
+            managerText = '-';
+          }
+          $vacationDetail.find('.manager').text(managerText);
+          $vacationDetail.show();
+          return $('#sidebar').addClass('active');
         } else {
-          substituteText = '-';
+          $vacationDetail = $('#vacationDetail');
+          return $vacationDetail.hide();
         }
-        $vacationDetail.find('.substitute').text(substituteText);
-        if ((calEvent.managerFirstName != null) && (calEvent.managerLastName != null)) {
-          managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName;
-        } else {
-          managerText = '-';
-        }
-        $vacationDetail.find('.manager').text(managerText);
-        $vacationDetail.show();
-        return $('#sidebar').addClass('active');
       }
     });
     return $('#calendarFilter .checkbox input').on('click', function() {

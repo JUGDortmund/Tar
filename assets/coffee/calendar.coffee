@@ -6,13 +6,14 @@
     header: {
       left: 'prev,next today'
       center: 'title'
-      right: 'month,basicWeek'
+      right: 'month,agendaWeek'
     }
     defaultView: 'month'
     lang: 'de'
-    weekends: false
+    weekends: true
     eventLimit: true
     weekNumbers: true
+    firstDay: 1
     eventSources: [
       {
         url: '/calendar'
@@ -33,22 +34,27 @@
         when 'canceled' then eventData.color = '#ca195a'
         else eventData.color = '#00f'
       eventData.displayedEnd = moment( eventData.end )
-      eventData.end = moment( eventData.end ).add(1,'days')
+      if eventData.allDay
+      	eventData.end = moment( eventData.end ).add(1,'days')
       return eventData
     eventClick: (calEvent, jsEvent, view) ->
-      #Show Details of event Object in div with ID vacationDetail when event is clicked 
-      $vacationDetail = $('#vacationDetail')
-      $vacationDetail.find('.user').text( calEvent.userFirstName + ' ' + calEvent.userLastName )
-      $vacationDetail.find('.state').text( calEvent.state );
-      $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
-      #Test if substitute is set. If set, show name, else show -
-      if ( ( calEvent.substituteFirstName? ) && ( calEvent.substituteLastName? ) ) then ( substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName ) else ( substituteText = '-' )
-      $vacationDetail.find('.substitute').text( substituteText )
-      #Test if substitute is set. If set, show name, else show -
-      if ( ( calEvent.managerFirstName? ) && ( calEvent.managerLastName? ) ) then ( managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName ) else ( managerText = '-' )
-      $vacationDetail.find('.manager').text( managerText )
-      $vacationDetail.show()
-      $('#sidebar').addClass('active')
+    	if calEvent.type is 'VACATION'
+      		#Show Details of event Object in div with ID vacationDetail when event is clicked 
+      		$vacationDetail = $('#vacationDetail')
+      		$vacationDetail.find('.user').text( calEvent.userFirstName + ' ' + calEvent.userLastName )
+      		$vacationDetail.find('.state').text( calEvent.state );
+      		$vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
+      		#Test if substitute is set. If set, show name, else show -
+      		if ( ( calEvent.substituteFirstName? ) && ( calEvent.substituteLastName? ) ) then ( substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName ) else ( substituteText = '-' )
+      		$vacationDetail.find('.substitute').text( substituteText )
+      		#Test if substitute is set. If set, show name, else show -
+      		if ( ( calEvent.managerFirstName? ) && ( calEvent.managerLastName? ) ) then ( managerText = calEvent.managerFirstName + ' ' + calEvent.managerLastName ) else ( managerText = '-' )
+      		$vacationDetail.find('.manager').text( managerText )
+      		$vacationDetail.show()
+      		$('#sidebar').addClass('active')
+      	else
+      		$vacationDetail = $('#vacationDetail')
+      		$vacationDetail.hide()
 
   $('#calendarFilter .checkbox input').on 'click', ->
     $('#calendar').fullCalendar( 'refetchEvents')
