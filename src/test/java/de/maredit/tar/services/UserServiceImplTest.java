@@ -8,6 +8,7 @@ import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.UserVacationAccountRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
 import org.junit.AfterClass;
@@ -45,6 +46,9 @@ public class UserServiceImplTest {
   @Autowired
   private VacationRepository vacationRepository;
 
+  @Autowired
+  private UserVacationAccountRepository userVacationAccountRepository;
+
   private User user1;
   private User user2;
 
@@ -68,7 +72,12 @@ public class UserServiceImplTest {
     userRepository.deleteAll();
     vacationRepository.deleteAll();
     userRepository.save(createDummyUserList());
+    createDummyVactions();
     vacationRepository.save(createDummyVactions());
+    List<Vacation> vacations = userService.getVacationsForUserAndYear(user1, LocalDate.now().getYear());
+    UserVacationAccount account = userService.getUserVacationAccountForYear(user1, vacations.get(0).getFrom().getYear());
+    account.setVacations(vacations);
+    userVacationAccountRepository.save(account);
   }
 
   @Test
@@ -144,7 +153,7 @@ public class UserServiceImplTest {
         account =
         userService.getUserVacationAccountForYear(user2, LocalDate.now().getYear());
     Assert.notNull(account);
-    assertEquals(0, account.getVacations().size());
+    assertNull(account.getVacations());
     assertEquals(0, account.getApprovedVacationDays(), 0);
     assertEquals(0, account.getPendingVacationDays(), 0);
     assertEquals(30, account.getOpenVacationDays(), 0);
