@@ -32,11 +32,13 @@ public class OverviewSeleniumTest extends BaseSeleniumTest {
       driver.findElement(By.id("password")).sendKeys("login");
       driver.findElement(By.xpath("//button[@type='submit']")).click();
       driver.findElement(By.xpath("//li[3]/a/span")).click();
-      assertEquals("Bname, Benutzer 2", driver.findElement(By.linkText("Bname, Benutzer 2")).getText());
+      assertEquals("Bname, Benutzer 2",
+                   driver.findElement(By.linkText("Bname, Benutzer 2")).getText());
       assertEquals("Gesamt", driver.findElement(By.cssSelector("span.progress-number > span")).getText());
       assertEquals("30", driver.findElement(By.cssSelector("b > span")).getText());
       driver.findElement(By.linkText("Bname, Benutzer 2")).click();
-      assertEquals("Details Benutzer Bname, Benutzer 2", driver.findElement(By.cssSelector("h1")).getText());
+      assertEquals("Benutzereinstellungen", driver.findElement(By.cssSelector("h1")).getText());
+      assertEquals("Bname, Benutzer 2", driver.findElement(By.cssSelector("div.panel-heading")).getText());
       try {
         assertEquals("30.0", driver.findElement(By.id("vacationDays")).getAttribute("value"));
       } catch (Error e) {

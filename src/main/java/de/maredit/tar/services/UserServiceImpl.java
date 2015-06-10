@@ -98,8 +98,6 @@ public class UserServiceImpl implements UserService {
       vacationAccount.setPreviousYearOpenVacationDays(previousVacationAccount
           .getPreviousYearOpenVacationDays());
     }
-    // }
-
     return vacationAccount;
   }
 
@@ -124,9 +122,7 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * Helper method to retrieve the amount of approved vacation days for a list of vacations. !!!!!
-   * WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is
-   * done!
+   * Helper method to retrieve the amount of approved vacation days for a list of vacations.
    *
    * @param vacations the list to analyze
    * @return the amount of approved vacation days
@@ -138,8 +134,7 @@ public class UserServiceImpl implements UserService {
 
   /**
    * Helper method to retrieve the amount of pending vacation days (which are already planned but
-   * not accepted yet) for a list of vacations. !!!!! WARNING: Those methods do have to be changed,
-   * as soon as automatic calculation of vacation is done!
+   * not accepted yet) for a list of vacations.
    *
    * @param vacations the list to analyze
    * @return the amount of pending vacation days
@@ -151,46 +146,5 @@ public class UserServiceImpl implements UserService {
             vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
                 || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
         .mapToDouble(vacation -> vacation.getDays()).sum();
-  }
-
-  /**
-   * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
-   * list of vacations. !!!!! WARNING: Those methods do have to be changed, as soon as automatic
-   * calculation of vacation is done!
-   *
-   * @param vacations the list to analyze
-   * @return the amount of open vacation days
-   */
-  private double getOpenVacationDays(List<Vacation> vacations) {
-    Optional result =
-        vacations
-            .stream()
-            .filter(vacation -> vacation.getCreated().getYear() == LocalDate.now().getYear())
-            .filter(
-                vacation -> vacation.getState() != State.CANCELED
-                    && vacation.getState() != State.REJECTED)
-            .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
-
-    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
-  }
-
-  /**
-   * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
-   * list of vacations. !!!!! WARNING: Those methods do have to be changed, as soon as automatic
-   * calculation of vacation is done!
-   *
-   * @param vacations the list to analyze
-   * @return the amount of open vacation days
-   */
-  private double getPreviousYearOpenVacationDays(List<Vacation> vacations) {
-    Optional result =
-        vacations
-            .stream()
-            .filter(
-                vacation -> vacation.getState() != State.CANCELED
-                    && vacation.getState() != State.REJECTED)
-            .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
-
-    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
   }
 }
