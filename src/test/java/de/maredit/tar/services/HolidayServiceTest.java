@@ -46,17 +46,6 @@ public class HolidayServiceTest {
       return new HolidayServiceImpl();
     }
   }
-  
-  static class Init implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-    @Override
-    public void initialize(ConfigurableApplicationContext applicationContext) {
-      MutablePropertySources propertySources = applicationContext.getEnvironment().getPropertySources();
-      MockPropertySource mockEnvVars = new MockPropertySource().withProperty("bundling.enabled", false);
-      propertySources.replace("classpath:vacationConfig.yaml", mockEnvVars);
-     }
-    
-  }
 
   @Autowired
   private HolidayService holidayService;
