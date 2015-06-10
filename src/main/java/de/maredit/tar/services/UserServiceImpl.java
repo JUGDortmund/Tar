@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -87,7 +86,6 @@ public class UserServiceImpl implements UserService {
       vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties
           .getDefaultVacationDays() : user.getVacationDays());
       vacationAccount.setVacations(vacations);
-      userVacationAccountRepository.save(vacationAccount);
     }
     UserVacationAccount previousVacationAccount =
         userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year - 1);
