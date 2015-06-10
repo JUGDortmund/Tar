@@ -3,20 +3,20 @@ package de.maredit.tar.listeners;
 import com.unboundid.ldap.sdk.LDAPException;
 
 import de.maredit.tar.models.CommentItem;
-import de.maredit.tar.models.Protocol;
 import de.maredit.tar.models.ProtocolItem;
 import de.maredit.tar.models.StateItem;
-import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.models.User;
+import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;
 import de.maredit.tar.repositories.StateItemRepository;
-import de.maredit.tar.repositories.TimelineItemRepository;
 import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.UserVacationAccountRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
+import de.maredit.tar.services.UserService;
 import de.maredit.tar.tasks.UserSyncTask;
 
 import org.springframework.context.ApplicationListener;
@@ -24,7 +24,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContextListener implements ApplicationListener<ContextRefreshedEvent> {
@@ -37,12 +36,22 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
     if (event.getApplicationContext().getEnvironment()
         .getProperty("spring.data.mongodb.preload", Boolean.class)) {
       UserRepository userRepository = event.getApplicationContext().getBean(UserRepository.class);
-      ProtocolItemRepository protocolItemRepository = event.getApplicationContext().getBean(ProtocolItemRepository.class);
-      CommentItemRepository commentItemRepository = event.getApplicationContext().getBean(CommentItemRepository.class);
-      StateItemRepository stateItemRepository = event.getApplicationContext().getBean(StateItemRepository.class);
+      ProtocolItemRepository
+          protocolItemRepository =
+          event.getApplicationContext().getBean(ProtocolItemRepository.class);
+      CommentItemRepository
+          commentItemRepository =
+          event.getApplicationContext().getBean(CommentItemRepository.class);
+      StateItemRepository
+          stateItemRepository =
+          event.getApplicationContext().getBean(StateItemRepository.class);
+
+      UserVacationAccountRepository userVacationAccountRepository = event.getApplicationContext().getBean(UserVacationAccountRepository.class);
       VacationRepository vacationRepository =
           event.getApplicationContext().getBean(VacationRepository.class);
+
       LdapService ldapService = event.getApplicationContext().getBean(LdapService.class);
+      UserService userService = event.getApplicationContext().getBean(UserService.class);
 
       User manager = null;
 
@@ -149,6 +158,12 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         stateItem3.setNewState(State.APPROVED);
         stateItemRepository.save(stateItem3);
 
+        UserVacationAccount
+            account = userService.getUserVacationAccountForYear(user, v1.getFrom().getYear());
+        account.addVacation(v1);
+        account.addVacation(v2);
+        account.addVacation(v3);
+        userVacationAccountRepository.save(account);
       }
     }
   }

@@ -80,12 +80,10 @@ public class UserServiceImpl implements UserService {
         userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year);
     if (vacationAccount == null) {
       vacationAccount = new UserVacationAccount();
-      List<Vacation> vacations = getVacationsForUserAndYear(user, year);
       vacationAccount.setUser(user);
       vacationAccount.setYear(year);
       vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties
           .getDefaultVacationDays() : user.getVacationDays());
-      vacationAccount.setVacations(vacations);
     }
     UserVacationAccount previousVacationAccount =
         userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year - 1);
@@ -126,8 +124,8 @@ public class UserServiceImpl implements UserService {
    * @return the amount of approved vacation days
    */
   private double getApprovedVacationDays(List<Vacation> vacations) {
-    return vacations.stream().filter(vacation -> vacation.getState() == State.APPROVED)
-        .mapToDouble(vacation -> vacation.getDays()).sum();
+    return vacations != null ? vacations.stream().filter(vacation -> vacation.getState() == State.APPROVED)
+        .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
   }
 
   /**
@@ -138,11 +136,11 @@ public class UserServiceImpl implements UserService {
    * @return the amount of pending vacation days
    */
   private double getPendingVacationDays(List<Vacation> vacations) {
-    return vacations
+    return vacations != null ? vacations
         .stream()
         .filter(
             vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
                 || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
-        .mapToDouble(vacation -> vacation.getDays()).sum();
+        .mapToDouble(vacation -> vacation.getDays()).sum() :0;
   }
 }

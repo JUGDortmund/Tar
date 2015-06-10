@@ -23,6 +23,7 @@ public class UserVacationAccount {
   private double totalVacationDays;
   private Double previousYearOpenVacationDays;
   private LocalDate expiryDate;
+  @DBRef
   private List<Vacation> vacations;
   private double pendingVacationDays;
   private double approvedVacationDays;
