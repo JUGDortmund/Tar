@@ -8,61 +8,43 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12">
-					<h1 th:inline="text">Details Benutzer [[${user.lastname + ', '
-						+ user.firstname}]]</h1>
+					<h1 th:inline="text">Benutzereinstellungen </h1>
 				</div>
 			</div>
 		</div>
 	</section>
 	<section class="content">
 		<div class="container-fluid">
-			<div class="row">
-				<form th:action="@{/updateDetails}" th:object="${user}" method="post"
-					role="form">
-					<input type="hidden" th:field="*{id}" />
 
-					<!-- Error-handling: show alert box, when validation fails  -->
-					<div class="alert alert-danger" role="alert"
-						th:if="${#fields.hasErrors('*')}">
-						<ul>
-							<li th:each="err : ${#fields.detailedErrors()}"
-								th:text="${err.fieldName +' '+ err.message}">Input is
-								incorrect</li>
-						</ul>
-					</div>
+			<div class="panel panel-default user-administration dashboard-panel">
+				<div class="panel-heading" th:text="${user.lastname + ', '
+						+ user.firstname}">Nachname, Vorname</div>
+				<div class="panel-body">
+					<form th:action="@{/updateDetails}" th:object="${user}" method="post"
+						  role="form">
+						<input type="hidden" th:field="*{id}" />
 
-					<div class="row">
-						<div class="col-xs-12 form-group">
-
-							<label for="employee"> Mitarbeiter </label> <input type="text"
-								class="form-control" th:value="*{lastname + ', ' + firstname}"
-								disabled="disabled" />
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-6 form-group"
-							th:classappend="${#fields.hasErrors('vacationDays')}? 'has-error'">
-							<label for="vacationDays"> Anspruch Jahresurlaub in Tagen 
-							</label>
-
-								<input type="number" class="form-control" name="vacationDays"
-									id="vacationDays" step="0.5" th:field="*{vacationDays}" />
-
+						<div class="alert alert-danger" role="alert"
+							 th:if="${#fields.hasErrors('*')}">
+							<ul>
+								<li th:each="err : ${#fields.detailedErrors()}"
+									th:text="${err.fieldName +' '+ err.message}">Input is
+									incorrect</li>
+							</ul>
 						</div>
 
-					</div>
-
-					<div class="row">
-						<div class="col-xs-12 form-group">
-							<button type="submit" class="btn btn-success pull-right">
-								speichern</button>
+						<label for="vacationDays">Anspruch Jahresurlaub in Tagen</label>
+						<div class="input-group" th:classappend="${#fields.hasErrors('vacationDays')}? 'has-error'">
+							<input type="number" class="form-control" name="vacationDays"
+								   id="vacationDays" step="0.5" th:field="*{vacationDays}" />
+							<span class="input-group-btn">
+								<button class="btn btn-success" type="submit">Speichern</button>
+							</span>
 						</div>
-					</div>
-
-				</form>
-
+					</form>
+				</div>
 			</div>
+
 		</div>
 	</section>
 
