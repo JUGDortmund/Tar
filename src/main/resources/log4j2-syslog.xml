@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" name="TakeARest">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{ISO8601} &lt;%6r&gt; [%t] %-5p %c %x - %m%n"/>
+    </Console>
+    <Syslog name="RFC5424" format="RFC5424" host="logstash.maredit.net" port="514" 
+        protocol="TCP" appName="tar" includeMDC="true" mdcId="mdc" program="TakeARest"
+        facility="LOCAL0" newLine="true" messageId="TaR" id="tar" immediateFlush="false"
+        connectTimeoutMillis="1000" reconnectDelayMillis="5000">
+            <LoggerFields>
+                <KeyValuePair key="thread" value="%t"/>
+                <KeyValuePair key="priority" value="%p"/>
+                <KeyValuePair key="category" value="%c"/>
+                <KeyValuePair key="exception" value="%ex"/>
+            </LoggerFields>
+    </Syslog>
+    
+  </Appenders>
+  <Loggers>
+    <Logger name="de.maredit" level="debug">
+    </Logger>
+    <Root level="INFO">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="RFC5424"/>
+    </Root>
+  </Loggers>
+</Configuration>
