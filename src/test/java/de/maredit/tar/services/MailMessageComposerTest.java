@@ -1,12 +1,12 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.services.mail.VacationCreateMail;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.services.mail.VacationCreateMail;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,7 +75,6 @@ public class MailMessageComposerTest {
     standardVacation.setFrom(LocalDate.of(2015, 04, 27));
     standardVacation.setTo(LocalDate.of(2016, 05, 30));
     standardVacation.setDays(13);
-    standardVacation.setDaysLeft(11);
 
     SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation, "http://www.maredit.de", "Kommentar"));
     String actualBodyText = mailMessage.getText();

@@ -1,30 +1,24 @@
 package de.maredit.tar.listeners;
 
 import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.CommentItem;
-import de.maredit.tar.models.Protocol;
 import de.maredit.tar.models.ProtocolItem;
 import de.maredit.tar.models.StateItem;
-import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;
 import de.maredit.tar.repositories.StateItemRepository;
-import de.maredit.tar.repositories.TimelineItemRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.tasks.UserSyncTask;
-
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContextListener implements ApplicationListener<ContextRefreshedEvent> {

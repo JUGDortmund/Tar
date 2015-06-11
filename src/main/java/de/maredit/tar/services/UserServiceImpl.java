@@ -1,14 +1,12 @@
 package de.maredit.tar.services;
 
 import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,7 +148,7 @@ public class UserServiceImpl implements UserService {
                                 && vacation.getState() != State.REJECTED)
             .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
 
-    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
+    return 0;
   }
 
   /**
@@ -169,6 +167,6 @@ public class UserServiceImpl implements UserService {
                                 && vacation.getState() != State.REJECTED)
             .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
 
-    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
+    return 0;
   }
 }

@@ -1,10 +1,9 @@
 package de.maredit.tar.listeners;
 
+import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.ConfigurableEnvironment;
-
-import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
 
 public class StartupListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
   private ConfigurableEnvironment environment;

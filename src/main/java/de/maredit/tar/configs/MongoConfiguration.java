@@ -1,7 +1,13 @@
 package de.maredit.tar.configs;
 
-import java.util.Arrays;
-
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import de.maredit.tar.models.converters.DateToLocalDateConverter;
+import de.maredit.tar.models.converters.DateToLocalDateTimeConverter;
+import de.maredit.tar.models.converters.LocalDateTimeToDateConverter;
+import de.maredit.tar.models.converters.LocalDateToDateConverter;
+import de.maredit.tar.properties.MongoProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.convert.CustomConversions;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-
-import de.maredit.tar.models.converters.DateToLocalDateConverter;
-import de.maredit.tar.models.converters.DateToLocalDateTimeConverter;
-import de.maredit.tar.models.converters.LocalDateTimeToDateConverter;
-import de.maredit.tar.models.converters.LocalDateToDateConverter;
-import de.maredit.tar.properties.MongoProperties;
+import java.util.Arrays;
 
 /**
  * Created by czillmann on 24.04.15.

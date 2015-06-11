@@ -132,16 +132,9 @@ edit-vacation, approve-vacation  -->
                                     Verbleibende Urlaubstage
                                     <span th:if="${editable}">*</span>
                                 </label>
-                                <th:block th:if="${editable}">
-                                    <input type="number" class="form-control" name="daysLeft" id="daysLeft"
-                                           step="0.5"
-                                           th:field="*{daysLeft}"/>
-                                </th:block>
-                                <th:block th:unless="${editable}">
                                     <input class="form-control" name="vacationDays"
                                            type="number" disabled="disabled"
-                                           th:field="*{daysLeft}"/>
-                                </th:block>
+                                           th:value="${remaining.days}"/>
                             </div>
                         </div>
 

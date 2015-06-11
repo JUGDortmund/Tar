@@ -3,7 +3,6 @@ package de.maredit.tar.repositories;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
-
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDate;

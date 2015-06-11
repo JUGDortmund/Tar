@@ -1,16 +1,15 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.LastingVacation;
+import de.maredit.tar.models.VacationEntitlement;
 
-import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.UserVacationAccount;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.State;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import de.maredit.tar.models.Vacation;
 
 public class VacationService {
 
@@ -49,8 +48,8 @@ public class VacationService {
     return date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.SATURDAY;
   }
 
-  public LastingVacation getLastingVacationDays(UserVacationAccount account) {
-    LastingVacation result = new LastingVacation(30, 5);
+  public VacationEntitlement getRemainingVacationDays(UserVacationAccount account) {
+    VacationEntitlement result = new VacationEntitlement(30, 5);
     LocalDate remainingDate = LocalDate.now().withMonth(4).withDayOfMonth(1);
     List<Vacation> vacations =
         account
@@ -65,33 +64,33 @@ public class VacationService {
       double countOfVacation = getCountOfVacation(vacation);
       if (vacation.getFrom().isBefore(remainingDate)) {
         if (vacation.getTo().isBefore(remainingDate)) {
-          if (result.getVacationDaysLastYear() > 0) {
-            if (countOfVacation > result.getVacationDaysLastYear()) {
-              double days = countOfVacation - result.getVacationDaysLastYear();
-              result.reduceVacationDaysLastYear(result.getVacationDaysLastYear());
-              result.reduceVacationDays(days);
+          if (result.getDaysLastYear() > 0) {
+            if (countOfVacation > result.getDaysLastYear()) {
+              double days = countOfVacation - result.getDaysLastYear();
+              result.reduceDaysLastYear(result.getDaysLastYear());
+              result.reduceDays(days);
             } else {
-              result.reduceVacationDaysLastYear(countOfVacation);
+              result.reduceDaysLastYear(countOfVacation);
             }
           } else {
-            result.reduceVacationDays(countOfVacation);
+            result.reduceDays(countOfVacation);
           }
         } else {
           double daysBefore = calculateDays(vacation.getFrom(), remainingDate.minusDays(1));
           double daysAfter = calculateDays(remainingDate, vacation.getTo());
 
-          if (daysBefore > result.getVacationDaysLastYear()) {
-            double days = daysBefore - result.getVacationDaysLastYear();
-            result.reduceVacationDaysLastYear(result.getVacationDaysLastYear());
-            result.reduceVacationDays(days);
+          if (daysBefore > result.getDaysLastYear()) {
+            double days = daysBefore - result.getDaysLastYear();
+            result.reduceDaysLastYear(result.getDaysLastYear());
+            result.reduceDays(days);
           } else {
-            result.reduceVacationDaysLastYear(daysBefore);
+            result.reduceDaysLastYear(daysBefore);
           }
-          result.reduceVacationDays(daysAfter);
+          result.reduceDays(daysAfter);
 
         }
       } else {
-        result.reduceVacationDays(countOfVacation);
+        result.reduceDays(countOfVacation);
       }
     }
     return result;

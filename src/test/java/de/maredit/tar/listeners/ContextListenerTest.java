@@ -4,8 +4,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-
+import de.maredit.tar.Main;
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.repositories.CommentItemRepository;
+import de.maredit.tar.repositories.ProtocolItemRepository;
+import de.maredit.tar.repositories.StateItemRepository;
+import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.LdapService;
+import de.maredit.tar.tasks.UserSyncTask;
+import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,17 +28,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import de.maredit.tar.Main;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.repositories.CommentItemRepository;
-import de.maredit.tar.repositories.ProtocolItemRepository;
-import de.maredit.tar.repositories.StateItemRepository;
-import de.maredit.tar.repositories.UserRepository;
-import de.maredit.tar.repositories.VacationRepository;
-import de.maredit.tar.services.LdapService;
-import de.maredit.tar.tasks.UserSyncTask;
-import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)

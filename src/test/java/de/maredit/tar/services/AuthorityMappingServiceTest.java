@@ -1,16 +1,16 @@
 package de.maredit.tar.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.util.Assert;
-import org.springframework.beans.factory.annotation.Autowired;
 import de.maredit.tar.Main;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)

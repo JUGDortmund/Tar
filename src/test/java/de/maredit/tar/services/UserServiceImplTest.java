@@ -1,5 +1,8 @@
 package de.maredit.tar.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
@@ -8,7 +11,6 @@ import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
-
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,9 +28,6 @@ import java.time.Month;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)

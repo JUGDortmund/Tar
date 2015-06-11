@@ -1,16 +1,15 @@
 package de.maredit.tar.tasks;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.LdapService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.unboundid.ldap.sdk.LDAPException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;

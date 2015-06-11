@@ -1,7 +1,6 @@
 package de.maredit.tar.models;
 
 import de.maredit.tar.models.enums.State;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document

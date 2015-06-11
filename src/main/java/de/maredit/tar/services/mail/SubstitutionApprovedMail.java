@@ -2,7 +2,6 @@ package de.maredit.tar.services.mail;
 
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.utils.ConversionUtils;
-
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;

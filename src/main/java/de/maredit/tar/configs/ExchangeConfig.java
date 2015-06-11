@@ -1,13 +1,12 @@
 package de.maredit.tar.configs;
 
-import org.springframework.context.annotation.Profile;
-
 import de.maredit.tar.properties.ExchangeProperties;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.net.URISyntaxException;
 

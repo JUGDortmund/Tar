@@ -1,14 +1,14 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.LastingVacation;
+import de.maredit.tar.models.VacationEntitlement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
@@ -59,12 +59,11 @@ public class VacationServiceTest {
     vacation.setState(State.APPROVED);
     vacation.setFrom(LocalDate.of(2015, Month.FEBRUARY, 8));
     vacation.setTo(LocalDate.of(2015, Month.FEBRUARY, 16));
-    vacation.setDays(7);
     account.setVacations(new ArrayList<Vacation>());
     account.getVacations().add(vacation);
 
-    LastingVacation lastingVacationDays = vacationService.getLastingVacationDays(account);
-    Assert.assertEquals(28, lastingVacationDays.getVacationDays(), 0);
-    Assert.assertEquals(0, lastingVacationDays.getVacationDaysLastYear(), 0);
+    VacationEntitlement lastingVacationDays = vacationService.getRemainingVacationDays(account);
+    Assert.assertEquals(28, lastingVacationDays.getDays(), 0);
+    Assert.assertEquals(0, lastingVacationDays.getDaysLastYear(), 0);
   }
 }

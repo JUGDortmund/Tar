@@ -1,9 +1,12 @@
 package de.maredit.tar.models.validators;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +18,6 @@ import org.springframework.validation.Errors;
 
 import java.time.LocalDate;
 import java.time.Month;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by czillmann on 23.04.15.

@@ -1,8 +1,7 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.services.calendar.CalendarItem;
-
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.services.calendar.CalendarItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Profile;
