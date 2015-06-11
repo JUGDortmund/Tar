@@ -35,7 +35,7 @@
 
 						<label for="vacationDays">Anspruch Jahresurlaub in Tagen</label>
 						<div class="input-group" th:classappend="${#fields.hasErrors('vacationDays')}? 'has-error'">
-							<input type="number" class="form-control" name="vacationDays"
+							<input type="number" class="form-control" name="vacationDays" min="0" 
 								   id="vacationDays" step="0.5" th:field="*{vacationDays}" />
 							<span class="input-group-btn">
 								<button class="btn btn-success" type="submit">Speichern</button>

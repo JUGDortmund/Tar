@@ -70,6 +70,6 @@ public class UserMangementController extends WebMvcConfigurerAdapter {
   @RequestMapping(value="/updateDetails", method= RequestMethod.POST)
   public String updateUserDetails(@ModelAttribute("user") User user, Model model, BindingResult bindingResult) {
     userRepository.save(user);
-    return "redirect:/";
+    return "redirect:/overview";
   }
 }
