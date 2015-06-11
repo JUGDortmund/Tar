@@ -1,19 +1,12 @@
 package de.maredit.tar.services;
 
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.mock.env.MockPropertySource;
 import de.maredit.tar.models.UserHoliday;
 import de.maredit.tar.properties.VacationProperties;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -24,7 +17,6 @@ import java.util.Set;
 @ContextConfiguration(classes = {HolidayServiceTest.Config.class})
 public class HolidayServiceTest {
 
-  @Configuration
   static class Config {
 
     @Bean

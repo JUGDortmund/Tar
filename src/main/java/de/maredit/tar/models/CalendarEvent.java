@@ -68,15 +68,10 @@ public class CalendarEvent {
 
     this.setState(userHoliday.getDescription());
     this.setType(CalendarEntryType.HOLIDAY);
-    if (userHoliday.getValence() == 1.0) {
-      this.setStart(userHoliday.getDate().toString());
-      this.setEnd(userHoliday.getDate().toString());
-      this.setAllDay(true);
-    } else {
-      this.setStart(userHoliday.getDate().toString() + " " + startHourMorning);
-      this.setEnd(userHoliday.getDate().toString() + " " + endHourMorning);
-      this.setAllDay(false);
-    }
+    this.setStart(userHoliday.getDate().toString());
+    this.setEnd(userHoliday.getDate().toString());
+    // TODO "halbe" Feiertage wieder kennzeichnen und die Darstellung im Kalendar verbessern
+    this.setAllDay(true);
   }
 
   public String getStart() {
