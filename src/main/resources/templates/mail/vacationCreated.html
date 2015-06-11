@@ -6,38 +6,39 @@
 </head>
 <body>
     <p>
-        Hallo, <span th:text="${manager}">Welt!</span>!<br />
-        <th:block th:if="${not #strings.isEmpty(substitute)}">Hallo, <span th:text="${substitute}">Welt!</span>!</th:block>
+        <th:block th:text="#{mail.salutation}"/> <span th:text="${manager}">Welt!</span>!<br />
+        <th:block th:if="${not #strings.isEmpty(substitute)}"><th:block th:text="#{mail.salutation}"/> <span th:text="${substitute}">Welt!</span>!</th:block>
     </p>
 
-    <p> <span th:text="${employee}">Welt!</span> hat Urlaub beantragt. Hier sind die Details: </p>
+    <p> <span th:text="${employee}">Welt!</span> <th:block th:text="#{mail.text.applyFor.vacation}"/></p>
     
-    <p> <b>Name des Vorgesetzten:</b> <span th:text="${manager}">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.superior}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
 
-    <p> <b>Name des Stellvertreters:</b> <span th:text="${#strings.isEmpty(substitute) ? '-': substitute }">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.replacement}"/></b> <span th:text="${#strings.isEmpty(substitute) ? '-': substitute }">Max Mustermann</span> </p>
 
-    <p> <b>Beantragte Urlaubszeit:</b> <ul>
-        <li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
-        <li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
+    <p> <b><th:block th:text="#{mail.vacation.time}"/></b> <ul>
+        <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate}">vonDatum</span> </li>
+        <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate}">bisDatum</span> </li> </ul> 
+	</p>
+    <p> <b><th:block th:text="#{mail.totalDays}"/></b> <span th:text="${totalDays}">Tage</span> </p>
 
-    <p> <b>Summe der Urlaubstage:</b> <span th:text="${totalDays}">Tage</span> </p>
-
-    <p> <b>Summe der Resturlaubstage:</b> <span th:text="${leftDays}">restTage</span> </p>
+    <p> <b><th:block th:text="#{mail.leftDays}"/></b> <span th:text="${leftDays}">restTage</span> </p>
 
     <th:block th:if="${not #strings.isEmpty(createdBy)}">
-        <p> <b>Angelegt von:</b> <span th:text="${createdBy}">createdBy</span> </p>
+        <p> <b><th:block th:text="#{mail.createdBy}"/></b> <span th:text="${createdBy}">createdBy</span> </p>
     </th:block>
 
     <th:block th:if="${not #strings.isEmpty(comment)}">
-        <p> <b>Kommentar:</b><br/>
+        <p> <b><th:block th:text="#{field.comment} + ';'"/></b><br/>
         <span th:text="${comment}">KOMMENTAR</span>
         </p>
     </th:block>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+        &lt;<a th:href="@{${urlToVacation}}"><th:block th:text="#{mail.urlToVacation}"/></a>
+        <th:block th:text="#{mail.urlToVacationText}"/>
     </p>
 
-    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team (i.A. von <span th:text="${employee}">Welt</span>) </em> </p>
+    <p> <th:block th:text="#{mail.signature.employee}"/> <em> <th:block th:text="#{mail.signature.yourTeam}"/><span th:text="${employee}">Welt</span>) </em> </p>
 </body>
 </html>
