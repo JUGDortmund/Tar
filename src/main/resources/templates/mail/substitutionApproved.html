@@ -5,30 +5,30 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <p> Hallo, <span th:text="${employee}">Welt!</span> </p>
+    <p> <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> </p>
 
-    <p> Die Vertretung f&uuml;r folgenden Urlaub wurde akzeptiert! Hier sind die Details: </p>
+    <p th:text="#{mail.text.accept.vacation.replacement}"> Text</p>
     
-    <p> <b>Name des Vorgesetzten:</b> <span th:text="${manager}">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.superior}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
 
-    <p> <b>Name des Stellvertreters:</b> <span th:text="${substitute}">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.replacement}"/></b> <span th:text="${substitute}">Max Mustermann</span> </p>
 
-    <p> <b>Beantragte Urlaubszeit:</b> <ul>
-        <li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
-        <li>Bis: <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
+    <p> <b><th:block th:text="#{mail.vacation.time}"/></b> <ul>
+        <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate}">vonDatum</span> </li>
+        <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate}">bisDatum</span> </li> </ul> </p>
 
     <th:block th:if="${not #strings.isEmpty(comment)}">
-        <p> <b>Kommentar:</b><br/>
+        <p> <b><th:block th:text="#{field.comment} + ';'"/></b><br/>
             <span th:text="${comment}">KOMMENTAR</span>
         </p>
     </th:block>
 
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+        &lt;<a th:href="@{${urlToVacation}}"><th:block th:text="#{mail.urlToVacation}"/></a><th:block th:text="#{mail.urlToVacationText}"/>
     </p>
 
-    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+    <p th:text="#{mail.signature}"> Signature </p>
 
 </body>
 </html>

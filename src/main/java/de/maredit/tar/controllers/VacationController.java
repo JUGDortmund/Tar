@@ -1,33 +1,16 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.models.CommentItem;
-import de.maredit.tar.models.TimelineItem;
-import de.maredit.tar.beans.NavigationBean;
-import de.maredit.tar.services.calendar.CalendarItem;
-import de.maredit.tar.services.CalendarService;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.models.enums.FormMode;
-import de.maredit.tar.models.enums.State;
-import de.maredit.tar.models.validators.VacationValidator;
-import de.maredit.tar.properties.CustomMailProperties;
-import de.maredit.tar.repositories.CommentItemRepository;
-import de.maredit.tar.repositories.ProtocolItemRepository;
-import de.maredit.tar.repositories.StateItemRepository;
-import de.maredit.tar.repositories.UserRepository;
-import de.maredit.tar.repositories.VacationRepository;
-import de.maredit.tar.services.LdapService;
-import de.maredit.tar.services.MailService;
-import de.maredit.tar.services.UserService;
-import de.maredit.tar.services.mail.CommentAddedMail;
-import de.maredit.tar.services.mail.MailObject;
-import de.maredit.tar.services.mail.SubstitutionApprovedMail;
-import de.maredit.tar.services.mail.SubstitutionRejectedMail;
-import de.maredit.tar.services.mail.VacationApprovedMail;
-import de.maredit.tar.services.mail.VacationCanceledMail;
-import de.maredit.tar.services.mail.VacationCreateMail;
-import de.maredit.tar.services.mail.VacationDeclinedMail;
-import de.maredit.tar.services.mail.VacationModifiedMail;
+import java.beans.PropertyEditorSupport;
+import java.net.SocketException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,21 +26,38 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.time.LocalDateTime;
-import java.time.LocalDate;
-import java.beans.PropertyEditorSupport;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import de.maredit.tar.beans.NavigationBean;
+import de.maredit.tar.models.CommentItem;
+import de.maredit.tar.models.TimelineItem;
+import de.maredit.tar.models.User;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.FormMode;
+import de.maredit.tar.models.enums.State;
+import de.maredit.tar.models.validators.VacationValidator;
+import de.maredit.tar.properties.CustomMailProperties;
+import de.maredit.tar.repositories.CommentItemRepository;
+import de.maredit.tar.repositories.ProtocolItemRepository;
+import de.maredit.tar.repositories.StateItemRepository;
+import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.CalendarService;
+import de.maredit.tar.services.LdapService;
+import de.maredit.tar.services.MailService;
+import de.maredit.tar.services.UserService;
+import de.maredit.tar.services.calendar.CalendarItem;
+import de.maredit.tar.services.mail.CommentAddedMail;
+import de.maredit.tar.services.mail.MailObject;
+import de.maredit.tar.services.mail.SubstitutionApprovedMail;
+import de.maredit.tar.services.mail.SubstitutionRejectedMail;
+import de.maredit.tar.services.mail.VacationApprovedMail;
+import de.maredit.tar.services.mail.VacationCanceledMail;
+import de.maredit.tar.services.mail.VacationCreateMail;
+import de.maredit.tar.services.mail.VacationDeclinedMail;
+import de.maredit.tar.services.mail.VacationModifiedMail;
 
 @Controller
-public class VacationController extends WebMvcConfigurerAdapter {
+public class VacationController extends AbstractBaseController {
 
   private static final Logger LOG = LogManager.getLogger(VacationController.class);
 
@@ -131,10 +131,10 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @RequestMapping("/")
   public String index(HttpServletRequest request, Model model,
                       @ModelAttribute("vacation") Vacation vacation) {
-
     navigationBean.setActiveComponent(NavigationBean.VACATION_PAGE);
     vacation.setUser(applicationController.getConnectedUser());
     User selectedUser = getUser(request);
+    
     setIndexModelValues(model, selectedUser);
 
     model.addAttribute("formMode", FormMode.NEW);

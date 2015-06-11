@@ -6,17 +6,17 @@
 </head>
 <body>
     <p>
-        Hallo, <span th:text="${employee}">Welt!</span>!<br />
+        <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span>!<br />
     </p>
 
-    <p> Dein Urlaub vom <span th:text="${fromDate}">FROM</span> bis <span th:text="${toDate}">TO</span> wurde von <span th:text="${author}">AUTHOR</span> kommentiert: </p>
+    <p> <th:block th:text="#{mail.vacation.dateFrom}"/> <span th:text="${fromDate}">FROM</span> <th:block th:text="#{field.dateTo}"/> <span th:text="${toDate}">TO</span><th:block th:text="#{mail.text.wasCommentedBy}"/><span th:text="${author}">AUTHOR</span> </p>
     
     <p><span th:text="${text}"></span></p>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+        &lt;<a th:href="@{${urlToVacation}}"><th:block th:text="#{mail.urlToVacation}"/></a><th:block th:text="#{mail.urlToVacationText}"/>
     </p>
 
-    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+    <p> <th:block th:text="#{mail.signature}"/></p>
 </body>
 </html>
