@@ -8,7 +8,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-xs-12">
-					<h1 th:inline="text">Benutzereinstellungen</h1>
+					<h1 th:text="#{userDetails.title}">Benutzereinstellungen</h1>
 				</div>
 			</div>
 		</div>
@@ -33,12 +33,12 @@
 							</ul>
 						</div>
 
-						<label for="vacationDays">Anspruch Jahresurlaub in Tagen</label>
+						<label for="vacationDays" th:text="#{userDetails.defaultVacationClaim.title}">Anspruch Jahresurlaub in Tagen</label>
 						<div class="input-group" th:classappend="${#fields.hasErrors('vacationDays')}? 'has-error'">
 							<input type="number" class="form-control" name="vacationDays" min="0" 
 								   id="vacationDays" step="0.5" th:field="*{vacationDays}" />
 							<span class="input-group-btn">
-								<button class="btn btn-success" type="submit">Speichern</button>
+								<button class="btn btn-success" type="submit" th:text="#{userDetails.button.save}">Speichern</button>
 							</span>
 						</div>
 					</form>
@@ -46,9 +46,10 @@
 			</div>
 			<div>
 				<a type="submit" name="cancel" href="/overview"
-						onclick="return confirm('Bearbeitung abbrechen?');"
-						class="btn btn-danger pull-right">
-					Abbrechen
+				   th:attr="data-message=#{userDetails.message.cancel}"
+				   onclick="return confirm(this.getAttribute('data-message'));"
+				   class="btn btn-danger pull-right" th:text="#{userDetails.button.cancel}">
+						Abbrechen
 				</a>
 			</div>
 		</div>
