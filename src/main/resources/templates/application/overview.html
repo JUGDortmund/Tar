@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <h1 th:inline="text">
-                        Urlaubsübersicht [[${#dates.year(#dates.createNow())}]]
+                        <th th:text="#{field.overview}"></th> [[${#dates.year(#dates.createNow())}]]
                     </h1>
                 </div>
             </div>
@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-8 module employee-overview">
                     <p class="pull-right visible-xs info-toggle">
-                        <button type="button" class="btn btn-primary btn-xs offcanvas-toggle" data-toggle="filter">Filter</button>
+                        <button type="button" class="btn btn-primary btn-xs offcanvas-toggle" data-toggle="filter"><th th:text="#{field.filter}"></th></button>
                     </p>
 
                     <div class="panel-group" id="accordion" role="tablist">
@@ -36,13 +36,13 @@
                                         <b>
                                             <span th:text="${{userVacationAccount.totalVacationDays}}"
                                                   data-toggle="tooltip" data-placement="top"
-                                                  title="Jahres-Gesamtanspruch">0</span>
+                                                  th:title="#{field.totalVacationsYear}">30</span>
                                             <span th:if="${userVacationAccount.previousYearOpenVacationDays > 0}"
                                                   th:text="${{'(+'+userVacationAccount.previousYearOpenVacationDays+')'}}"
                                                   data-toggle="tooltip" data-placement="top"
-                                                  title="Resturlaub Vorjahr">(+0)</span>
+                                                  th:title="#{field.leftDaysLastYear}">(+0)</span>
                                         </b>
-                                        <span>Gesamt</span>
+                                        <span th:text="#{field.total}">Gesamt</span>
                                         <!-- /*
                                         This is for TAR-130 to open the collapse-panel for more details
                                         <a data-toggle="collapse" data-parent="#accordion" th:href="|#collapse${iterator.index}|">
@@ -54,19 +54,19 @@
                                         <div class="progress-bar progress-bar-success"
                                              th:style="|width: ${userVacationAccount.totalVacationDays &lt;= 0 ? 0 : userVacationAccount.approvedVacationDays/userVacationAccount.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             th:title="|genehmigte Urlaubstage: ${{userVacationAccount.approvedVacationDays}}|">
+                                             th:title="#{field.approvedVacations} + ': ' + ${{userVacationAccount.approvedVacationDays}}|">
                                             <span th:text="${{userVacationAccount.approvedVacationDays}}">genehmigte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-warning progress-bar-striped"
                                              th:style="|width: ${userVacationAccount.totalVacationDays &lt;= 0 ? 0 : userVacationAccount.pendingVacationDays/userVacationAccount.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             th:title="|beantragte Urlaubstage: ${{userVacationAccount.pendingVacationDays}}|">
+                                             th:title="#{field.vacationsApplied} + ': ' + ${{userVacationAccount.pendingVacationDays}}|">
                                             <span th:text="${{userVacationAccount.pendingVacationDays}}">beantragte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-empty"
                                              th:style="|width: ${userVacationAccount.totalVacationDays &lt;= 0 ? 0 : userVacationAccount.openVacationDays/userVacationAccount.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             th:title="|noch verfügbare Urlaubstage: ${{userVacationAccount.openVacationDays}}|">
+                                             th:title="#{field.openVacationDays} + ': ' + ${{userVacationAccount.openVacationDays}}|">
                                             <span th:text="${{userVacationAccount.openVacationDays}}">noch verfügbare Urlaubstage</span>
                                         </div>
                                     </div>
@@ -117,7 +117,7 @@
 
                 <div class="col-xs-12 col-sm-4 module offcanvas-filter" id="sidebar">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Info-Panel</div>
+                        <div class="panel-heading"><th th:text="#{field.infoPanel}"></th></div>
                         <div class="panel-body">
                             <form th:action="@{/overview}" role="form" method="post">
                                 <div th:include="components/employeeFilter :: employeeFilter">

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="panel panel-default module vacation-form approve-vacation">
+    <div class="panel-heading"><th th:text="#{field.vacationForm}"></th></div>
+    <div class="panel-body" th:object="${vacation}">
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <label for="employee" th:text="#{field.employee}"></label>
+                    <input type="text" class="form-control" th:value="*{user.firstname + ' ' + user.lastname}" disabled="disabled"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6 form-group">
+                    <label for="dateFrom" th:text="#{field.dateFrom}"></label>
+                    <input type="text" class="form-control" name="dateFrom" id="dateFrom" th:value="*{from}" disabled="disabled"/>
+                </div>
+
+                <div class="col-xs-6 form-group">
+                    <label for="dateTo" th:text="#{field.dateTo}"></label>
+                    <input type="text" class="form-control" name="dateTo" id="dateTo" th:value="*{to}" disabled="disabled"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6 form-group">
+                    <label for="vacationDays" th:text="#{field.vacationDays}"></label>
+                    <input type="number" class="form-control" name="vacationDays" id="vacationDays" th:value="*{days}"  disabled="disabled"/>
+                </div>
+
+                <div class="col-xs-6 form-group">
+                    <label for="daysLeft" th:text="#{vacationDaysLeft}"></label>
+                    <input type="number" class="form-control" name="daysLeft" id="daysLeft" th:field="*{daysLeft}" disabled="disabled"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <label for="replacement" th:text="#{field.replacement}"></label>
+                    <input type="text" class="form-control" th:value="*{substitute != NULL ? substitute.firstname + ' ' + substitute.lastname : ''}" disabled="disabled"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <label for="superior" th:text="#{field.superior}"></label>
+                    <input type="text" class="form-control" th:value="*{manager.firstname + ' ' + manager.lastname}" disabled="disabled"/>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <label for="comment" th:text="#{field.comment}"></label>
+                    <textarea class="form-control" rows="5" name="comment" id="comment"></textarea>
+                </div>
+            </div>
+             <a th:href="@{/substitution(id=${vacation.id}, approve=false)}" th:attr="data-message=#{message.reject.replacement}"
+				onclick="return confirm(this.getAttribute('data-message'));" class="btn btn-danger">ablehnen</a>
+             <a th:href="@{/substitution(id=${vacation.id}, approve=true)}" th:attr="data-message=#{message.accept.vacation}"
+				onclick="return confirm(this.getAttribute('data-message'));" class="btn btn-success pull-right">annehmen</a>
+    </div>
+</div>
+</body>
+</html>

@@ -5,21 +5,21 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <p> Hallo, <span th:text="${employee}">Welt!</span> </p>
+    <p> <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> </p>
 
-    <p> Dein Urlaubsantrag wurde ge&auml;ndert! Hier sind die Details: </p>
+    <p th:text="#{mail.text.change.vacation}"> Vacation details </p>
 
     <table>
         <thead>
         	<tr>
                 <td/>
-                <td><b>Alter Wert</b></td>
-                <td><b>Neuer Wert</b></td>
+                <td><b><th:block th:text="#{mail.oldValue}"/></b></td>
+                <td><b><th:block th:text="#{mail.newValue}"/></b></td>
             </tr>
         </thead>
         <tr>
             <td>
-                <b>Name des Vorgesetzten:</b>
+                <b><th:block th:text="#{mail.superior}"/></b>
             </td>
             <td>
                 <span th:text="${manager_old}">Max Mustermann</span>
@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <td>
-                <b>Name des Stellvertreters:</b>
+                <b><th:block th:text="#{mail.replacement}"/></b>
             </td>
             <td>
                 <span th:text="${substitute_old}">Max Mustermann</span>
@@ -41,24 +41,24 @@
         </tr>
         <tr>
             <td>
-                <b>Beantragte Urlaubszeit:</b>
+                <b><th:block th:text="#{mail.vacation.time}"/></b>
             </td>
             <td>
                 <ul>
-                    <li>Von: <span th:text="${fromDate_old}">vonDatum</span> </li>
-                    <li>Bis: <span th:text="${toDate_old}">bisDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate_old}">vonDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate_old}">bisDatum</span> </li>
                 </ul>
             </td>
             <td>
                 <ul>
-                    <li>Von: <span th:text="${fromDate}">vonDatum</span> </li>
-                    <li>Bis: <span th:text="${toDate}">bisDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate}">vonDatum</span> </li>
+                    <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate}">bisDatum</span> </li>
                 </ul>
             </td>
         </tr>
         <tr>
             <td>
-                <b>Beantragte Urlaubstage:</b>
+                <b><th:block th:text="#{mail.vacation.time}"/></b>
             </td>
             <td>
                 <span th:text="${totalDays_old}">Tage</span>
@@ -69,7 +69,7 @@
         </tr>
         <tr>
             <td>
-                <b>Beantragte Resturlaubstage:</b>
+                <b><th:block th:text="#{mail.vacation.leftDays}"/></b>
             </td>
             <td>
                 <span th:text="${leftDays_old}">Tage</span>
@@ -80,18 +80,18 @@
         </tr>
     </table>
 
-    <p> Der Urlaub wurde ge&auml;ndert von: <span th:text="${modifiedBy}">Bearbeiter</span></p>
+    <p> <th:block th:text="#{mail.modifiedBy}"/> <span th:text="${modifiedBy}">Bearbeiter</span></p>
 
     <th:block th:if="${not #strings.isEmpty(comment)}">
-        <p> <b>Kommentar:</b><br/>
+        <p> <b><th:block th:text="#{field.comment} + ';'"/></b><br/>
         <span th:text="${comment}">KOMMENTAR</span>
         </p>
     </th:block>
 
     <p>
-        &lt;<a th:href="@{${urlToVacation}}">Hier</a>&gt; geht es zur Urlaubsverwaltung!
+        &lt;<a th:href="@{${urlToVacation}}"/><th:block th:text="#{mail.urlToVacation}"/>
     </p>
 
-    <p> Gr&uuml;&szlig;e, <br /> &emsp; <em>Dein TaR-Team</em> </p>
+    <p th:text="#{mail.signature}"> Signature </p>
 </body>
 </html>

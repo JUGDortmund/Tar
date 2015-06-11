@@ -1,5 +1,12 @@
 package de.maredit.tar.listeners;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+
 import com.unboundid.ldap.sdk.LDAPException;
 
 import de.maredit.tar.models.CommentItem;
@@ -18,13 +25,6 @@ import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.UserService;
 import de.maredit.tar.tasks.UserSyncTask;
-
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class ContextListener implements ApplicationListener<ContextRefreshedEvent> {
 
