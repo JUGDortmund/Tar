@@ -1,6 +1,7 @@
 package de.maredit.tar.services;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
@@ -28,7 +30,8 @@ public class HolidayServiceImpl implements HolidayService {
   private VacationProperties properties;
 
   private static final Logger LOG = LogManager.getLogger(HolidayServiceImpl.class);
-  private ManagerParameter parameters = ManagerParameters.create(HolidayCalendar.GERMANY);
+  private static final ManagerParameter parameters = ManagerParameters.create(HolidayCalendar.GERMANY);
+  private static final DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
   @Override
   public Set<UserHoliday> getAllHolidays(int year) {
@@ -64,7 +67,9 @@ public class HolidayServiceImpl implements HolidayService {
     for (UserHoliday uH : userHolidays) {
       UserHoliday userHoliday = new UserHoliday(uH);
       userHoliday.setDate(year + "-" + uH.getDate());
-      if (!startDate.isBefore(startDate) && !endDate.isAfter(endDate)) {
+      LocalDate userStartDate = LocalDate.parse(userHoliday.getDate(), dateTimeFormatter);
+      LocalDate userEndDate = LocalDate.parse(userHoliday.getDate(), dateTimeFormatter);
+      if (startDate.isBefore(userStartDate) && endDate.isAfter(userEndDate)) {
         periodHolidays.add(userHoliday);
       }
     }

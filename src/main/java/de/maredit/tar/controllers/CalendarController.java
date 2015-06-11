@@ -114,7 +114,7 @@ public class CalendarController {
                 userHoliday -> {
                   CalendarEvent calendarEvent = new CalendarEvent(userHoliday);
                   LOG.debug("added CalendarEvent '" + calendarEvent.getTitle() + "' [start: "
-                      + calendarEvent.getStart() + " - end: " + calendarEvent.getEnd() + calendarEvent.getType() + "] - "
+                      + calendarEvent.getStart() + " - end: " + calendarEvent.getEnd() + "] - "
                       + calendarEvent.getState());
                   return calendarEvent;
                 }).collect(toList());
