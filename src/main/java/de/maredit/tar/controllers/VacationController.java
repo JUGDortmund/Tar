@@ -1,5 +1,9 @@
 package de.maredit.tar.controllers;
 
+import org.springframework.http.MediaType;
+
+import org.springframework.web.bind.annotation.ResponseBody;
+import de.maredit.tar.models.LastingVacation;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.beans.NavigationBean;
@@ -287,6 +291,18 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
     return "redirect:/";
   }
+  
+  
+  @RequestMapping(value="/updateVacationForm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  public LastingVacation updateVacationForm(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
+    if (bindingResult.hasFieldErrors("")) {
+      
+    }
+    
+    return null;
+  }
+
 
   private CommentItem saveComment(@ModelAttribute("comment") String comment,
                            @ModelAttribute("vacation") @Valid Vacation vacation) {

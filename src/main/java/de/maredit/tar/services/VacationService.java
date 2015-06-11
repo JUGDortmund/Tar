@@ -19,7 +19,9 @@ public class VacationService {
     LocalDate endDate = vacation.getTo();
     double result = 0;
     if (startDate.equals(endDate)) {
-      result = vacation.getDays() < 1 ? 0.5 : 1;
+      if (!isWeekEnd(startDate) && !isHoliday(startDate)) {
+        result = vacation.getDays() < 1 ? 0.5 : 1;
+      }
     } else {
       result = calculateDays(startDate, endDate);
     }
@@ -36,6 +38,11 @@ public class VacationService {
       }
     } while (!startDate.equals(endDate));
     return result;
+  }
+  
+  public boolean isHoliday(LocalDate date)  {
+    // TODO hier Prüfung auf Feiertage
+    return false;
   }
 
   public boolean isWeekEnd(LocalDate date) {
@@ -55,18 +62,19 @@ public class VacationService {
             .sorted((vaction1, vacation2) -> vaction1.getFrom().compareTo(vacation2.getFrom()))
             .collect(Collectors.toList());
     for (Vacation vacation : vacations) {
+      double countOfVacation = getCountOfVacation(vacation);
       if (vacation.getFrom().isBefore(remainingDate)) {
         if (vacation.getTo().isBefore(remainingDate)) {
           if (result.getVacationDaysLastYear() > 0) {
-            if (vacation.getDays() > result.getVacationDaysLastYear()) {
-              double days = vacation.getDays() - result.getVacationDaysLastYear();
+            if (countOfVacation > result.getVacationDaysLastYear()) {
+              double days = countOfVacation - result.getVacationDaysLastYear();
               result.reduceVacationDaysLastYear(result.getVacationDaysLastYear());
               result.reduceVacationDays(days);
             } else {
-              result.reduceVacationDaysLastYear(vacation.getDays());
+              result.reduceVacationDaysLastYear(countOfVacation);
             }
           } else {
-            result.reduceVacationDays(vacation.getDays());
+            result.reduceVacationDays(countOfVacation);
           }
         } else {
           double daysBefore = calculateDays(vacation.getFrom(), remainingDate.minusDays(1));
@@ -83,7 +91,7 @@ public class VacationService {
 
         }
       } else {
-        result.reduceVacationDays(vacation.getDays());
+        result.reduceVacationDays(countOfVacation);
       }
     }
     return result;
