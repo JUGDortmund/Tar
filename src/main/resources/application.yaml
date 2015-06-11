@@ -10,6 +10,7 @@ spring.profiles.include: dummyLdapService,dummyMailService,dummyCalendarService
 ##### Development configuration #####
 spring:
   profiles: localDev
+  log: console
   thymeleaf:
     cache: false
   data:
