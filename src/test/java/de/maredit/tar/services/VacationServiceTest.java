@@ -15,14 +15,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.HashSet;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(classes = {VacationServiceTest.Config.class})
 public class VacationServiceTest {
 
-  @Configuration
   static class Config {
 
     //TODO Hier Feiertagsberechnung noch initialisieren
