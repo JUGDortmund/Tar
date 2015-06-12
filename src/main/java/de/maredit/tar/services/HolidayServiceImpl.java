@@ -1,17 +1,5 @@
 package de.maredit.tar.services;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import de.jollyday.Holiday;
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
@@ -19,6 +7,17 @@ import de.jollyday.ManagerParameter;
 import de.jollyday.ManagerParameters;
 import de.maredit.tar.models.UserHoliday;
 import de.maredit.tar.properties.VacationProperties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by phorninge on 05.06.2015
@@ -30,8 +29,12 @@ public class HolidayServiceImpl implements HolidayService {
   private VacationProperties properties;
 
   private static final Logger LOG = LogManager.getLogger(HolidayServiceImpl.class);
-  private static final ManagerParameter parameters = ManagerParameters.create(HolidayCalendar.GERMANY);
-  private static final DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  private static final ManagerParameter
+      parameters =
+      ManagerParameters.create(HolidayCalendar.GERMANY);
+  private static final DateTimeFormatter
+      dateTimeFormatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
   @Override
   public Set<UserHoliday> getAllHolidays(int year) {
@@ -78,7 +81,7 @@ public class HolidayServiceImpl implements HolidayService {
   }
 
 
-  private UserHoliday addUserHoliday(de.jollyday.Holiday holiday) {
+  private UserHoliday addUserHoliday(Holiday holiday) {
     UserHoliday uHoliday = new UserHoliday();
     uHoliday.setDate(holiday.getDate().toString());
     uHoliday.setValence(1);
