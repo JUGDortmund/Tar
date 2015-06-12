@@ -1,1 +1,8 @@
 defaultVacationDays: 30
+userHolidays:
+   - date: 12-24
+     valence: 0.5
+     description: Heiligabend
+   - date: 12-31
+     valence: 0.5
+     description: Silvester

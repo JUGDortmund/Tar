@@ -1,9 +1,11 @@
 package de.maredit.tar.models;
 
+import java.time.format.DateTimeFormatter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.format.DateTimeFormatter;
+import de.maredit.tar.models.enums.CalendarEntryType;
 
 /**
  * Created by czillmann on 29.04.15.
@@ -12,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 public class CalendarEvent {
 
   private static final Logger LOG = LogManager.getLogger(CalendarEvent.class);
+  private static final String startHalfDayHoliday = "12:00:00";
+  private static final String endHalfDayHoliday = "17:00:00";
 
   private String start;
   private String end;
@@ -28,16 +32,17 @@ public class CalendarEvent {
   private String managerFirstName;
   private String managerLastName;
 
+  private CalendarEntryType type;
   private String state;
   private Boolean allDay;
 
   public CalendarEvent(Vacation vacation) {
-    if(vacation.getUser() != null) {
+    if (vacation.getUser() != null) {
       this.setTitle("Urlaub " + vacation.getUser().getUsername().substring(0, 3));
       this.setUserName(vacation.getUser().getUsername());
       this.setUserFirstName(vacation.getUser().getFirstname());
       this.setUserLastName(vacation.getUser().getLastname());
-    }else {
+    } else {
       LOG.error("Provided user is null for vacation ID {}", vacation.getId());
     }
     if (vacation.getManager() != null) {
@@ -54,7 +59,26 @@ public class CalendarEvent {
       this.setSubstituteFirstName(vacation.getSubstitute().getFirstname());
       this.setSubstituteLastName(vacation.getSubstitute().getLastname());
     }
+    this.setType(CalendarEntryType.VACATION);
     this.allDay = true;
+  }
+
+  public CalendarEvent(UserHoliday userHoliday) {
+    this.setTitle(userHoliday.getDescription());
+
+    this.setState(userHoliday.getDescription());
+    this.setType(CalendarEntryType.HOLIDAY);
+    this.setStart(userHoliday.getDate().toString());
+    this.setEnd(userHoliday.getDate().toString());
+    if (userHoliday.getValence() == 1.0) {
+      this.setStart(userHoliday.getDate().toString());
+      this.setEnd(userHoliday.getDate().toString());
+      this.setAllDay(true);
+    } else {
+      this.setStart(userHoliday.getDate().toString() + " " + startHalfDayHoliday);
+      this.setEnd(userHoliday.getDate().toString() + " " + endHalfDayHoliday);
+      this.setAllDay(false);
+    }
   }
 
   public String getStart() {
@@ -135,6 +159,14 @@ public class CalendarEvent {
 
   public void setManagerLastName(String managerLastName) {
     this.managerLastName = managerLastName;
+  }
+
+  public CalendarEntryType getType() {
+    return type;
+  }
+
+  public void setType(CalendarEntryType type) {
+    this.type = type;
   }
 
   public String getState() {

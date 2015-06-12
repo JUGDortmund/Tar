@@ -1,21 +1,21 @@
 .employee-overview {
-	.progress-number a {
-		margin-left: 10px;
-	}
+    .progress-number a {
+        margin-left: 10px;
+    }
 
-	.glyphicon {
-		&.pending {
-			vertical-align: middle;
-			color: $vacation-pending;
+    .glyphicon {
+        &.pending {
+            vertical-align: middle;
+            color: $vacation-pending;
 
-			&:before {
-				content:"\231b";
-			}
-		}
-	}
+            &:before {
+                content:"\231b";
+            }
+        }
+    }
 
-	.progress-bar-empty {
-		background-color: transparent;
-		color: black;
-	}
+    .progress-bar-empty {
+        background-color: transparent;
+        color: black;
+    }
 }

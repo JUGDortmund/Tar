@@ -20,13 +20,4 @@
     clear: "Löschen"
     weekStart: 1
   }
-
-  $('.input-group.date').each -> 
-    $this = $(this)
-    $this.datepicker({
-      # convert from java simpledate to date format of datepicker api
-      "format" : $this.data('dateformat').replace(/M/g, 'm')
-      "autoclose" : true
-      "language" : $this.data('lang')
-    })
 )(jQuery);

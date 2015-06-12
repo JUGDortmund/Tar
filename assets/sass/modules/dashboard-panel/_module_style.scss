@@ -1,156 +1,156 @@
 .dashboard-panel {
-	
-	.panel-heading {
-		color: $white;
-		font-size: 16px;
 
-		&:after {
-			float: right;
-			-moz-osx-font-smoothing: grayscale;
-		    display: inline-block;
-		    font-family: "Glyphicons Halflings";
-		    font-style: normal;
-		    font-weight: 400;
-		    line-height: 1;
-		    position: relative;
-		    top: 1px;
-		}
-	}
+    .panel-heading {
+        color: $white;
+        font-size: 16px;
 
-	h3 {
-		font-size: 16px;
-	}
+        &:after {
+            float: right;
+            -moz-osx-font-smoothing: grayscale;
+            display: inline-block;
+            font-family: "Glyphicons Halflings";
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1;
+            position: relative;
+            top: 1px;
+        }
+    }
 
-	&.user-administration {
-		border-color: $task-primary;
+    h3 {
+        font-size: 16px;
+    }
 
-		.panel-heading {
-			background-color: $task-primary;
+    &.user-administration {
+        border-color: $task-primary;
 
-			&:after {
-				content: "\e019";
-			}
-		}
-	}
+        .panel-heading {
+            background-color: $task-primary;
 
-	&.approve-vacation {
-		border-color: $task-primary;
+            &:after {
+                content: "\e019";
+            }
+        }
+    }
 
-		.panel-heading {
-			background-color: $task-primary;
+    &.approve-vacation {
+        border-color: $task-primary;
 
-			&:after {
-				content: "\e137";
-			}
-		}
-	}
+        .panel-heading {
+            background-color: $task-primary;
 
-	&.edit-vacation {
-		border-color: $vacation-edit-primary;
+            &:after {
+                content: "\e137";
+            }
+        }
+    }
 
-		.panel-heading {
-			background-color: $vacation-edit-primary;
+    &.edit-vacation {
+        border-color: $vacation-edit-primary;
 
-			&:after {
-				content: "\e109";
-			}
-		}
-	}
+        .panel-heading {
+            background-color: $vacation-edit-primary;
 
-	&.new {
-		border-color: $vacation-new-primary;
+            &:after {
+                content: "\e109";
+            }
+        }
+    }
 
-		.panel-heading {
-			background-color: $vacation-new-primary;
+    &.new {
+        border-color: $vacation-new-primary;
 
-			&:after {
-				content: "\e164";
-			}
-		}
-	}
+        .panel-heading {
+            background-color: $vacation-new-primary;
 
-	@media (max-width: 760px) {
-		.btn {
-			width: 100%;
-			margin-bottom: 10px;
-		}
-		.input-group-btn > .btn {
-			width: auto;
-		}
-	}
+            &:after {
+                content: "\e164";
+            }
+        }
+    }
 
-	.checkbox {
-		margin: 0 0 -1px 0;
-	}
+    @media (max-width: 760px) {
+        .btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .input-group-btn > .btn {
+            width: auto;
+        }
+    }
 
-	.glyphicon {
-		float: right;
+    .checkbox {
+        margin: 0 0 -1px 0;
+    }
 
-		&.pending-substitute {
-			color: $vacation-pending;
-			&:before {
-				content:"\e008";
-			}
-		}
+    .glyphicon {
+        float: right;
 
-		&.pending-approvement {
-			color: $vacation-pending;
-			&:before {
-				content:"\231b";
-			}
-		}
+        &.pending-substitute {
+            color: $vacation-pending;
+            &:before {
+                content:"\e008";
+            }
+        }
 
-		&.approved {
-			color: $vacation-approved;
-			&:before {
-				content:"\e013";
-			}
-		}
+        &.pending-approvement {
+            color: $vacation-pending;
+            &:before {
+                content:"\231b";
+            }
+        }
 
-		&.cancelled {
-			color: $vacation-cancelled;
-			&:before {
-				content:"\e014";
-			}
-		}
+        &.approved {
+            color: $vacation-approved;
+            &:before {
+                content:"\e013";
+            }
+        }
 
-		&.rejected {
-			color: $vacation-rejected;
-			&:before {
-				content:"\e014";
-			}
-		}
-	}
+        &.cancelled {
+            color: $vacation-cancelled;
+            &:before {
+                content:"\e014";
+            }
+        }
 
-	.timeline .item-icon {
-		margin-top: 10px;
+        &.rejected {
+            color: $vacation-rejected;
+            &:before {
+                content:"\e014";
+            }
+        }
+    }
 
-		&.new {
-			background-color: $vacation-new-primary;
-			color: $white;
-		}
+    .timeline .item-icon {
+        margin-top: 10px;
 
-		&.edit-vacation {
-			background-color: $vacation-edit-primary;
-			color: $white;
-		}
+        &.new {
+            background-color: $vacation-new-primary;
+            color: $white;
+        }
 
-		&.approve-vacation {
-			background-color: $task-primary;
-			color: $white;
-		}
-	}
+        &.edit-vacation {
+            background-color: $vacation-edit-primary;
+            color: $white;
+        }
 
-	.box {
-		margin-top: 10px;
+        &.approve-vacation {
+            background-color: $task-primary;
+            color: $white;
+        }
+    }
 
-		> .box-header{
-			background-color: #f5f5f5;
-			font-size: 16px;
-		}
-	}
+    .box {
+        margin-top: 10px;
 
-	.date-group {
-		z-index: 1000;
-	}
+        > .box-header{
+            background-color: #f5f5f5;
+            font-size: 16px;
+        }
+    }
+
+    .date-group {
+        z-index: 1000;
+    }
 }

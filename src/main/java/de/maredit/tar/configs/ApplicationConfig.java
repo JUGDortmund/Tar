@@ -1,10 +1,9 @@
 package de.maredit.tar.configs;
 
-import de.maredit.tar.utils.Log4j2Configurer;
-
-import org.springframework.beans.factory.annotation.Value;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.beans.VersionBean;
+import de.maredit.tar.utils.Log4j2Configurer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;

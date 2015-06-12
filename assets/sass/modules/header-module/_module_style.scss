@@ -1,24 +1,24 @@
 .main-header {
-	.logo {
-		background: #367fa9 url(../images/logo.png) center left no-repeat;
-		padding-left: 60px;
-		
-		&:hover {
-			background: #367fa9 url(../images/logo.png) center left no-repeat !important;		
-		}
-	}
+    .logo {
+        background: #367fa9 url(../images/logo.png) center left no-repeat;
+        padding-left: 60px;
 
-	.navbar .nav > li {
-		> a:hover,
-		> a:active,
-		> a:focus {
-			background-color: transparent !important;
-		}
+        &:hover {
+            background: #367fa9 url(../images/logo.png) center left no-repeat !important;
+        }
+    }
 
-		button {
-			border: none;
-			padding: 15px 12px;
-		}
-	}
-	
+    .navbar .nav > li {
+        > a:hover,
+        > a:active,
+        > a:focus {
+            background-color: transparent !important;
+        }
+
+        button {
+            border: none;
+            padding: 15px 12px;
+        }
+    }
+
 }

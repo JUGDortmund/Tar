@@ -1,28 +1,28 @@
 .calendar-filter {
-	
-	> h3.list-group-item {
-		background-color: #f5f5f5;
-    	border-color: #ddd;
-    	color: #333;
-    	font-size: 16px;
-	}
 
-	> .list-group-item {
+    > h3.list-group-item {
+        background-color: #f5f5f5;
+        border-color: #ddd;
+        color: #333;
+        font-size: 16px;
+    }
 
-		margin: 0;
-		color: $white;
+    > .list-group-item {
 
-		&.filter-approved {
-			background-color: $vacation-approved;
-		}
-        &.filter-pending {
-        	background-color: $vacation-pending;
+        margin: 0;
+        color: $white;
+
+        &.filter-approved {
+            background-color: $vacation-approved;
         }
-		&.filter-cancelled {
-			background-color: $vacation-cancelled;
-		}
-		&.filter-rejected {
-			background-color: $vacation-rejected;
-		}
-	}
+        &.filter-pending {
+            background-color: $vacation-pending;
+        }
+        &.filter-cancelled {
+            background-color: $vacation-cancelled;
+        }
+        &.filter-rejected {
+            background-color: $vacation-rejected;
+        }
+    }
 }
