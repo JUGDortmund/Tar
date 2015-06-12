@@ -179,8 +179,4 @@ public class Vacation {
     return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
         + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", state=" + state + "]";
   }
-
-  public double getDaysLeft() {
-    return 0;
-  }
 }

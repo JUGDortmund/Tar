@@ -64,7 +64,7 @@
                            th:field="*{days}" th:disabled="${disableInput}"/>
                 </div>
 
-                <div th:class="${#fields.hasErrors('daysLeft')}? 'col-xs-6 form-group has-error' : 'col-xs-6 form-group'">
+                <div th:class="col-xs-6 form-group">
                     <label for="daysLeft" th:text="#{vacationDaysLeft}">*</label>
                     <input type="number" class="form-control" name="daysLeft" id="daysLeft"
                            step="0.5"

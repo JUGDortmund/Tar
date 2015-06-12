@@ -1,5 +1,7 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.VacationEntitlement;
+
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.utils.ConversionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -19,7 +21,7 @@ public class VacationCreateMail implements MailObject {
   private String[] toRecipients;
 
 
-  public VacationCreateMail(Vacation vacation, String urlToVacation, String comment) {
+  public VacationCreateMail(Vacation vacation, VacationEntitlement entitlement, String urlToVacation, String comment) {
     values.put("employee", vacation.getUser().getFullname());
     values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
@@ -27,7 +29,7 @@ public class VacationCreateMail implements MailObject {
     values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
-    values.put("leftDays", vacation.getDaysLeft());
+    values.put("leftDays", entitlement.getDays());
     if (!vacation.getAuthor().equals(vacation.getUser())) {
       values.put("createdBy", vacation.getAuthor().getFullname());
     }

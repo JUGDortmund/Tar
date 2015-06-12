@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 public class VacationProperties {
 
   private double defaultVacationDays;
+  
+  private String expiryDate;
 
   public double getDefaultVacationDays() {
     return defaultVacationDays;
@@ -16,5 +18,13 @@ public class VacationProperties {
 
   public void setDefaultVacationDays(double defaultVacationDays) {
     this.defaultVacationDays = defaultVacationDays;
+  }
+
+  public String getExpiryDate() {
+    return expiryDate;
+  }
+
+  public void setExpiryDate(String expiryDate) {
+    this.expiryDate = expiryDate;
   }
 }

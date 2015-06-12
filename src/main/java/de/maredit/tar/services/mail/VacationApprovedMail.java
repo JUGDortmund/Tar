@@ -1,5 +1,7 @@
 package de.maredit.tar.services.mail;
 
+import de.maredit.tar.models.VacationEntitlement;
+
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.utils.ConversionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -18,7 +20,7 @@ public class VacationApprovedMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public VacationApprovedMail(Vacation vacation, String urlToVacation, String comment) throws SocketException {
+  public VacationApprovedMail(Vacation vacation, VacationEntitlement entitlement, String urlToVacation, String comment) throws SocketException {
     values.put("employee", vacation.getUser().getFirstname());
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
@@ -26,7 +28,7 @@ public class VacationApprovedMail implements MailObject {
     values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
-    values.put("leftDays", vacation.getDaysLeft());
+    values.put("leftDays", entitlement.getDays());
     values.put("urlToVacation", urlToVacation);
     values.put("comment", comment);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));

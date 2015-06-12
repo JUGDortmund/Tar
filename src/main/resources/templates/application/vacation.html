@@ -49,7 +49,7 @@
 				<div class="col-xs-6 form-group">
 					<label for="daysLeft" th:text="#{field.vacationDaysLeft}"></label> <input
 						type="number" class="form-control" name="daysLeft" id="daysLeft"
-						th:field="${vacation.daysLeft}" disabled="disabled" />
+						th:value="${remaining.days}" disabled="disabled" />
 				</div>
 			</div>
 

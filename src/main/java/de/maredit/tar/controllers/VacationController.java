@@ -163,8 +163,9 @@ public class VacationController extends AbstractBaseController {
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
     saveComment(comment, vacation);
+    VacationEntitlement entilement = vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear()));
     MailObject mail =
-        (approve ? new SubstitutionApprovedMail(vacation, customMailProperties.getUrlToVacation(), comment) : new SubstitutionRejectedMail(vacation, customMailProperties.getUrlToVacation(), comment));
+        (approve ? new SubstitutionApprovedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment) : new SubstitutionRejectedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment));
     this.mailService.sendMail(mail);
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
@@ -189,8 +190,9 @@ public class VacationController extends AbstractBaseController {
 
     this.vacationRepository.save(vacation);
     saveComment(comment, vacation);
+    VacationEntitlement entilement = vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear()));
     MailObject mail =
-        (approve ? new VacationApprovedMail(vacation, customMailProperties.getUrlToVacation(), comment) : new VacationDeclinedMail(vacation, customMailProperties.getUrlToVacation(), comment));
+        (approve ? new VacationApprovedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment) : new VacationDeclinedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment));
     this.mailService.sendMail(mail);
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
@@ -243,6 +245,7 @@ public class VacationController extends AbstractBaseController {
     model.addAttribute("users", userService.getSortedUserList());
     model.addAttribute("vacation", vacation);
     model.addAttribute("formMode", FormMode.NEW);
+    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
     return "components/vacationForm";
   }
 
@@ -265,46 +268,59 @@ public class VacationController extends AbstractBaseController {
       } else {
         model.addAttribute("formMode", FormMode.EDIT);
       }
+      model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
       return "application/index";
     } else {
 
-      Vacation vacationBeforeChange = newVacation ? null : vacationRepository.findOne(vacation.getId());
+      UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+      if (vacation.getFrom().equals(vacation.getTo())) {
+        if (vacation.getDays() > 1) {
+          vacation.setDays(1);
+        }
+      } else {
+        vacation.setDays(vacationService.getCountOfVacation(vacation));
+      }
 
       if (newVacation) {
         vacation.setAuthor(applicationController.getConnectedUser());
-      } else {
-        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
-                                                           : State.REQUESTED_SUBSTITUTE);
-        calendarService.deleteAppointment(vacation);
-        vacation.setAppointmentId(null);
-      }
-      this.vacationRepository.save(vacation);
-      saveComment(comment, vacation);
-
-      if (newVacation) {
-        UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+        this.vacationRepository.save(vacation);
+        saveComment(comment, vacation);
         account.addVacation(vacation);
         userVacationAccountRepository.save(account);
+
+        this.mailService.sendMail(new VacationCreateMail(vacation, vacationService.getRemainingVacationDays(account), customMailProperties.getUrlToVacation(), comment));
+      } else {
+        VacationEntitlement oldRemaining = vacationService.getRemainingVacationDays(account);
+        Vacation vacationBeforeChange = vacationRepository.findOne(vacation.getId());
+        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
+            : State.REQUESTED_SUBSTITUTE);
+        calendarService.deleteAppointment(vacation);
+        vacation.setAppointmentId(null);
+
+        this.vacationRepository.save(vacation);
+        saveComment(comment, vacation);
+        account.addVacation(vacation);
+        userVacationAccountRepository.save(account);
+
+        VacationEntitlement remaining = vacationService.getRemainingVacationDays(account);
+
+        this.mailService.sendMail(new VacationModifiedMail(vacation, remaining, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
+                                   oldRemaining, applicationController
+                                       .getConnectedUser()));
       }
 
-      this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation(), comment)
-                                            : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
-                                                                       applicationController
-                                                                           .getConnectedUser()));
     }
-      return "redirect:/";
-    }
+    return "redirect:/";
+  }
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String cancelVacation(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment) {
-    VacationCanceledMail mail = new
-        VacationCanceledMail(vacation, comment);
     vacation.setState(State.CANCELED);
     calendarService.deleteAppointment(vacation);
     vacation.setAppointmentId(null);
     this.vacationRepository.save(vacation);
-    this.mailService.sendMail(mail);
+    this.mailService.sendMail(new VacationCanceledMail(vacation, vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear())), comment));
 
     return "redirect:/";
   }
@@ -319,7 +335,7 @@ public class VacationController extends AbstractBaseController {
       calculatingAccount.setUser(account.getUser());
       Set<Vacation> vacations = new HashSet<Vacation>(account.getVacations());
       vacations.add(vacation);
-      calculatingAccount.setVacations(new ArrayList<Vacation>(vacations));
+      calculatingAccount.setVacations(vacations);
       return vacationService.getRemainingVacationDays(calculatingAccount);
     }
     

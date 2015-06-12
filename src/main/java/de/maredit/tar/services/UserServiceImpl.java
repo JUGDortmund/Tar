@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +28,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+  private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
   private static final Logger LOG = LogManager.getLogger(UserServiceImpl.class);
 
@@ -84,6 +88,7 @@ public class UserServiceImpl implements UserService {
       vacationAccount.setYear(year);
       vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties
           .getDefaultVacationDays() : user.getVacationDays());
+      vacationAccount.setExpiryDate(LocalDate.parse(year + "-" + vacationProperties.getExpiryDate(), DATE_PATTERN));
     }
     UserVacationAccount previousVacationAccount =
         userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year - 1);
@@ -120,11 +125,11 @@ public class UserServiceImpl implements UserService {
   /**
    * Helper method to retrieve the amount of approved vacation days for a list of vacations.
    *
-   * @param vacations the list to analyze
+   * @param set the set to analyze
    * @return the amount of approved vacation days
    */
-  private double getApprovedVacationDays(List<Vacation> vacations) {
-    return vacations != null ? vacations.stream().filter(vacation -> vacation.getState() == State.APPROVED)
+  private double getApprovedVacationDays(Set<Vacation> set) {
+    return set != null ? set.stream().filter(vacation -> vacation.getState() == State.APPROVED)
         .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
   }
 
@@ -132,11 +137,11 @@ public class UserServiceImpl implements UserService {
    * Helper method to retrieve the amount of pending vacation days (which are already planned but
    * not accepted yet) for a list of vacations.
    *
-   * @param vacations the list to analyze
+   * @param set the set to analyze
    * @return the amount of pending vacation days
    */
-  private double getPendingVacationDays(List<Vacation> vacations) {
-    return vacations != null ? vacations
+  private double getPendingVacationDays(Set<Vacation> set) {
+    return set != null ? set
         .stream()
         .filter(
             vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE

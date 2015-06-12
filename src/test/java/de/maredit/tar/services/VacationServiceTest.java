@@ -1,7 +1,6 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.models.VacationEntitlement;
-
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
@@ -17,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -59,7 +59,7 @@ public class VacationServiceTest {
     vacation.setState(State.APPROVED);
     vacation.setFrom(LocalDate.of(2015, Month.FEBRUARY, 8));
     vacation.setTo(LocalDate.of(2015, Month.FEBRUARY, 16));
-    account.setVacations(new ArrayList<Vacation>());
+    account.setVacations(new HashSet<Vacation>());
     account.getVacations().add(vacation);
 
     VacationEntitlement lastingVacationDays = vacationService.getRemainingVacationDays(account);

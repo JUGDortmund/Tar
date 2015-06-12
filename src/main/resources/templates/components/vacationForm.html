@@ -123,8 +123,7 @@ edit-vacation, approve-vacation  -->
 
                             </div>
 
-                            <div class="col-xs-6 form-group"
-                                 th:classappend="${#fields.hasErrors('daysLeft')}? 'has-error'">
+                            <div class="col-xs-6 form-group">
                                 <label for="daysLeft">
                                     <th th:text="#{field.vacationDaysLeft}"></th>
                                     <span th:if="${editable}">*</span>

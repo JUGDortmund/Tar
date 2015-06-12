@@ -49,8 +49,8 @@ public class VacationService {
   }
 
   public VacationEntitlement getRemainingVacationDays(UserVacationAccount account) {
-    VacationEntitlement result = new VacationEntitlement(30, 5);
-    LocalDate remainingDate = LocalDate.now().withMonth(4).withDayOfMonth(1);
+    VacationEntitlement result = new VacationEntitlement(account.getTotalVacationDays(), account .getPreviousYearOpenVacationDays() == null ? 0 : account.getPreviousYearOpenVacationDays());
+    LocalDate expiaryDate = account.getExpiryDate();
     List<Vacation> vacations =
         account
             .getVacations()
@@ -62,8 +62,8 @@ public class VacationService {
             .collect(Collectors.toList());
     for (Vacation vacation : vacations) {
       double countOfVacation = getCountOfVacation(vacation);
-      if (vacation.getFrom().isBefore(remainingDate)) {
-        if (vacation.getTo().isBefore(remainingDate)) {
+      if (vacation.getFrom().isBefore(expiaryDate)) {
+        if (vacation.getTo().isBefore(expiaryDate)) {
           if (result.getDaysLastYear() > 0) {
             if (countOfVacation > result.getDaysLastYear()) {
               double days = countOfVacation - result.getDaysLastYear();
@@ -76,8 +76,8 @@ public class VacationService {
             result.reduceDays(countOfVacation);
           }
         } else {
-          double daysBefore = calculateDays(vacation.getFrom(), remainingDate.minusDays(1));
-          double daysAfter = calculateDays(remainingDate, vacation.getTo());
+          double daysBefore = calculateDays(vacation.getFrom(), expiaryDate.minusDays(1));
+          double daysAfter = calculateDays(expiaryDate, vacation.getTo());
 
           if (daysBefore > result.getDaysLastYear()) {
             double days = daysBefore - result.getDaysLastYear();

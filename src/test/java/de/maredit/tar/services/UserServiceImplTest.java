@@ -1,8 +1,8 @@
 package de.maredit.tar.services;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
@@ -29,7 +29,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
@@ -73,8 +75,8 @@ public class UserServiceImplTest {
     userRepository.save(createDummyUserList());
     createDummyVactions();
     vacationRepository.save(createDummyVactions());
-    List<Vacation> vacations = userService.getVacationsForUserAndYear(user1, LocalDate.now().getYear());
-    UserVacationAccount account = userService.getUserVacationAccountForYear(user1, vacations.get(0).getFrom().getYear());
+    Set<Vacation> vacations = new HashSet<>(userService.getVacationsForUserAndYear(user1, LocalDate.now().getYear()));
+    UserVacationAccount account = userService.getUserVacationAccountForYear(user1, vacations.stream().findFirst().orElse(new Vacation()).getFrom().getYear());
     account.setVacations(vacations);
     userVacationAccountRepository.save(account);
   }
