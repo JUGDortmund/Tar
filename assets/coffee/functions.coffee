@@ -30,6 +30,7 @@ refreshVacationForm = (data) ->
 initializeDatePicker = () ->
    $('.input-group.date').each ->
       $this = $(this)
+
       $this.datepicker({
         # convert from java simpledate to date format of datepicker api
         format : $this.data('dateformat').replace(/M/g, 'm')
@@ -40,9 +41,10 @@ initializeDatePicker = () ->
         todayHighlight: true
       })
 
-  $('.input-group.date.dateFrom').datepicker().on 'changeDate', ->
-    if(isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()))
-      $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'))
+      if $this.hasClass('dateFrom')
+        $this.on 'changeDate', ->
+            if(isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()))
+                $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'))
 
 
 # document ready 
