@@ -46,20 +46,21 @@ public class VacationService {
 
   private double calculateDays(LocalDate startDate, LocalDate endDate) {
     double result;
-    result = 1;
+    result = 0;
     Set<Holiday> holidays = holidayService.getHolidayPeriodOfTime(startDate, endDate);
+    LocalDate date = startDate;
     do {
-      startDate = startDate.plusDays(1);
-      if (!isWeekEnd(startDate)) {
+      if (!isWeekEnd(date)) {
         
-        Holiday holiday = getHoliday(startDate, holidays);
+        Holiday holiday = getHoliday(date, holidays);
         if (holiday == null) {
           result++;
         } else {
           result += (1 - holiday.getValence());
         }
       }
-    } while (!startDate.equals(endDate));
+      date = date.plusDays(1);
+    } while (!date.isAfter(endDate));
     return result;
   }
   

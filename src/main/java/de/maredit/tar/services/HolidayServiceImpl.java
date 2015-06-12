@@ -73,22 +73,12 @@ public class HolidayServiceImpl implements HolidayService {
       for (UserHoliday uH : userHolidays) {
         Holiday userHoliday = new Holiday(LocalDate.parse(startYear + "-" + uH.getDate(), dateTimeFormatter), uH.getDescription());
         userHoliday.setValence(uH.getValence());
-        if (startDate.isBefore(userHoliday.getDate()) && endDate.isAfter(userHoliday.getDate())) {
+        if ((startDate.isBefore(userHoliday.getDate()) || startDate.equals(userHoliday.getDate())) && (endDate.isAfter(userHoliday.getDate()) || endDate.equals(userHoliday.getDate()))) {
           periodHolidays.add(userHoliday);
         }
       }
     }
 
     return periodHolidays;
-  }
-
-
-  private UserHoliday addUserHoliday(Holiday holiday) {
-    UserHoliday uHoliday = new UserHoliday();
-    uHoliday.setDate(holiday.getDate().toString());
-    uHoliday.setValence(1);
-    uHoliday.setDescription(holiday.getDescription());
-
-    return uHoliday;
   }
 }
