@@ -1,14 +1,15 @@
 package de.maredit.tar.services;
 
-import com.unboundid.ldap.sdk.LDAPException;
+import de.maredit.tar.properties.VacationProperties;
 
+import de.maredit.tar.repositories.UserVacationAccountRepository;
+import com.unboundid.ldap.sdk.LDAPException;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.VacationRepository;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,11 +33,16 @@ public class UserServiceImpl implements UserService {
   private UserRepository userRepository;
 
   @Autowired
+  private UserVacationAccountRepository userVacationAccountRepository;
+
+  @Autowired
   private VacationRepository vacationRepository;
 
   @Autowired
   private LdapService ldapService;
 
+  @Autowired
+  private VacationProperties vacationProperties;
 
   @Override
   public List<User> getSortedUserList() {
@@ -52,7 +57,8 @@ public class UserServiceImpl implements UserService {
     return userList;
   }
 
-  public List<User> getManagerList(){
+  @Override
+  public List<User> getManagerList() {
     List<User> managerList = new ArrayList<User>();
     try {
       managerList = userRepository.findByUsernames(ldapService.getLdapSupervisorList());
@@ -69,18 +75,25 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserVacationAccount getUserVacationAccountForYear(User user, int year) {
-    UserVacationAccount vacationAccount = new UserVacationAccount();
-    List<Vacation> vacations = getVacationsForUserAndYear(user, year);
-    List<Vacation> previousVacations = getVacationsForUserAndYear(user, year - 1);
 
-    vacationAccount.setUser(user);
-    vacationAccount.setVacations(vacations);
-    vacationAccount.setApprovedVacationDays(getApprovedVacationDays(vacations));
-    vacationAccount.setPendingVacationDays(getPendingVacationDays(vacations));
-    vacationAccount.setOpenVacationDays(getOpenVacationDays(vacations));
+    UserVacationAccount vacationAccount =
+        userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year);
+    if (vacationAccount == null) {
+      vacationAccount = new UserVacationAccount();
+      vacationAccount.setUser(user);
+      vacationAccount.setYear(year);
+      vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties
+          .getDefaultVacationDays() : user.getVacationDays());
+    }
+    UserVacationAccount previousVacationAccount =
+        userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year - 1);
     vacationAccount
-        .setPreviousYearOpenVacationDays(getPreviousYearOpenVacationDays(previousVacations));
-
+        .setApprovedVacationDays(getApprovedVacationDays(vacationAccount.getVacations()));
+    vacationAccount.setPendingVacationDays(getPendingVacationDays(vacationAccount.getVacations()));
+    if (previousVacationAccount != null) {
+      vacationAccount.setPreviousYearOpenVacationDays(previousVacationAccount
+          .getPreviousYearOpenVacationDays());
+    }
     return vacationAccount;
   }
 
@@ -95,80 +108,39 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<Vacation> getVacationsForUserAndYear(User user, int year) {
-    LocalDate startOfYear = LocalDate.now().withYear(year).with(
-        TemporalAdjusters.firstDayOfYear()).minusDays(1);
-    LocalDate endOfYear = LocalDate.now().withYear(year).with(
-        TemporalAdjusters.lastDayOfYear()).plusDays(1);
+    LocalDate startOfYear =
+        LocalDate.now().withYear(year).with(TemporalAdjusters.firstDayOfYear()).minusDays(1);
+    LocalDate endOfYear =
+        LocalDate.now().withYear(year).with(TemporalAdjusters.lastDayOfYear()).plusDays(1);
 
-    return this.vacationRepository.findVacationByUserAndFromBetweenOrUserAndToBetween(
-        user, startOfYear, endOfYear, user, startOfYear, endOfYear);
+    return this.vacationRepository.findVacationByUserAndFromBetweenOrUserAndToBetween(user,
+        startOfYear, endOfYear, user, startOfYear, endOfYear);
   }
 
   /**
    * Helper method to retrieve the amount of approved vacation days for a list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic calculation of vacation is
-   * done!
    *
    * @param vacations the list to analyze
    * @return the amount of approved vacation days
    */
   private double getApprovedVacationDays(List<Vacation> vacations) {
-    return vacations.stream().filter(vacation -> vacation.getState() == State.APPROVED)
-        .mapToDouble(vacation -> vacation.getDays()).sum();
+    return vacations != null ? vacations.stream().filter(vacation -> vacation.getState() == State.APPROVED)
+        .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
   }
 
   /**
    * Helper method to retrieve the amount of pending vacation days (which are already planned but
    * not accepted yet) for a list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed,
-   * as soon as automatic calculation of vacation is done!
    *
    * @param vacations the list to analyze
    * @return the amount of pending vacation days
    */
   private double getPendingVacationDays(List<Vacation> vacations) {
-    return vacations.stream().filter(vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
-                                                 || vacation.getState()
-                                                    == State.WAITING_FOR_APPROVEMENT)
-        .mapToDouble(vacation -> vacation.getDays()).sum();
-  }
-
-  /**
-   * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
-   * list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic
-   * calculation of vacation is done!
-   *
-   * @param vacations the list to analyze
-   * @return the amount of open vacation days
-   */
-  private double getOpenVacationDays(List<Vacation> vacations) {
-    Optional result =
-        vacations.stream()
-            .filter(vacation -> vacation.getCreated().getYear() == LocalDate.now().getYear())
-            .filter(vacation -> vacation.getState() != State.CANCELED
-                                && vacation.getState() != State.REJECTED)
-            .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
-
-    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
-  }
-
-  /**
-   * Helper method to retrieve the amount of open vacation days (which can still be planned) for a
-   * list of vacations.
-   * !!!!! WARNING: Those methods do have to be changed, as soon as automatic
-   * calculation of vacation is done!
-   *
-   * @param vacations the list to analyze
-   * @return the amount of open vacation days
-   */
-  private double getPreviousYearOpenVacationDays(List<Vacation> vacations) {
-    Optional result =
-        vacations.stream()
-            .filter(vacation -> vacation.getState() != State.CANCELED
-                                && vacation.getState() != State.REJECTED)
-            .max((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
-
-    return result.isPresent() ? ((Vacation) result.get()).getDaysLeft() : 0;
+    return vacations != null ? vacations
+        .stream()
+        .filter(
+            vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
+                || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
+        .mapToDouble(vacation -> vacation.getDays()).sum() :0;
   }
 }

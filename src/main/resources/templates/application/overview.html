@@ -29,11 +29,12 @@
 
                             <div class="panel-heading" th:id="|heading${iterator.index}|">
                                 <div class="progress-group">
-                                    <span class="progress-text"
+                                	<a th:href="@{/userDetails(user=${userVacationAccount.user.id})}" th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text" th:text="${userVacationAccount.user.lastname + ', ' + userVacationAccount.user.firstname}">Username</a>
+                                    <span th:unless="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text"
                                           th:text="${userVacationAccount.user.lastname + ', ' + userVacationAccount.user.firstname}">Username</span>
                                     <span class="progress-number">
                                         <b>
-                                            <span th:text="${{userVacationAccount.totalDays-userVacationAccount.previousYearOpenVacationDays}}"
+                                            <span th:text="${{userVacationAccount.totalVacationDays}}"
                                                   data-toggle="tooltip" data-placement="top"
                                                   th:title="#{field.totalVacationsYear}">30</span>
                                             <span th:if="${userVacationAccount.previousYearOpenVacationDays > 0}"
@@ -49,22 +50,21 @@
                                         </a>
                                         */-->
                                     </span>
-
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success"
-                                             th:style="|width: ${userVacationAccount.totalDays &lt;= 0 ? 0 : userVacationAccount.approvedVacationDays/userVacationAccount.totalDays * 100}%;|"
+                                             th:style="|width: ${userVacationAccount.totalVacationDays &lt;= 0 ? 0 : userVacationAccount.approvedVacationDays/userVacationAccount.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
                                              th:title="#{field.approvedVacations} + ': ' + ${{userVacationAccount.approvedVacationDays}}|">
                                             <span th:text="${{userVacationAccount.approvedVacationDays}}">genehmigte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-warning progress-bar-striped"
-                                             th:style="|width: ${userVacationAccount.totalDays &lt;= 0 ? 0 : userVacationAccount.pendingVacationDays/userVacationAccount.totalDays * 100}%;|"
+                                             th:style="|width: ${userVacationAccount.totalVacationDays &lt;= 0 ? 0 : userVacationAccount.pendingVacationDays/userVacationAccount.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
                                              th:title="#{field.vacationsApplied} + ': ' + ${{userVacationAccount.pendingVacationDays}}|">
                                             <span th:text="${{userVacationAccount.pendingVacationDays}}">beantragte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-empty"
-                                             th:style="|width: ${userVacationAccount.totalDays &lt;= 0 ? 0 : userVacationAccount.openVacationDays/userVacationAccount.totalDays * 100}%;|"
+                                             th:style="|width: ${userVacationAccount.totalVacationDays &lt;= 0 ? 0 : userVacationAccount.openVacationDays/userVacationAccount.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
                                              th:title="#{field.openVacationDays} + ': ' + ${{userVacationAccount.openVacationDays}}|">
                                             <span th:text="${{userVacationAccount.openVacationDays}}">noch verfügbare Urlaubstage</span>

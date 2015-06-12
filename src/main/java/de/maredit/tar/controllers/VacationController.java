@@ -1,5 +1,8 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.repositories.UserVacationAccountRepository;
+
+import de.maredit.tar.models.UserVacationAccount;
 import java.beans.PropertyEditorSupport;
 import java.net.SocketException;
 import java.time.LocalDate;
@@ -87,6 +90,9 @@ public class VacationController extends AbstractBaseController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private UserVacationAccountRepository userVacationAccountRepository;
 
   @Autowired
   private NavigationBean navigationBean;
@@ -266,6 +272,12 @@ public class VacationController extends AbstractBaseController {
       this.vacationRepository.save(vacation);
       saveComment(comment, vacation);
 
+      if (newVacation) {
+        UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+        account.addVacation(vacation);
+        userVacationAccountRepository.save(account);
+      }
+
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation(), comment)
                                             : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
                                                                        applicationController
@@ -299,10 +311,9 @@ public class VacationController extends AbstractBaseController {
       commentItem.setVacation(vacation);
       commentItemRepository.save(commentItem);
       return commentItem;
-    } else {
+    }
       return null;
     }
-  }
 
   private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
     List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();

@@ -1,7 +1,8 @@
 package de.maredit.tar.tasks;
 
-import org.apache.commons.lang3.StringUtils;
+import de.maredit.tar.properties.VacationProperties;
 
+import org.apache.commons.lang3.StringUtils;
 import de.maredit.tar.models.User;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.LdapService;
@@ -27,6 +28,9 @@ public class UserSyncTask {
 
   @Autowired
   private UserRepository userRepository;
+  
+  @Autowired
+  private VacationProperties vacationProperties;
 
   @Scheduled(cron = "0 0 */1 * * ?")
   public void syncLdapUser() {
@@ -38,6 +42,7 @@ public class UserSyncTask {
       for (User user : ldapUserList) {
         User localUser = userRepository.findByUidNumber(user.getUidNumber());
         if (localUser == null) {
+          user.setVacationDays(vacationProperties.getDefaultVacationDays());
           localUser = user;
           LOG.debug("User created. username: {} / uidNumber: {}", user.getUsername(),
               user.getUidNumber());
