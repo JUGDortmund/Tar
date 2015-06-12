@@ -1,13 +1,12 @@
 (function() {
   (function($) {
-    var getCurrentCheckedStatus;
+    var getCurrentCheckedStatus, selectedFormat, selectedLanguage;
     if ($('#calendar').length > 0) {
       getCurrentCheckedStatus = function(checkboxId) {
-        var selectedFormat, selectedLanguage;
         return $(checkboxId).is(':checked');
-        selectedLanguage = $('#calendar').data('lang');
-        return selectedFormat = $('#calendar').data('dateformat').replace(/d/g, 'D').replace(/y/g, 'Y');
       };
+      selectedLanguage = $('#calendar').data('lang');
+      selectedFormat = $('#calendar').data('dateformat').replace(/d/g, 'D').replace(/y/g, 'Y');
       $('#calendar').fullCalendar({
         header: {
           left: 'prev,next today',
@@ -34,11 +33,15 @@
           }
         ],
         eventDataTransform: function(eventData) {
+          console.log(eventData.state);
           switch (eventData.state) {
             case 'approved':
               eventData.color = '#008d4c';
               break;
-            case 'pending':
+            case 'pending-approvement':
+              eventData.color = '#f39c12';
+              break;
+            case 'pending-substitute':
               eventData.color = '#f39c12';
               break;
             case 'rejected':

@@ -4,9 +4,9 @@
     getCurrentCheckedStatus = (checkboxId) ->
       return $(checkboxId).is(':checked')
 
-      #get i8n settings from data attribute, convert from java simpledate to date format of moment.js used in calendar
-      selectedLanguage = $('#calendar').data('lang')
-      selectedFormat = $('#calendar').data('dateformat').replace(/d/g, 'D').replace(/y/g, 'Y')
+    #get i8n settings from data attribute, convert from java simpledate to date format of moment.js used in calendar
+    selectedLanguage = $('#calendar').data('lang')
+    selectedFormat = $('#calendar').data('dateformat').replace(/d/g, 'D').replace(/y/g, 'Y')
 
     $('#calendar').fullCalendar
       header: {
@@ -33,9 +33,11 @@
         }
       ]
       eventDataTransform: (eventData) ->
+        console.log eventData.state
         switch eventData.state
           when 'approved' then eventData.color = '#008d4c'
-          when 'pending' then eventData.color = '#f39c12'
+          when 'pending-approvement' then eventData.color = '#f39c12'
+          when 'pending-substitute' then eventData.color = '#f39c12'
           when 'rejected' then eventData.color = '#dd4b39'
           when 'canceled' then eventData.color = '#ca195a'
           else eventData.color = '#00f'
