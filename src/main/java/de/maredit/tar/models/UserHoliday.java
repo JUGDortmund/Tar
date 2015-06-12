@@ -71,7 +71,6 @@ public class UserHoliday {
     if (date == null) {
       if (other.date != null) return false;
     } else if (!date.equals(other.date)) return false;
-    if (Double.doubleToLongBits(valence) != Double.doubleToLongBits(other.valence)) return false;
-    return true;
+    return Double.doubleToLongBits(valence) == Double.doubleToLongBits(other.valence);
   }
 }

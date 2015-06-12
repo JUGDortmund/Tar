@@ -14,8 +14,8 @@ import de.maredit.tar.models.enums.CalendarEntryType;
 public class CalendarEvent {
 
   private static final Logger LOG = LogManager.getLogger(CalendarEvent.class);
-  private static final String startHourMorning = "08:00:00";
-  private static final String endHourMorning = "12:00:00";
+  private static final String startHalfDayHoliday = "12:00:00";
+  private static final String endHalfDayHoliday = "17:00:00";
 
   private String start;
   private String end;
@@ -70,8 +70,15 @@ public class CalendarEvent {
     this.setType(CalendarEntryType.HOLIDAY);
     this.setStart(userHoliday.getDate().toString());
     this.setEnd(userHoliday.getDate().toString());
-    // TODO "halbe" Feiertage wieder kennzeichnen und die Darstellung im Kalendar verbessern
-    this.setAllDay(true);
+    if (userHoliday.getValence() == 1.0) {
+      this.setStart(userHoliday.getDate().toString());
+      this.setEnd(userHoliday.getDate().toString());
+      this.setAllDay(true);
+    } else {
+      this.setStart(userHoliday.getDate().toString() + " " + startHalfDayHoliday);
+      this.setEnd(userHoliday.getDate().toString() + " " + endHalfDayHoliday);
+      this.setAllDay(false);
+    }
   }
 
   public String getStart() {

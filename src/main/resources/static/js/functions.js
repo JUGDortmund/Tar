@@ -15,7 +15,7 @@
         },
         defaultView: 'month',
         lang: selectedLanguage,
-        weekends: false,
+        weekends: true,
         eventLimit: true,
         weekNumbers: true,
         firstDay: 1,
