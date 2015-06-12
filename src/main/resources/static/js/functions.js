@@ -156,7 +156,7 @@
     return $('.input-group.date').each(function() {
       var $this;
       $this = $(this);
-      return $this.datepicker({
+      $this.datepicker({
         format: $this.data('dateformat').replace(/M/g, 'm'),
         autoclose: true,
         language: $this.data('lang'),
@@ -164,14 +164,15 @@
         daysOfWeekDisabled: '0,6',
         todayHighlight: true
       });
+      if ($this.hasClass('dateFrom')) {
+        return $this.on('changeDate', function() {
+          if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+            return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
+          }
+        });
+      }
     });
   };
-
-  $('.input-group.date.dateFrom').datepicker().on('changeDate', function() {
-    if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
-      return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
-    }
-  });
 
   (function($) {
     initializeDatePicker();
