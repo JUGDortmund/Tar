@@ -56,7 +56,6 @@ public class VacationServiceTest {
   public void testRemainingDays() {
     UserVacationAccount account = new UserVacationAccount();
     account.setTotalVacationDays(30);
-    account.setPreviousYearOpenVacationDays(5d);
     account.setExpiryDate(LocalDate.of(2015, 4, 1));
     Vacation vacation = new Vacation();
     vacation.setState(State.APPROVED);
@@ -65,8 +64,14 @@ public class VacationServiceTest {
     account.setVacations(new HashSet<Vacation>());
     account.getVacations().add(vacation);
 
+    
     VacationEntitlement lastingVacationDays = vacationService.getRemainingVacationDays(account);
-    Assert.assertEquals(28, lastingVacationDays.getDays(), 0);
+    Assert.assertEquals(23, lastingVacationDays.getDays(), 0);
     Assert.assertEquals(0, lastingVacationDays.getDaysLastYear(), 0);
+
+    account.setPreviousYearOpenVacationDays(5d);
+    VacationEntitlement lastingVacationDays2 = vacationService.getRemainingVacationDays(account);
+    Assert.assertEquals(28, lastingVacationDays2.getDays(), 0);
+    Assert.assertEquals(0, lastingVacationDays2.getDaysLastYear(), 0);
   }
 }
