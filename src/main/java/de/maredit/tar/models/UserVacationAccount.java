@@ -1,23 +1,32 @@
 package de.maredit.tar.models;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by czillmann on 19.05.15.
  */
+@Document
 public class UserVacationAccount {
 
+  @Id
+  private String id;
+  @DBRef
   private User user;
+  private Integer year;
+  private double totalVacationDays;
+  private Double previousYearOpenVacationDays;
+  private LocalDate expiryDate;
+  @DBRef
   private List<Vacation> vacations;
-  private double openVacationDays;
   private double pendingVacationDays;
   private double approvedVacationDays;
-  private double previousYearOpenVacationDays;
-
-  public double getTotalDays() {
-    double totalDays = getApprovedVacationDays() + getPendingVacationDays() + getOpenVacationDays() + getPreviousYearOpenVacationDays();
-    return totalDays;
-  }
 
   public User getUser() {
     return user;
@@ -35,12 +44,44 @@ public class UserVacationAccount {
     this.vacations = vacations;
   }
 
-  public double getOpenVacationDays() {
-    return openVacationDays;
+  public Double getPreviousYearOpenVacationDays() {
+    return previousYearOpenVacationDays;
   }
 
-  public void setOpenVacationDays(double openVacationDays) {
-    this.openVacationDays = openVacationDays;
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public void setYear(int year) {
+    this.year = year;
+  }
+
+  public double getTotalVacationDays() {
+    return totalVacationDays;
+  }
+
+  public void setTotalVacationDays(double totalVacationDays) {
+    this.totalVacationDays = totalVacationDays;
+  }
+
+  public LocalDate getExpiryDate() {
+    return expiryDate;
+  }
+
+  public void setExpiryDate(LocalDate expiryDate) {
+    this.expiryDate = expiryDate;
+  }
+
+  public void setPreviousYearOpenVacationDays(Double previousYearOpenVacationDays) {
+    this.previousYearOpenVacationDays = previousYearOpenVacationDays;
   }
 
   public double getPendingVacationDays() {
@@ -59,11 +100,14 @@ public class UserVacationAccount {
     this.approvedVacationDays = approvedVacationDays;
   }
 
-  public double getPreviousYearOpenVacationDays() {
-    return previousYearOpenVacationDays;
+  public double getOpenVacationDays() {
+    return totalVacationDays - approvedVacationDays - pendingVacationDays + (previousYearOpenVacationDays == null ? 0 : previousYearOpenVacationDays);
   }
 
-  public void setPreviousYearOpenVacationDays(double previousYearOpenVacationDays) {
-    this.previousYearOpenVacationDays = previousYearOpenVacationDays;
+  public void addVacation(Vacation vacation) {
+    if (vacations == null) {
+      vacations = new ArrayList<>();
+    }
+    vacations.add(vacation);
   }
 }

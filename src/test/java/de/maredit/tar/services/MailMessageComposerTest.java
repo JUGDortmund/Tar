@@ -78,7 +78,7 @@ public class MailMessageComposerTest {
 
     SimpleMailMessage mailMessage = mailComposer.composeSimpleMailMessage(new VacationCreateMail(standardVacation, "http://www.maredit.de", "Kommentar"));
     String actualBodyText = mailMessage.getText();
-
+    
     String errorMessage = "Expected substring not found in body text: ";
 
     String expectedSubString = "Hallo, <span>John Surname</span>";

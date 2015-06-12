@@ -25,14 +25,14 @@ public class AuthorityMappingServiceTest {
     Assert.notNull(authMappingService.getGroups(), "No mapping infos loaded");
     Assert.isNull(authMappingService.getGroups().get("unknown"));
 
-    List<String> auths = authMappingService.getGroups().get("tar-user");
+    List<String> auths = authMappingService.getGroups().get("tar-users");
     Assert.notNull(auths);
     Assert.notEmpty(auths);
     List<String> assertedAuths = new ArrayList<>();
     assertedAuths.add("ROLE_USER");
     org.junit.Assert.assertEquals(assertedAuths, auths);
     
-    List<String> auths2 = authMappingService.getGroups().get("tar-supervisor");
+    List<String> auths2 = authMappingService.getGroups().get("tar-supervisors");
     Assert.notNull(auths2);
     Assert.notEmpty(auths2);
     List<String> assertedAuths2 = new ArrayList<>();

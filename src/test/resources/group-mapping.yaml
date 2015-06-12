@@ -1,7 +1,7 @@
 --- ## test autorities
 groups:
-  tar-user:
+  tar-users:
     - ROLE_USER
-  tar-supervisor:
+  tar-supervisors:
     - ROLE_USER
     - ROLE_SUPERVISOR

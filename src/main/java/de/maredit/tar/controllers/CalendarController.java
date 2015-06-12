@@ -28,7 +28,7 @@ import java.util.List;
  */
 
 @Controller
-public class CalendarController {
+public class CalendarController  extends AbstractBaseController{
 
   private static final Logger LOG = LogManager.getLogger(CalendarController.class);
 

@@ -1,13 +1,12 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.models.VacationEntitlement;
-import de.maredit.tar.services.VacationService;
-import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.models.User;
+import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
@@ -16,11 +15,13 @@ import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;
 import de.maredit.tar.repositories.StateItemRepository;
 import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.UserVacationAccountRepository;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.CalendarService;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.MailService;
 import de.maredit.tar.services.UserService;
+import de.maredit.tar.services.VacationService;
 import de.maredit.tar.services.calendar.CalendarItem;
 import de.maredit.tar.services.mail.CommentAddedMail;
 import de.maredit.tar.services.mail.MailObject;
@@ -48,7 +49,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.beans.PropertyEditorSupport;
 import java.net.SocketException;
@@ -64,7 +64,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
-public class VacationController extends WebMvcConfigurerAdapter {
+public class VacationController extends AbstractBaseController {
 
   private static final Logger LOG = LogManager.getLogger(VacationController.class);
 
@@ -94,6 +94,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private UserVacationAccountRepository userVacationAccountRepository;
 
   @Autowired
   private NavigationBean navigationBean;
@@ -141,10 +144,10 @@ public class VacationController extends WebMvcConfigurerAdapter {
   @RequestMapping("/")
   public String index(HttpServletRequest request, Model model,
                       @ModelAttribute("vacation") Vacation vacation) {
-
     navigationBean.setActiveComponent(NavigationBean.VACATION_PAGE);
     vacation.setUser(applicationController.getConnectedUser());
     User selectedUser = getUser(request);
+    
     setIndexModelValues(model, selectedUser);
 
     model.addAttribute("formMode", FormMode.NEW);
@@ -278,6 +281,12 @@ public class VacationController extends WebMvcConfigurerAdapter {
       this.vacationRepository.save(vacation);
       saveComment(comment, vacation);
 
+      if (newVacation) {
+        UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+        account.addVacation(vacation);
+        userVacationAccountRepository.save(account);
+      }
+
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation(), comment)
                                             : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
                                                                        applicationController
@@ -329,10 +338,9 @@ public class VacationController extends WebMvcConfigurerAdapter {
       commentItem.setVacation(vacation);
       commentItemRepository.save(commentItem);
       return commentItem;
-    } else {
+    }
       return null;
     }
-  }
 
   private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
     List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();

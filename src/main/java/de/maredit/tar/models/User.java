@@ -16,6 +16,7 @@ public class User {
   private String username;
   private String mail;
   private String userImage = null;
+  private Double vacationDays;
   private boolean active;
 
   public User() {}
@@ -116,5 +117,13 @@ public class User {
     return "User [id=" + id + ", uidNumber=" + uidNumber + ", firstname=" + firstname
         + ", lastname=" + lastname + ", username=" + username + ", mail=" + mail + ", active="
         + active + "]";
+  }
+
+  public Double getVacationDays() {
+    return vacationDays;
+  }
+
+  public void setVacationDays(Double vacationDays) {
+    this.vacationDays = vacationDays;
   }
 }
