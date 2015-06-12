@@ -21,12 +21,12 @@ public interface LdapService {
 
 
   /**
-   * get user list wth user details from LDAP
+   * get user list with user details from LDAP
    */
   List<User> getLdapUserList() throws LDAPException;
 
   /**
-   * Get the list uf usernames for supervisor
+   * Get the list of usernames for supervisor
    */
   Set<String> getLdapSupervisorList() throws LDAPException;
 

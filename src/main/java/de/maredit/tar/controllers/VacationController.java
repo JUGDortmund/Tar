@@ -88,7 +88,7 @@ public class VacationController extends AbstractBaseController {
 
   @Autowired
   private LdapService ldapService;
-  
+
   @Autowired
   private CalendarService calendarService;
 
@@ -123,15 +123,15 @@ public class VacationController extends AbstractBaseController {
     binder.addValidators(new VacationValidator());
     binder.registerCustomEditor(String.class, "id", new StringTrimmerEditor(true));
     binder.registerCustomEditor(User.class, new PropertyEditorSupport() {
-      
+
       @Override
       public String getAsText() {
         if (getValue() == null) {
           return "";
         }
-        return ((User)getValue()).getId();
+        return ((User) getValue()).getId();
       }
-      
+
       @Override
       public void setAsText(String text) throws IllegalArgumentException {
         if (StringUtils.isNotBlank(text)) {
@@ -147,7 +147,7 @@ public class VacationController extends AbstractBaseController {
     navigationBean.setActiveComponent(NavigationBean.VACATION_PAGE);
     vacation.setUser(applicationController.getConnectedUser());
     User selectedUser = getUser(request);
-    
+
     setIndexModelValues(model, selectedUser);
 
     model.addAttribute("formMode", FormMode.NEW);
@@ -156,8 +156,9 @@ public class VacationController extends AbstractBaseController {
     return "application/index";
   }
 
-  @RequestMapping(value="/substitution", method = RequestMethod.POST)
-  public String substitution(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
+  @RequestMapping(value = "/substitution", method = RequestMethod.POST)
+  public String substitution(@ModelAttribute("vacation") Vacation vacation,
+                             @ModelAttribute("comment") String comment,
                              @ModelAttribute("approve") String approval, Model model) {
     boolean approve = Boolean.valueOf(approval);
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
@@ -172,10 +173,12 @@ public class VacationController extends AbstractBaseController {
     return "redirect:/";
   }
 
-  @RequestMapping(value="/approval", method = RequestMethod.POST)
+  @RequestMapping(value = "/approval", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR')")
-  public String approval(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment,
-                         @ModelAttribute("approve") String approval, Model model) throws SocketException {
+  public String approval(@ModelAttribute("vacation") Vacation vacation,
+                         @ModelAttribute("comment") String comment,
+                         @ModelAttribute("approve") String approval, Model model)
+      throws SocketException {
     boolean approve = Boolean.valueOf(approval);
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
 
@@ -199,12 +202,14 @@ public class VacationController extends AbstractBaseController {
     return "redirect:/";
   }
 
-  @RequestMapping(value="/addComment", method = RequestMethod.POST)
-  public String addComment(@ModelAttribute("id") String id, @ModelAttribute("comment") String comment) {
-    if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(comment)){
+  @RequestMapping(value = "/addComment", method = RequestMethod.POST)
+  public String addComment(@ModelAttribute("id") String id,
+                           @ModelAttribute("comment") String comment) {
+    if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(comment)) {
       Vacation vacation = vacationRepository.findOne(id);
       final CommentItem commentItem = saveComment(comment, vacation);
-      this.mailService.sendMail(new CommentAddedMail(vacation, customMailProperties.getUrlToVacation(), commentItem));
+      this.mailService.sendMail(
+          new CommentAddedMail(vacation, customMailProperties.getUrlToVacation(), commentItem));
     }
     return "redirect:/";
   }
@@ -252,7 +257,8 @@ public class VacationController extends AbstractBaseController {
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String saveVacation(@ModelAttribute("comment") String comment,
-                             @ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model,
+                             @ModelAttribute("vacation") @Valid Vacation vacation,
+                             BindingResult bindingResult, Model model,
                              HttpServletRequest request) {
 
     boolean newVacation = StringUtils.isBlank(vacation.getId());
@@ -315,7 +321,8 @@ public class VacationController extends AbstractBaseController {
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
-  public String cancelVacation(@ModelAttribute("vacation") Vacation vacation, @ModelAttribute("comment") String comment) {
+  public String cancelVacation(@ModelAttribute("vacation") Vacation vacation,
+                               @ModelAttribute("comment") String comment) {
     vacation.setState(State.CANCELED);
     calendarService.deleteAppointment(vacation);
     vacation.setAppointmentId(null);
@@ -344,8 +351,8 @@ public class VacationController extends AbstractBaseController {
 
 
   private CommentItem saveComment(@ModelAttribute("comment") String comment,
-                           @ModelAttribute("vacation") @Valid Vacation vacation) {
-    if(StringUtils.isNotBlank(comment)) {
+                                  @ModelAttribute("vacation") @Valid Vacation vacation) {
+    if (StringUtils.isNotBlank(comment)) {
       CommentItem commentItem = new CommentItem();
       commentItem.setModifed(LocalDateTime.now());
       commentItem.setCreated(LocalDateTime.now());
@@ -355,8 +362,8 @@ public class VacationController extends AbstractBaseController {
       commentItemRepository.save(commentItem);
       return commentItem;
     }
-      return null;
-    }
+    return null;
+  }
 
   private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
     List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
