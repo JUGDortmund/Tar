@@ -17,9 +17,17 @@ public class VacationService {
     LocalDate startDate = vacation.getFrom();
     LocalDate endDate = vacation.getTo();
     double result = 0;
+    
+    // wenn start und enddatum gleich sind, kann es nur ein einzelner oder ein halber Urlaubstag sein
     if (startDate.equals(endDate)) {
-      if (!isWeekEnd(startDate) && !isHoliday(startDate)) {
-        result = vacation.getDays() < 1 ? 0.5 : 1;
+      if (!isWeekEnd(startDate)) {
+        
+        if (isHoliday(startDate)) {
+          // "Sondertage" wie Silvester und Heiligabend zählen als halbe Tage
+        } else {
+          // handling für halbe Tage
+          result = vacation.getDays() < 1 ? 0.5 : 1;
+        }
       }
     } else {
       result = calculateDays(startDate, endDate);
@@ -32,7 +40,9 @@ public class VacationService {
     result = 1;
     do {
       startDate = startDate.plusDays(1);
-      if (!isWeekEnd(startDate)) {
+      if (isHoliday(startDate)) {
+        // "Sondertage" wie Silvester und Heiligabend zählen als halbe Tage
+      } else if (!isWeekEnd(startDate)) {
         result++;
       }
     } while (!startDate.equals(endDate));
@@ -51,6 +61,8 @@ public class VacationService {
   public VacationEntitlement getRemainingVacationDays(UserVacationAccount account) {
     VacationEntitlement result = new VacationEntitlement(account.getTotalVacationDays(), account .getPreviousYearOpenVacationDays() == null ? 0 : account.getPreviousYearOpenVacationDays());
     LocalDate expiaryDate = account.getExpiryDate();
+    
+    // Filtern und sortieren der Eingangsdaten
     List<Vacation> vacations =
         account
             .getVacations()
@@ -60,10 +72,13 @@ public class VacationService {
                     && vacation.getState() != State.CANCELED)
             .sorted((vaction1, vacation2) -> vaction1.getFrom().compareTo(vacation2.getFrom()))
             .collect(Collectors.toList());
+    
     for (Vacation vacation : vacations) {
       double countOfVacation = getCountOfVacation(vacation);
       if (vacation.getFrom().isBefore(expiaryDate)) {
         if (vacation.getTo().isBefore(expiaryDate)) {
+          
+          // Zuerst Resturlaub aufbrauchen
           if (result.getDaysLastYear() > 0) {
             if (countOfVacation > result.getDaysLastYear()) {
               double days = countOfVacation - result.getDaysLastYear();
@@ -76,6 +91,8 @@ public class VacationService {
             result.reduceDays(countOfVacation);
           }
         } else {
+          
+          // Ein Teil des Urlaubs kann mit Resturlaub bedient werden
           double daysBefore = calculateDays(vacation.getFrom(), expiaryDate.minusDays(1));
           double daysAfter = calculateDays(expiaryDate, vacation.getTo());
 
@@ -90,6 +107,8 @@ public class VacationService {
 
         }
       } else {
+        
+        // normaler Abzug
         result.reduceDays(countOfVacation);
       }
     }
