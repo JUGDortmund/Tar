@@ -55,6 +55,9 @@ public class VacationServiceTest {
   @Test
   public void testRemainingDays() {
     UserVacationAccount account = new UserVacationAccount();
+    account.setTotalVacationDays(30);
+    account.setPreviousYearOpenVacationDays(5d);
+    account.setExpiryDate(LocalDate.of(2015, 4, 1));
     Vacation vacation = new Vacation();
     vacation.setState(State.APPROVED);
     vacation.setFrom(LocalDate.of(2015, Month.FEBRUARY, 8));
