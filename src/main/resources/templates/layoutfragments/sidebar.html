@@ -3,12 +3,12 @@
 
 <body>
 
-	<aside class="main-sidebar" th:fragment="sidebar">
-		<!-- sidebar: style can be found in sidebar.less -->
-		<section class="sidebar">
+    <aside class="main-sidebar" th:fragment="sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
 
-			<!-- Sidebar Menu -->
-			<ul class="sidebar-menu">
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
                 <!-- Optionally, you can add icons to the links -->
                 <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).VACATION_PAGE ? 'active' : ''}"><a href="/"><span th:text="#{field.vacationPlanning}"></span></a></li>
                 <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).CALENDAR_PAGE ? 'active' : ''}"><a href="/calendar"><span th:text="#{field.calender}"></span></a></li>

@@ -33,7 +33,6 @@
           }
         ],
         eventDataTransform: function(eventData) {
-          console.log(eventData.state);
           switch (eventData.state) {
             case 'approved':
               eventData.color = '#008d4c';
@@ -105,7 +104,7 @@
       today: "Today",
       clear: "Clear"
     };
-    $.fn.datepicker.dates['de'] = {
+    return $.fn.datepicker.dates['de'] = {
       days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
       daysShort: ["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam", "Son"],
       daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"],
@@ -115,15 +114,6 @@
       clear: "Löschen",
       weekStart: 1
     };
-    return $('.input-group.date').each(function() {
-      var $this;
-      $this = $(this);
-      return $this.datepicker({
-        "format": $this.data('dateformat').replace(/M/g, 'm'),
-        "autoclose": true,
-        "language": $this.data('lang')
-      });
-    });
   })(jQuery);
 
 }).call(this);
@@ -163,19 +153,25 @@
   };
 
   initializeDatePicker = function() {
-    $('.input-group.date').datepicker({
-      format: "dd.mm.yyyy",
-      weekStart: 1,
-      daysOfWeekDisabled: '0,6',
-      autoclose: true,
-      todayHighlight: true
-    });
-    return $('.input-group.date.dateFrom').datepicker().on('changeDate', function() {
-      if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
-        return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
-      }
+    return $('.input-group.date').each(function() {
+      var $this;
+      $this = $(this);
+      return $this.datepicker({
+        format: $this.data('dateformat').replace(/M/g, 'm'),
+        autoclose: true,
+        language: $this.data('lang'),
+        weekStart: 1,
+        daysOfWeekDisabled: '0,6',
+        todayHighlight: true
+      });
     });
   };
+
+  $('.input-group.date.dateFrom').datepicker().on('changeDate', function() {
+    if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+      return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
+    }
+  });
 
   (function($) {
     initializeDatePicker();

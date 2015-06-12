@@ -11,14 +11,14 @@ import de.maredit.tar.models.UserHoliday;
 @ConfigurationProperties(locations = "classpath:vacationConfig.yaml")
 public class VacationProperties {
 
-  private int defaultVacationDays;
+  private double defaultVacationDays;
   private List<UserHoliday> userHolidays;
 
-  public int getDefaultVacationDays() {
+  public double getDefaultVacationDays() {
     return defaultVacationDays;
   }
 
-  public void setDefaultVacationDays(int defaultVacationDays) {
+  public void setDefaultVacationDays(double defaultVacationDays) {
     this.defaultVacationDays = defaultVacationDays;
   }
 

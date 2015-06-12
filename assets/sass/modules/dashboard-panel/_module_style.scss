@@ -21,6 +21,18 @@
         font-size: 16px;
     }
 
+    &.user-administration {
+        border-color: $task-primary;
+
+        .panel-heading {
+            background-color: $task-primary;
+
+            &:after {
+                content: "\e019";
+            }
+        }
+    }
+
     &.approve-vacation {
         border-color: $task-primary;
 
@@ -61,6 +73,9 @@
         .btn {
             width: 100%;
             margin-bottom: 10px;
+        }
+        .input-group-btn > .btn {
+            width: auto;
         }
     }
 

@@ -1,16 +1,18 @@
 package de.maredit.tar.tasks;
 
-import org.apache.commons.lang3.StringUtils;
+import com.unboundid.ldap.sdk.LDAPException;
 
 import de.maredit.tar.models.User;
+import de.maredit.tar.properties.VacationProperties;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.LdapService;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.unboundid.ldap.sdk.LDAPException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ public class UserSyncTask {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private VacationProperties vacationProperties;
+
   @Scheduled(cron = "0 0 */1 * * ?")
   public void syncLdapUser() {
     try {
@@ -38,13 +43,14 @@ public class UserSyncTask {
       for (User user : ldapUserList) {
         User localUser = userRepository.findByUidNumber(user.getUidNumber());
         if (localUser == null) {
+          user.setVacationDays(vacationProperties.getDefaultVacationDays());
           localUser = user;
           LOG.debug("User created. username: {} / uidNumber: {}", user.getUsername(),
-              user.getUidNumber());
+                    user.getUidNumber());
         } else {
           updateUser(localUser, user);
           LOG.debug("User updated. username: {} / uidNumber: {}", user.getUsername(),
-              user.getUidNumber());
+                    user.getUidNumber());
         }
         userRepository.save(localUser);
         editedUser.add(localUser);
@@ -78,7 +84,8 @@ public class UserSyncTask {
     user.setFirstname(resultEntry.getFirstname());
     user.setLastname(resultEntry.getLastname());
     try {
-      user.setPhoto(Optional.ofNullable(resultEntry.getUserImage()).orElse(StringUtils.EMPTY).getBytes("UTF8"));
+      user.setPhoto(Optional.ofNullable(resultEntry.getUserImage()).orElse(StringUtils.EMPTY)
+                        .getBytes("UTF8"));
     } catch (UnsupportedEncodingException e) {
       LOG.error("Failed to sync utf-8 user photo", e);
     }

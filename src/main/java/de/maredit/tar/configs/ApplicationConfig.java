@@ -19,13 +19,13 @@ public class ApplicationConfig {
   private String logconfig;
   
   @Bean
-  @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+  @Scope(value=WebApplicationContext.SCOPE_SESSION, proxyMode=ScopedProxyMode.TARGET_CLASS)
   public NavigationBean navigationBean() {
     return new NavigationBean();
   }
 
   @Bean
-  @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+  @Scope(value=ConfigurableBeanFactory.SCOPE_SINGLETON)
   public VersionBean versionBean() {
     return new VersionBean();
   }

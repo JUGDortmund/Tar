@@ -1,5 +1,35 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.repositories.UserVacationAccountRepository;
+
+import de.maredit.tar.models.UserVacationAccount;
+import java.beans.PropertyEditorSupport;
+import java.net.SocketException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
@@ -90,6 +120,9 @@ public class VacationController extends AbstractBaseController {
   private UserService userService;
 
   @Autowired
+  private UserVacationAccountRepository userVacationAccountRepository;
+
+  @Autowired
   private NavigationBean navigationBean;
 
   @Autowired
@@ -97,7 +130,7 @@ public class VacationController extends AbstractBaseController {
 
   @Autowired
   private ApplicationController applicationController;
-  
+
   @Autowired
   private HolidayService holidayService;
 
@@ -270,6 +303,12 @@ public class VacationController extends AbstractBaseController {
       this.vacationRepository.save(vacation);
       saveComment(comment, vacation);
 
+      if (newVacation) {
+        UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+        account.addVacation(vacation);
+        userVacationAccountRepository.save(account);
+      }
+
       this.mailService.sendMail(newVacation ? new VacationCreateMail(vacation, customMailProperties.getUrlToVacation(), comment)
                                             : new VacationModifiedMail(vacation, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
                                                                        applicationController
@@ -303,10 +342,9 @@ public class VacationController extends AbstractBaseController {
       commentItem.setVacation(vacation);
       commentItemRepository.save(commentItem);
       return commentItem;
-    } else {
+    }
       return null;
     }
-  }
 
   private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
     List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
