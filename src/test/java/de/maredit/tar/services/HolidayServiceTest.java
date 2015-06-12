@@ -1,5 +1,6 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.models.Holiday;
 import de.maredit.tar.models.UserHoliday;
 import de.maredit.tar.properties.VacationProperties;
 import org.junit.Assert;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -44,16 +46,12 @@ public class HolidayServiceTest {
 
   @Test
   public void test() {
-    Set<UserHoliday> allHolidays = holidayService.getAllHolidays(2015);
-    UserHoliday christmas = new UserHoliday();
-    UserHoliday newYearsEve = new UserHoliday();
-    UserHoliday easter = new UserHoliday();
-    
-    christmas.setDate("2015-12-25");
+    Set<Holiday> allHolidays = holidayService.getAllHolidays(2015);
+    Holiday christmas = new Holiday(LocalDate.of(2015, 12, 25), "X-Max");
     christmas.setValence(1.0);
-    newYearsEve.setDate("2015-12-31");
+    Holiday newYearsEve = new Holiday(LocalDate.of(2015, 12, 31), "Silvester");
     newYearsEve.setValence(0.5);
-    easter.setDate("2015-04-05");
+    Holiday easter = new Holiday(LocalDate.of(2015, 4, 5), "Easter");
     easter.setValence(1.0);
 
     System.out.println(allHolidays);

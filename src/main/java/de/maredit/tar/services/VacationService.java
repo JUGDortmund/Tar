@@ -1,7 +1,10 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.VacationEntitlement;
+import de.maredit.tar.models.Holiday;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
@@ -9,9 +12,14 @@ import de.maredit.tar.models.enums.State;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class VacationService {
+  
+  @Autowired
+  private HolidayService holidayService;
 
   public double getCountOfVacation(Vacation vacation) {
     LocalDate startDate = vacation.getFrom();
@@ -22,8 +30,9 @@ public class VacationService {
     if (startDate.equals(endDate)) {
       if (!isWeekEnd(startDate)) {
         
-        if (isHoliday(startDate)) {
-          // "Sondertage" wie Silvester und Heiligabend zählen als halbe Tage
+        Holiday holiday = getHoliday(startDate, holidayService.getHolidayPeriodOfTime(startDate, startDate));
+        if (holiday != null) {
+          result = 1 - holiday.getValence();
         } else {
           // handling für halbe Tage
           result = vacation.getDays() < 1 ? 0.5 : 1;
@@ -38,20 +47,29 @@ public class VacationService {
   private double calculateDays(LocalDate startDate, LocalDate endDate) {
     double result;
     result = 1;
+    Set<Holiday> holidays = holidayService.getHolidayPeriodOfTime(startDate, endDate);
     do {
       startDate = startDate.plusDays(1);
-      if (isHoliday(startDate)) {
-        // "Sondertage" wie Silvester und Heiligabend zählen als halbe Tage
-      } else if (!isWeekEnd(startDate)) {
-        result++;
+      if (!isWeekEnd(startDate)) {
+        
+        Holiday holiday = getHoliday(startDate, holidays);
+        if (holiday == null) {
+          result++;
+        } else {
+          result += (1 - holiday.getValence());
+        }
       }
     } while (!startDate.equals(endDate));
     return result;
   }
   
-  public boolean isHoliday(LocalDate date)  {
-    // TODO hier Prüfung auf Feiertage
-    return false;
+  private Holiday getHoliday(LocalDate date, Set<Holiday> holidays)  {
+    for (Holiday holiday : holidays) {
+      if (holiday.getDate().equals(date)) {
+        return holiday;
+      }
+    }
+    return null;
   }
 
   public boolean isWeekEnd(LocalDate date) {

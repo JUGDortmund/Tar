@@ -63,20 +63,20 @@ public class CalendarEvent {
     this.allDay = true;
   }
 
-  public CalendarEvent(UserHoliday userHoliday) {
-    this.setTitle(userHoliday.getDescription());
+  public CalendarEvent(Holiday holiday) {
+    this.setTitle(holiday.getDescription());
 
-    this.setState(userHoliday.getDescription());
+    this.setState(holiday.getDescription());
     this.setType(CalendarEntryType.HOLIDAY);
-    this.setStart(userHoliday.getDate().toString());
-    this.setEnd(userHoliday.getDate().toString());
-    if (userHoliday.getValence() == 1.0) {
-      this.setStart(userHoliday.getDate().toString());
-      this.setEnd(userHoliday.getDate().toString());
+    this.setStart(holiday.getDate().toString());
+    this.setEnd(holiday.getDate().toString());
+    if (holiday.getValence() == 1.0) {
+      this.setStart(holiday.getDate().toString());
+      this.setEnd(holiday.getDate().toString());
       this.setAllDay(true);
     } else {
-      this.setStart(userHoliday.getDate().toString() + " " + startHalfDayHoliday);
-      this.setEnd(userHoliday.getDate().toString() + " " + endHalfDayHoliday);
+      this.setStart(holiday.getDate().toString() + " " + startHalfDayHoliday);
+      this.setEnd(holiday.getDate().toString() + " " + endHalfDayHoliday);
       this.setAllDay(false);
     }
   }
