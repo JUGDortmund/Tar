@@ -107,6 +107,9 @@ public class UserVacationAccount {
     if (vacations == null) {
       vacations = new HashSet<>();
     }
-    vacations.add(vacation);
+    if (!vacations.add(vacation)) {
+      vacations.remove(vacation);
+      vacations.add(vacation);
+    }
   }
 }
