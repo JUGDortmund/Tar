@@ -4,8 +4,8 @@
         <i class="item-icon glyphicon glyphicon-pencil edit-vacation"></i>
         <div class="timeline-item">
             <span class="time" th:text="${{timeLineItem.created.toLocalDate() + ' ' + timeLineItem.created.toLocalTime()}}"><i class="fa fa-clock-o"></i></span>
-            <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat den Wert f&uuml;r
-                <b><span th:text="${timeLineItem.protocolItem.fieldName}"></span></b> ge&auml;ndert</h3>
+            <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> <th:block th:text="#{timeline.changeValueForUser}"/>
+                <b><span th:text="${timeLineItem.protocolItem.fieldName}"></span></b> <th:block th:text="#{timeline.changeValueForUserText}"/></h3>
         </div>
     </body>
 </html>

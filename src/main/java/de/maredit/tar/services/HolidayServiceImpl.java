@@ -32,6 +32,7 @@ public class HolidayServiceImpl implements HolidayService {
   private static final ManagerParameter
       parameters =
       ManagerParameters.create(HolidayCalendar.GERMANY);
+  private static final String federalState = "nw";
   private static final DateTimeFormatter
       dateTimeFormatter =
       DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -60,7 +61,7 @@ public class HolidayServiceImpl implements HolidayService {
 
     Set<UserHoliday> periodHolidays = new HashSet<UserHoliday>();
     HolidayManager m = HolidayManager.getInstance(parameters);
-    Set<Holiday> extHolidays = m.getHolidays(startDate, endDate, "nw");
+    Set<Holiday> extHolidays = m.getHolidays(startDate, endDate, federalState);
     List<UserHoliday> userHolidays = properties.getUserHolidays();
 
     for (de.jollyday.Holiday h : extHolidays) {

@@ -237,13 +237,13 @@ edit-vacation, approve-vacation  -->
                                     <th:block
                                             th:case="${T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL}">
                                         <button type="submit" name="approve" value="false" formaction="/substitution"
-                                                th:attr="data-message=#{message.reject.replacement}"
+                                                th:attr="data-message=#{message.reject.substitution}"
 												onclick="return confirm(this.getAttribute('data-message'));"
                                                 class="btn btn-danger">
                                             <th th:text="#{field.reject}"></th>
                                         </button>
                                         <button type="submit" name="approve" value="true" formaction="/substitution"
-                                                th:attr="data-message=#{message.accept.replacement}"
+                                                th:attr="data-message=#{message.accept.substitution}"
 												onclick="return confirm(this.getAttribute('data-message'));"
                                                 class="btn btn-success pull-right">
                                             <th th:text="#{field.acceptRepresetation}"></th>
