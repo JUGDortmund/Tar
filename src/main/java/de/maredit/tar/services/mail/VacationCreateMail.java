@@ -30,6 +30,7 @@ public class VacationCreateMail implements MailObject {
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", entitlement.getDays());
+    values.put("leftDaysLastYear", entitlement.getDaysLastYear());
     if (!vacation.getAuthor().equals(vacation.getUser())) {
       values.put("createdBy", vacation.getAuthor().getFullname());
     }

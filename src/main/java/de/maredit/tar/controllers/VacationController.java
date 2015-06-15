@@ -55,8 +55,10 @@ import java.net.SocketException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -279,13 +281,7 @@ public class VacationController extends AbstractBaseController {
     } else {
 
       UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
-      if (vacation.getFrom().equals(vacation.getTo())) {
-        if (vacation.getDays() > 1) {
-          vacation.setDays(1);
-        }
-      } else {
-        vacation.setDays(vacationService.getCountOfVacation(vacation));
-      }
+      vacation.setDays(vacationService.getCountOfVacation(vacation));
 
       if (newVacation) {
         vacation.setAuthor(applicationController.getConnectedUser());
@@ -335,15 +331,19 @@ public class VacationController extends AbstractBaseController {
   
   @RequestMapping(value="/updateVacationForm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public VacationEntitlement updateVacationForm(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
+  public Map<String, Object> updateVacationForm(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
     if (!bindingResult.hasFieldErrors("from") && !bindingResult.hasFieldErrors("to")) {
+      Map<String, Object> result = new HashMap<>();
+      result.put("vacationDays", vacationService.getCountOfVacation(vacation));
       UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
       UserVacationAccount calculatingAccount = new UserVacationAccount();
       calculatingAccount.setUser(account.getUser());
       Set<Vacation> vacations = new HashSet<Vacation>(account.getVacations());
       vacations.add(vacation);
       calculatingAccount.setVacations(vacations);
-      return vacationService.getRemainingVacationDays(calculatingAccount);
+ 
+      result.put("remainingDays", vacationService.getRemainingVacationDays(calculatingAccount));
+      return result;
     }
     
     return null;

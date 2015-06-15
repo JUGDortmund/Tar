@@ -28,6 +28,7 @@ public class VacationCanceledMail implements MailObject {
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", entitlement.getDays());
+    values.put("leftDaysLastYear", entitlement.getDaysLastYear());
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));
     if (vacation.getSubstitute() != null) {
       ccRecipients = ArrayUtils.add(ccRecipients, retrieveMail(vacation.getSubstitute()));

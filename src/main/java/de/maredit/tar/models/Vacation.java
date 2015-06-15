@@ -41,7 +41,6 @@ public class Vacation {
   @NotNull
   private User manager;
 
-  @DecimalMin("0.5")
   private double days;
 
   @NotNull

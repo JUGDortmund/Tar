@@ -28,6 +28,7 @@ public class SubstitutionApprovedMail implements MailObject {
     values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", entitlement.getDays());
+    values.put("leftDaysLastYear", entitlement.getDaysLastYear());
     values.put("urlToVacation", urlToVacation);
     values.put("comment", comment);
     toRecipients = ArrayUtils.add(toRecipients, retrieveMail(vacation.getUser()));

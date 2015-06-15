@@ -30,6 +30,7 @@ public class VacationModifiedMail implements MailObject {
                ConversionUtils.convertLocalDateToString(vacationBeforeChange.getTo()));
     values.put("totalDays_old", vacationBeforeChange.getDays());
     values.put("leftDays_old", oldRemaining.getDays());
+    values.put("leftDaysLastYear_old", oldRemaining.getDaysLastYear());
 
     values.put("employee", vacation.getUser().getFirstname());
     values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
@@ -40,6 +41,7 @@ public class VacationModifiedMail implements MailObject {
                ConversionUtils.convertLocalDateToString(vacation.getTo()));
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", remaining.getDays());
+    values.put("leftDaysLastYear", remaining.getDaysLastYear());
     values.put("modifiedBy", user.getFullname());
     values.put("urlToVacation", urlToVacation);
     values.put("comment", comment);

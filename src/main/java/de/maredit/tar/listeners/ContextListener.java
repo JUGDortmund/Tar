@@ -71,103 +71,104 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
 
       List<User> users = userRepository.findAll();
       for (User user : users) {
-        Vacation v1 =
-            new Vacation(user, LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(
-                1).plusDays(1), manager, manager, 2, 28);
-        v1.setState(State.WAITING_FOR_APPROVEMENT);
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        Vacation v2 =
-            new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(8),
-                         manager, manager, 4, 24);
-        v2.setState(State.REQUESTED_SUBSTITUTE);
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-        Vacation
-            v3 =
-            new Vacation(user, LocalDate.now().plusWeeks(2), LocalDate.now().plusWeeks(2).plusDays(
-                4), manager, manager, 5, 19);
-        v3.setState(State.APPROVED);
-        vacationRepository.save(v1);
-        vacationRepository.save(v2);
-        vacationRepository.save(v3);
-
-        ProtocolItem protocolItem = new ProtocolItem();
-        protocolItem.setVacation(v1);
-        protocolItem.setAuthor(user);
-        protocolItem.setCreated(LocalDateTime.now());
-        protocolItem.setFieldName("from");
-        protocolItem.setOldValue(v1.getFrom());
-        protocolItem.setNewValue(v1.getFrom().plusDays(1));
-        protocolItemRepository.save(protocolItem);
-
-        CommentItem commentItem = new CommentItem();
-        commentItem.setVacation(v1);
-        commentItem.setAuthor(user);
-        commentItem.setCreated(LocalDateTime.now());
-        commentItem.setText("TEST TEXT FUER KOMMENTAR!!!!111eins");
-        commentItem.setModifed(LocalDateTime.now());
-        commentItemRepository.save(commentItem);
-
-        CommentItem commentItem2 = new CommentItem();
-        commentItem2.setVacation(v1);
-        commentItem2.setAuthor(user);
-        commentItem2.setCreated(LocalDateTime.now());
-        commentItem2.setText("zweiter Text");
-        commentItem2.setModifed(LocalDateTime.now());
-        commentItemRepository.save(commentItem2);
-
-        StateItem stateItem = new StateItem();
-        stateItem.setVacation(v1);
-        stateItem.setAuthor(user);
-        stateItem.setCreated(LocalDateTime.now());
-        stateItem.setOldState(null);
-        stateItem.setNewState(State.WAITING_FOR_APPROVEMENT);
-        stateItemRepository.save(stateItem);
-
-        StateItem stateItem2 = new StateItem();
-        stateItem2.setVacation(v2);
-        stateItem2.setAuthor(user);
-        stateItem2.setCreated(LocalDateTime.now());
-        stateItem2.setOldState(null);
-        stateItem2.setNewState(State.REJECTED);
-        stateItemRepository.save(stateItem2);
-
-        StateItem stateItem3 = new StateItem();
-        stateItem3.setVacation(v2);
-        stateItem3.setAuthor(user);
-        stateItem3.setCreated(LocalDateTime.now());
-        stateItem3.setOldState(null);
-        stateItem3.setNewState(State.REQUESTED_SUBSTITUTE);
-        stateItemRepository.save(stateItem3);
-
-        stateItem3 = new StateItem();
-        stateItem3.setVacation(v2);
-        stateItem3.setAuthor(user);
-        stateItem3.setCreated(LocalDateTime.now());
-        stateItem3.setOldState(State.REQUESTED_SUBSTITUTE);
-        stateItem3.setNewState(State.WAITING_FOR_APPROVEMENT);
-        stateItemRepository.save(stateItem3);
-
-        stateItem3 = new StateItem();
-        stateItem3.setVacation(v2);
-        stateItem3.setAuthor(user);
-        stateItem3.setCreated(LocalDateTime.now());
-        stateItem3.setOldState(State.WAITING_FOR_APPROVEMENT);
-        stateItem3.setNewState(State.APPROVED);
-        stateItemRepository.save(stateItem3);
+//        Vacation v1 =
+//            new Vacation(user, LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(
+//                1).plusDays(1), manager, manager, 2, 28);
+//        v1.setState(State.WAITING_FOR_APPROVEMENT);
+//        try {
+//          Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//          e.printStackTrace();
+//        }
+//        Vacation v2 =
+//            new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(8),
+//                         manager, manager, 4, 24);
+//        v2.setState(State.REQUESTED_SUBSTITUTE);
+//        try {
+//          Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//          e.printStackTrace();
+//        }
+//        Vacation
+//            v3 =
+//            new Vacation(user, LocalDate.now().plusWeeks(2), LocalDate.now().plusWeeks(2).plusDays(
+//                4), manager, manager, 5, 19);
+//        v3.setState(State.APPROVED);
+//        vacationRepository.save(v1);
+//        vacationRepository.save(v2);
+//        vacationRepository.save(v3);
+//
+//        ProtocolItem protocolItem = new ProtocolItem();
+//        protocolItem.setVacation(v1);
+//        protocolItem.setAuthor(user);
+//        protocolItem.setCreated(LocalDateTime.now());
+//        protocolItem.setFieldName("from");
+//        protocolItem.setOldValue(v1.getFrom());
+//        protocolItem.setNewValue(v1.getFrom().plusDays(1));
+//        protocolItemRepository.save(protocolItem);
+//
+//        CommentItem commentItem = new CommentItem();
+//        commentItem.setVacation(v1);
+//        commentItem.setAuthor(user);
+//        commentItem.setCreated(LocalDateTime.now());
+//        commentItem.setText("TEST TEXT FUER KOMMENTAR!!!!111eins");
+//        commentItem.setModifed(LocalDateTime.now());
+//        commentItemRepository.save(commentItem);
+//
+//        CommentItem commentItem2 = new CommentItem();
+//        commentItem2.setVacation(v1);
+//        commentItem2.setAuthor(user);
+//        commentItem2.setCreated(LocalDateTime.now());
+//        commentItem2.setText("zweiter Text");
+//        commentItem2.setModifed(LocalDateTime.now());
+//        commentItemRepository.save(commentItem2);
+//
+//        StateItem stateItem = new StateItem();
+//        stateItem.setVacation(v1);
+//        stateItem.setAuthor(user);
+//        stateItem.setCreated(LocalDateTime.now());
+//        stateItem.setOldState(null);
+//        stateItem.setNewState(State.WAITING_FOR_APPROVEMENT);
+//        stateItemRepository.save(stateItem);
+//
+//        StateItem stateItem2 = new StateItem();
+//        stateItem2.setVacation(v2);
+//        stateItem2.setAuthor(user);
+//        stateItem2.setCreated(LocalDateTime.now());
+//        stateItem2.setOldState(null);
+//        stateItem2.setNewState(State.REJECTED);
+//        stateItemRepository.save(stateItem2);
+//
+//        StateItem stateItem3 = new StateItem();
+//        stateItem3.setVacation(v2);
+//        stateItem3.setAuthor(user);
+//        stateItem3.setCreated(LocalDateTime.now());
+//        stateItem3.setOldState(null);
+//        stateItem3.setNewState(State.REQUESTED_SUBSTITUTE);
+//        stateItemRepository.save(stateItem3);
+//
+//        stateItem3 = new StateItem();
+//        stateItem3.setVacation(v2);
+//        stateItem3.setAuthor(user);
+//        stateItem3.setCreated(LocalDateTime.now());
+//        stateItem3.setOldState(State.REQUESTED_SUBSTITUTE);
+//        stateItem3.setNewState(State.WAITING_FOR_APPROVEMENT);
+//        stateItemRepository.save(stateItem3);
+//
+//        stateItem3 = new StateItem();
+//        stateItem3.setVacation(v2);
+//        stateItem3.setAuthor(user);
+//        stateItem3.setCreated(LocalDateTime.now());
+//        stateItem3.setOldState(State.WAITING_FOR_APPROVEMENT);
+//        stateItem3.setNewState(State.APPROVED);
+//        stateItemRepository.save(stateItem3);
 
         UserVacationAccount
-            account = userService.getUserVacationAccountForYear(user, v1.getFrom().getYear());
-        account.addVacation(v1);
-        account.addVacation(v2);
-        account.addVacation(v3);
+            account = userService.getUserVacationAccountForYear(user, LocalDate.now().getYear());
+        account.setPreviousYearOpenVacationDays(5d);
+//        account.addVacation(v1);
+//        account.addVacation(v2);
+//        account.addVacation(v3);
         userVacationAccountRepository.save(account);
       }
     }

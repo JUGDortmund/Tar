@@ -27,6 +27,10 @@ public class UserVacationAccount {
   private double pendingVacationDays;
   private double approvedVacationDays;
 
+  public UserVacationAccount() {
+    vacations = new HashSet<Vacation>();
+  }
+  
   public User getUser() {
     return user;
   }

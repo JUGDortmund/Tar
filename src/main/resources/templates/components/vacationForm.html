@@ -102,35 +102,26 @@ edit-vacation, approve-vacation  -->
                         </div>
 
                         <div class="row">
-                            <div class="col-xs-6 form-group"
-                                 th:classappend="${#fields.hasErrors('days')}? 'has-error'">
-                                <label for="vacationDays">
+                            <div class="col-xs-6 form-group">
+                                <label>
                                     <th th:text="#{field.vacationDays}"></th>
                                     <span th:if="${editable}">*</span>
                                 </label>
-
-                                <th:block th:if="${editable}">
-                                    <input type="number" class="form-control" name="vacationDays"
-                                           id="vacationDays"
-                                           step="0.5" min="0"
-                                           th:field="*{days}"/>
-                                </th:block>
-                                <th:block th:unless="${editable}">
-                                    <input class="form-control" name="vacationDays"
-                                           type="number" disabled="disabled"
-                                           th:field="*{days}"/>
-                                </th:block>
+	                            <label class="form-control vacationDays">
+                                	<!-- th:block th:text="${#numbers.formatDecimal(days,0,1)}"/-->
+                                </label>
 
                             </div>
 
                             <div class="col-xs-6 form-group">
-                                <label for="daysLeft">
+                                <label >
                                     <th th:text="#{field.vacationDaysLeft}"></th>
                                     <span th:if="${editable}">*</span>
                                 </label>
-                                    <input class="form-control" name="vacationDays"
-                                           type="number" disabled="disabled"
-                                           th:value="${remaining.days}"/>
+                                <label class="form-control remainingDays">
+                                	<th:block th:text="${#numbers.formatDecimal(remaining.days,1,1)}"/>
+                                	<th:block th:if="${remaining.daysLastYear > 0}" th:text="${' + ' + #numbers.formatDecimal(remaining.daysLastYear,0,1)}" />
+                                </label>
                             </div>
                         </div>
 

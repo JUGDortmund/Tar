@@ -5,7 +5,7 @@ import de.maredit.tar.models.User;
 import java.util.Map;
 
 public interface MailObject {
-
+  
   String getTemplate();
 
   String getHtmlTemplate();
