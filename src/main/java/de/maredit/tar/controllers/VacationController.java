@@ -1,7 +1,8 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.properties.VacationProperties;
+import org.springframework.context.i18n.LocaleContextHolder;
 
+import de.maredit.tar.properties.VacationProperties;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
@@ -54,6 +55,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.beans.PropertyEditorSupport;
 import java.net.SocketException;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -227,6 +229,7 @@ public class VacationController extends AbstractBaseController {
                          Model model) {
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
+    model.addAttribute("days", vacationService.getCountOfVacation(vacation));
     model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom() == null ? LocalDateTime.now().getYear(): vacation.getFrom().getYear())));
     switch (action) {
       case "edit":
@@ -337,20 +340,38 @@ public class VacationController extends AbstractBaseController {
   @RequestMapping(value="/updateVacationForm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public Map<String, Object> updateVacationForm(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
+    NumberFormat localFormat = NumberFormat.getNumberInstance(LocaleContextHolder.getLocale());
+    localFormat.setMinimumFractionDigits(1);
+    Map<String, Object> result = new HashMap<>();
     if (!bindingResult.hasFieldErrors("from") && !bindingResult.hasFieldErrors("to")) {
-      Map<String, Object> result = new HashMap<>();
-      result.put("vacationDays", vacationService.getCountOfVacation(vacation));
       UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
-      UserVacationAccount calculatingAccount = userService.getEmptyAccount(vacation.getUser(), vacation.getFrom().getYear());
+      UserVacationAccount calculatingAccount = new UserVacationAccount();
+      calculatingAccount.setUser(vacation.getUser());
+      calculatingAccount.setYear(vacation.getFrom().getYear());
+      calculatingAccount.setExpiryDate(account.getExpiryDate());
+      calculatingAccount.setTotalVacationDays(account.getTotalVacationDays());
+      calculatingAccount.setPreviousYearOpenVacationDays(account.getPreviousYearOpenVacationDays());
       Set<Vacation> vacations = new HashSet<Vacation>(account.getVacations());
       vacations.add(vacation);
       calculatingAccount.setVacations(vacations);
- 
-      result.put("remainingDays", vacationService.getRemainingVacationDays(calculatingAccount));
-      return result;
+
+      result.put("vacationDays", localFormat.format(vacationService.getCountOfVacation(vacation)));
+      VacationEntitlement remainingDays = vacationService.getRemainingVacationDays(calculatingAccount);
+      StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
+      if (remainingDays.getDaysLastYear() > 0) {
+        remainingBuilder.append(" + ").append(localFormat.format(remainingDays.getDaysLastYear()));
+      }
+      result.put("remainingDays", remainingBuilder.toString());
+    } else {
+      result.put("vacationDays", "");
+      VacationEntitlement remainingDays = vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), LocalDate.now().getYear()));
+      StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
+      if (remainingDays.getDaysLastYear() > 0) {
+        remainingBuilder.append(" + ").append(localFormat.format(remainingDays.getDaysLastYear()));
+      }
+      result.put("remainingDays", remainingBuilder.toString());
     }
-    
-    return null;
+    return result;
   }
 
 

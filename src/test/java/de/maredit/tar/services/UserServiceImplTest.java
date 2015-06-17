@@ -2,6 +2,7 @@ package de.maredit.tar.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import de.maredit.tar.Main;
@@ -142,9 +143,6 @@ public class UserServiceImplTest {
     Assert.notNull(account);
     Assert.notEmpty(account.getVacations());
     assertEquals(4, account.getVacations().size());
-    assertEquals(4, account.getApprovedVacationDays(), 0);
-    assertEquals(4, account.getPendingVacationDays(), 0);
-    assertEquals(22, account.getOpenVacationDays(), 0);
     assertNull(account.getPreviousYearOpenVacationDays());
   }
 
@@ -154,10 +152,8 @@ public class UserServiceImplTest {
         account =
         userService.getUserVacationAccountForYear(user2, LocalDate.now().getYear());
     Assert.notNull(account);
-    assertNull(account.getVacations());
-    assertEquals(0, account.getApprovedVacationDays(), 0);
-    assertEquals(0, account.getPendingVacationDays(), 0);
-    assertEquals(30, account.getOpenVacationDays(), 0);
+    assertNotNull(account.getVacations());
+    assertEquals(0, account.getVacations().size());
     assertNull(account.getPreviousYearOpenVacationDays());
   }
 

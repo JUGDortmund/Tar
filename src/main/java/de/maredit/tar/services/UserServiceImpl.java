@@ -19,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -91,9 +90,6 @@ public class UserServiceImpl implements UserService {
     }
     UserVacationAccount previousVacationAccount =
         userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year - 1);
-    vacationAccount
-        .setApprovedVacationDays(getApprovedVacationDays(vacationAccount.getVacations()));
-    vacationAccount.setPendingVacationDays(getPendingVacationDays(vacationAccount.getVacations()));
     if (previousVacationAccount != null) {
       vacationAccount.setPreviousYearOpenVacationDays(previousVacationAccount
           .getPreviousYearOpenVacationDays());
@@ -119,43 +115,5 @@ public class UserServiceImpl implements UserService {
 
     return this.vacationRepository.findVacationByUserAndFromBetweenOrUserAndToBetween(user,
         startOfYear, endOfYear, user, startOfYear, endOfYear);
-  }
-
-  /**
-   * Helper method to retrieve the amount of approved vacation days for a list of vacations.
-   *
-   * @param set the set to analyze
-   * @return the amount of approved vacation days
-   */
-  private double getApprovedVacationDays(Set<Vacation> set) {
-    return set != null ? set.stream().filter(vacation -> vacation.getState() == State.APPROVED)
-        .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
-  }
-
-  /**
-   * Helper method to retrieve the amount of pending vacation days (which are already planned but
-   * not accepted yet) for a list of vacations.
-   *
-   * @param set the set to analyze
-   * @return the amount of pending vacation days
-   */
-  private double getPendingVacationDays(Set<Vacation> set) {
-    return set != null ? set
-        .stream()
-        .filter(
-            vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
-                || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
-        .mapToDouble(vacation -> vacation.getDays()).sum() :0;
-  }
-
-  @Override
-  public UserVacationAccount getEmptyAccount(User user, int year) {
-    UserVacationAccount vacationAccount = new UserVacationAccount();
-    vacationAccount.setUser(user);
-    vacationAccount.setYear(year);
-    vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties
-        .getDefaultVacationDays() : user.getVacationDays());
-    vacationAccount.setExpiryDate(LocalDate.parse(year + "-" + vacationProperties.getExpiryDate(), DATE_PATTERN));
-    return vacationAccount;
   }
 }

@@ -56,6 +56,4 @@ public interface UserService {
    * @return the list of vacations
    */
   public List<Vacation> getVacationsForUserAndYear(User user, int year);
-
-  public UserVacationAccount getEmptyAccount(User user, int year);
 }

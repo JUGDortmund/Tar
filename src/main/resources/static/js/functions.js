@@ -119,7 +119,7 @@
 }).call(this);
 
 (function() {
-  var activateToggle, initializeDatePicker, refreshVacationForm, scrollToVacationForm;
+  var activateToggle, initializeAjaxCalculation, initializeDatePicker, refreshVacationDays, refreshVacationForm, scrollToVacationForm;
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -149,7 +149,16 @@
     initializeDatePicker();
     $myForm.find('select').select2();
     scrollToVacationForm();
-    return activateToggle();
+    activateToggle();
+    return initializeAjaxCalculation();
+  };
+
+  refreshVacationDays = function(data) {
+    var $daysLabel, $remainingLabel;
+    $daysLabel = $('label.vacationDays');
+    $remainingLabel = $('label.remainingDays');
+    $daysLabel.text(data.vacationDays);
+    return $remainingLabel.text(data.remainingDays);
   };
 
   initializeDatePicker = function() {
@@ -171,6 +180,29 @@
           }
         });
       }
+    });
+  };
+
+  initializeAjaxCalculation = function() {
+    return $('form input[id="dateFrom"], form input[id="dateTo"]').change(function() {
+      return $.ajax({
+        url: 'updateVacationForm',
+        method: "POST",
+        dataType: "json",
+        data: {
+          "id": $('form > input[id="id"][type="hidden"]').val(),
+          "from": $('form input[id="dateFrom"]').val(),
+          "to": $('form input[id="dateTo"]').val(),
+          "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(),
+          "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          return console.log(textStatus);
+        },
+        success: function(data) {
+          return refreshVacationDays(data);
+        }
+      });
     });
   };
 
@@ -199,24 +231,7 @@
       });
       return false;
     });
-    return $('form input[id="dateFrom"], form input[id="dateTo"]').blur(function() {
-      $.ajax({
-        url: 'updateVacationForm',
-        method: "POST",
-        dataType: "json",
-        data: {
-          "id": $('form > input[id="id"][type="hidden"]').val(),
-          "from": $('form input[id="dateFrom"]').val(),
-          "to": $('form input[id="dateTo"]').val(),
-          "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(),
-          "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-          return console.log(textStatus);
-        }
-      });
-      return false;
-    });
+    return initializeAjaxCalculation();
   })(jQuery);
 
 }).call(this);

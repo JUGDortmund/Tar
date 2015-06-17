@@ -24,8 +24,6 @@ public class UserVacationAccount {
   private LocalDate expiryDate;
   @DBRef
   private Set<Vacation> vacations;
-  private double pendingVacationDays;
-  private double approvedVacationDays;
 
   public UserVacationAccount() {
     vacations = new HashSet<Vacation>();
@@ -85,26 +83,6 @@ public class UserVacationAccount {
 
   public void setPreviousYearOpenVacationDays(Double previousYearOpenVacationDays) {
     this.previousYearOpenVacationDays = previousYearOpenVacationDays;
-  }
-
-  public double getPendingVacationDays() {
-    return pendingVacationDays;
-  }
-
-  public void setPendingVacationDays(double pendingVacationDays) {
-    this.pendingVacationDays = pendingVacationDays;
-  }
-
-  public double getApprovedVacationDays() {
-    return approvedVacationDays;
-  }
-
-  public void setApprovedVacationDays(double approvedVacationDays) {
-    this.approvedVacationDays = approvedVacationDays;
-  }
-
-  public double getOpenVacationDays() {
-    return totalVacationDays - approvedVacationDays - pendingVacationDays + (previousYearOpenVacationDays == null ? 0 : previousYearOpenVacationDays);
   }
 
   public void addVacation(Vacation vacation) {
