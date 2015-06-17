@@ -119,7 +119,7 @@
 }).call(this);
 
 (function() {
-  var activateToggle, initializeDatePicker, refreshVacationForm, scrollToVacationForm;
+  var activateToggle, initializeDatePicker, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -150,6 +150,16 @@
     $myForm.find('select').select2();
     scrollToVacationForm();
     return activateToggle();
+  };
+
+  toggleHalfDay = function() {
+    return $('#halfDay').on('change', function() {
+      if ($(this).is(':checked')) {
+        return $('#dateTo').disable;
+      } else {
+        return $('#dateTo').enable;
+      }
+    });
   };
 
   initializeDatePicker = function() {
@@ -186,7 +196,7 @@
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
     });
-    return $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
+    $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
       $.ajax({
         url: $(this).attr('href'),
         dataType: "html",
@@ -199,6 +209,7 @@
       });
       return false;
     });
+    return toggleHalfDay();
   })(jQuery);
 
 }).call(this);

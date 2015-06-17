@@ -26,6 +26,13 @@ refreshVacationForm = (data) ->
   scrollToVacationForm()
   activateToggle()
 
+toggleHalfDay = () ->
+  $('#halfDay').on 'change', ->
+    if $(this).is(':checked')
+      $('#dateTo').disable
+    else
+      $('#dateTo').enable
+
 
 initializeDatePicker = () ->
    $('.input-group.date').each ->
@@ -75,4 +82,5 @@ initializeDatePicker = () ->
         refreshVacationForm(data)
     return false
 
+  toggleHalfDay()
 )(jQuery);
