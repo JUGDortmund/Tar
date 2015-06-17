@@ -11,7 +11,7 @@ edit-vacation, approve-vacation  -->
                 <div class="panel-heading"><th th:text="#{field.vacationForm}"></th></div>
                 <div class="panel-body">
 
-                    <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form"
+                    <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form" class="vacationForm"
                           th:with="editable=
                                 ${(formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT)
                                     and (#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">

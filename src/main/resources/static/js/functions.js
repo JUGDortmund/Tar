@@ -186,7 +186,7 @@
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
     });
-    return $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
+    $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
       $.ajax({
         url: $(this).attr('href'),
         dataType: "html",
@@ -195,6 +195,24 @@
         },
         success: function(data) {
           return refreshVacationForm(data);
+        }
+      });
+      return false;
+    });
+    return $('form input[id="dateFrom"], form input[id="dateTo"]').blur(function() {
+      $.ajax({
+        url: 'updateVacationForm',
+        method: "POST",
+        dataType: "json",
+        data: {
+          "id": $('form > input[id="id"][type="hidden"]').val(),
+          "from": $('form input[id="dateFrom"]').val(),
+          "to": $('form input[id="dateTo"]').val(),
+          "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(),
+          "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          return console.log(textStatus);
         }
       });
       return false;

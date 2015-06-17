@@ -75,4 +75,14 @@ initializeDatePicker = () ->
         refreshVacationForm(data)
     return false
 
+  $('form input[id="dateFrom"], form input[id="dateTo"]').blur ->
+    $.ajax
+      url: 'updateVacationForm'
+      method: "POST"
+      dataType: "json"
+      data: { "id" : $('form > input[id="id"][type="hidden"]').val(), "from": $('form input[id="dateFrom"]').val(), "to": $('form input[id="dateTo"]').val(), "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(), "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()}
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log(textStatus)
+    return false
+
 )(jQuery);

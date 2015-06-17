@@ -1,5 +1,7 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.properties.VacationProperties;
+
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
@@ -75,6 +77,9 @@ public class VacationController extends AbstractBaseController {
 
   @Autowired
   private UserRepository userRepository;
+  
+  @Autowired
+  private VacationProperties vacationProperties; 
 
   @Autowired
   private ProtocolItemRepository protocolItemRepository;
@@ -336,8 +341,7 @@ public class VacationController extends AbstractBaseController {
       Map<String, Object> result = new HashMap<>();
       result.put("vacationDays", vacationService.getCountOfVacation(vacation));
       UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
-      UserVacationAccount calculatingAccount = new UserVacationAccount();
-      calculatingAccount.setUser(account.getUser());
+      UserVacationAccount calculatingAccount = userService.getEmptyAccount(vacation.getUser(), vacation.getFrom().getYear());
       Set<Vacation> vacations = new HashSet<Vacation>(account.getVacations());
       vacations.add(vacation);
       calculatingAccount.setVacations(vacations);

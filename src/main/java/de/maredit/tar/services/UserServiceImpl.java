@@ -147,4 +147,15 @@ public class UserServiceImpl implements UserService {
                 || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
         .mapToDouble(vacation -> vacation.getDays()).sum() :0;
   }
+
+  @Override
+  public UserVacationAccount getEmptyAccount(User user, int year) {
+    UserVacationAccount vacationAccount = new UserVacationAccount();
+    vacationAccount.setUser(user);
+    vacationAccount.setYear(year);
+    vacationAccount.setTotalVacationDays(user.getVacationDays() == null ? vacationProperties
+        .getDefaultVacationDays() : user.getVacationDays());
+    vacationAccount.setExpiryDate(LocalDate.parse(year + "-" + vacationProperties.getExpiryDate(), DATE_PATTERN));
+    return vacationAccount;
+  }
 }
