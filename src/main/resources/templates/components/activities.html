@@ -10,9 +10,9 @@
           th:action="@{/addComment}" method="post" role="form">
 
         <div class="input-group">
-            <input class="form-control" type="text" placeholder="Add comment.." name="comment" id="comment"/>
+            <input class="form-control" type="text" th:placeholder="#{timeline.input.add}" name="comment" id="comment"/>
             <span class="input-group-btn">
-                <button class="btn btn-success" type="submit">Add</button>
+                <button class="btn btn-success" type="submit" th:text="#{timeline.button.add}">Add</button>
             </span>
         </div>
         <input type="hidden" th:value="${vacation.id}" name="id" id="id"/>
@@ -21,7 +21,7 @@
         <ul class="timeline">
             <!-- timeline time label -->
             <li class="time-label">
-                <span class="bg-yellow">Timeline</span>
+                <span class="bg-yellow"><th:block th:text="#{timeline.header}"/></span>
             </li>
             <!-- /.timeline-label -->
 
@@ -35,7 +35,7 @@
                 <i class="item-icon glyphicon glyphicon-arrow-left bg-blue"></i>
 
                 <div class="timeline-item">
-                    <h3 class="timeline-header"><button id="more-activities" class="flip btn bg-blue">back</button></h3>
+                    <h3 class="timeline-header"><button id="more-activities" class="flip btn bg-blue" th:text="#{timeline.button.back}">back</button></h3>
                 </div>
             </li>
 

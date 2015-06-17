@@ -20,11 +20,11 @@ public class Vacation {
   @Id
   private String id;
 
-  @NotNull
+  @NotNull(message="{date.from}")
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate from;
 
-  @NotNull
+  @NotNull(message="{date.to}")
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate to;
 
@@ -40,10 +40,10 @@ public class Vacation {
   private User substitute;
 
   @DBRef
-  @NotNull
+  @NotNull(message="{manager.notnull}")
   private User manager;
 
-  @DecimalMin("0.5")
+  @DecimalMin(value="0.5", message=("{vacationDays}"))
   private double days;
 
   @Min(0)

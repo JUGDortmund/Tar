@@ -60,7 +60,7 @@ import javax.validation.Valid;
 
 
 @Controller
-public class VacationController extends AbstractBaseController {
+public class VacationController {
 
   private static final Logger LOG = LogManager.getLogger(VacationController.class);
 
@@ -258,7 +258,7 @@ public class VacationController extends AbstractBaseController {
     boolean newVacation = StringUtils.isBlank(vacation.getId());
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
-          fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
+          fieldError -> LOG.error(fieldError.getDefaultMessage()));
 
       User selectedUser = getUser(request);
 

@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="taskList">
     <div class="panel panel-default approve-vacation module dashboard-panel">
-        <div class="panel-heading"><th th:text="#{field.tasks}"></th></div>
+        <div class="panel-heading"><th:block th:text="#{field.tasks}"/></div>
         <div class="panel-body">
             <div class="list-group" th:if="${substitutesForApproval.size() > 0}">
-                <h3 class="list-group-item"><th th:text="#{field.tasks}"></th></h3>
+                <h3 class="list-group-item"><th:block th:text="#{field.substitutions}"/></h3>
                 <a th:each="substitute : ${substitutesForApproval}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='substitute')}">
                     <span th:text="${substitute.from + ' - '  + substitute.to}"></span>
                     <strong th:text="${substitute.user.lastname + ' - ' + substitute.user.firstname}"></strong>
@@ -14,7 +14,7 @@
             </div>
 
             <div class="list-group" th:if="${approvals.size() > 0}">
-                <h3 class="list-group-item"><th th:text="#{field.tasks}"></th></h3>
+                <h3 class="list-group-item"><th:block th:text="#{field.pendingApprovals}"/></h3>
                 <a th:each="approval : ${approvals}" class="list-group-item" th:href="@{/vacation(id=${approval.id},action='approve')}">
                     <span th:text="${approval.from + ' - '  + approval.to}"></span>
                     <strong th:text="${approval.user.lastname + ', ' + approval.user.firstname}"></strong>

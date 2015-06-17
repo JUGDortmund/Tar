@@ -33,7 +33,7 @@ import de.maredit.tar.services.HolidayService;
  */
 
 @Controller
-public class CalendarController  extends AbstractBaseController{
+public class CalendarController{
 
   private static final Logger LOG = LogManager.getLogger(CalendarController.class);
 
