@@ -217,7 +217,7 @@ public class UserServiceImplTest {
         vacation1 =
         new Vacation(user1, LocalDate.now().withMonth(4).plusDays(5),
                      LocalDate.now().withMonth(4).plusDays(8),
-                     null, user1, 4, 26);
+                     null, user1, 4);
     vacation1.setCreated(LocalDateTime.now().withMonth(3).minusDays(10));
     vacation1.setState(State.APPROVED);
     vacations.add(vacation1);
@@ -225,7 +225,7 @@ public class UserServiceImplTest {
         vacation2 =
         new Vacation(user1, LocalDate.now().withMonth(4).plusDays(15),
                      LocalDate.now().withMonth(4).plusDays(18),
-                     null, user1, 4, 22);
+                     null, user1, 4);
     vacation2.setCreated(LocalDateTime.now().withMonth(3).minusDays(8));
     vacations.add(vacation2);
     Vacation
@@ -234,7 +234,7 @@ public class UserServiceImplTest {
                      LocalDate.now().withMonth(
                          4).minusYears(
                          1).plusDays(18),
-                     null, user1, 4, 2);
+                     null, user1, 4);
     vacation3.setCreated(LocalDateTime.now().withMonth(3).minusYears(1));
     vacations.add(vacation3);
 
@@ -242,7 +242,7 @@ public class UserServiceImplTest {
         vacation4 =
         new Vacation(user1, LocalDate.now().withMonth(4).plusMonths(1).plusDays(1),
                      LocalDate.now().withMonth(4).plusMonths(1).plusDays(1),
-                     null, user1, 2, 24);
+                     null, user1, 2);
     vacation4.setCreated(LocalDateTime.now().withMonth(3).minusDays(5));
     vacation4.setState(State.REJECTED);
     vacations.add(vacation4);
@@ -250,7 +250,7 @@ public class UserServiceImplTest {
     Vacation
         vacation5 =
         new Vacation(user1, LocalDate.now().withMonth(4), LocalDate.now().withMonth(4),
-                     null, user1, 1, 25);
+                     null, user1, 1);
     vacation5.setCreated(LocalDateTime.now().withMonth(3).minusDays(2));
     vacation5.setState(State.CANCELED);
     vacations.add(vacation5);
@@ -268,14 +268,14 @@ public class UserServiceImplTest {
     Vacation
         vacation1 =
         new Vacation(user1, firstDayOfYear, firstDayOfYear,
-                     null, user1, 1, 29);
+                     null, user1, 1);
     vacation1.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(1));
     vacation1.setState(State.APPROVED);
     vacations.add(vacation1);
     Vacation
         vacation2 =
         new Vacation(user1, lastDayOfYear, lastDayOfYear,
-                     null, user1, 0.5, 4.5);
+                     null, user1, 0.5);
     vacation2.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
     vacation2.setState(State.APPROVED);
     vacations.add(vacation2);
@@ -283,7 +283,7 @@ public class UserServiceImplTest {
     Vacation
         vacation3 =
         new Vacation(user1, lastDayOfYear, firstDayOfNextYear,
-                     null, user1, 2, 2.5);
+                     null, user1, 2);
     vacation3.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
     vacation3.setState(State.APPROVED);
     vacations.add(vacation3);

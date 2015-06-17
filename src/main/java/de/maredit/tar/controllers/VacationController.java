@@ -229,7 +229,7 @@ public class VacationController extends AbstractBaseController {
                          Model model) {
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
-    model.addAttribute("days", vacationService.getCountOfVacation(vacation));
+    model.addAttribute("days", vacation.getDays());
     model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom() == null ? LocalDateTime.now().getYear(): vacation.getFrom().getYear())));
     switch (action) {
       case "edit":

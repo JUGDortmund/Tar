@@ -50,7 +50,7 @@ public class VacationValidatorTest {
     VacationValidator validatorUnderTest = new VacationValidator();
     Vacation validVacation =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                     user2, user, 15, 5);
+                     user2, user, 15);
 
     Errors errors = new BeanPropertyBindingResult(validVacation, "validVacation");
     validatorUnderTest.validate(validVacation, errors);
@@ -64,7 +64,7 @@ public class VacationValidatorTest {
 
     Vacation invalidVacation =
         new Vacation(user, LocalDate.of(2099, Month.AUGUST, 18), LocalDate.of(2099, Month.JULY, 03),
-                     null, user, 15, 5);
+                     null, user, 15);
 
     Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
     validatorUnderTest.validate(invalidVacation, errors);

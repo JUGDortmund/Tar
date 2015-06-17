@@ -31,10 +31,10 @@ public class VacationTest {
 
     vacation1 =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                     user, user, 15, 5);
+                     user, user, 15);
     vacation2 =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                     null, user, 15, 5);
+                     null, user, 15);
   }
 
   @Test
