@@ -23,7 +23,7 @@ public class TimelineItem {
 
   @DBRef
   @NotNull
-  private Vacation vacation;
+  private AccountEntry vacation;
 
   public String getId() {
     return id;
@@ -49,11 +49,11 @@ public class TimelineItem {
     this.author = author;
   }
 
-  public Vacation getVacation() {
+  public AccountEntry getVacation() {
     return vacation;
   }
 
-  public void setVacation(Vacation vacation) {
+  public void setVacation(AccountEntry vacation) {
     this.vacation = vacation;
   }
 

@@ -15,7 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import de.maredit.tar.models.enums.State;
 
-public class Vacation {
+public class Vacation implements AccountEntry {
 
   @Id
   private String id;
@@ -99,6 +99,10 @@ public class Vacation {
     this.daysLeft = daysLeft;
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.models.AccountEntry#getDays()
+   */
+  @Override
   public double getDays() {
     return days;
   }
@@ -148,6 +152,10 @@ public class Vacation {
     this.from = from;
   }
 
+  /* (non-Javadoc)
+   * @see de.maredit.tar.models.AccountEntry#getCreated()
+   */
+  @Override
   public LocalDateTime getCreated() {
     return created;
   }
@@ -177,6 +185,10 @@ public class Vacation {
     this.author = user;
   }
   
+  /* (non-Javadoc)
+   * @see de.maredit.tar.models.AccountEntry#getAuthor()
+   */
+  @Override
   public User getAuthor() {
     return author;
   }
