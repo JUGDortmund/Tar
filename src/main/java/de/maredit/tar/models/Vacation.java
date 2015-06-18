@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 public class Vacation {
@@ -46,6 +45,7 @@ public class Vacation {
   @NotNull
   private State state;
 
+  @DBRef
   private User author;
   
   private String appointmentId;
