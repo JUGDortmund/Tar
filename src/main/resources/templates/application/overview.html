@@ -82,12 +82,20 @@
                                             <th>Urlaubstage</th>
                                             <th>Saldo</th>
                                         </tr>
+                                        <tr>
+                                            <td>Gutschrift Jahresurlaub</td>
+                                            <td/>
+                                            <td/>
+                                            <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays,1,1)}"/>
+                                            <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays,1,1)}"/>
+                                        
+                                        </tr>
                                         <th:block th:each="entry, iterator : ${account.entries}">
                                         <tr>
                                             <td>Urlaub</td>
                                             <td th:text="${entry.from}"/>
                                             <td th:text="${entry.to}"/>
-                                            <td th:text="${entry.days}"/>
+                                            <td th:text="${#numbers.formatDecimal(entry.days,1,1)}"/>
                                             <td />
                                         </tr>
                                         </th:block>
