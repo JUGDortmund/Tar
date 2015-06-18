@@ -64,7 +64,11 @@
             $vacationDetail = $('#vacationDetail');
             $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
             $vacationDetail.find('.state').text(calEvent.state);
-            $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
+            if (calEvent.allDay) {
+              $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
+            } else {
+              $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY HH:mm') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY HH:mm'));
+            }
             if ((calEvent.substituteFirstName != null) && (calEvent.substituteLastName != null)) {
               substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName;
             } else {
@@ -149,15 +153,21 @@
     initializeDatePicker();
     $myForm.find('select').select2();
     scrollToVacationForm();
-    return activateToggle();
+    activateToggle();
+    return toggleHalfDay();
   };
 
   toggleHalfDay = function() {
     return $('#halfDay').on('change', function() {
       if ($(this).is(':checked')) {
-        return $('#dateTo').disable;
+        if (!isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+          $('.input-group.date.dateTo').datepicker('update', $('.input-group.date.dateFrom').datepicker('getDate'));
+        }
+        $('#dateToBox').hide();
+        return $('#halfDayBox').show();
       } else {
-        return $('#dateTo').enable;
+        $('#dateToBox').show();
+        return $('#halfDayBox').hide();
       }
     });
   };
@@ -176,7 +186,7 @@
       });
       if ($this.hasClass('dateFrom')) {
         return $this.on('changeDate', function() {
-          if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+          if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()) || $('#halfDay').is(':checked')) {
             return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
           }
         });
