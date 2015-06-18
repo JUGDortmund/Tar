@@ -27,5 +27,14 @@ public class VacationValidator implements Validator {
       errors.rejectValue("substitute", "substitute.is.user",
           "Vertretung darf nicht Antragssteller sein");
     }
+    if (vacation.isHalfDay()) {
+      if (vacation.getTimeframe() == null) {
+        errors.rejectValue("halfDay", "halfday.without.timeframe", "Halbe Urlaubstage benötigen einen Zeitraum");
+      }
+
+      if (!vacation.getTo().isEqual(vacation.getFrom())) {
+        errors.rejectValue("to", "halfday.to.long", "Halbe Urlaubstagedürfen nicht über mehrere Tage beantragt werden.");
+      }
+    }
   }
 }
