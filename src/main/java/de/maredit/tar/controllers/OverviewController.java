@@ -1,5 +1,8 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.models.Vacation;
+
+import de.maredit.tar.models.AccountModel;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
@@ -20,7 +23,7 @@ import java.util.List;
  * Created by czillmann on 19.05.15.
  */
 @Controller
-public class OverviewController {
+public class OverviewController extends AbstractBaseController {
 
   private static final Logger LOG = LogManager.getLogger(OverviewController.class);
 
@@ -48,11 +51,21 @@ public class OverviewController {
       userVacationAccounts = userService.getUserVacationAccountsForYear(
           filteredUsers, LocalDate.now().getYear());
     }
+    
+    List<AccountModel> models = new ArrayList<>();
+    for (UserVacationAccount userVacationAccount : userVacationAccounts) {
+      AccountModel accountModel = new AccountModel();
+      accountModel.setAccount(userVacationAccount);
+      List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
+      vacations.sort((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
+      accountModel.setEntries(vacations);
+      models.add(accountModel);
+    }
 
     model.addAttribute("loginUser", applicationController.getConnectedUser());
     model.addAttribute("users", allUsers);
     model.addAttribute("filteredUsers", filteredUsers);
-    model.addAttribute("userVacationAccounts", userVacationAccounts);
+    model.addAttribute("accounts", models);
 
     return "application/overview";
   }

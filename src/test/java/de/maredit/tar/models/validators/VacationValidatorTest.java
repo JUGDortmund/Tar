@@ -1,9 +1,10 @@
 package de.maredit.tar.models.validators;
 
+import de.maredit.tar.models.AccountEntry;
+
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +50,7 @@ public class VacationValidatorTest {
   public void testValidationWithValidVacation() {
 
     VacationValidator validatorUnderTest = new VacationValidator();
-    Vacation validVacation =
+    AccountEntry validVacation =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
                      user2, user, 15, 5);
 
@@ -63,7 +64,7 @@ public class VacationValidatorTest {
   public void testValidationWithToBeforeFromDate() {
     VacationValidator validatorUnderTest = new VacationValidator();
 
-    Vacation invalidVacation =
+    AccountEntry invalidVacation =
         new Vacation(user, LocalDate.of(2099, Month.AUGUST, 18), LocalDate.of(2099, Month.JULY, 03),
                      null, user, 15, 5);
 

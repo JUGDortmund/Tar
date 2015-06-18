@@ -1,5 +1,7 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.models.AccountEntry;
+
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
@@ -30,7 +32,6 @@ import de.maredit.tar.services.mail.VacationCanceledMail;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import de.maredit.tar.services.mail.VacationDeclinedMail;
 import de.maredit.tar.services.mail.VacationModifiedMail;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -104,7 +105,7 @@ public class VacationController extends AbstractBaseController {
   private ApplicationController applicationController;
 
   @ModelAttribute("vacation")
-  public Vacation getVacation(@RequestParam(value = "id", required = false) String id) {
+  public AccountEntry getVacation(@RequestParam(value = "id", required = false) String id) {
     if (StringUtils.isBlank(id)) {
       return new Vacation();
     }
@@ -211,7 +212,7 @@ public class VacationController extends AbstractBaseController {
   }
 
   @RequestMapping(value = "/vacation", method = {RequestMethod.GET}, params = "id")
-  public String vacation(@ModelAttribute("vacation") Vacation vacation,
+  public String vacation(@ModelAttribute("vacation") AccountEntry vacation,
                          @RequestParam(value = "action", required = false) String action,
                          Model model) {
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
@@ -321,7 +322,7 @@ public class VacationController extends AbstractBaseController {
   }
 
   private CommentItem saveComment(@ModelAttribute("comment") String comment,
-                                  @ModelAttribute("vacation") @Valid Vacation vacation) {
+                                  @ModelAttribute("vacation") @Valid AccountEntry vacation) {
     if (StringUtils.isNotBlank(comment)) {
       CommentItem commentItem = new CommentItem();
       commentItem.setModifed(LocalDateTime.now());
@@ -335,7 +336,7 @@ public class VacationController extends AbstractBaseController {
     return null;
   }
 
-  private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") Vacation vacation) {
+  private List<TimelineItem> getTimelineItems(@ModelAttribute("vacation") AccountEntry vacation) {
     List<TimelineItem> allTimeline = new ArrayList<TimelineItem>();
     allTimeline.addAll(commentItemRepository.findAllByVacation(vacation));
     allTimeline.addAll(protocolItemRepository.findAllByVacation(vacation));
