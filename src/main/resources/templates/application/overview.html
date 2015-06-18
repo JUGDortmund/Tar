@@ -76,27 +76,27 @@
 
                                     <table class="table table-hover table-condensed">
                                         <tr>
-                                            <th>Buchungstext</th>
-                                            <th>Urlaub von</th>
-                                            <th>Urlaub bis</th>
-                                            <th>Urlaubstage</th>
-                                            <th>Saldo</th>
+                                            <th th:text="#{field.entryText}">Buchungstext</th>
+                                            <th th:text="#{field.dateFrom}">von</th>
+                                            <th th:text="#{field.dateTo}">bis</th>
+                                            <th th:text="#{field.days}">Tage</th>
+                                            <th th:text="#{field.saldo}">Saldo</th>
                                         </tr>
                                         <tr>
                                             <td>Gutschrift Jahresurlaub</td>
                                             <td/>
                                             <td/>
-                                            <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays,1,1)}"/>
-                                            <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays,1,1)}"/>
+                                            <td th:text="${#numbers.formatDecimal(account.totalVacationDays,1,1)}"/>
+                                            <td th:text="${#numbers.formatDecimal(account.totalVacationDays + account.previousYearOpenVacationDays,1,1)}"/>
                                         
                                         </tr>
                                         <th:block th:each="entry, iterator : ${account.entries}">
                                         <tr>
                                             <td>Urlaub</td>
-                                            <td th:text="${entry.from}"/>
-                                            <td th:text="${entry.to}"/>
+                                            <td th:text="${{entry.from}}"/>
+                                            <td th:text="${{entry.to}}"/>
                                             <td th:text="${#numbers.formatDecimal(entry.days,1,1)}"/>
-                                            <td />
+                                            <td th:text="${#numbers.formatDecimal(entry.daysLeft,1,1)}"/>
                                         </tr>
                                         </th:block>
                                     </table>

@@ -9,11 +9,12 @@ public class AccountModel {
   private User user;
   private Integer year;
   private double totalVacationDays;
-  private Double previousYearOpenVacationDays;
+  private double previousYearOpenVacationDays;
   private double pendingVacationDays;
   private double approvedVacationDays;
   private List<? extends AccountEntry> entries;
   private UserVacationAccount account;
+  private double openVacationDays;
   
   public String getId() {
     return id;
@@ -42,7 +43,7 @@ public class AccountModel {
   public Double getPreviousYearOpenVacationDays() {
     return previousYearOpenVacationDays;
   }
-  public void setPreviousYearOpenVacationDays(Double previousYearOpenVacationDays) {
+  public void setPreviousYearOpenVacationDays(double previousYearOpenVacationDays) {
     this.previousYearOpenVacationDays = previousYearOpenVacationDays;
   }
   public double getPendingVacationDays() {
@@ -68,5 +69,11 @@ public class AccountModel {
   }
   public void setAccount(UserVacationAccount account) {
     this.account = account;
+  }
+  public void setOpenVacationDays(double openVacationDays) {
+    this.openVacationDays = openVacationDays;
+  }
+  public double getOpenVacationDays() {
+    return openVacationDays;
   }
 }

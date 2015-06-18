@@ -56,6 +56,9 @@ public class OverviewController extends AbstractBaseController {
     for (UserVacationAccount userVacationAccount : userVacationAccounts) {
       AccountModel accountModel = new AccountModel();
       accountModel.setAccount(userVacationAccount);
+      accountModel.setOpenVacationDays(userVacationAccount.getOpenVacationDays());
+      accountModel.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
+      accountModel.setPreviousYearOpenVacationDays(userVacationAccount.getPreviousYearOpenVacationDays() == null ? 0 : userVacationAccount.getPreviousYearOpenVacationDays());
       List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
       vacations.sort((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
       accountModel.setEntries(vacations);
