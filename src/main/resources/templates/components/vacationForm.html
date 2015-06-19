@@ -82,6 +82,18 @@ edit-vacation, approve-vacation  -->
                                 </th:block>
                             </div>
 
+                            <div class="col-xs-6 form-group">
+                                <div class="input-group" style="padding-top: 30px;">
+                                    <input id="halfDay" type="checkbox" name="halfDay" th:field="*{halfDay}" th:disabled="${!editable}" />
+                                    <label for="halfDay">
+                                        <th th:text="#{field.halfday}"></th>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
                             <div class="col-xs-6 form-group date-group" id="dateToBox" th:styleappend="*{halfDay} ? 'display:none' : ''"
                                  th:classappend="${#fields.hasErrors('to')}? 'has-error'">
                                 <label for="dateTo">
@@ -109,24 +121,14 @@ edit-vacation, approve-vacation  -->
                                 </label>
 
                                 <select class="form-control" style="width: 100%;" name="timeframe" th:field="*{timeframe}"
-                                        id="timeframe">
+                                        id="timeframe" th:disabled="${!editable}">
                                     <option th:each="timeframe : ${T(de.maredit.tar.models.enums.HalfDayTimeFrame).values()}"
                                             th:value="${timeframe}"
                                             th:text="#{__${timeframe.value}__}"/>
 
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-xs-6 form-group">
-                            </div>
-                            <div class="col-xs-6 form-group">
-                                <input id="halfDay" type="checkbox" name="halfDay" th:field="*{halfDay}" />
-                                <label for="halfDay">
-                                    <th th:text="#{field.halfday}"></th>
-                                </label>
-
                             </div>
                         </div>
 
