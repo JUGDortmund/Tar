@@ -49,7 +49,11 @@
                     $vacationDetail = $('#vacationDetail')
                     $vacationDetail.find('.user').text( calEvent.userFirstName + ' ' + calEvent.userLastName )
                     $vacationDetail.find('.state').text( calEvent.state );
-                    $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
+
+                    if calEvent.allDay
+                      $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
+                    else
+                      $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY HH:mm')  + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY HH:mm') )
 
                     #Test if substitute is set. If set, show name, else show -
                     if ( ( calEvent.substituteFirstName? ) && ( calEvent.substituteLastName? ) ) then ( substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName ) else ( substituteText = '-' )

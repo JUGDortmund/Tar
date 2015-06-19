@@ -25,7 +25,19 @@ refreshVacationForm = (data) ->
   $myForm.find('select').select2()
   scrollToVacationForm()
   activateToggle()
+  toggleHalfDay()
 
+toggleHalfDay = () ->
+  $('#halfDay').on 'change', ->
+    if $(this).is(':checked')
+      if(!isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()))
+        $('.input-group.date.dateTo').datepicker('update', $('.input-group.date.dateFrom').datepicker('getDate'))
+
+      $('#dateToBox').hide()
+      $('#halfDayBox').show()
+    else
+      $('#dateToBox').show()
+      $('#halfDayBox').hide()
 
 initializeDatePicker = () ->
    $('.input-group.date').each ->
@@ -43,7 +55,7 @@ initializeDatePicker = () ->
 
       if $this.hasClass('dateFrom')
         $this.on 'changeDate', ->
-            if(isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()))
+            if(isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()) or $('#halfDay').is(':checked') )
                 $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'))
 
 
@@ -75,4 +87,5 @@ initializeDatePicker = () ->
         refreshVacationForm(data)
     return false
 
+  toggleHalfDay()
 )(jQuery);
