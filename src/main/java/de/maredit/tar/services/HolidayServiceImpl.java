@@ -1,5 +1,7 @@
 package de.maredit.tar.services;
 
+import org.springframework.cache.annotation.Cacheable;
+
 import de.jollyday.HolidayCalendar;
 import de.jollyday.HolidayManager;
 import de.jollyday.ManagerParameter;
@@ -37,6 +39,7 @@ public class HolidayServiceImpl implements HolidayService {
       DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
   @Override
+  @Cacheable("holidays")
   public Set<Holiday> getAllHolidays(int year) {
     HolidayManager m = HolidayManager.getInstance(parameters);
     Set<de.jollyday.Holiday> extHolidays = m.getHolidays(year, "nw");
@@ -56,6 +59,7 @@ public class HolidayServiceImpl implements HolidayService {
   }
 
   @Override
+  @Cacheable("holidays")
   public Set<Holiday> getHolidayPeriodOfTime(LocalDate startDate, LocalDate endDate) {
 
     Set<Holiday> periodHolidays = new HashSet<>();

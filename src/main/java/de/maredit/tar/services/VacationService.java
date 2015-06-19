@@ -34,8 +34,7 @@ public class VacationService {
         if (holiday != null) {
           result = 1 - holiday.getValence();
         } else {
-          // handling für halbe Tage
-          result = 1;
+          result = vacation.isHalfDay() ? 0.5 : 1;
         }
       }
     } else {

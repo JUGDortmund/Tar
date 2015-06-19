@@ -1,5 +1,8 @@
 package de.maredit.tar.configs;
 
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+
+import org.springframework.cache.CacheManager;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.beans.VersionBean;
 import de.maredit.tar.utils.Log4j2Configurer;
@@ -37,5 +40,10 @@ public class ApplicationConfig {
     factoryBean.setTargetMethod("initLogging");
     factoryBean.setArguments(new String[] {"classpath:log4j2-" + logconfig + ".xml"});
     return factoryBean;
+  }
+  
+  @Bean
+  public CacheManager cacheManager() {
+    return new ConcurrentMapCacheManager("holidays");
   }
 }
