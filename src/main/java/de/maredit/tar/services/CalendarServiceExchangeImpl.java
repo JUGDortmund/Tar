@@ -1,5 +1,6 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.properties.ExchangeProperties;
 import de.maredit.tar.services.calendar.CalendarItem;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.TimeZone;
@@ -57,13 +59,44 @@ public class CalendarServiceExchangeImpl implements CalendarService {
       appointment.setIsReminderSet(false);
       appointment.setIsResponseRequested(false);
       appointment.setSubject("Urlaub: " + vacation.getUser().getFullname());
-      appointment.setIsAllDayEvent(true);
-      appointment.setStart(Date.from(vacation.getFrom().atStartOfDay(ZoneId.systemDefault())
-          .toInstant()));
-      appointment.setStartTimeZone(timezone);
-      appointment.setEnd(Date.from(vacation.getTo().atTime(23, 59, 59)
-          .atZone(ZoneId.systemDefault()).toInstant()));
-      appointment.setEndTimeZone(timezone);
+      appointment.setIsAllDayEvent(!vacation.isHalfDay());
+
+      if (vacation.isHalfDay()) {
+        String startTime = "00:00:00";
+        String endTime = "23:59:59";
+
+        switch(vacation.getTimeframe()) {
+          case AFTERNOON:
+            startTime = CalendarEvent.START_HALF_DAY_HOLIDAY_AFTERNOON;
+            endTime = CalendarEvent.END_HALF_DAY_HOLIDAY_AFTERNOON;
+            break;
+          case MORNING:
+            startTime = CalendarEvent.START_HALF_DAY_HOLIDAY_AFTERNOON;
+            endTime = CalendarEvent.END_HALF_DAY_HOLIDAY_AFTERNOON;
+            break;
+        }
+
+        appointment.setStart(Date.from(
+            vacation.getFrom().atTime(LocalTime.parse(
+                startTime))
+                 .atZone(ZoneId.systemDefault()).toInstant()));
+        appointment.setStartTimeZone(timezone);
+
+        appointment.setEnd(Date.from(
+            vacation.getTo().atTime(LocalTime.parse(endTime))
+                .atZone(ZoneId.systemDefault()).toInstant()));
+        appointment.setEndTimeZone(timezone);
+      }
+      else {
+        appointment.setIsAllDayEvent(true);
+        appointment.setStart(Date.from(vacation.getFrom().atStartOfDay(ZoneId.systemDefault())
+                                           .toInstant()));
+        appointment.setStartTimeZone(timezone);
+        appointment.setEnd(Date.from(vacation.getTo().atTime(23, 59, 59)
+                                         .atZone(ZoneId.systemDefault()).toInstant()));
+        appointment.setEndTimeZone(timezone);
+      }
+
       appointment.getRequiredAttendees().add(vacation.getUser().getMail());
       appointment.save(folder.getId(), SendInvitationsMode.SendToAllAndSaveCopy);
       return new CalendarItem(appointment.getId().toString());

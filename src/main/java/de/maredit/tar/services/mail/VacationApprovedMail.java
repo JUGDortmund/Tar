@@ -1,8 +1,8 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.VacationEntitlement;
-
+import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.utils.ConversionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -25,8 +25,27 @@ public class VacationApprovedMail implements MailObject {
     values.put("substitute", vacation.getSubstitute() == null ? "" : vacation.getSubstitute()
         .getFullname());
     values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
-    values.put("fromDate", ConversionUtils.convertLocalDateToString(vacation.getFrom()));
-    values.put("toDate", ConversionUtils.convertLocalDateToString(vacation.getTo()));
+
+    String fromDate = ConversionUtils.convertLocalDateToString(vacation.getFrom());
+    String toDate = ConversionUtils.convertLocalDateToString(vacation.getTo());
+
+    if ( vacation.isHalfDay() ) {
+      switch (vacation.getTimeframe()) {
+        case AFTERNOON:
+          fromDate = fromDate + CalendarEvent.START_HALF_DAY_HOLIDAY_AFTERNOON;
+          toDate = toDate + CalendarEvent.END_HALF_DAY_HOLIDAY_AFTERNOON;
+          break;
+        case MORNING:
+          fromDate = fromDate + CalendarEvent.START_HALF_DAY_HOLIDAY_MORNING;
+          toDate = toDate + CalendarEvent.END_HALF_DAY_HOLIDAY_MORNING;
+          break;
+        default:
+      }
+    }
+
+    values.put("fromDate", fromDate);
+    values.put("toDate", toDate);
+
     values.put("totalDays", vacation.getDays());
     values.put("leftDays", entitlement.getDays());
     values.put("leftDaysLastYear", entitlement.getDaysLastYear());

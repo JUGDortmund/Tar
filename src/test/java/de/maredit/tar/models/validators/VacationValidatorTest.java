@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,6 +66,40 @@ public class VacationValidatorTest {
     Vacation invalidVacation =
         new Vacation(user, LocalDate.of(2099, Month.AUGUST, 18), LocalDate.of(2099, Month.JULY, 03),
                      null, user, 15);
+
+    Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
+    validatorUnderTest.validate(invalidVacation, errors);
+
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("to"));
+  }
+
+  @Test
+  public void testValidationHalfDayWithoutTimeFrame() {
+    VacationValidator validatorUnderTest = new VacationValidator();
+
+    Vacation invalidVacation =
+        new Vacation(user, LocalDate.of(2099, Month.AUGUST, 03), LocalDate.of(2099, Month.AUGUST, 03),
+                     null, user, 0.5);
+    invalidVacation.setHalfDay(true);
+    invalidVacation.setTimeframe(null);
+
+    Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
+    validatorUnderTest.validate(invalidVacation, errors);
+
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("halfDay"));
+  }
+
+  @Test
+  public void testValidationHalfDayToLong() {
+    VacationValidator validatorUnderTest = new VacationValidator();
+
+    Vacation invalidVacation =
+        new Vacation(user, LocalDate.of(2099, Month.AUGUST, 03), LocalDate.of(2099, Month.AUGUST, 05),
+                     null, user, 0.5);
+    invalidVacation.setHalfDay(true);
+    invalidVacation.setTimeframe(HalfDayTimeFrame.AFTERNOON);
 
     Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
     validatorUnderTest.validate(invalidVacation, errors);

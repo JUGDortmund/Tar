@@ -1,5 +1,6 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
 import de.maredit.tar.models.enums.State;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -49,6 +50,10 @@ public class Vacation {
   private User author;
   
   private String appointmentId;
+
+  private boolean halfDay;
+
+  private HalfDayTimeFrame timeframe;
 
   public Vacation() {
     this.created = LocalDateTime.now();
@@ -171,6 +176,22 @@ public class Vacation {
 
   public void setAppointmentId(String appointmentId) {
     this.appointmentId = appointmentId;
+  }
+
+  public boolean isHalfDay() {
+    return halfDay;
+  }
+
+  public void setHalfDay(boolean halfDay) {
+    this.halfDay = halfDay;
+  }
+
+  public HalfDayTimeFrame getTimeframe() {
+    return timeframe;
+  }
+
+  public void setTimeframe(HalfDayTimeFrame timeframe) {
+    this.timeframe = timeframe;
   }
 
   @Override

@@ -5,6 +5,9 @@
 
 	<!-- Possible additional classes for vacation-form:
 edit-vacation, approve-vacation  -->
+
+
+
     <div class="card">
         <div class="panel panel-default module dashboard-panel face front"
              th:classappend="${formMode.value}">
@@ -79,7 +82,19 @@ edit-vacation, approve-vacation  -->
                                 </th:block>
                             </div>
 
-                            <div class="col-xs-6 form-group date-group"
+                            <div class="col-xs-6 form-group">
+                                <div class="input-group" style="padding-top: 30px;">
+                                    <input id="halfDay" type="checkbox" name="halfDay" th:field="*{halfDay}" th:disabled="${!editable}" />
+                                    <label for="halfDay">
+                                        <th th:text="#{field.halfday}"></th>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6 form-group date-group" id="dateToBox" th:styleappend="*{halfDay} ? 'display:none' : ''"
                                  th:classappend="${#fields.hasErrors('to')}? 'has-error'">
                                 <label for="dateTo">
                                     <th th:text="#{field.dateTo}"></th>
@@ -95,9 +110,25 @@ edit-vacation, approve-vacation  -->
                                     </div>
                                 </th:block>
                                 <th:block th:unless="${editable}">
-                                    <input type="text" class="form-control" th:field="*{to}"
+                                    <input type="text" class="form-control" th:field="*{to}" id="dateTo"
                                            disabled="disabled"/>
                                 </th:block>
+                            </div>
+
+                            <div class="col-xs-6 form-group date-group" id="halfDayBox" th:styleappend="*{halfDay} ? '' :'display:none'">
+                                <label for="dateTo">
+                                    <th th:text="#{field.timeframe}"></th>
+                                </label>
+
+                                <select class="form-control" style="width: 100%;" name="timeframe" th:field="*{timeframe}"
+                                        id="timeframe" th:disabled="${!editable}">
+                                    <option th:each="timeframe : ${T(de.maredit.tar.models.enums.HalfDayTimeFrame).values()}"
+                                            th:value="${timeframe}"
+                                            th:text="#{__${timeframe.value}__}"/>
+
+                                </select>
+                            </div>
+                            <div class="col-xs-6 form-group">
                             </div>
                         </div>
 
