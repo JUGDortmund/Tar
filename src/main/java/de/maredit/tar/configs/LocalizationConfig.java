@@ -18,6 +18,7 @@ public class LocalizationConfig extends WebMvcConfigurerAdapter {
 
   private final Locale locale = LocaleContextHolder.getLocale();
 
+  @SuppressWarnings("unused")
   private static final Logger LOG = LogManager.getLogger(LocalizationConfig.class);
 
   @Bean

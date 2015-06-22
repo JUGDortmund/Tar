@@ -32,14 +32,6 @@
 		<div th:if="${param.logout}" class="alert alert-success">
 			<th:block th:text="#{field.alertSuccess}" />
 		</div>
-		<div>
-			<form name="language" th:action="@{/changeLanguage}" method="post">
-				<select name="language" onchange="this.form.submit()">
-					<option value="?lang=de">Deutsch</option>
-					<option value="?lang=en" selected="selected">Englisch</option>
-				</select>
-			</form>
-		</div>
 		<div class="login-box-body">
 			<p class="login-box-msg">Chewie, we are home</p>
 
@@ -64,8 +56,7 @@
 					</div>
 					<!-- /.col -->
 					<div class="col-xs-4">
-						<button type="submit" class="btn btn-primary btn-block btn-flat">
-							<th:block th:text="#{field.signin}" />
+						<button type="submit" class="btn btn-primary btn-block btn-flat" th:text="#{field.signin}" >
 						</button>
 					</div>
 					<!-- /.col -->
