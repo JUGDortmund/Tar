@@ -1,20 +1,17 @@
 package de.maredit.tar.models;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Objects;
-
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
+import de.maredit.tar.models.enums.State;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import de.maredit.tar.models.enums.HalfDayTimeFrame;
-import de.maredit.tar.models.enums.State;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
 
 public class Vacation implements AccountEntry {
 
@@ -44,15 +41,12 @@ public class Vacation implements AccountEntry {
   @NotNull
   private User manager;
 
-  @DecimalMin("0.5")
   private double days;
-
-  @Min(0)
-  private double daysLeft;
 
   @NotNull
   private State state;
 
+  @DBRef
   private User author;
   
   private String appointmentId;
@@ -67,15 +61,13 @@ public class Vacation implements AccountEntry {
   }
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
-      double days, double daysLeft) {
+      double days) {
     this.user = user;
     this.from = from;
     this.to = to;
     this.substitute = substitute;
     this.manager = manager;
     this.days = days;
-    this.daysLeft = daysLeft;
-
     this.state = substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
     this.created = LocalDateTime.now();
   }
@@ -94,14 +86,6 @@ public class Vacation implements AccountEntry {
 
   public void setState(State state) {
     this.state = state;
-  }
-
-  public double getDaysLeft() {
-    return daysLeft;
-  }
-
-  public void setDaysLeft(double daysLeft) {
-    this.daysLeft = daysLeft;
   }
 
   /* (non-Javadoc)
@@ -225,7 +209,6 @@ public class Vacation implements AccountEntry {
   @Override
   public String toString() {
     return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
-        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", daysLeft="
-        + daysLeft + ", state=" + state + "]";
+        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", state=" + state + "]";
   }
 }

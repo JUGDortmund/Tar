@@ -1,17 +1,14 @@
 package de.maredit.tar.services;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import net.fortuna.ical4j.model.ValidationException;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.services.calendar.CalendarItem;
 
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.services.mail.Attachment;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Cn;
 import net.fortuna.ical4j.model.parameter.Role;
@@ -22,15 +19,16 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.util.UidGenerator;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
-
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.services.calendar.CalendarItem;
 
 @Service
 @Profile("iCalCalendarService")

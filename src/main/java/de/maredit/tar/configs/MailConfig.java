@@ -1,10 +1,9 @@
 package de.maredit.tar.configs;
 
-import org.springframework.context.annotation.Profile;
-
-import org.springframework.context.annotation.Bean;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 

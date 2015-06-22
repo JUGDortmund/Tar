@@ -40,7 +40,7 @@ public class AccountModel {
   public void setTotalVacationDays(double totalVacationDays) {
     this.totalVacationDays = totalVacationDays;
   }
-  public Double getPreviousYearOpenVacationDays() {
+  public double getPreviousYearOpenVacationDays() {
     return previousYearOpenVacationDays;
   }
   public void setPreviousYearOpenVacationDays(double previousYearOpenVacationDays) {

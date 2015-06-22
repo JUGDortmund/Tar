@@ -51,9 +51,9 @@ public class VacationValidatorTest {
   public void testValidationWithValidVacation() {
 
     VacationValidator validatorUnderTest = new VacationValidator();
-    AccountEntry validVacation =
+    Vacation validVacation =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                     user2, user, 15, 5);
+                     user2, user, 15);
 
     Errors errors = new BeanPropertyBindingResult(validVacation, "validVacation");
     validatorUnderTest.validate(validVacation, errors);
@@ -65,9 +65,9 @@ public class VacationValidatorTest {
   public void testValidationWithToBeforeFromDate() {
     VacationValidator validatorUnderTest = new VacationValidator();
 
-    AccountEntry invalidVacation =
+    Vacation invalidVacation =
         new Vacation(user, LocalDate.of(2099, Month.AUGUST, 18), LocalDate.of(2099, Month.JULY, 03),
-                     null, user, 15, 5);
+                     null, user, 15);
 
     Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
     validatorUnderTest.validate(invalidVacation, errors);
@@ -82,7 +82,7 @@ public class VacationValidatorTest {
 
     Vacation invalidVacation =
         new Vacation(user, LocalDate.of(2099, Month.AUGUST, 03), LocalDate.of(2099, Month.AUGUST, 03),
-                     null, user, 0.5, 5);
+                     null, user, 0.5);
     invalidVacation.setHalfDay(true);
     invalidVacation.setTimeframe(null);
 
@@ -99,7 +99,7 @@ public class VacationValidatorTest {
 
     Vacation invalidVacation =
         new Vacation(user, LocalDate.of(2099, Month.AUGUST, 03), LocalDate.of(2099, Month.AUGUST, 05),
-                     null, user, 0.5, 5);
+                     null, user, 0.5);
     invalidVacation.setHalfDay(true);
     invalidVacation.setTimeframe(HalfDayTimeFrame.AFTERNOON);
 

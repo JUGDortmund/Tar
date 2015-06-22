@@ -3,7 +3,6 @@ package de.maredit.tar.services;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;

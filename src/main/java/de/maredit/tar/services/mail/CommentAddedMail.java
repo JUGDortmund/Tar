@@ -4,7 +4,6 @@ import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.utils.ConversionUtils;
-
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;

@@ -3,8 +3,8 @@ package de.maredit.tar.services.mail;
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.utils.ConversionUtils;
-
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
@@ -20,7 +20,7 @@ public class VacationModifiedMail implements MailObject {
   private String[] ccRecipients;
   private String[] toRecipients;
 
-  public VacationModifiedMail(Vacation vacation, String urlToVacation, String comment, Vacation vacationBeforeChange, User user) {
+  public VacationModifiedMail(Vacation vacation, VacationEntitlement remaining, String urlToVacation, String comment, Vacation vacationBeforeChange, VacationEntitlement oldRemaining, User user) {
     values.put("employee_old", vacationBeforeChange.getUser().getFirstname());
     values.put("manager_old", vacationBeforeChange.getManager() == null ? "" : vacationBeforeChange.getManager().getFullname());
     values.put("substitute_old", vacationBeforeChange.getSubstitute() == null ? "" : vacationBeforeChange.getSubstitute()
@@ -47,7 +47,8 @@ public class VacationModifiedMail implements MailObject {
     values.put("toDate", toDateOld);
 
     values.put("totalDays_old", vacationBeforeChange.getDays());
-    values.put("leftDays_old", vacationBeforeChange.getDaysLeft());
+    values.put("leftDays_old", oldRemaining.getDays());
+    values.put("leftDaysLastYear_old", oldRemaining.getDaysLastYear());
 
     values.put("employee", vacation.getUser().getFirstname());
     values.put("manager", vacation.getManager() == null ? "" : vacation.getManager().getFullname());
@@ -75,7 +76,8 @@ public class VacationModifiedMail implements MailObject {
     values.put("toDate", toDate);
 
     values.put("totalDays", vacation.getDays());
-    values.put("leftDays", vacation.getDaysLeft());
+    values.put("leftDays", remaining.getDays());
+    values.put("leftDaysLastYear", remaining.getDaysLastYear());
     values.put("modifiedBy", user.getFullname());
     values.put("urlToVacation", urlToVacation);
     values.put("comment", comment);

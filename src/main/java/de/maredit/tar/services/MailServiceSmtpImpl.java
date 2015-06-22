@@ -1,11 +1,7 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.services.mail.Attachment;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import de.maredit.tar.properties.CustomMailProperties;
+import de.maredit.tar.services.mail.Attachment;
 import de.maredit.tar.services.mail.MailObject;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +13,9 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 @Service
 @Profile({"smtpMailService"})

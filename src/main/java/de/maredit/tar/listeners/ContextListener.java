@@ -1,14 +1,8 @@
 package de.maredit.tar.listeners;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
+import de.maredit.tar.services.VacationService;
 
 import com.unboundid.ldap.sdk.LDAPException;
-
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.ProtocolItem;
 import de.maredit.tar.models.StateItem;
@@ -25,6 +19,12 @@ import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.UserService;
 import de.maredit.tar.tasks.UserSyncTask;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class ContextListener implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -52,6 +52,7 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
 
       LdapService ldapService = event.getApplicationContext().getBean(LdapService.class);
       UserService userService = event.getApplicationContext().getBean(UserService.class);
+      VacationService vacationService = event.getApplicationContext().getBean(VacationService.class);
 
       User manager = null;
 
@@ -68,7 +69,8 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
       for (User user : users) {
         Vacation v1 =
             new Vacation(user, LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(
-                1).plusDays(1), manager, manager, 2, 28);
+                1).plusDays(1), manager, manager, 0);
+        v1.setDays(vacationService.getCountOfVacation(v1));
         v1.setState(State.WAITING_FOR_APPROVEMENT);
         try {
           Thread.sleep(100);
@@ -77,7 +79,8 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         }
         Vacation v2 =
             new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(8),
-                         manager, manager, 4, 24);
+                         manager, manager, 4);
+        v2.setDays(vacationService.getCountOfVacation(v2));
         v2.setState(State.REQUESTED_SUBSTITUTE);
         try {
           Thread.sleep(100);
@@ -87,7 +90,8 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         Vacation
             v3 =
             new Vacation(user, LocalDate.now().plusWeeks(2), LocalDate.now().plusWeeks(2).plusDays(
-                4), manager, manager, 5, 19);
+                4), manager, manager, 5);
+        v3.setDays(vacationService.getCountOfVacation(v3));
         v3.setState(State.APPROVED);
         vacationRepository.save(v1);
         vacationRepository.save(v2);
@@ -159,7 +163,7 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         stateItemRepository.save(stateItem3);
 
         UserVacationAccount
-            account = userService.getUserVacationAccountForYear(user, v1.getFrom().getYear());
+            account = userService.getUserVacationAccountForYear(user, LocalDate.now().getYear());
         account.addVacation(v1);
         account.addVacation(v2);
         account.addVacation(v3);

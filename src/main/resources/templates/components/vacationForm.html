@@ -14,7 +14,7 @@ edit-vacation, approve-vacation  -->
                 <div class="panel-heading"><th th:text="#{field.vacationForm}"></th></div>
                 <div class="panel-body">
 
-                    <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form"
+                    <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form" class="vacationForm"
                           th:with="editable=
                                 ${(formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT)
                                     and (#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
@@ -133,43 +133,26 @@ edit-vacation, approve-vacation  -->
                         </div>
 
                         <div class="row">
-                            <div class="col-xs-6 form-group"
-                                 th:classappend="${#fields.hasErrors('days')}? 'has-error'">
-                                <label for="vacationDays">
+                            <div class="col-xs-6 form-group">
+                                <label>
                                     <th th:text="#{field.vacationDays}"></th>
                                     <span th:if="${editable}">*</span>
                                 </label>
-
-                                <th:block th:if="${editable}">
-                                    <input type="number" class="form-control" name="vacationDays"
-                                           id="vacationDays"
-                                           step="0.5" min="0"
-                                           th:field="*{days}"/>
-                                </th:block>
-                                <th:block th:unless="${editable}">
-                                    <input class="form-control" name="vacationDays"
-                                           type="number" disabled="disabled"
-                                           th:field="*{days}"/>
-                                </th:block>
+	                            <label class="form-control vacationDays">
+                                	<th:block th:if="${vacationDays != null}" th:text="${#numbers.formatDecimal(vacationDays,1,1)}"/>
+                                </label>
 
                             </div>
 
-                            <div class="col-xs-6 form-group"
-                                 th:classappend="${#fields.hasErrors('daysLeft')}? 'has-error'">
-                                <label for="daysLeft">
+                            <div class="col-xs-6 form-group">
+                                <label >
                                     <th th:text="#{field.vacationDaysLeft}"></th>
                                     <span th:if="${editable}">*</span>
                                 </label>
-                                <th:block th:if="${editable}">
-                                    <input type="number" class="form-control" name="daysLeft" id="daysLeft"
-                                           step="0.5"
-                                           th:field="*{daysLeft}"/>
-                                </th:block>
-                                <th:block th:unless="${editable}">
-                                    <input class="form-control" name="vacationDays"
-                                           type="number" disabled="disabled"
-                                           th:field="*{daysLeft}"/>
-                                </th:block>
+                                <label class="form-control remainingDays">
+                                	<th:block th:text="${#numbers.formatDecimal(remaining.days,1,1)}"/>
+                                	<th:block th:if="${remaining.daysLastYear > 0}" th:text="${' + ' + #numbers.formatDecimal(remaining.daysLastYear,1,1)}" />
+                                </label>
                             </div>
                         </div>
 

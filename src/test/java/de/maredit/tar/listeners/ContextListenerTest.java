@@ -1,5 +1,10 @@
 package de.maredit.tar.listeners;
 
+import de.maredit.tar.services.VacationService;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
@@ -13,7 +18,6 @@ import de.maredit.tar.services.LdapService;
 import de.maredit.tar.services.UserService;
 import de.maredit.tar.tasks.UserSyncTask;
 import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,10 +32,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
@@ -61,6 +61,9 @@ public class ContextListenerTest {
 
   @Autowired
   private LdapService ldapServcie;
+  
+  @Autowired
+  private VacationService vacationService;
 
   @Autowired
   private UserService userService;
@@ -101,6 +104,8 @@ public class ContextListenerTest {
         userVacationAccountRepository);
     when(event.getApplicationContext().getBean(LdapService.class)).thenReturn(ldapServcie);
     when(event.getApplicationContext().getBean(UserService.class)).thenReturn(userService);
+    when(event.getApplicationContext().getBean(VacationService.class)).thenReturn(vacationService);
+    
 
     this.userSyncTask.syncLdapUser();
 

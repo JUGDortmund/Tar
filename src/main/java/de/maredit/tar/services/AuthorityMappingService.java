@@ -1,10 +1,10 @@
 package de.maredit.tar.services;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 
 @ConfigurationProperties(locations = "classpath:group-mapping.yaml")

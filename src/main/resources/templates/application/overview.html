@@ -29,16 +29,16 @@
 
                             <div class="panel-heading" th:id="|heading${iterator.index}|">
                                 <div class="progress-group">
-                                	<a th:href="@{/userDetails(user=${account.account.user.id})}" th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text" th:text="${account.account.user.lastname + ', ' + account.account.user.firstname}">Username</a>
+                                	<a th:href="@{/userDetails(user=${account.user.id})}" th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text" th:text="${account.user.lastname + ', ' + account.user.firstname}">Username</a>
                                     <span th:unless="${#authorization.expression('hasRole(''SUPERVISOR'')')}" class="progress-text"
-                                          th:text="${account.account.user.lastname + ', ' + account.account.user.firstname}">Username</span>
+                                          th:text="${account.user.lastname + ', ' + account.user.firstname}">Username</span>
                                     <span class="progress-number">
                                         <b>
-                                            <span th:text="${{account.account.totalVacationDays}}"
+                                            <span th:text="${{account.totalVacationDays}}"
                                                   data-toggle="tooltip" data-placement="top"
                                                   th:title="#{field.totalVacationsYear}">30</span>
-                                            <span th:if="${account.account.previousYearOpenVacationDays > 0}"
-                                                  th:text="${{'(+'+account.account.previousYearOpenVacationDays+')'}}"
+                                            <span th:if="${account.previousYearOpenVacationDays > 0}"
+                                                  th:text="${{'(+'+account.previousYearOpenVacationDays+')'}}"
                                                   data-toggle="tooltip" data-placement="top"
                                                   th:title="#{field.leftDaysLastYear}">(+0)</span>
                                         </b>
@@ -49,22 +49,22 @@
                                     </span>
                                     <div class="progress">
                                         <div class="progress-bar progress-bar-success"
-                                             th:style="|width: ${account.account.totalVacationDays &lt;= 0 ? 0 : account.account.approvedVacationDays/account.account.totalVacationDays * 100}%;|"
+                                             th:style="|width: ${account.totalVacationDays &lt;= 0 ? 0 : account.approvedVacationDays/account.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             th:title="#{field.approvedVacations} + ': ' + ${{account.account.approvedVacationDays}}|">
-                                            <span th:text="${{account.account.approvedVacationDays}}">genehmigte Urlaubstage</span>
+                                             th:title="#{field.approvedVacations} + ': ' + ${{account.approvedVacationDays}}|">
+                                            <span th:text="${{account.approvedVacationDays}}">genehmigte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-warning progress-bar-striped"
-                                             th:style="|width: ${account.account.totalVacationDays &lt;= 0 ? 0 : account.account.pendingVacationDays/account.account.totalVacationDays * 100}%;|"
+                                             th:style="|width: ${account.totalVacationDays &lt;= 0 ? 0 : account.pendingVacationDays/account.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             th:title="#{field.vacationsApplied} + ': ' + ${{account.account.pendingVacationDays}}|">
-                                            <span th:text="${{account.account.pendingVacationDays}}">beantragte Urlaubstage</span>
+                                             th:title="#{field.vacationsApplied} + ': ' + ${{account.pendingVacationDays}}|">
+                                            <span th:text="${{account.pendingVacationDays}}">beantragte Urlaubstage</span>
                                         </div>
                                         <div class="progress-bar progress-bar-empty"
-                                             th:style="|width: ${account.account.totalVacationDays &lt;= 0 ? 0 : account.account.openVacationDays/account.account.totalVacationDays * 100}%;|"
+                                             th:style="|width: ${account.totalVacationDays &lt;= 0 ? 0 : account.openVacationDays/account.totalVacationDays * 100}%;|"
                                              data-toggle="tooltip" data-placement="top"
-                                             th:title="#{field.openVacationDays} + ': ' + ${{account.account.openVacationDays}}|">
-                                            <span th:text="${{account.account.openVacationDays}}">noch verfügbare Urlaubstage</span>
+                                             th:title="#{field.openVacationDays} + ': ' + ${{account.openVacationDays}}|">
+                                            <span th:text="${{account.openVacationDays}}">noch verfügbare Urlaubstage</span>
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                             <th th:text="#{field.saldo}">Saldo</th>
                                         </tr>
                                         <tr>
-                                            <td th:text="${field.creditAnnualVacation}">Gutschrift</td>
+                                            <td th:text="#{field.creditAnnualVacation}">Gutschrift</td>
                                             <td/>
                                             <td/>
                                             <td th:text="${#numbers.formatDecimal(account.totalVacationDays,1,1)}"/>
@@ -92,11 +92,11 @@
                                         </tr>
                                         <th:block th:each="entry, iterator : ${account.entries}">
                                         <tr>
-                                            <td th:text="${field.vacation}">Urlaub</td>
+                                            <td th:text="#{field.vacation}">Urlaub</td>
                                             <td th:text="${{entry.from}}"/>
                                             <td th:text="${{entry.to}}"/>
                                             <td th:text="${#numbers.formatDecimal(entry.days,1,1)}"/>
-                                            <td th:text="${#numbers.formatDecimal(entry.daysLeft,1,1)}"/>
+                                            <td th:text="${#numbers.formatDecimal(entry.days,1,1)}"/>
                                         </tr>
                                         </th:block>
                                     </table>
