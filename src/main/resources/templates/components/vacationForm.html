@@ -139,7 +139,7 @@ edit-vacation, approve-vacation  -->
                                     <span th:if="${editable}">*</span>
                                 </label>
 	                            <label class="form-control vacationDays">
-                                	<th:block th:if="${days != null}" th:text="${#numbers.formatDecimal(days,1,1)}"/>
+                                	<th:block th:if="${vacationDays != null}" th:text="${#numbers.formatDecimal(vacationDays,1,1)}"/>
                                 </label>
 
                             </div>

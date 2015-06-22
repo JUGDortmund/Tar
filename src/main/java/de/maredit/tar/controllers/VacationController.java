@@ -1,8 +1,5 @@
 package de.maredit.tar.controllers;
 
-import org.springframework.context.i18n.LocaleContextHolder;
-
-import de.maredit.tar.properties.VacationProperties;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
@@ -14,6 +11,7 @@ import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.properties.CustomMailProperties;
+import de.maredit.tar.properties.VacationProperties;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;
 import de.maredit.tar.repositories.StateItemRepository;
@@ -40,6 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -60,10 +59,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -229,7 +226,7 @@ public class VacationController extends AbstractBaseController {
                          Model model) {
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
-    model.addAttribute("days", vacation.getDays());
+    model.addAttribute("vacationDays", vacation.getDays());
     model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom() == null ? LocalDateTime.now().getYear(): vacation.getFrom().getYear())));
     switch (action) {
       case "edit":
@@ -272,6 +269,8 @@ public class VacationController extends AbstractBaseController {
                              HttpServletRequest request) {
 
     boolean newVacation = StringUtils.isBlank(vacation.getId());
+    UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+    account.addVacation(vacation);
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getField() + " " + fieldError.getDefaultMessage()));
@@ -284,21 +283,33 @@ public class VacationController extends AbstractBaseController {
       } else {
         model.addAttribute("formMode", FormMode.EDIT);
       }
-      model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
+      if (bindingResult.hasFieldErrors("from") || bindingResult.hasFieldErrors("to")) {
+        model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
+      } else {
+        model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
+        model.addAttribute("remaining", vacationService.getRemainingVacationDays(account));
+      }
       return "application/index";
     } else {
 
-      UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
       vacation.setDays(vacationService.getCountOfVacation(vacation));
 
       if (newVacation) {
         vacation.setAuthor(applicationController.getConnectedUser());
+        VacationEntitlement remainingVacationDays = vacationService.getRemainingVacationDays(account);
+        if (remainingVacationDays.getDays() < 0) {
+          bindingResult.reject("error.notEnoughRemaingDays", "You have not enough days left for this vacation");
+          setIndexModelValues(model, vacation.getUser());
+          model.addAttribute("formMode", FormMode.NEW);
+          model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
+          model.addAttribute("remaining", remainingVacationDays);
+          return "application/index";
+        }
         this.vacationRepository.save(vacation);
         saveComment(comment, vacation);
-        account.addVacation(vacation);
         userVacationAccountRepository.save(account);
 
-        this.mailService.sendMail(new VacationCreateMail(vacation, vacationService.getRemainingVacationDays(account), customMailProperties.getUrlToVacation(), comment));
+        this.mailService.sendMail(new VacationCreateMail(vacation, remainingVacationDays, customMailProperties.getUrlToVacation(), comment));
       } else {
         VacationEntitlement oldRemaining = vacationService.getRemainingVacationDays(account);
         Vacation vacationBeforeChange = vacationRepository.findOne(vacation.getId());
@@ -306,13 +317,21 @@ public class VacationController extends AbstractBaseController {
             : State.REQUESTED_SUBSTITUTE);
         calendarService.deleteAppointment(vacation);
         vacation.setAppointmentId(null);
+        account.addVacation(vacation);
+
+        VacationEntitlement remaining = vacationService.getRemainingVacationDays(account);
+        if (remaining.getDays() < 0) {
+          bindingResult.reject("error.notEnoughRemaingDays", "You have not enough days left for this vacation");
+          setIndexModelValues(model, vacation.getUser());
+          model.addAttribute("formMode", FormMode.EDIT);
+          model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
+          model.addAttribute("remaining", remaining);
+          return "application/index";
+        }
 
         this.vacationRepository.save(vacation);
         saveComment(comment, vacation);
-        account.addVacation(vacation);
         userVacationAccountRepository.save(account);
-
-        VacationEntitlement remaining = vacationService.getRemainingVacationDays(account);
 
         this.mailService.sendMail(new VacationModifiedMail(vacation, remaining, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
                                    oldRemaining, applicationController
@@ -340,9 +359,7 @@ public class VacationController extends AbstractBaseController {
   @RequestMapping(value="/updateVacationForm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public Map<String, Object> updateVacationForm(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
-    NumberFormat localFormat = NumberFormat.getNumberInstance(LocaleContextHolder.getLocale());
-    localFormat.setMinimumFractionDigits(1);
-    Map<String, Object> result = new HashMap<>();
+    
     if (!bindingResult.hasFieldErrors("from") && !bindingResult.hasFieldErrors("to")) {
       UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
       UserVacationAccount calculatingAccount = new UserVacationAccount();
@@ -351,26 +368,26 @@ public class VacationController extends AbstractBaseController {
       calculatingAccount.setExpiryDate(account.getExpiryDate());
       calculatingAccount.setTotalVacationDays(account.getTotalVacationDays());
       calculatingAccount.setPreviousYearOpenVacationDays(account.getPreviousYearOpenVacationDays());
-      Set<Vacation> vacations = new HashSet<Vacation>(account.getVacations());
-      vacations.add(vacation);
-      calculatingAccount.setVacations(vacations);
-
-      result.put("vacationDays", localFormat.format(vacationService.getCountOfVacation(vacation)));
-      VacationEntitlement remainingDays = vacationService.getRemainingVacationDays(calculatingAccount);
-      StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
-      if (remainingDays.getDaysLastYear() > 0) {
-        remainingBuilder.append(" + ").append(localFormat.format(remainingDays.getDaysLastYear()));
-      }
-      result.put("remainingDays", remainingBuilder.toString());
-    } else {
-      result.put("vacationDays", "");
-      VacationEntitlement remainingDays = vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), LocalDate.now().getYear()));
-      StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
-      if (remainingDays.getDaysLastYear() > 0) {
-        remainingBuilder.append(" + ").append(localFormat.format(remainingDays.getDaysLastYear()));
-      }
-      result.put("remainingDays", remainingBuilder.toString());
+      vacation.setDays(vacationService.getCountOfVacation(vacation));
+      calculatingAccount.setVacations(account.getVacations());
+      calculatingAccount.addVacation(vacation);
+      
+      return buildRemainingDays(calculatingAccount, vacation);
     }
+    return buildRemainingDays(userService.getUserVacationAccountForYear(vacation.getUser(), LocalDate.now().getYear()), null);
+  }
+
+  private Map<String, Object> buildRemainingDays(UserVacationAccount account, Vacation vacation) {
+    NumberFormat localFormat = NumberFormat.getNumberInstance(LocaleContextHolder.getLocale());
+    localFormat.setMinimumFractionDigits(1);
+    Map<String, Object> result = new HashMap<>();
+    result.put("vacationDays", vacation == null ? "" : localFormat.format(vacationService.getCountOfVacation(vacation)));
+    VacationEntitlement remainingDays = vacationService.getRemainingVacationDays(account);
+    StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
+    if (remainingDays.getDaysLastYear() > 0) {
+      remainingBuilder.append(" + ").append(localFormat.format(remainingDays.getDaysLastYear()));
+    }
+    result.put("remainingDays", remainingBuilder.toString());
     return result;
   }
 
