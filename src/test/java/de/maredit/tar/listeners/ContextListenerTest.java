@@ -1,9 +1,10 @@
 package de.maredit.tar.listeners;
 
+import de.maredit.tar.services.VacationService;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
@@ -60,6 +61,9 @@ public class ContextListenerTest {
 
   @Autowired
   private LdapService ldapServcie;
+  
+  @Autowired
+  private VacationService vacationService;
 
   @Autowired
   private UserService userService;
@@ -100,6 +104,8 @@ public class ContextListenerTest {
         userVacationAccountRepository);
     when(event.getApplicationContext().getBean(LdapService.class)).thenReturn(ldapServcie);
     when(event.getApplicationContext().getBean(UserService.class)).thenReturn(userService);
+    when(event.getApplicationContext().getBean(VacationService.class)).thenReturn(vacationService);
+    
 
     this.userSyncTask.syncLdapUser();
 
