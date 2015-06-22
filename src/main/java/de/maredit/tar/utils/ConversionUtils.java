@@ -1,5 +1,7 @@
 package de.maredit.tar.utils;
 
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;

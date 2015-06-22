@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.fortuna.ical4j.model.ValidationException;
+
+import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.services.mail.Attachment;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
@@ -23,6 +25,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -42,12 +45,40 @@ public class CalendarServiceICalImpl implements CalendarService {
       ical.getProperties().add(CalScale.GREGORIAN);
       ical.getProperties().add(Version.VERSION_2_0);
       ical.getProperties().add(new ProdId("-//maredit//TaR 1.0//DE"));
-      DateTime start =
-          new DateTime(Date.from(vacation.getFrom().atStartOfDay(ZoneId.systemDefault())
-              .toInstant()));
-      DateTime end =
-          new DateTime(Date.from(vacation.getTo().plusDays(1).atStartOfDay(ZoneId.systemDefault())
-              .toInstant()));
+
+      DateTime start;
+      DateTime end;
+
+      if (vacation.isHalfDay()) {
+        String startTime = "00:00:00";
+        String endTime = "23:59:59";
+
+        switch(vacation.getTimeframe()) {
+          case AFTERNOON:
+            startTime = CalendarEvent.START_HALF_DAY_HOLIDAY_AFTERNOON;
+            endTime = CalendarEvent.END_HALF_DAY_HOLIDAY_AFTERNOON;
+            break;
+          case MORNING:
+            startTime = CalendarEvent.START_HALF_DAY_HOLIDAY_AFTERNOON;
+            endTime = CalendarEvent.END_HALF_DAY_HOLIDAY_AFTERNOON;
+            break;
+        }
+        start =
+            new DateTime(Date.from(vacation.getFrom().atTime(LocalTime.parse(startTime))
+                                       .atZone(ZoneId.systemDefault()).toInstant()));
+        end =
+            new DateTime(Date.from(vacation.getTo().atTime(LocalTime.parse(endTime))
+                                       .atZone(ZoneId.systemDefault()).toInstant()));
+      }
+      else {
+        start =
+            new DateTime(Date.from(vacation.getFrom().atStartOfDay(ZoneId.systemDefault())
+                                       .toInstant()));
+        end =
+            new DateTime(Date.from(vacation.getTo().plusDays(1).atStartOfDay(ZoneId.systemDefault())
+                                       .toInstant()));
+      }
+
       VEvent meeting = new VEvent(start, end, "Urlaub " + vacation.getUser().getFullname());
 
       // generate unique identifier..

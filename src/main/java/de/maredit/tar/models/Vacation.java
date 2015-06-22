@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
 import de.maredit.tar.models.enums.State;
 
 public class Vacation implements AccountEntry {
@@ -55,6 +56,10 @@ public class Vacation implements AccountEntry {
   private User author;
   
   private String appointmentId;
+
+  private boolean halfDay;
+
+  private HalfDayTimeFrame timeframe;
 
   public Vacation() {
     this.created = LocalDateTime.now();
@@ -199,6 +204,22 @@ public class Vacation implements AccountEntry {
 
   public void setAppointmentId(String appointmentId) {
     this.appointmentId = appointmentId;
+  }
+
+  public boolean isHalfDay() {
+    return halfDay;
+  }
+
+  public void setHalfDay(boolean halfDay) {
+    this.halfDay = halfDay;
+  }
+
+  public HalfDayTimeFrame getTimeframe() {
+    return timeframe;
+  }
+
+  public void setTimeframe(HalfDayTimeFrame timeframe) {
+    this.timeframe = timeframe;
   }
 
   @Override

@@ -13,9 +13,11 @@ import de.maredit.tar.models.enums.CalendarEntryType;
 
 public class CalendarEvent {
 
-  private static final Logger LOG = LogManager.getLogger(CalendarEvent.class);
-  private static final String startHalfDayHoliday = "12:00:00";
-  private static final String endHalfDayHoliday = "17:00:00";
+  public static final Logger LOG = LogManager.getLogger(CalendarEvent.class);
+  public static final String START_HALF_DAY_HOLIDAY_MORNING = " 08:00:00";
+  public static final String END_HALF_DAY_HOLIDAY_MORNING = " 12:00:00";
+  public static final String START_HALF_DAY_HOLIDAY_AFTERNOON = " 13:00:00";
+  public static final String END_HALF_DAY_HOLIDAY_AFTERNOON = " 17:00:00";
 
   private String start;
   private String end;
@@ -51,8 +53,6 @@ public class CalendarEvent {
     } else {
       LOG.error("Provided manager is null for vacation ID {}", vacation.getId());
     }
-    this.setStart(vacation.getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-    this.setEnd(vacation.getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
     this.setState(vacation.getState().get());
     if (vacation.getSubstitute() != null) {
@@ -60,7 +60,29 @@ public class CalendarEvent {
       this.setSubstituteLastName(vacation.getSubstitute().getLastname());
     }
     this.setType(CalendarEntryType.VACATION);
-    this.allDay = true;
+    this.allDay = !vacation.isHalfDay();
+
+    String startTime = "";
+    String endTime = "";
+
+    if ( vacation.isHalfDay() ) {
+      switch (vacation.getTimeframe()) {
+        case AFTERNOON:
+          startTime = START_HALF_DAY_HOLIDAY_AFTERNOON;
+          endTime = END_HALF_DAY_HOLIDAY_AFTERNOON;
+          break;
+        case MORNING:
+          startTime = START_HALF_DAY_HOLIDAY_MORNING;
+          endTime = END_HALF_DAY_HOLIDAY_MORNING;
+          break;
+        default:
+          startTime = "";
+          endTime = "";
+      }
+    }
+
+    this.setStart(vacation.getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + startTime);
+    this.setEnd(vacation.getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + endTime);
   }
 
   public CalendarEvent(UserHoliday userHoliday) {
@@ -75,8 +97,8 @@ public class CalendarEvent {
       this.setEnd(userHoliday.getDate().toString());
       this.setAllDay(true);
     } else {
-      this.setStart(userHoliday.getDate().toString() + " " + startHalfDayHoliday);
-      this.setEnd(userHoliday.getDate().toString() + " " + endHalfDayHoliday);
+      this.setStart(userHoliday.getDate().toString() + " " + START_HALF_DAY_HOLIDAY_AFTERNOON);
+      this.setEnd(userHoliday.getDate().toString() + " " + END_HALF_DAY_HOLIDAY_AFTERNOON);
       this.setAllDay(false);
     }
   }
