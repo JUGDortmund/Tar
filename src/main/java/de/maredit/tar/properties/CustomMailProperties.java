@@ -1,9 +1,8 @@
 package de.maredit.tar.properties;
 
 
-import org.springframework.stereotype.Component;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "spring.mail")

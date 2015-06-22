@@ -12,6 +12,7 @@ import de.maredit.tar.models.UserHoliday;
 public class VacationProperties {
 
   private double defaultVacationDays;
+  private String expiryDate;
   private List<UserHoliday> userHolidays;
 
   public double getDefaultVacationDays() {
@@ -20,6 +21,14 @@ public class VacationProperties {
 
   public void setDefaultVacationDays(double defaultVacationDays) {
     this.defaultVacationDays = defaultVacationDays;
+  }
+
+  public String getExpiryDate() {
+    return expiryDate;
+  }
+
+  public void setExpiryDate(String expiryDate) {
+    this.expiryDate = expiryDate;
   }
 
   public List<UserHoliday> getUserHolidays() {

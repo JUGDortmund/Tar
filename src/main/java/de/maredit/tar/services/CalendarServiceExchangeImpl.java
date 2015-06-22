@@ -1,10 +1,9 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.models.CalendarEvent;
-import de.maredit.tar.services.calendar.CalendarItem;
-
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.properties.ExchangeProperties;
+import de.maredit.tar.services.calendar.CalendarItem;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;

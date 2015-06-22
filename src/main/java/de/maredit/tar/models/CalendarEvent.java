@@ -1,11 +1,10 @@
 package de.maredit.tar.models;
 
-import java.time.format.DateTimeFormatter;
-
+import de.maredit.tar.models.enums.CalendarEntryType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.maredit.tar.models.enums.CalendarEntryType;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by czillmann on 29.04.15.
@@ -85,20 +84,20 @@ public class CalendarEvent {
     this.setEnd(vacation.getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + endTime);
   }
 
-  public CalendarEvent(UserHoliday userHoliday) {
-    this.setTitle(userHoliday.getDescription());
+  public CalendarEvent(Holiday holiday) {
+    this.setTitle(holiday.getDescription());
 
-    this.setState(userHoliday.getDescription());
+    this.setState(holiday.getDescription());
     this.setType(CalendarEntryType.HOLIDAY);
-    this.setStart(userHoliday.getDate().toString());
-    this.setEnd(userHoliday.getDate().toString());
-    if (userHoliday.getValence() == 1.0) {
-      this.setStart(userHoliday.getDate().toString());
-      this.setEnd(userHoliday.getDate().toString());
+    this.setStart(holiday.getDate().toString());
+    this.setEnd(holiday.getDate().toString());
+    if (holiday.getValence() == 1.0) {
+      this.setStart(holiday.getDate().toString());
+      this.setEnd(holiday.getDate().toString());
       this.setAllDay(true);
     } else {
-      this.setStart(userHoliday.getDate().toString() + " " + START_HALF_DAY_HOLIDAY_AFTERNOON);
-      this.setEnd(userHoliday.getDate().toString() + " " + END_HALF_DAY_HOLIDAY_AFTERNOON);
+      this.setStart(holiday.getDate().toString() + " " + START_HALF_DAY_HOLIDAY_AFTERNOON);
+      this.setEnd(holiday.getDate().toString() + " " + END_HALF_DAY_HOLIDAY_AFTERNOON);
       this.setAllDay(false);
     }
   }
