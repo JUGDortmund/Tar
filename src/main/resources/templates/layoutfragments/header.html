@@ -5,8 +5,8 @@
 	<header class="main-header" th:fragment="header">
 
 		<!-- Logo -->
-		<a href="/" class="logo">
-			<th:block th:text="#{field.vacationmanagement}"/>
+		<a href="/" class="logo"> <th:block
+				th:text="#{field.vacationmanagement}" />
 		</a>
 
 		<!-- Header Navbar -->
@@ -45,24 +45,28 @@
 							<form th:action="@{/logout}" method="post">
 								<button type="submit" class="btn btn-primary logout">
 									<i class="glyphicon glyphicon-off"></i>
-									<th:block th:text="#{field.signout}"/>
+									<th:block th:text="#{field.signout}" />
 								</button>
 							</form>
 						</div>
 					</li>
 					<li>
-						<div>
-							<select name="forma" onchange="location = this.options[this.selectedIndex].value;">
-								<option value="?lang=de">Deutsch</option>
-								<option value="?lang=en">Englisch</option>
-							</select>
+						<div th:if="${#locale.toString().contains('de')}">
+							<form th:action="@{/changeLanguage}" method="post">
+								<select name="language" id="language"
+									onchange="this.form.submit()">
+									<option value="de" selected="selected">German</option>
+									<option value="en">English</option>
+								</select>
+							</form>
 						</div>
-						<div>
-						<form th:action="@{/changeLanguage}" method="post">
-								<button type="submit" class="btn btn-primary logout">
-									<i class="glyphicon glyphicon-off"></i>
-									<th:block th:text="Sprache"/>
-								</button>
+						<div th:if="${#locale.toString().contains('en')}">
+							<form th:action="@{/changeLanguage}" method="post">
+								<select name="language" id="language"
+									onchange="this.form.submit()">
+									<option value="de">German</option>
+									<option value="en" selected="selected">English</option>
+								</select>
 							</form>
 						</div>
 					</li>

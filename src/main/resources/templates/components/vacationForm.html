@@ -190,7 +190,7 @@ edit-vacation, approve-vacation  -->
                                     <select class="form-control" style="width: 100%;" name="superior"
                                             id="superior"
                                             th:field="*{manager}">
-                                        <option value="" selected="selected">- <th:block th:text="#{field.selectSuperior}"/> -</option>
+                                        <option value="" selected="selected">- <th:block th:text="#{field.selectManager}"/> -</option>
                                         <option th:each="manager : ${managers}"
                                                 th:value="${manager.id}"
                                                 th:text="${manager.lastname +', '+ manager.firstname}">

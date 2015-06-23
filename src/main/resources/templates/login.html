@@ -56,11 +56,27 @@
 					</div>
 					<!-- /.col -->
 					<div class="col-xs-4">
-						<button type="submit" class="btn btn-primary btn-block btn-flat" th:text="#{field.signin}" >
-						</button>
+						<button type="submit" class="btn btn-primary btn-block btn-flat"
+							th:text="#{field.signin}"></button>
 					</div>
 					<!-- /.col -->
 				</div>
+			</form>
+		</div>
+		<div th:if="${#locale.toString().contains('de')}">
+			<form th:action="@{/changeLanguage}" method="post">
+				<select name="language" id="language" onchange="this.form.submit()">
+					<option value="de" selected="selected">German</option>
+					<option value="en">English</option>
+				</select>
+			</form>
+		</div>
+		<div th:if="${#locale.toString().contains('en')}">
+			<form th:action="@{/changeLanguage}" method="post">
+				<select name="language" id="language" onchange="this.form.submit()">
+					<option value="de">German</option>
+					<option value="en" selected="selected">English</option>
+				</select>
 			</form>
 		</div>
 	</div>
