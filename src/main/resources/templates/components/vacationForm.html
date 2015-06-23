@@ -5,192 +5,210 @@
 
 	<!-- Possible additional classes for vacation-form:
 edit-vacation, approve-vacation  -->
-	<div class="card">
-		<div class="panel panel-default module dashboard-panel face front"
-			th:classappend="${formMode.value}">
-			<div class="panel-heading">
-				<th:block th:text="#{field.vacationForm}" />
-			</div>
-			<div class="panel-body">
+    <div class="card">
+        <div class="panel panel-default module dashboard-panel face front"
+             th:classappend="${formMode.value}">
+                <div class="panel-heading"><th:block th:text="#{field.vacationForm}"/></div>
+                <div class="panel-body">
 
-				<form th:action="@{/saveVacation}" th:object="${vacation}"
-					method="post" role="form"
-					th:with="editable=
+                    <form th:action="@{/saveVacation}" th:object="${vacation}" method="post" role="form" class="vacationForm"
+                          th:with="editable=
                                 ${(formMode == T(de.maredit.tar.models.enums.FormMode).NEW || formMode == T(de.maredit.tar.models.enums.FormMode).EDIT)
                                     and (#authorization.expression('hasRole(''SUPERVISOR'')') || vacation.user.username == #authentication.name)}">
-					<input type="hidden" th:field="*{id}" />
+                        <input type="hidden" th:field="*{id}"/>
 
-					<!-- Error-handling: show alert box, when validation fails  -->
-					<div class="alert alert-danger" role="alert"
-						th:if="${#fields.hasErrors('*')}">
-						<ul>
-							<li th:each="err : ${#fields.detailedErrors()}"
-								th:text="${err.message}">Input is incorrect</li>
-						</ul>
-					</div>
+                        <!-- Error-handling: show alert box, when validation fails  -->
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.detailedErrors()}"
+                                    th:text="${err.fieldName +' '+ err.message}">Input is incorrect
+                                </li>
+                            </ul>
+                        </div>
 
-					<div class="row">
-						<div class="col-xs-12 form-group"
-							th:classappend="${#fields.hasErrors('user')}? 'has-error'">
+                        <div class="row">
+                            <div class="col-xs-12 form-group"
+                                 th:classappend="${#fields.hasErrors('user')}? 'has-error'">
 
-							<label for="employee"> <th:block
-									th:text="#{field.employee}" /> <span
-								th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">*</span>
-							</label>
+                                <label for="employee">
+                                    <th:block th:text="#{field.employee}"/>
+                                    <span th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW}">*</span>
+                                </label>
 
-							<th:block
-								th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
-								<select class="form-control" style="width: 100%;"
-									name="employee" id="employee" th:field="*{user}">
-									<option th:each="user : ${users}" th:value="${user.id}"
-										th:text="${user.lastname +', '+ user.firstname}"></option>
-								</select>
-							</th:block>
-							<th:block
-								th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
-								<input type="text" class="form-control"
-									th:value="*{user.lastname + ', ' + user.firstname}"
-									disabled="disabled" />
-								<input type="hidden" th:field="*{user}" />
-							</th:block>
+                                <th:block
+                                        th:if="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
+                                    <select class="form-control" style="width: 100%;" name="employee"
+                                            id="employee"
+                                            th:field="*{user}">
+                                        <option th:each="user : ${users}"
+                                                th:value="${user.id}"
+                                                th:text="${user.lastname +', '+ user.firstname}">
+                                        </option>
+                                    </select>
+                                </th:block>
+                                <th:block
+                                        th:unless="${formMode == T(de.maredit.tar.models.enums.FormMode).NEW and #authorization.expression('hasRole(''SUPERVISOR'')')}">
+                                    <input type="text" class="form-control"
+                                           th:value="*{user.lastname + ', ' + user.firstname}"
+                                           disabled="disabled"/>
+                                    <input type="hidden" th:field="*{user}"/>
+                                </th:block>
 
-						</div>
-					</div>
+                            </div>
+                        </div>
 
-					<div class="row">
-						<div class="col-xs-6 form-group date-group"
-							th:classappend="${#fields.hasErrors('from')}? 'has-error'">
-							<label for="dateFrom"> <th:block
-									th:text="#{field.dateFrom}" /> <span th:if="${editable}">*</span>
-							</label>
+                        <div class="row">
+                            <div class="col-xs-6 form-group date-group"
+                                 th:classappend="${#fields.hasErrors('from')}? 'has-error'">
+                                <label for="dateFrom">
+                                    <th:block th:text="#{field.dateFrom}"/>
+                                    <span th:if="${editable}">*</span>
+                                </label>
 
-							<th:block th:if="${editable}">
-								<div class="input-group date dateFrom"
-									th:attr="data-lang=${#locale.language},data-dateformat=#{date.pattern}">
-									<input type="text" class="form-control" name="dateFrom"
-										id="dateFrom" th:field="*{from}" /> <span
-										class="input-group-addon"><i
-										class="glyphicon glyphicon-th"></i></span>
-								</div>
-							</th:block>
-							<th:block th:unless="${editable}">
-								<input type="text" class="form-control" th:field="*{from}"
-									disabled="disabled" />
-							</th:block>
-						</div>
+                                <th:block th:if="${editable}">
+                                    <div class="input-group date dateFrom"  th:attr="data-lang=${#locale.language},data-dateformat=${dateFormat}">
+                                        <input type="text" class="form-control" name="dateFrom" id="dateFrom"
+                                               th:field="*{from}"/>
+                                        <span class="input-group-addon"><i
+                                                class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${editable}">
+                                    <input type="text" class="form-control" th:field="*{from}"
+                                           disabled="disabled"/>
+                                </th:block>
+                            </div>
 
-						<div class="col-xs-6 form-group date-group"
-							th:classappend="${#fields.hasErrors('to')}? 'has-error'">
-							<label for="dateTo"> <th:block th:text="#{field.dateTo}" />
-								<span th:if="${editable}">*</span>
-							</label>
+                            <div class="col-xs-6 form-group">
+                                <div class="input-group" style="padding-top: 30px;">
+                                    <input id="halfDay" type="checkbox" name="halfDay" th:field="*{halfDay}" th:disabled="${!editable}" />
+                                    <label for="halfDay">
+                                        <th:block th:text="#{field.halfday}"/>
+                                    </label>
+                                </div>
+                            </div>
 
-							<th:block th:if="${editable}">
-								<div class="input-group date dateTo"
-									th:attr="data-lang=${#locale.language},data-dateformat=#{date.pattern}">
-									<input type="text" class="form-control" name="dateTo"
-										id="dateTo" th:field="*{to}" /> <span
-										class="input-group-addon"><i
-										class="glyphicon glyphicon-th"></i></span>
-								</div>
-							</th:block>
-							<th:block th:unless="${editable}">
-								<input type="text" class="form-control" th:field="*{to}"
-									disabled="disabled" />
-							</th:block>
-						</div>
-					</div>
+                        </div>
 
-					<div class="row">
-						<div class="col-xs-6 form-group"
-							th:classappend="${#fields.hasErrors('days')}? 'has-error'">
-							<label for="vacationDays"> <th:block
-									th:text="#{field.vacationDays}" /> <span th:if="${editable}">*</span>
-							</label>
+                        <div class="row">
+                            <div class="col-xs-6 form-group date-group" id="dateToBox" th:styleappend="*{halfDay} ? 'display:none' : ''"
+                                 th:classappend="${#fields.hasErrors('to')}? 'has-error'">
+                                <label for="dateTo">
+                                    <th:block th:text="#{field.dateTo}"/>
+                                    <span th:if="${editable}">*</span>
+                                </label>
 
-							<th:block th:if="${editable}">
-								<input type="number" class="form-control" name="vacationDays"
-									id="vacationDays" step="0.5" min="0" th:field="*{days}" />
-							</th:block>
-							<th:block th:unless="${editable}">
-								<input class="form-control" name="vacationDays" type="number"
-									disabled="disabled" th:field="*{days}" />
-							</th:block>
+                                <th:block th:if="${editable}">
+                                    <div class="input-group date dateTo" th:attr="data-lang=${#locale.language},data-dateformat=${dateFormat}">
+                                        <input type="text" class="form-control" name="dateTo" id="dateTo"
+                                               th:field="*{to}"/>
+                                        <span class="input-group-addon"><i
+                                                class="glyphicon glyphicon-th"></i></span>
+                                    </div>
+                                </th:block>
+                                <th:block th:unless="${editable}">
+                                    <input type="text" class="form-control" th:field="*{to}" id="dateTo"
+                                           disabled="disabled"/>
+                                </th:block>
+                            </div>
 
-						</div>
+                            <div class="col-xs-6 form-group date-group" id="halfDayBox" th:styleappend="*{halfDay} ? '' :'display:none'">
+                                <label for="dateTo">
+                                    <th:block th:text="#{field.timeframe}"/>
+                                </label>
 
-						<div class="col-xs-6 form-group"
-							th:classappend="${#fields.hasErrors('daysLeft')}? 'has-error'">
-							<label for="daysLeft"> <th:block
-									th:text="#{field.vacationDaysLeft}" /> <span
-								th:if="${editable}">*</span>
-							</label>
-							<th:block th:if="${editable}">
-								<input type="number" class="form-control" name="daysLeft"
-									id="daysLeft" step="0.5" th:field="*{daysLeft}" />
-							</th:block>
-							<th:block th:unless="${editable}">
-								<input class="form-control" name="vacationDays" type="number"
-									disabled="disabled" th:field="*{daysLeft}" />
-							</th:block>
-						</div>
-					</div>
+                                <select class="form-control" style="width: 100%;" name="timeframe" th:field="*{timeframe}"
+                                        id="timeframe" th:disabled="${!editable}">
+                                    <option th:each="timeframe : ${T(de.maredit.tar.models.enums.HalfDayTimeFrame).values()}"
+                                            th:value="${timeframe}"
+                                            th:text="#{__${timeframe.value}__}"/>
 
-					<div class="row">
-						<div class="col-xs-12 form-group"
-							th:classappend="${#fields.hasErrors('substitute')}? 'has-error'">
-							<label for="replacement" th:text="#{field.substitution}"></label>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 form-group">
+                            </div>
+                        </div>
 
-							<th:block th:if="${editable}">
-								<select class="form-control" style="width: 100%;"
-									name="replacement" id="replacement" th:field="*{substitute}">
-									<option value="" selected="selected">-
-										<th:block th:text="#{field.selectSubstitution}" /> -
-									</option>
-									<option th:each="substitute : ${users}"
-										th:value="${substitute.id}"
-										th:text="${substitute.lastname +', '+ substitute.firstname}">
-									</option>
-								</select>
-							</th:block>
-							<th:block th:unless="${editable}">
-								<input type="text" class="form-control"
-									th:value="*{substitute != null ? substitute.lastname + ', ' + substitute.firstname : ''}"
-									disabled="disabled" />
-							</th:block>
-						</div>
-					</div>
+                        <div class="row">
+                            <div class="col-xs-6 form-group">
+                                <label>
+                                    <th:block th:text="#{field.vacationDays}"/>
+                                    <span th:if="${editable}">*</span>
+                                </label>
+	                            <label class="form-control vacationDays">
+                                	<th:block th:if="${vacationDays != null}" th:text="${#numbers.formatDecimal(vacationDays,1,1)}"/>
+                                </label>
 
-					<div class="row">
-						<div class="col-xs-12 form-group"
-							th:classappend="${#fields.hasErrors('manager')}? 'has-error'">
-							<label for="superior"> <th:block
-									th:text="#{field.manager}" /> <span th:if="${editable}">*</span>
-							</label>
+                            </div>
 
-							<th:block th:if="${editable}">
-								<select class="form-control" style="width: 100%;"
-									name="superior" id="superior" th:field="*{manager}">
-									<option value="" selected="selected">-
-										<th:block th:text="#{field.selectManager}" /> -
-									</option>
-									<option th:each="manager : ${managers}"
-										th:value="${manager.id}"
-										th:text="${manager.lastname +', '+ manager.firstname}">
-									</option>
-								</select>
-							</th:block>
-							<th:block th:unless="${editable}">
-								<input type="text" class="form-control"
-									th:value="*{manager.lastname +', '+ manager.firstname}"
-									disabled="disabled" />
-							</th:block>
+                            <div class="col-xs-6 form-group">
+                                <label >
+                                    <th:block th:text="#{field.vacationDaysLeft}"/>
+                                    <span th:if="${editable}">*</span>
+                                </label>
+                                <label class="form-control remainingDays">
+                                	<th:block th:text="${#numbers.formatDecimal(remaining.days,1,1)}"/>
+                                	<th:block th:if="${remaining.daysLastYear > 0}" th:text="${' + ' + #numbers.formatDecimal(remaining.daysLastYear,1,1)}" />
+                                </label>
+                            </div>
+                        </div>
 
-						</div>
-					</div>
+                        <div class="row">
+                            <div class="col-xs-12 form-group"
+                                 th:classappend="${#fields.hasErrors('substitute')}? 'has-error'">
+                                <label for="replacement"><th:block th:text="#{field.substitution}"/></label>
 
-					<div class="row"
-						th:if="${
+                                <th:block th:if="${editable}">
+                                    <select class="form-control" style="width: 100%;" name="replacement"
+                                            id="replacement"
+                                            th:field="*{substitute}">
+                                        <option value="" selected="selected">- <th:block th:text="#{field.selectSubstitution}"/> -</option>
+                                        <option th:each="substitute : ${users}"
+                                                th:value="${substitute.id}"
+                                                th:text="${substitute.lastname +', '+ substitute.firstname}">
+                                        </option>
+                                    </select>
+                                </th:block>
+                                <th:block
+                                        th:unless="${editable}">
+                                    <input type="text" class="form-control"
+                                           th:value="*{substitute != null ? substitute.lastname + ', ' + substitute.firstname : ''}"
+                                           disabled="disabled"/>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 form-group"
+                                 th:classappend="${#fields.hasErrors('manager')}? 'has-error'">
+                                <label for="superior">
+                                    <th:block th:text="#{field.manager}"/>
+                                    <span th:if="${editable}">*</span>
+                                </label>
+
+                                <th:block th:if="${editable}">
+                                    <select class="form-control" style="width: 100%;" name="superior"
+                                            id="superior"
+                                            th:field="*{manager}">
+                                        <option value="" selected="selected">- <th:block th:text="#{field.selectSuperior}"/> -</option>
+                                        <option th:each="manager : ${managers}"
+                                                th:value="${manager.id}"
+                                                th:text="${manager.lastname +', '+ manager.firstname}">
+                                        </option>
+                                    </select>
+                                </th:block>
+                                <th:block
+                                        th:unless="${editable}">
+                                    <input type="text" class="form-control"
+                                           th:value="*{manager.lastname +', '+ manager.firstname}"
+                                           disabled="disabled"/>
+                                </th:block>
+
+                            </div>
+                        </div>
+
+                        <div class="row"
+                             th:if="${
                                     editable ||
                                     formMode == T(de.maredit.tar.models.enums.FormMode).SUBSTITUTE_APPROVAL ||
                                     formMode == T(de.maredit.tar.models.enums.FormMode).MANAGER_APPROVAL

@@ -25,7 +25,26 @@ refreshVacationForm = (data) ->
   $myForm.find('select').select2()
   scrollToVacationForm()
   activateToggle()
+  initializeAjaxCalculation()
+  toggleHalfDay()
+  
+refreshVacationDays = (data) ->
+  $daysLabel = $('label.vacationDays')
+  $remainingLabel = $('label.remainingDays')
+  $daysLabel.text(data.vacationDays)
+  $remainingLabel.text(data.remainingDays)
 
+toggleHalfDay = () ->
+  $('#halfDay').on 'change', ->
+    if $(this).is(':checked')
+      if(!isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()))
+        $('.input-group.date.dateTo').datepicker('update', $('.input-group.date.dateFrom').datepicker('getDate'))
+
+      $('#dateToBox').hide()
+      $('#halfDayBox').show()
+    else
+      $('#dateToBox').show()
+      $('#halfDayBox').hide()
 
 initializeDatePicker = () ->
    $('.input-group.date').each ->
@@ -43,9 +62,20 @@ initializeDatePicker = () ->
 
       if $this.hasClass('dateFrom')
         $this.on 'changeDate', ->
-            if(isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()))
+            if(isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()) or $('#halfDay').is(':checked') )
                 $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'))
 
+initializeAjaxCalculation = () ->
+  $('form input[id="dateFrom"], form input[id="dateTo"], form input[id="halfDay"]').change ->
+    $.ajax
+      url: 'updateVacationForm'
+      method: "POST"
+      dataType: "json"
+      data: { "id" : $('form > input[id="id"][type="hidden"]').val(), "from": $('form input[id="dateFrom"]').val(), "to": $('form input[id="dateTo"]').val(), "halfDay": $('form input[id="halfDay"]').is(':checked'), "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(), "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()}
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log(textStatus)
+      success: (data) ->
+        refreshVacationDays(data)
 
 # document ready 
 (($) ->
@@ -74,5 +104,7 @@ initializeDatePicker = () ->
       success: (data) ->
         refreshVacationForm(data)
     return false
-
+    
+  initializeAjaxCalculation()
+  toggleHalfDay()
 )(jQuery);

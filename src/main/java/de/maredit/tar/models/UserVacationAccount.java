@@ -1,13 +1,12 @@
 package de.maredit.tar.models;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by czillmann on 19.05.15.
@@ -24,10 +23,12 @@ public class UserVacationAccount {
   private Double previousYearOpenVacationDays;
   private LocalDate expiryDate;
   @DBRef
-  private List<Vacation> vacations;
-  private double pendingVacationDays;
-  private double approvedVacationDays;
+  private Set<Vacation> vacations;
 
+  public UserVacationAccount() {
+    vacations = new HashSet<Vacation>();
+  }
+  
   public User getUser() {
     return user;
   }
@@ -36,11 +37,11 @@ public class UserVacationAccount {
     this.user = user;
   }
 
-  public List<Vacation> getVacations() {
+  public Set<Vacation> getVacations() {
     return vacations;
   }
 
-  public void setVacations(List<Vacation> vacations) {
+  public void setVacations(Set<Vacation> vacations) {
     this.vacations = vacations;
   }
 
@@ -84,30 +85,13 @@ public class UserVacationAccount {
     this.previousYearOpenVacationDays = previousYearOpenVacationDays;
   }
 
-  public double getPendingVacationDays() {
-    return pendingVacationDays;
-  }
-
-  public void setPendingVacationDays(double pendingVacationDays) {
-    this.pendingVacationDays = pendingVacationDays;
-  }
-
-  public double getApprovedVacationDays() {
-    return approvedVacationDays;
-  }
-
-  public void setApprovedVacationDays(double approvedVacationDays) {
-    this.approvedVacationDays = approvedVacationDays;
-  }
-
-  public double getOpenVacationDays() {
-    return totalVacationDays - approvedVacationDays - pendingVacationDays + (previousYearOpenVacationDays == null ? 0 : previousYearOpenVacationDays);
-  }
-
   public void addVacation(Vacation vacation) {
     if (vacations == null) {
-      vacations = new ArrayList<>();
+      vacations = new HashSet<>();
     }
-    vacations.add(vacation);
+    if (!vacations.add(vacation)) {
+      vacations.remove(vacation);
+      vacations.add(vacation);
+    }
   }
 }

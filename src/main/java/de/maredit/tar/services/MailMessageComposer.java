@@ -1,20 +1,19 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.services.mail.Attachment;
-
-import java.util.Date;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-
+import de.maredit.tar.services.mail.MailObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
-import de.maredit.tar.services.mail.MailObject;
+
+import java.util.Date;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 
 @Component
 public class MailMessageComposer {

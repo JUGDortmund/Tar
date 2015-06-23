@@ -1,6 +1,9 @@
 package de.maredit.tar.services;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
@@ -27,10 +30,9 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Main.class)
@@ -74,8 +76,8 @@ public class UserServiceImplTest {
     userRepository.save(createDummyUserList());
     createDummyVactions();
     vacationRepository.save(createDummyVactions());
-    List<Vacation> vacations = userService.getVacationsForUserAndYear(user1, LocalDate.now().getYear());
-    UserVacationAccount account = userService.getUserVacationAccountForYear(user1, vacations.get(0).getFrom().getYear());
+    Set<Vacation> vacations = new HashSet<>(userService.getVacationsForUserAndYear(user1, LocalDate.now().getYear()));
+    UserVacationAccount account = userService.getUserVacationAccountForYear(user1, vacations.stream().findFirst().orElse(new Vacation()).getFrom().getYear());
     account.setVacations(vacations);
     userVacationAccountRepository.save(account);
   }
@@ -141,9 +143,6 @@ public class UserServiceImplTest {
     Assert.notNull(account);
     Assert.notEmpty(account.getVacations());
     assertEquals(4, account.getVacations().size());
-    assertEquals(4, account.getApprovedVacationDays(), 0);
-    assertEquals(4, account.getPendingVacationDays(), 0);
-    assertEquals(22, account.getOpenVacationDays(), 0);
     assertNull(account.getPreviousYearOpenVacationDays());
   }
 
@@ -153,10 +152,8 @@ public class UserServiceImplTest {
         account =
         userService.getUserVacationAccountForYear(user2, LocalDate.now().getYear());
     Assert.notNull(account);
-    assertNull(account.getVacations());
-    assertEquals(0, account.getApprovedVacationDays(), 0);
-    assertEquals(0, account.getPendingVacationDays(), 0);
-    assertEquals(30, account.getOpenVacationDays(), 0);
+    assertNotNull(account.getVacations());
+    assertEquals(0, account.getVacations().size());
     assertNull(account.getPreviousYearOpenVacationDays());
   }
 
@@ -220,7 +217,7 @@ public class UserServiceImplTest {
         vacation1 =
         new Vacation(user1, LocalDate.now().withMonth(4).plusDays(5),
                      LocalDate.now().withMonth(4).plusDays(8),
-                     null, user1, 4, 26);
+                     null, user1, 4);
     vacation1.setCreated(LocalDateTime.now().withMonth(3).minusDays(10));
     vacation1.setState(State.APPROVED);
     vacations.add(vacation1);
@@ -228,7 +225,7 @@ public class UserServiceImplTest {
         vacation2 =
         new Vacation(user1, LocalDate.now().withMonth(4).plusDays(15),
                      LocalDate.now().withMonth(4).plusDays(18),
-                     null, user1, 4, 22);
+                     null, user1, 4);
     vacation2.setCreated(LocalDateTime.now().withMonth(3).minusDays(8));
     vacations.add(vacation2);
     Vacation
@@ -237,7 +234,7 @@ public class UserServiceImplTest {
                      LocalDate.now().withMonth(
                          4).minusYears(
                          1).plusDays(18),
-                     null, user1, 4, 2);
+                     null, user1, 4);
     vacation3.setCreated(LocalDateTime.now().withMonth(3).minusYears(1));
     vacations.add(vacation3);
 
@@ -245,7 +242,7 @@ public class UserServiceImplTest {
         vacation4 =
         new Vacation(user1, LocalDate.now().withMonth(4).plusMonths(1).plusDays(1),
                      LocalDate.now().withMonth(4).plusMonths(1).plusDays(1),
-                     null, user1, 2, 24);
+                     null, user1, 2);
     vacation4.setCreated(LocalDateTime.now().withMonth(3).minusDays(5));
     vacation4.setState(State.REJECTED);
     vacations.add(vacation4);
@@ -253,7 +250,7 @@ public class UserServiceImplTest {
     Vacation
         vacation5 =
         new Vacation(user1, LocalDate.now().withMonth(4), LocalDate.now().withMonth(4),
-                     null, user1, 1, 25);
+                     null, user1, 1);
     vacation5.setCreated(LocalDateTime.now().withMonth(3).minusDays(2));
     vacation5.setState(State.CANCELED);
     vacations.add(vacation5);
@@ -271,14 +268,14 @@ public class UserServiceImplTest {
     Vacation
         vacation1 =
         new Vacation(user1, firstDayOfYear, firstDayOfYear,
-                     null, user1, 1, 29);
+                     null, user1, 1);
     vacation1.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(1));
     vacation1.setState(State.APPROVED);
     vacations.add(vacation1);
     Vacation
         vacation2 =
         new Vacation(user1, lastDayOfYear, lastDayOfYear,
-                     null, user1, 0.5, 4.5);
+                     null, user1, 0.5);
     vacation2.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
     vacation2.setState(State.APPROVED);
     vacations.add(vacation2);
@@ -286,7 +283,7 @@ public class UserServiceImplTest {
     Vacation
         vacation3 =
         new Vacation(user1, lastDayOfYear, firstDayOfNextYear,
-                     null, user1, 2, 2.5);
+                     null, user1, 2);
     vacation3.setCreated(LocalDateTime.now().withYear(2012).withMonth(12).withDayOfMonth(2));
     vacation3.setState(State.APPROVED);
     vacations.add(vacation3);

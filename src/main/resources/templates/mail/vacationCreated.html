@@ -20,9 +20,9 @@
         <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate}">vonDatum</span> </li>
         <li><th:block th:text="#{mail.dateTo}"/> <span th:text="${toDate}">bisDatum</span> </li> </ul> 
 	</p>
-    <p> <b><th:block th:text="#{mail.totalDays}"/></b> <span th:text="${totalDays}">Tage</span> </p>
+    <p> <b><th:block th:text="#{mail.totalDays}"/></b> <span th:text="${#numbers.formatDecimal(totalDays,0,1)}">Tage</span> </p>
 
-    <p> <b><th:block th:text="#{mail.leftDays}"/></b> <span th:text="${leftDays}">restTage</span> </p>
+    <p> <b><th:block th:text="#{mail.leftDays}"/></b> <span><th:block th:text="${#numbers.formatDecimal(leftDays,1,1)}">restTage</th:block><th:block th:if="${leftDaysLastYear > 0}" th:text="${' + ' + #numbers.formatDecimal(leftDaysLastYear,0,1)}"/></span> </p>
 
     <th:block th:if="${not #strings.isEmpty(createdBy)}">
         <p> <b><th:block th:text="#{mail.createdBy}"/></b> <span th:text="${createdBy}">createdBy</span> </p>

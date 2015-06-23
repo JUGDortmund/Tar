@@ -2,13 +2,13 @@ package de.maredit.tar.controllers;
 
 import static java.util.stream.Collectors.toList;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import de.maredit.tar.beans.NavigationBean;
+import de.maredit.tar.models.CalendarEvent;
+import de.maredit.tar.models.Holiday;
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.State;
+import de.maredit.tar.repositories.VacationRepository;
+import de.maredit.tar.services.HolidayService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import de.maredit.tar.beans.NavigationBean;
-import de.maredit.tar.models.CalendarEvent;
-import de.maredit.tar.models.UserHoliday;
-import de.maredit.tar.models.Vacation;
-import de.maredit.tar.models.enums.State;
-import de.maredit.tar.repositories.VacationRepository;
-import de.maredit.tar.services.HolidayService;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by czillmann on 29.04.15.
@@ -104,11 +103,11 @@ public class CalendarController{
                   return calendarEvent;
                 }).collect(toList());
 
-    Set<UserHoliday> userHolidays = new HashSet<UserHoliday>();
-    userHolidays = holidaySerivce.getHolidayPeriodOfTime(startDate, endDate, startDate.getYear());
+    Set<Holiday> holidays = new HashSet<>();
+    holidays = holidaySerivce.getHolidayPeriodOfTime(startDate, endDate);
 
     List<CalendarEvent> calendarHolidayEvents =
-        userHolidays
+        holidays
             .stream()
             .map(
                 userHoliday -> {

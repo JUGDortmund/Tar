@@ -19,14 +19,16 @@
             <div th:if="${vacations.size() > 0}">
                 <h3 class="list-group-item"><th:block th:text="#{field.vacations}"/></h3>
                 <a th:each="vacation : ${vacations}" class="list-group-item" th:href="@{/vacation(id=${vacation.id},action='edit')}">
-                    <span th:text="${vacation.from +' - '  + vacation.to}"></span>
+                    <span th:unless="${vacation.halfDay}" th:text="${{vacation.from +' - '  + vacation.to}}"></span>
+                    <span th:if="${vacation.halfDay}" th:text="|${{vacation.from}} #{${vacation.timeframe.get()}}|"></span>
                     <span th:class="${'glyphicon ' + vacation.state.get()}" aria-hidden="true" data-toggle="tooltip" th:title="${vacation.state.get()}"></span>
                 </a>
             </div>
             <div th:if="${substitutes.size() > 0}">
                 <h3 class="list-group-item"><th:block th:text="#{field.substitution}"/></h3>
                 <a th:each="substitute : ${substitutes}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='view')}">
-                    <span th:text="${substitute.from +' - '  + substitute.to}"></span>
+                    <span th:unless="${substitute.halfDay}" th:text="${{substitute.from +' - '  + substitute.to}}"></span>
+                    <span th:if="${substitute.halfDay}" th:text="|${{substitute.from}} #{${substitute.timeframe.get()}}|"></span>
                 	<strong th:text="${substitute.user.lastname + ', ' + substitute.user.firstname}"></strong>
                     <span th:class="${'glyphicon ' + substitute.state.get()}" aria-hidden="true" data-toggle="tooltip" th:title="${substitute.state.get()}"></span>
                 </a>

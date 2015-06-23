@@ -64,7 +64,11 @@
             $vacationDetail = $('#vacationDetail');
             $vacationDetail.find('.user').text(calEvent.userFirstName + ' ' + calEvent.userLastName);
             $vacationDetail.find('.state').text(calEvent.state);
-            $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
+            if (calEvent.allDay) {
+              $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY'));
+            } else {
+              $vacationDetail.find('.time').text(calEvent.start.format('DD.MM.YYYY HH:mm') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY HH:mm'));
+            }
             if ((calEvent.substituteFirstName != null) && (calEvent.substituteLastName != null)) {
               substituteText = calEvent.substituteFirstName + ' ' + calEvent.substituteLastName;
             } else {
@@ -119,7 +123,7 @@
 }).call(this);
 
 (function() {
-  var activateToggle, initializeDatePicker, refreshVacationForm, scrollToVacationForm;
+  var activateToggle, initializeAjaxCalculation, initializeDatePicker, refreshVacationDays, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -149,7 +153,32 @@
     initializeDatePicker();
     $myForm.find('select').select2();
     scrollToVacationForm();
-    return activateToggle();
+    activateToggle();
+    initializeAjaxCalculation();
+    return toggleHalfDay();
+  };
+
+  refreshVacationDays = function(data) {
+    var $daysLabel, $remainingLabel;
+    $daysLabel = $('label.vacationDays');
+    $remainingLabel = $('label.remainingDays');
+    $daysLabel.text(data.vacationDays);
+    return $remainingLabel.text(data.remainingDays);
+  };
+
+  toggleHalfDay = function() {
+    return $('#halfDay').on('change', function() {
+      if ($(this).is(':checked')) {
+        if (!isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+          $('.input-group.date.dateTo').datepicker('update', $('.input-group.date.dateFrom').datepicker('getDate'));
+        }
+        $('#dateToBox').hide();
+        return $('#halfDayBox').show();
+      } else {
+        $('#dateToBox').show();
+        return $('#halfDayBox').hide();
+      }
+    });
   };
 
   initializeDatePicker = function() {
@@ -166,11 +195,35 @@
       });
       if ($this.hasClass('dateFrom')) {
         return $this.on('changeDate', function() {
-          if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf())) {
+          if (isNaN($('.input-group.date.dateTo').datepicker('getDate').valueOf()) || $('#halfDay').is(':checked')) {
             return $('.input-group.date.dateTo').datepicker('update', $(this).datepicker('getDate'));
           }
         });
       }
+    });
+  };
+
+  initializeAjaxCalculation = function() {
+    return $('form input[id="dateFrom"], form input[id="dateTo"], form input[id="halfDay"]').change(function() {
+      return $.ajax({
+        url: 'updateVacationForm',
+        method: "POST",
+        dataType: "json",
+        data: {
+          "id": $('form > input[id="id"][type="hidden"]').val(),
+          "from": $('form input[id="dateFrom"]').val(),
+          "to": $('form input[id="dateTo"]').val(),
+          "halfDay": $('form input[id="halfDay"]').is(':checked'),
+          "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(),
+          "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          return console.log(textStatus);
+        },
+        success: function(data) {
+          return refreshVacationDays(data);
+        }
+      });
     });
   };
 
@@ -186,7 +239,7 @@
     $('[data-toggle="filter"]').click(function() {
       return $('.offcanvas-filter').toggleClass('active');
     });
-    return $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
+    $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
       $.ajax({
         url: $(this).attr('href'),
         dataType: "html",
@@ -199,6 +252,8 @@
       });
       return false;
     });
+    initializeAjaxCalculation();
+    return toggleHalfDay();
   })(jQuery);
 
 }).call(this);

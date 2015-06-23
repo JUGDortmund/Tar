@@ -6,3 +6,4 @@ userHolidays:
    - date: 12-31
      valence: 0.5
      description: Silvester
+expiryDate: 04-01

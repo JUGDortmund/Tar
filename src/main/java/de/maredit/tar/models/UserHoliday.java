@@ -1,11 +1,8 @@
 package de.maredit.tar.models;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 /**
  * Created by phorninge on 09.06.15.
  */
-@Document
 public class UserHoliday {
 
   private String date;

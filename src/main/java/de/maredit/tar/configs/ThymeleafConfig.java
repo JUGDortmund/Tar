@@ -1,7 +1,6 @@
 package de.maredit.tar.configs;
 
 import de.maredit.tar.models.formatters.DoubleFormatter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.annotation.Bean;

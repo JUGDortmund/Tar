@@ -1,6 +1,10 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.models.Vacation;
+import de.maredit.tar.models.enums.State;
+
 import de.maredit.tar.beans.NavigationBean;
+import de.maredit.tar.models.AccountModel;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.services.UserService;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by czillmann on 19.05.15.
@@ -49,11 +54,51 @@ public class OverviewController {
           filteredUsers, LocalDate.now().getYear());
     }
 
+    List<AccountModel> accounts = new ArrayList<>();
+    for (UserVacationAccount userVacationAccount : userVacationAccounts) {
+      AccountModel accountModel = new AccountModel();
+      accountModel.setId(userVacationAccount.getId());
+      accountModel.setUser(userVacationAccount.getUser());
+      accountModel.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
+      accountModel.setPreviousYearOpenVacationDays(userVacationAccount.getPreviousYearOpenVacationDays());
+      accountModel.setApprovedVacationDays(getApprovedVacationDays(userVacationAccount.getVacations()));
+      accountModel.setPendingVacationDays(getPendingVacationDays(userVacationAccount.getVacations()));
+      accounts.add(accountModel);
+    }
+    
     model.addAttribute("loginUser", applicationController.getConnectedUser());
     model.addAttribute("users", allUsers);
     model.addAttribute("filteredUsers", filteredUsers);
-    model.addAttribute("userVacationAccounts", userVacationAccounts);
+    model.addAttribute("accounts", accounts);
 
     return "application/overview";
   }
+  
+  /**
+   * Helper method to retrieve the amount of approved vacation days for a list of vacations.
+   *
+   * @param set the set to analyze
+   * @return the amount of approved vacation days
+   */
+  private double getApprovedVacationDays(Set<Vacation> set) {
+    return set != null ? set.stream().filter(vacation -> vacation.getState() == State.APPROVED)
+        .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
+  }
+
+  /**
+   * Helper method to retrieve the amount of pending vacation days (which are already planned but
+   * not accepted yet) for a list of vacations.
+   *
+   * @param set the set to analyze
+   * @return the amount of pending vacation days
+   */
+  private double getPendingVacationDays(Set<Vacation> set) {
+    return set != null ? set
+        .stream()
+        .filter(
+            vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
+                || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
+        .mapToDouble(vacation -> vacation.getDays()).sum() :0;
+  }
+
 }

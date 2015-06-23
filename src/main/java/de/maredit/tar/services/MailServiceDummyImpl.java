@@ -1,7 +1,6 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.services.mail.Attachment;
-
 import de.maredit.tar.services.mail.MailObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

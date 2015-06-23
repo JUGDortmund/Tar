@@ -1,9 +1,13 @@
 package de.maredit.tar.models.validators;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import de.maredit.tar.Main;
 import de.maredit.tar.models.User;
 import de.maredit.tar.models.Vacation;
-
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +19,6 @@ import org.springframework.validation.Errors;
 
 import java.time.LocalDate;
 import java.time.Month;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by czillmann on 23.04.15.
@@ -51,7 +51,7 @@ public class VacationValidatorTest {
     VacationValidator validatorUnderTest = new VacationValidator();
     Vacation validVacation =
         new Vacation(user, LocalDate.of(2099, Month.JULY, 18), LocalDate.of(2099, Month.AUGUST, 03),
-                     user2, user, 15, 5);
+                     user2, user, 15);
 
     Errors errors = new BeanPropertyBindingResult(validVacation, "validVacation");
     validatorUnderTest.validate(validVacation, errors);
@@ -65,7 +65,41 @@ public class VacationValidatorTest {
 
     Vacation invalidVacation =
         new Vacation(user, LocalDate.of(2099, Month.AUGUST, 18), LocalDate.of(2099, Month.JULY, 03),
-                     null, user, 15, 5);
+                     null, user, 15);
+
+    Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
+    validatorUnderTest.validate(invalidVacation, errors);
+
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("to"));
+  }
+
+  @Test
+  public void testValidationHalfDayWithoutTimeFrame() {
+    VacationValidator validatorUnderTest = new VacationValidator();
+
+    Vacation invalidVacation =
+        new Vacation(user, LocalDate.of(2099, Month.AUGUST, 03), LocalDate.of(2099, Month.AUGUST, 03),
+                     null, user, 0.5);
+    invalidVacation.setHalfDay(true);
+    invalidVacation.setTimeframe(null);
+
+    Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
+    validatorUnderTest.validate(invalidVacation, errors);
+
+    assertTrue(errors.hasErrors());
+    assertNotNull(errors.getFieldError("halfDay"));
+  }
+
+  @Test
+  public void testValidationHalfDayToLong() {
+    VacationValidator validatorUnderTest = new VacationValidator();
+
+    Vacation invalidVacation =
+        new Vacation(user, LocalDate.of(2099, Month.AUGUST, 03), LocalDate.of(2099, Month.AUGUST, 05),
+                     null, user, 0.5);
+    invalidVacation.setHalfDay(true);
+    invalidVacation.setTimeframe(HalfDayTimeFrame.AFTERNOON);
 
     Errors errors = new BeanPropertyBindingResult(invalidVacation, "invalidVacation");
     validatorUnderTest.validate(invalidVacation, errors);
