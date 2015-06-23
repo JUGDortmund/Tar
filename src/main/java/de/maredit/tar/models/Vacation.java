@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-public class Vacation implements AccountEntry {
+public class Vacation {
 
   @Id
   private String id;
@@ -88,10 +88,7 @@ public class Vacation implements AccountEntry {
     this.state = state;
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.models.AccountEntry#getDays()
-   */
-  @Override
+
   public double getDays() {
     return days;
   }
@@ -141,10 +138,6 @@ public class Vacation implements AccountEntry {
     this.from = from;
   }
 
-  /* (non-Javadoc)
-   * @see de.maredit.tar.models.AccountEntry#getCreated()
-   */
-  @Override
   public LocalDateTime getCreated() {
     return created;
   }
@@ -174,10 +167,6 @@ public class Vacation implements AccountEntry {
     this.author = user;
   }
   
-  /* (non-Javadoc)
-   * @see de.maredit.tar.models.AccountEntry#getAuthor()
-   */
-  @Override
   public User getAuthor() {
     return author;
   }

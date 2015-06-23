@@ -1,5 +1,9 @@
 package de.maredit.tar.controllers;
 
+import de.maredit.tar.services.VacationService;
+
+import de.maredit.tar.models.AccountVactionEntry;
+import de.maredit.tar.models.AccountEntry;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.AccountModel;
 import de.maredit.tar.models.User;
@@ -35,6 +39,9 @@ public class OverviewController extends AbstractBaseController {
   private UserService userService;
   
   @Autowired
+  private VacationService vacationService;
+  
+  @Autowired
   private NavigationBean navigationBean;
 
   @RequestMapping("/overview")
@@ -55,6 +62,12 @@ public class OverviewController extends AbstractBaseController {
     
     List<AccountModel> models = new ArrayList<>();
     for (UserVacationAccount userVacationAccount : userVacationAccounts) {
+      UserVacationAccount calculationAccount = new UserVacationAccount();
+      calculationAccount.setExpiryDate(userVacationAccount.getExpiryDate());
+      calculationAccount.setPreviousYearOpenVacationDays(userVacationAccount.getPreviousYearOpenVacationDays());
+      calculationAccount.setUser(userVacationAccount.getUser());
+      calculationAccount.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
+      
       AccountModel accountModel = new AccountModel();
       accountModel.setId(userVacationAccount.getId());
       accountModel.setUser(userVacationAccount.getUser());
@@ -63,9 +76,18 @@ public class OverviewController extends AbstractBaseController {
       accountModel.setPreviousYearOpenVacationDays(userVacationAccount.getPreviousYearOpenVacationDays() == null ? 0 : userVacationAccount.getPreviousYearOpenVacationDays());
       accountModel.setApprovedVacationDays(getApprovedVacationDays(userVacationAccount.getVacations()));
       accountModel.setPendingVacationDays(getPendingVacationDays(userVacationAccount.getVacations()));
+      accountModel.setOpenVacationDays(vacationService.getRemainingVacationDays(userVacationAccount).getTotalDays());
       List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
       vacations.sort((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
-      accountModel.setEntries(vacations);
+      List<AccountEntry> entryList = new ArrayList<>();
+      
+      for (Vacation vacation: vacations) {
+        calculationAccount.addVacation(vacation);
+        AccountVactionEntry entry = new AccountVactionEntry(vacation);
+        entry.setBalance(vacationService.getRemainingVacationDays(calculationAccount).getTotalDays());
+        entryList.add(entry);
+      }
+      accountModel.setEntries(entryList);
       models.add(accountModel);
     }
 

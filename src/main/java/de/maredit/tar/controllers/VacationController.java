@@ -1,7 +1,5 @@
 package de.maredit.tar.controllers;
 
-import de.maredit.tar.models.AccountEntry;
-
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CommentItem;
 import de.maredit.tar.models.TimelineItem;
@@ -119,7 +117,7 @@ public class VacationController extends AbstractBaseController {
   private VacationService vacationService;
 
   @ModelAttribute("vacation")
-  public AccountEntry getVacation(@RequestParam(value = "id", required = false) String id) {
+  public Vacation getVacation(@RequestParam(value = "id", required = false) String id) {
     if (StringUtils.isBlank(id)) {
       return new Vacation();
     }
@@ -395,7 +393,7 @@ public class VacationController extends AbstractBaseController {
 
 
   private CommentItem saveComment(@ModelAttribute("comment") String comment,
-                                  @ModelAttribute("vacation") @Valid AccountEntry vacation) {
+                                  @ModelAttribute("vacation") @Valid Vacation vacation) {
     if (StringUtils.isNotBlank(comment)) {
       CommentItem commentItem = new CommentItem();
       commentItem.setModifed(LocalDateTime.now());
