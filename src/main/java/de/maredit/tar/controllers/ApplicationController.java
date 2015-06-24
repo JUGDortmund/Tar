@@ -52,7 +52,6 @@ public class ApplicationController {
       @RequestParam(value = "language") String id, Model model) {
     Locale newLocale = new Locale(id);
     localeResolver.setDefaultLocale(newLocale);
-    LOG.debug(request.getContextPath());
     return "redirect:/";
   }
 }

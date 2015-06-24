@@ -30,7 +30,7 @@
 							<th:block th:text="#{field.calendar}"/>
 						</div>
 						<div class="panel-body">
-							<div id="calendar"  th:attr="data-lang=${#locale.language},data-dateformat=${dateFormat}"></div>
+							<div id="calendar"  th:attr="data-lang=${#locale},data-dateformat=#{date.pattern}"></div>
 						</div>
 					</div>
 				</div>
