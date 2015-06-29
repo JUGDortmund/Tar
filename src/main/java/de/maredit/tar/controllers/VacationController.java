@@ -271,6 +271,7 @@ public class VacationController {
     boolean newVacation = StringUtils.isBlank(vacation.getId());
     UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
     account.addVacation(vacation);
+    LOG.debug("DAYS: {}", vacation.getDays());
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getDefaultMessage()));

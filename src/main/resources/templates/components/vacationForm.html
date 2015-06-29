@@ -156,13 +156,13 @@ edit-vacation, approve-vacation  -->
                         <div class="row">
                             <div class="col-xs-12 form-group"
                                  th:classappend="${#fields.hasErrors('substitute')}? 'has-error'">
-                                <label for="replacement"><th:block th:text="#{field.substitution}"/></label>
+                                <label for="replacement"><th:block th:text="#{field.substitute}"/></label>
 
                                 <th:block th:if="${editable}">
                                     <select class="form-control" style="width: 100%;" name="replacement"
                                             id="replacement"
                                             th:field="*{substitute}">
-                                        <option value="" selected="selected">- <th:block th:text="#{field.selectSubstitution}"/> -</option>
+                                        <option value="" selected="selected">- <th:block th:text="#{field.selectSubstitute}"/> -</option>
                                         <option th:each="substitute : ${users}"
                                                 th:value="${substitute.id}"
                                                 th:text="${substitute.lastname +', '+ substitute.firstname}">
