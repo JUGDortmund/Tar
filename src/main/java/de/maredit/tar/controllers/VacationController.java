@@ -398,7 +398,6 @@ public class VacationController {
     return "redirect:/";
   }
 
-
   @RequestMapping(value = "/updateVacationForm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public Map<String, Object> updateVacationForm(
