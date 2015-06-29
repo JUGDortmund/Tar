@@ -20,6 +20,20 @@
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
+                    <li>
+                        <form th:action="@{/changeLanguage}" method="post" role="form" class="navbar-form navbar-left">
+                            <select name="language" id="language" class="autosubmit">
+                                <option
+                                        th:selected="${#locale.toString().contains('de')}"
+                                        th:value="de"
+                                        th:text="#{field.language.german}" />
+                                <option
+                                        th:selected="${#locale.toString().contains('en')}"
+                                        th:value="en"
+                                        th:text="#{field.language.english}" />
+                            </select>
+                        </form>
+                    </li>
                     <!-- User Account Menu -->
                     <li class="dropdown user user-menu"
                         th:if="${loginUser.userImage != null}">
@@ -49,21 +63,6 @@
                                 </button>
                             </form>
                         </div>
-                    </li>
-
-                    <li>
-                        <form th:action="@{/changeLanguage}" method="post" role="form" class="navbar-form navbar-left">
-                            <select name="language" id="language" class="autosubmit">
-                                <option
-                                    th:selected="${#locale.toString().contains('de')}"
-                                    th:value="de"
-                                    th:text="Deutsch" />
-                                <option
-                                    th:selected="${#locale.toString().contains('en')}"
-                                    th:value="en"
-                                    th:text="Englisch" />
-                            </select>
-                        </form>
                     </li>
                 </ul>
             </div>
