@@ -123,7 +123,13 @@
 }).call(this);
 
 (function() {
-  var activateToggle, initializeAjaxCalculation, initializeDatePicker, refreshVacationDays, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
+  var activateToggle, initializeAjaxCalculation, initializeDatePicker, initializeLanguageSelect, refreshVacationDays, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
+
+  initializeLanguageSelect = function() {
+    return $('#language').select2({
+      minimumResultsForSearch: Infinity
+    });
+  };
 
   scrollToVacationForm = function() {
     var clientWidth;
@@ -154,6 +160,7 @@
     $myForm.find('select').select2();
     scrollToVacationForm();
     activateToggle();
+    initializeLanguageSelect();
     initializeAjaxCalculation();
     return toggleHalfDay();
   };
@@ -229,6 +236,7 @@
 
   (function($) {
     initializeDatePicker();
+    initializeLanguageSelect();
     $('[data-toggle="tooltip"]').tooltip();
     $('.panel-default select').select2();
     $('.autosubmit').on('change', function() {
