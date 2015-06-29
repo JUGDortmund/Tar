@@ -2,77 +2,72 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-	<header class="main-header" th:fragment="header">
+    <header class="main-header" th:fragment="header">
 
-		<!-- Logo -->
-		<a href="/" class="logo"> <th:block
-				th:text="#{field.vacationmanagement}" />
-		</a>
+        <!-- Logo -->
+        <a href="/" class="logo"> <th:block
+                th:text="#{field.vacationmanagement}" />
+        </a>
 
-		<!-- Header Navbar -->
-		<nav class="navbar navbar-static-top" role="navigation">
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
 
-			<!-- Sidebar toggle button-->
-			<a href="#" class="sidebar-toggle" data-toggle="offcanvas"
-				role="button"> <i class="glyphicon glyphicon-menu-hamburger"></i>
-				<span class="sr-only">Toggle navigation</span>
-			</a>
-			<!-- Navbar Right Menu -->
-			<div class="navbar-custom-menu">
-				<ul class="nav navbar-nav">
-					<!-- User Account Menu -->
-					<li class="dropdown user user-menu"
-						th:if="${loginUser.userImage != null}">
-						<!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle"
-						data-toggle="dropdown"> <!-- The user image in the navbar--> <img
-							th:src="@{${'data:image/jpeg;base64,'+ loginUser.userImage}}"
-							class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
-							<span class="hidden-xs"
-							th:text="${loginUser.firstname + ' ' + loginUser.lastname}"></span>
-					</a>
-					</li>
-					<li class="dropdown user user-menu"
-						th:if="${loginUser.userImage == null}">
-						<!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle"
-						data-toggle="dropdown"> <!-- The user image in the navbar--> <img
-							src="../images/dummy_user_image.jpg" class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
-							<span class="hidden-xs"
-							th:text="${loginUser.firstname + ' ' + loginUser.lastname}"></span>
-					</a>
-					</li>
-					<li>
-						<div class="pull-right">
-							<form th:action="@{/logout}" method="post">
-								<button type="submit" class="btn btn-primary logout">
-									<i class="glyphicon glyphicon-off"></i>
-									<th:block th:text="#{field.signout}" />
-								</button>
-							</form>
-						</div>
-					</li>
-					<li>
-						<div th:if="${#locale.toString().contains('de')}">
-							<form th:action="@{/changeLanguage}" method="post">
-								<select name="language" id="language"
-									onchange="this.form.submit()">
-									<option value="de" selected="selected">Deutsch</option>
-									<option value="en">Englisch</option>
-								</select>
-							</form>
-						</div>
-						<div th:if="${#locale.toString().contains('en')}">
-							<form th:action="@{/changeLanguage}" method="post">
-								<select name="language" id="language"
-									onchange="this.form.submit()">
-									<option value="de">German</option>
-									<option value="en" selected="selected">English</option>
-								</select>
-							</form>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</header>
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas"
+                role="button"> <i class="glyphicon glyphicon-menu-hamburger"></i>
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account Menu -->
+                    <li class="dropdown user user-menu"
+                        th:if="${loginUser.userImage != null}">
+                        <!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle"
+                        data-toggle="dropdown"> <!-- The user image in the navbar--> <img
+                            th:src="@{${'data:image/jpeg;base64,'+ loginUser.userImage}}"
+                            class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs"
+                            th:text="${loginUser.firstname + ' ' + loginUser.lastname}"></span>
+                    </a>
+                    </li>
+                    <li class="dropdown user user-menu"
+                        th:if="${loginUser.userImage == null}">
+                        <!-- Menu Toggle Button --> <a href="#" class="dropdown-toggle"
+                        data-toggle="dropdown"> <!-- The user image in the navbar--> <img
+                            src="../images/dummy_user_image.jpg" class="user-image" /> <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs"
+                            th:text="${loginUser.firstname + ' ' + loginUser.lastname}"></span>
+                    </a>
+                    </li>
+                    <li>
+                        <div class="pull-right">
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="btn btn-primary logout">
+                                    <i class="glyphicon glyphicon-off"></i>
+                                    <th:block th:text="#{field.signout}" />
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+
+                    <li>
+                        <form th:action="@{/changeLanguage}" method="post" role="form" class="navbar-form navbar-left">
+                            <select name="language" id="language" class="autosubmit">
+                                <option
+                                    th:selected="${#locale.toString().contains('de')}"
+                                    th:value="de"
+                                    th:text="Deutsch" />
+                                <option
+                                    th:selected="${#locale.toString().contains('en')}"
+                                    th:value="en"
+                                    th:text="Englisch" />
+                            </select>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 </body>
 </html>
