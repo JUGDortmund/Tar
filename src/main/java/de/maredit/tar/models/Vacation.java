@@ -1,19 +1,19 @@
 package de.maredit.tar.models;
 
-import de.maredit.tar.models.enums.HalfDayTimeFrame;
-import de.maredit.tar.models.enums.State;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
+import de.maredit.tar.models.enums.State;
 
 public class Vacation {
 
@@ -43,7 +43,6 @@ public class Vacation {
   @NotNull(message="{manager.notnull}")
   private User manager;
 
-  @DecimalMin(value="0.5", message=("{vacationDays}"))
   private double days;
 
   @NotNull

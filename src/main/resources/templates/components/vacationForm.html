@@ -21,7 +21,7 @@ edit-vacation, approve-vacation  -->
                         <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
                             <ul>
                                 <li th:each="err : ${#fields.detailedErrors()}"
-                                    th:text="${err.fieldName +' '+ err.message}">Input is incorrect
+                                    th:text="${err.message}">Input is incorrect
                                 </li>
                             </ul>
                         </div>
@@ -216,7 +216,7 @@ edit-vacation, approve-vacation  -->
 						<div class="col-xs-12 form-group">
 							<label for="comment" th:text="#{field.comment}"></label>
 							<textarea class="form-control" rows="2" name="comment"
-								id="comment" path="comment"></textarea>
+								id="comment" path="comment" th:text="${comment}"></textarea>
 						</div>
 					</div>
 

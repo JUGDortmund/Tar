@@ -76,9 +76,9 @@ public class VacationController {
 
   @Autowired
   private UserRepository userRepository;
-  
+
   @Autowired
-  private VacationProperties vacationProperties; 
+  private VacationProperties vacationProperties;
 
   @Autowired
   private ProtocolItemRepository protocolItemRepository;
@@ -112,7 +112,7 @@ public class VacationController {
 
   @Autowired
   private ApplicationController applicationController;
-  
+
   @Autowired
   private VacationService vacationService;
 
@@ -149,7 +149,7 @@ public class VacationController {
 
   @RequestMapping("/")
   public String index(HttpServletRequest request, Model model,
-                      @ModelAttribute("vacation") Vacation vacation) {
+      @ModelAttribute("vacation") Vacation vacation) {
     navigationBean.setActiveComponent(NavigationBean.VACATION_PAGE);
     vacation.setUser(applicationController.getConnectedUser());
     User selectedUser = getUser(request);
@@ -158,21 +158,27 @@ public class VacationController {
 
     model.addAttribute("formMode", FormMode.NEW);
     model.addAttribute("timeLineItems", new ArrayList<TimelineItem>());
-    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
+    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService
+        .getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime
+            .now().getYear())));
     return "application/index";
   }
 
   @RequestMapping(value = "/substitution", method = RequestMethod.POST)
   public String substitution(@ModelAttribute("vacation") Vacation vacation,
-                             @ModelAttribute("comment") String comment,
-                             @ModelAttribute("approve") String approval, Model model) {
+      @ModelAttribute("comment") String comment, @ModelAttribute("approve") String approval,
+      Model model) {
     boolean approve = Boolean.valueOf(approval);
     vacation.setState((approve) ? State.WAITING_FOR_APPROVEMENT : State.REJECTED);
     this.vacationRepository.save(vacation);
     saveComment(comment, vacation);
-    VacationEntitlement entilement = vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear()));
+    VacationEntitlement entilement =
+        vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(
+            vacation.getUser(), vacation.getFrom().getYear()));
     MailObject mail =
-        (approve ? new SubstitutionApprovedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment) : new SubstitutionRejectedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment));
+        (approve ? new SubstitutionApprovedMail(vacation, entilement,
+            customMailProperties.getUrlToVacation(), comment) : new SubstitutionRejectedMail(
+            vacation, entilement, customMailProperties.getUrlToVacation(), comment));
     this.mailService.sendMail(mail);
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
@@ -182,9 +188,8 @@ public class VacationController {
   @RequestMapping(value = "/approval", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String approval(@ModelAttribute("vacation") Vacation vacation,
-                         @ModelAttribute("comment") String comment,
-                         @ModelAttribute("approve") String approval, Model model)
-      throws SocketException {
+      @ModelAttribute("comment") String comment, @ModelAttribute("approve") String approval,
+      Model model) throws SocketException {
     boolean approve = Boolean.valueOf(approval);
     vacation.setState((approve) ? State.APPROVED : State.REJECTED);
 
@@ -199,9 +204,13 @@ public class VacationController {
 
     this.vacationRepository.save(vacation);
     saveComment(comment, vacation);
-    VacationEntitlement entilement = vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear()));
+    VacationEntitlement entilement =
+        vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(
+            vacation.getUser(), vacation.getFrom().getYear()));
     MailObject mail =
-        (approve ? new VacationApprovedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment) : new VacationDeclinedMail(vacation, entilement, customMailProperties.getUrlToVacation(), comment));
+        (approve ? new VacationApprovedMail(vacation, entilement,
+            customMailProperties.getUrlToVacation(), comment) : new VacationDeclinedMail(vacation,
+            entilement, customMailProperties.getUrlToVacation(), comment));
     this.mailService.sendMail(mail);
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
@@ -210,24 +219,26 @@ public class VacationController {
 
   @RequestMapping(value = "/addComment", method = RequestMethod.POST)
   public String addComment(@ModelAttribute("id") String id,
-                           @ModelAttribute("comment") String comment) {
+      @ModelAttribute("comment") String comment) {
     if (StringUtils.isNotBlank(id) && StringUtils.isNotBlank(comment)) {
       Vacation vacation = vacationRepository.findOne(id);
       final CommentItem commentItem = saveComment(comment, vacation);
-      this.mailService.sendMail(
-          new CommentAddedMail(vacation, customMailProperties.getUrlToVacation(), commentItem));
+      this.mailService.sendMail(new CommentAddedMail(vacation, customMailProperties
+          .getUrlToVacation(), commentItem));
     }
     return "redirect:/";
   }
 
   @RequestMapping(value = "/vacation", method = {RequestMethod.GET}, params = "id")
   public String vacation(@ModelAttribute("vacation") Vacation vacation,
-                         @RequestParam(value = "action", required = false) String action,
-                         Model model) {
+      @RequestParam(value = "action", required = false) String action, Model model) {
     List<TimelineItem> allTimeline = getTimelineItems(vacation);
     model.addAttribute("timeLineItems", allTimeline);
     model.addAttribute("vacationDays", vacation.getDays());
-    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom() == null ? LocalDateTime.now().getYear(): vacation.getFrom().getYear())));
+    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService
+        .getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom() == null
+            ? LocalDateTime.now().getYear()
+            : vacation.getFrom().getYear())));
     switch (action) {
       case "edit":
         model.addAttribute("users", userService.getSortedUserList());
@@ -257,112 +268,146 @@ public class VacationController {
     model.addAttribute("users", userService.getSortedUserList());
     model.addAttribute("vacation", vacation);
     model.addAttribute("formMode", FormMode.NEW);
-    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
+    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService
+        .getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime
+            .now().getYear())));
     return "components/vacationForm";
   }
 
   @RequestMapping(value = "/saveVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String saveVacation(@ModelAttribute("comment") String comment,
-                             @ModelAttribute("vacation") @Valid Vacation vacation,
-                             BindingResult bindingResult, Model model,
-                             HttpServletRequest request) {
+      @ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult,
+      Model model, HttpServletRequest request) {
 
     boolean newVacation = StringUtils.isBlank(vacation.getId());
-    UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
-    account.addVacation(vacation);
-    LOG.debug("DAYS: {}", vacation.getDays());
-    if (bindingResult.hasErrors()) {
-      bindingResult.getFieldErrors().forEach(
-          fieldError -> LOG.error(fieldError.getDefaultMessage()));
+    if (vacation.getFrom() != null) {
 
-      User selectedUser = getUser(request);
+      UserVacationAccount account =
+          userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom()
+              .getYear());
+      account.addVacation(vacation);
+      LOG.debug("DAYS: {}", vacation.getDays());
+      if (bindingResult.hasErrors()) {
+        bindingResult.getFieldErrors().forEach(
+            fieldError -> LOG.error(fieldError.getDefaultMessage()));
 
-      setIndexModelValues(model, selectedUser);
-      if (newVacation) {
-        model.addAttribute("formMode", FormMode.NEW);
-      } else {
-        model.addAttribute("formMode", FormMode.EDIT);
-      }
-      if (bindingResult.hasFieldErrors("from") || bindingResult.hasFieldErrors("to")) {
-        model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
-      } else {
-        model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
-        model.addAttribute("remaining", vacationService.getRemainingVacationDays(account));
-      }
-      return "application/index";
-    } else {
+        User selectedUser = getUser(request);
 
-      vacation.setDays(vacationService.getCountOfVacation(vacation));
-
-      if (newVacation) {
-        vacation.setAuthor(applicationController.getConnectedUser());
-        VacationEntitlement remainingVacationDays = vacationService.getRemainingVacationDays(account);
-        if (remainingVacationDays.getDays() < 0) {
-          bindingResult.reject("error.notEnoughRemaingDays", "You have not enough days left for this vacation");
-          setIndexModelValues(model, vacation.getUser());
+        setIndexModelValues(model, selectedUser);
+        if (newVacation) {
           model.addAttribute("formMode", FormMode.NEW);
-          model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
-          model.addAttribute("remaining", remainingVacationDays);
-          return "application/index";
-        }
-        this.vacationRepository.save(vacation);
-        saveComment(comment, vacation);
-        userVacationAccountRepository.save(account);
-
-        this.mailService.sendMail(new VacationCreateMail(vacation, remainingVacationDays, customMailProperties.getUrlToVacation(), comment));
-      } else {
-        VacationEntitlement oldRemaining = vacationService.getRemainingVacationDays(account);
-        Vacation vacationBeforeChange = vacationRepository.findOne(vacation.getId());
-        vacation.setState(vacation.getSubstitute() == null ? State.WAITING_FOR_APPROVEMENT
-            : State.REQUESTED_SUBSTITUTE);
-        calendarService.deleteAppointment(vacation);
-        vacation.setAppointmentId(null);
-        account.addVacation(vacation);
-
-        VacationEntitlement remaining = vacationService.getRemainingVacationDays(account);
-        if (remaining.getDays() < 0) {
-          bindingResult.reject("error.notEnoughRemaingDays", "You have not enough days left for this vacation");
-          setIndexModelValues(model, vacation.getUser());
+        } else {
           model.addAttribute("formMode", FormMode.EDIT);
-          model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
-          model.addAttribute("remaining", remaining);
-          return "application/index";
         }
+        if (bindingResult.hasFieldErrors("from") || bindingResult.hasFieldErrors("to")) {
+          model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService
+              .getUserVacationAccountForYear(applicationController.getConnectedUser(),
+                  LocalDateTime.now().getYear())));
+        } else {
+          model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
+          model.addAttribute("remaining", vacationService.getRemainingVacationDays(account));
+        }
+        
+        model.addAttribute("comment" , comment);
+        return "application/index";
+      } else {
 
-        this.vacationRepository.save(vacation);
-        saveComment(comment, vacation);
-        userVacationAccountRepository.save(account);
+        vacation.setDays(vacationService.getCountOfVacation(vacation));
 
-        this.mailService.sendMail(new VacationModifiedMail(vacation, remaining, customMailProperties.getUrlToVacation(), comment, vacationBeforeChange,
-                                   oldRemaining, applicationController
-                                       .getConnectedUser()));
+        if (newVacation) {
+          vacation.setAuthor(applicationController.getConnectedUser());
+          VacationEntitlement remainingVacationDays =
+              vacationService.getRemainingVacationDays(account);
+          if (remainingVacationDays.getDays() < 0) {
+            bindingResult.reject("error.notEnoughRemaingDays",
+                "You have not enough days left for this vacation");
+            setIndexModelValues(model, vacation.getUser());
+            model.addAttribute("formMode", FormMode.NEW);
+            model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
+            model.addAttribute("remaining", remainingVacationDays);
+            model.addAttribute("comment" , comment);
+            return "application/index";
+          }
+          this.vacationRepository.save(vacation);
+          saveComment(comment, vacation);
+          userVacationAccountRepository.save(account);
+
+          this.mailService.sendMail(new VacationCreateMail(vacation, remainingVacationDays,
+              customMailProperties.getUrlToVacation(), comment));
+        } else {
+          VacationEntitlement oldRemaining = vacationService.getRemainingVacationDays(account);
+          Vacation vacationBeforeChange = vacationRepository.findOne(vacation.getId());
+          vacation.setState(vacation.getSubstitute() == null
+              ? State.WAITING_FOR_APPROVEMENT
+              : State.REQUESTED_SUBSTITUTE);
+          calendarService.deleteAppointment(vacation);
+          vacation.setAppointmentId(null);
+          account.addVacation(vacation);
+
+          VacationEntitlement remaining = vacationService.getRemainingVacationDays(account);
+          if (remaining.getDays() < 0) {
+            bindingResult.reject("error.notEnoughRemaingDays",
+                "You have not enough days left for this vacation");
+            setIndexModelValues(model, vacation.getUser());
+            model.addAttribute("formMode", FormMode.EDIT);
+            model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
+            model.addAttribute("remaining", remaining);
+            model.addAttribute("comment" , comment);
+            return "application/index";
+          }
+
+          this.vacationRepository.save(vacation);
+          saveComment(comment, vacation);
+          userVacationAccountRepository.save(account);
+
+          this.mailService.sendMail(new VacationModifiedMail(vacation, remaining,
+              customMailProperties.getUrlToVacation(), comment, vacationBeforeChange, oldRemaining,
+              applicationController.getConnectedUser()));
+        }
       }
+      return "redirect:/";
+    }  
+    User selectedUser = getUser(request);
 
-    }
-    return "redirect:/";
+    setIndexModelValues(model, selectedUser);
+    model.addAttribute("managers", userService.getManagerList());
+    model.addAttribute("users", userService.getSortedUserList());
+    model.addAttribute("vacation", vacation);
+    model.addAttribute("formMode", FormMode.NEW);
+    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService
+        .getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime
+            .now().getYear())));
+    model.addAttribute("comment" , comment);
+
+    return "application/index";
   }
 
   @RequestMapping(value = "/cancelVacation", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR') or #vacation.user.username == authentication.name")
   public String cancelVacation(@ModelAttribute("vacation") Vacation vacation,
-                               @ModelAttribute("comment") String comment) {
+      @ModelAttribute("comment") String comment) {
     vacation.setState(State.CANCELED);
     calendarService.deleteAppointment(vacation);
     vacation.setAppointmentId(null);
     this.vacationRepository.save(vacation);
-    this.mailService.sendMail(new VacationCanceledMail(vacation, vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear())), comment));
+    this.mailService.sendMail(new VacationCanceledMail(vacation, vacationService
+        .getRemainingVacationDays(userService.getUserVacationAccountForYear(vacation.getUser(),
+            vacation.getFrom().getYear())), comment));
 
     return "redirect:/";
   }
-  
-  
-  @RequestMapping(value="/updateVacationForm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+
+
+  @RequestMapping(value = "/updateVacationForm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public Map<String, Object> updateVacationForm(@ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
-    
+  public Map<String, Object> updateVacationForm(
+      @ModelAttribute("vacation") @Valid Vacation vacation, BindingResult bindingResult, Model model) {
+
     if (!bindingResult.hasFieldErrors("from") && !bindingResult.hasFieldErrors("to")) {
-      UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+      UserVacationAccount account =
+          userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom()
+              .getYear());
       UserVacationAccount calculatingAccount = new UserVacationAccount();
       calculatingAccount.setUser(vacation.getUser());
       calculatingAccount.setYear(vacation.getFrom().getYear());
@@ -372,17 +417,20 @@ public class VacationController {
       vacation.setDays(vacationService.getCountOfVacation(vacation));
       calculatingAccount.setVacations(account.getVacations());
       calculatingAccount.addVacation(vacation);
-      
+
       return buildRemainingDays(calculatingAccount, vacation);
     }
-    return buildRemainingDays(userService.getUserVacationAccountForYear(vacation.getUser(), LocalDate.now().getYear()), null);
+    return buildRemainingDays(
+        userService.getUserVacationAccountForYear(vacation.getUser(), LocalDate.now().getYear()),
+        null);
   }
 
   private Map<String, Object> buildRemainingDays(UserVacationAccount account, Vacation vacation) {
     NumberFormat localFormat = NumberFormat.getNumberInstance(LocaleContextHolder.getLocale());
     localFormat.setMinimumFractionDigits(1);
     Map<String, Object> result = new HashMap<>();
-    result.put("vacationDays", vacation == null ? "" : localFormat.format(vacationService.getCountOfVacation(vacation)));
+    result.put("vacationDays",
+        vacation == null ? "" : localFormat.format(vacationService.getCountOfVacation(vacation)));
     VacationEntitlement remainingDays = vacationService.getRemainingVacationDays(account);
     StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
     if (remainingDays.getDaysLastYear() > 0) {
@@ -394,7 +442,7 @@ public class VacationController {
 
 
   private CommentItem saveComment(@ModelAttribute("comment") String comment,
-                                  @ModelAttribute("vacation") @Valid Vacation vacation) {
+      @ModelAttribute("vacation") @Valid Vacation vacation) {
     if (StringUtils.isNotBlank(comment)) {
       CommentItem commentItem = new CommentItem();
       commentItem.setModifed(LocalDateTime.now());
@@ -415,11 +463,8 @@ public class VacationController {
     allTimeline.addAll(stateItemRepository.findAllByVacation(vacation));
 
     allTimeline =
-        allTimeline
-            .stream()
-            .sorted(
-                (e1, e2) -> e2.getCreated()
-                    .compareTo(e1.getCreated())).collect(Collectors.toList());
+        allTimeline.stream().sorted((e1, e2) -> e2.getCreated().compareTo(e1.getCreated()))
+            .collect(Collectors.toList());
     return allTimeline;
   }
 
@@ -431,11 +476,9 @@ public class VacationController {
     List<Vacation> vacations = getVacationsForUser(selectedUser);
     List<Vacation> substitutes = getSubstitutesForUser(selectedUser);
 
-    List<Vacation>
-        substitutesForApproval =
+    List<Vacation> substitutesForApproval =
         getVacationsForSubstituteApprovalForUser(applicationController.getConnectedUser());
-    List<Vacation>
-        approvals =
+    List<Vacation> approvals =
         getVacationsForApprovalForUser(applicationController.getConnectedUser());
 
     model.addAttribute("users", users);
@@ -462,31 +505,27 @@ public class VacationController {
   }
 
   private List<Vacation> getSubstitutesForUser(User user) {
-    List<Vacation>
-        substitutes =
-        this.vacationRepository.findVacationBySubstituteAndStateNotAndToAfterOrderByFromAsc(
-            user, State.CANCELED, LocalDate.now().minusDays(1));
+    List<Vacation> substitutes =
+        this.vacationRepository.findVacationBySubstituteAndStateNotAndToAfterOrderByFromAsc(user,
+            State.CANCELED, LocalDate.now().minusDays(1));
     return substitutes;
   }
 
   private List<Vacation> getVacationsForUser(User user) {
-    List<Vacation>
-        vacations =
+    List<Vacation> vacations =
         this.vacationRepository.findVacationByUserAndStateNotOrderByFromAsc(user, State.CANCELED);
     return vacations;
   }
 
   private List<Vacation> getVacationsForApprovalForUser(User user) {
-    List<Vacation> approvals = this.vacationRepository.findVacationByManagerAndState(
-        user, State.WAITING_FOR_APPROVEMENT);
+    List<Vacation> approvals =
+        this.vacationRepository.findVacationByManagerAndState(user, State.WAITING_FOR_APPROVEMENT);
     return approvals;
   }
 
   private List<Vacation> getVacationsForSubstituteApprovalForUser(User user) {
-    List<Vacation>
-        substitutesForApproval =
-        this.vacationRepository.findVacationBySubstituteAndState(
-            user, State.REQUESTED_SUBSTITUTE);
+    List<Vacation> substitutesForApproval =
+        this.vacationRepository.findVacationBySubstituteAndState(user, State.REQUESTED_SUBSTITUTE);
     return substitutesForApproval;
   }
 }
