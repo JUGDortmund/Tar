@@ -39,20 +39,19 @@
             <form name="f" th:action="@{/login}" method="post">
                 <div class="form-group has-feedback">
                     <input type="text" class="form-control"
-                        th:placeholder="#{field.username}" id="username" name="username"></input>
+                        th:placeholder="#{field.username}" id="username" name="username"/>
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
                     <input type="password" class="form-control"
-                        th:placeholder="#{field.password}" id="password" name="password"></input>
+                        th:placeholder="#{field.password}" id="password" name="password"/>
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="checkbox icheck">
-                            <label> <input type="checkbox"
-                                th:text="#{field.remembersignin}">remember</input>
-                            </label>
+                            <input type="checkbox" name="remember" id="remember"/>
+                            <label for="remember" th:text="#{field.remembersignin}">remember</label>
                         </div>
                     </div>
                     <!-- /.col -->
@@ -95,7 +94,8 @@
                 increaseArea : '20%' // optional
             });
             $('.autosubmit').on('change', function () {
-                return (this).closest('form').submit()
+                _this = $(this)
+                return _this.closest('form').submit()
             });
         });
     </script>
