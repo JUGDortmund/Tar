@@ -158,7 +158,8 @@ public class VacationController extends AbstractBaseController {
 
     model.addAttribute("formMode", FormMode.NEW);
     model.addAttribute("timeLineItems", new ArrayList<TimelineItem>());
-    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
+    model.addAttribute("remaining", vacationService.getRemainingVacationDays(userService.getUserVacationAccountForYear(
+        applicationController.getConnectedUser(), LocalDateTime.now().getYear())));
     return "application/index";
   }
 
@@ -269,7 +270,8 @@ public class VacationController extends AbstractBaseController {
                              HttpServletRequest request) {
 
     boolean newVacation = StringUtils.isBlank(vacation.getId());
-    UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), vacation.getFrom().getYear());
+    int year = vacation.getFrom() != null ? vacation.getFrom().getYear() : LocalDate.now().getYear();
+    UserVacationAccount account = userService.getUserVacationAccountForYear(vacation.getUser(), year);
     account.addVacation(vacation);
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
@@ -381,7 +383,8 @@ public class VacationController extends AbstractBaseController {
     NumberFormat localFormat = NumberFormat.getNumberInstance(LocaleContextHolder.getLocale());
     localFormat.setMinimumFractionDigits(1);
     Map<String, Object> result = new HashMap<>();
-    result.put("vacationDays", vacation == null ? "" : localFormat.format(vacationService.getCountOfVacation(vacation)));
+    result.put("vacationDays", vacation == null ? "" : localFormat
+        .format(vacationService.getCountOfVacation(vacation)));
     VacationEntitlement remainingDays = vacationService.getRemainingVacationDays(account);
     StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
     if (remainingDays.getDaysLastYear() > 0) {
