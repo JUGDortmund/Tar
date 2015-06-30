@@ -154,8 +154,8 @@
                                             <button type="submit" class="btn btn-default"
                                                     name="year" th:value="${#dates.year(#dates.createNow())}"
                                                     th:text="${'aktuelles Jahr'}"></button>
-                                            <button th:if="${year != #dates.year(#dates.createNow())}" type="submit" class="btn btn-default"
-                                                    name="year" th:value="${year + 1}" >
+                                            <button type="submit" class="btn btn-default"
+                                                    name="year" th:value="${year + 1}" th:disabled="${year == #dates.year(#dates.createNow())}" >
                                                 <span aria-hidden="true">&raquo;</span>
                                             </button>
                                         </div>
