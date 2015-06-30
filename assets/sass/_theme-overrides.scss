@@ -29,3 +29,15 @@
 .fc-month-view .fc-event-container .fc-time {
     display: none;
 }
+
+@media (max-width: 760px) {
+    .navbar-form {
+        border: none;
+        margin: 0px;
+    }
+}
+
+.main-header .logo {
+     font-size:14px;
+     font-weight:bold;
+}

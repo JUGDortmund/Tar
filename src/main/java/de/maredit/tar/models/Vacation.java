@@ -1,28 +1,30 @@
 package de.maredit.tar.models;
 
-import de.maredit.tar.models.enums.HalfDayTimeFrame;
-import de.maredit.tar.models.enums.State;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
+import de.maredit.tar.models.enums.State;
 
 public class Vacation {
 
   @Id
   private String id;
 
-  @NotNull
+  @NotNull(message="{date.from}")
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate from;
 
-  @NotNull
+  @NotNull(message="{date.to}")
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate to;
 
@@ -38,7 +40,7 @@ public class Vacation {
   private User substitute;
 
   @DBRef
-  @NotNull
+  @NotNull(message="{manager.notnull}")
   private User manager;
 
   private double days;
@@ -87,6 +89,7 @@ public class Vacation {
   public void setState(State state) {
     this.state = state;
   }
+
 
   public double getDays() {
     return days;

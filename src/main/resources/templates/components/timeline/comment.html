@@ -4,8 +4,8 @@
         <i class="item-icon glyphicon glyphicon-comment bg-blue"></i>
         <div class="timeline-item">
             <span class="time" th:text="${{timeLineItem.createdTime}}"><i class="fa fa-clock-o"></i> 12:05</span>
-            <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">Pascal Plewa</a> hat einen
-                Kommentar verfasst</h3>
+            <h3 class="timeline-header"><a href="#" th:text="${timeLineItem.author.fullname}">NA</a>
+            <th:block th:text="#{timeline.createComment}"/></h3>
             <div class="timeline-body" th:text="${timeLineItem.commentItem.text}">Comment Text</div>
         </div>
     </body>

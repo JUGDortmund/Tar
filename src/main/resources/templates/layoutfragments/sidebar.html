@@ -6,24 +6,16 @@
 	<aside class="main-sidebar" th:fragment="sidebar">
 		<!-- sidebar: style can be found in sidebar.less -->
 		<section class="sidebar">
-
-			<!-- Sidebar Menu -->
-			<ul class="sidebar-menu">
-				<!-- Optionally, you can add icons to the links -->
-				<li
-					th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).VACATION_PAGE ? 'active' : ''}"><a
-					href="/"><span th:text="#{field.vacationPlanning}"></span></a></li>
-				<li
-					th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).CALENDAR_PAGE ? 'active' : ''}"><a
-					href="/calendar"><span th:text="#{field.calender}"></span></a></li>
-				<li
-					th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).OVERVIEW_PAGE ? 'active' : ''}"><a
-					href="/overview"><span th:text="#{field.overview}"></span></a></li>
-			</ul>
-			<!-- /.sidebar-menu -->
-		</section>
-		<!-- /.sidebar -->
-	</aside>
-
+            <!-- Sidebar Menu -->
+            <ul class="sidebar-menu">
+                <!-- Optionally, you can add icons to the links -->
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).VACATION_PAGE ? 'active' : ''}"><a href="/"><span th:text="#{field.vacationPlanning}"></span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).CALENDAR_PAGE ? 'active' : ''}"><a href="/calendar"><span th:text="#{field.calendar}"></span></a></li>
+                <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).OVERVIEW_PAGE ? 'active' : ''}"><a href="/overview"><span th:text="#{field.overview}"></span></a></li>
+        </ul>
+        <!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+    </aside>
 </body>
 </html>

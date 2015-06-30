@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="vacationList">
     <div class="panel panel-default edit-vacation module dashboard-panel">
-        <div class="panel-heading"><th th:text="#{field.overview}"></th></div>
+        <div class="panel-heading"><th:block th:text="#{field.overview}"/></div>
         <div class="panel-body">
             <form th:action="@{/}" role="form" method="post">
                 <div class="form-group">
@@ -17,7 +17,7 @@
                 </div>
             </form>
             <div th:if="${vacations.size() > 0}">
-                <h3 class="list-group-item"><th th:text="#{field.vacations}"></th></h3>
+                <h3 class="list-group-item"><th:block th:text="#{field.vacations}"/></h3>
                 <a th:each="vacation : ${vacations}" class="list-group-item" th:href="@{/vacation(id=${vacation.id},action='edit')}">
                     <span th:unless="${vacation.halfDay}" th:text="${{vacation.from +' - '  + vacation.to}}"></span>
                     <span th:if="${vacation.halfDay}" th:text="|${{vacation.from}} #{${vacation.timeframe.get()}}|"></span>
@@ -25,7 +25,7 @@
                 </a>
             </div>
             <div th:if="${substitutes.size() > 0}">
-                <h3 class="list-group-item"><th th:text="#{field.replacements}"></th></h3>
+                <h3 class="list-group-item"><th:block th:text="#{field.substitutions}"/></h3>
                 <a th:each="substitute : ${substitutes}" class="list-group-item" th:href="@{/vacation(id=${substitute.id},action='view')}">
                     <span th:unless="${substitute.halfDay}" th:text="${{substitute.from +' - '  + substitute.to}}"></span>
                     <span th:if="${substitute.halfDay}" th:text="|${{substitute.from}} #{${substitute.timeframe.get()}}|"></span>

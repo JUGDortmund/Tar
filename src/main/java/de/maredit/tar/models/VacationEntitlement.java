@@ -25,6 +25,10 @@ public class VacationEntitlement {
   public void reduceDays(double days) {
     this.days -= days;
   }
+  
+  public double getTotalDays() {
+    return days + daysLastYear;
+  }
 
   @Override
   public String toString() {
