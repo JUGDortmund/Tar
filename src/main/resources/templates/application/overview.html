@@ -66,7 +66,7 @@
                                             class="progress-bar progress-bar-warning progress-bar-striped"
                                             th:style="|width: ${account.totalVacationDays &lt;= 0 ? 0 : account.pendingVacationDays/(account.totalVacationDays + account.previousYearOpenVacationDays) * 100}%;|"
                                             data-toggle="tooltip" data-placement="top"
-                                            th:title="#{field.vacationsApplied} + ': ' + ${{account.pendingVacationDays}}|">
+                                            th:title="#{field.pendingVacations} + ': ' + ${{account.pendingVacationDays}}|">
                                             <span th:text="${{account.pendingVacationDays}}">beantragte
                                                 Urlaubstage</span>
                                         </div>
