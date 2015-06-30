@@ -28,7 +28,7 @@ import java.util.Set;
  * Created by czillmann on 19.05.15.
  */
 @Controller
-public class OverviewController extends AbstractBaseController {
+public class OverviewController{
 
   private static final Logger LOG = LogManager.getLogger(OverviewController.class);
 

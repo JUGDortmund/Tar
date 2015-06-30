@@ -32,7 +32,7 @@ import java.util.Set;
  */
 
 @Controller
-public class CalendarController  extends AbstractBaseController{
+public class CalendarController{
 
   private static final Logger LOG = LogManager.getLogger(CalendarController.class);
 

@@ -137,8 +137,13 @@
 
                 <div class="col-xs-12 col-sm-4 module offcanvas-filter" id="sidebar">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <th th:text="#{field.infoPanel}"></th>
+                        <div class="panel-heading"><th:block th:text="#{field.infoPanel}"/></div>
+                        <div class="panel-body">
+                            <form th:action="@{/overview}" role="form" method="post">
+                                <div th:include="components/employeeFilter :: employeeFilter">
+                                    employeeFilter
+                                </div>
+                            </form>
                         </div>
 
                         <form th:action="@{/overview}" method="post">
