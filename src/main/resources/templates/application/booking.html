@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout">
+<div layout:fragment="content">
+	<section class="content-header">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12">
+					<h1 th:inline="text">
+						<th:block th:text="#{field.booking}"/>
+					</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+</html>
