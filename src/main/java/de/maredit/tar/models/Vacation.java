@@ -90,6 +90,7 @@ public class Vacation {
     this.state = state;
   }
 
+
   public double getDays() {
     return days;
   }

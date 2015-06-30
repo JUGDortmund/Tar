@@ -3,7 +3,7 @@ initializeLanguageSelect = ->
   $('#language').select2({
     minimumResultsForSearch: Infinity
   })
-
+  
 #Scroll to vaction-form in small resolutions
 scrollToVacationForm = ->
   clientWidth = document.documentElement.clientWidth;
