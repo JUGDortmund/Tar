@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -49,15 +48,16 @@ public class OverviewController extends AbstractBaseController {
   public String overview(Model model, @RequestParam(value = "year", required = false) Integer year,
                          @RequestParam(value = "employees", required = false) ArrayList<User> filteredUsers) {
     navigationBean.setActiveComponent(NavigationBean.OVERVIEW_PAGE);
-    LOG.info("Filtered users: {}", filteredUsers);
+
     List<User> allUsers = userService.getSortedUserList();
     List<UserVacationAccount> userVacationAccounts = null;
 
     int selectedYear = LocalDate.now().getYear();
-    if(year != null && year <= selectedYear){
+    if (year != null && year <= selectedYear) {
       selectedYear = year.intValue();
     }
-    LOG.info("selectedYear : {}", selectedYear);
+    LOG.trace("Filtered users: {}", filteredUsers);
+    LOG.trace("selectedYear : {}", selectedYear);
 
     if (filteredUsers == null || filteredUsers.isEmpty()) {
       userVacationAccounts =
