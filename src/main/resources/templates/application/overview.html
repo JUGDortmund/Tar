@@ -114,9 +114,9 @@
 
                                         </tr>
                                         <th:block th:each="entry, iterator : ${account.entries}">
-                                            <tr>
-                                                <td th:text="#{field.vacation}">Urlaub
-                                                </td>
+                                            <tr> 
+                                                <td th:if="${{entry.state.toString() != 'APPROVED'}}" th:text="#{field.vacation} + '*'">Urlaub</td>
+                                                <td th:if="${{entry.state.toString() == 'APPROVED'}}" th:text="#{field.vacation}">Urlaub</td>
                                                 <td th:text="${{entry.from}}" />
                                                 <td th:text="${{entry.to}}" />
                                                 <td th:text="${#numbers.formatDecimal(entry.days,1,1)}" />

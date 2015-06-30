@@ -1,6 +1,7 @@
 package de.maredit.tar.models;
 
 import de.maredit.tar.models.enums.HalfDayTimeFrame;
+import de.maredit.tar.models.enums.State;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class AccountVactionEntry implements AccountEntry {
   private HalfDayTimeFrame timeframe;
   private User author;
   private double balance;
+  private State state;
 
   public AccountVactionEntry(Vacation vacation) {
     id = vacation.getId();
@@ -24,6 +26,7 @@ public class AccountVactionEntry implements AccountEntry {
     to = vacation.getTo();
     timeframe = vacation.getTimeframe();
     author = vacation.getAuthor();
+    state = vacation.getState();
   }
 
   @Override
@@ -91,6 +94,14 @@ public class AccountVactionEntry implements AccountEntry {
 
   public void setBalance(double balance) {
     this.balance = balance;
+  }
+
+  public State getState() {
+    return state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
   }
 
 }
