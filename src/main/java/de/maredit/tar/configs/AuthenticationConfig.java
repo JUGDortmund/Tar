@@ -32,6 +32,7 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/dist/**").permitAll()
         .antMatchers("/login").permitAll()
         .antMatchers("/userDetails").hasAnyRole("SUPERVISOR")
+        .antMatchers("/changeLanguage").permitAll()
         .anyRequest().authenticated()
         .and()
         .formLogin()

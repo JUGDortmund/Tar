@@ -1,3 +1,9 @@
+#Initialize styling of language select
+initializeLanguageSelect = ->
+  $('#language').select2({
+    minimumResultsForSearch: Infinity
+  })
+
 #Scroll to vaction-form in small resolutions
 scrollToVacationForm = ->
   clientWidth = document.documentElement.clientWidth;
@@ -19,15 +25,14 @@ refreshVacationForm = (data) ->
   $myForm = $('#vacation-form-panel')
   $myForm.html(data).hide().fadeIn( 800 )
   $('.panel-default').matchHeight()
-
   initializeDatePicker()
-
   $myForm.find('select').select2()
   scrollToVacationForm()
   activateToggle()
+  initializeLanguageSelect()
   initializeAjaxCalculation()
   toggleHalfDay()
-
+  
 refreshVacationDays = (data) ->
   $daysLabel = $('label.vacationDays')
   $remainingLabel = $('label.remainingDays')
@@ -45,6 +50,7 @@ toggleHalfDay = () ->
     else
       $('#dateToBox').show()
       $('#halfDayBox').hide()
+
 
 initializeDatePicker = () ->
    $('.input-group.date').each ->
@@ -80,7 +86,7 @@ initializeAjaxCalculation = () ->
 # document ready 
 (($) ->
   initializeDatePicker()
-
+  initializeLanguageSelect()
   $('[data-toggle="tooltip"]').tooltip()
 
   $('.panel-default select').select2()

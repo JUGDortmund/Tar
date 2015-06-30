@@ -7,11 +7,11 @@
 <body>
     <p> <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span> </p>
 
-    <p th:text="#{mail.text.accept.vacation.replacement}"> Text</p>
+    <p> <th:block th:text="#{mail.text.accept.vacation.substitution}"/></p>
     
-    <p> <b><th:block th:text="#{mail.superior}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.manager}"/></b> <span th:text="${manager}">Max Mustermann</span> </p>
 
-    <p> <b><th:block th:text="#{mail.replacement}"/></b> <span th:text="${substitute}">Max Mustermann</span> </p>
+    <p> <b><th:block th:text="#{mail.substitution}"/></b> <span th:text="${substitute}">Max Mustermann</span> </p>
 
     <p> <b><th:block th:text="#{mail.vacation.time}"/></b> <ul>
         <li><th:block th:text="#{mail.dateFrom}"/> <span th:text="${fromDate}">vonDatum</span> </li>
