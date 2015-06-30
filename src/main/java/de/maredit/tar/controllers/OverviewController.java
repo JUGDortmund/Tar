@@ -61,11 +61,11 @@ public class OverviewController extends AbstractBaseController {
 
     if (filteredUsers == null || filteredUsers.isEmpty()) {
       userVacationAccounts =
-          userService.getUserVacationAccountsForYear(allUsers, LocalDate.now().getYear());
+          userService.getUserVacationAccountsForYear(allUsers, selectedYear);
       filteredUsers = new ArrayList<User>();
     } else {
       userVacationAccounts =
-          userService.getUserVacationAccountsForYear(filteredUsers, LocalDate.now().getYear());
+          userService.getUserVacationAccountsForYear(filteredUsers, selectedYear);
     }
 
     List<AccountModel> models = new ArrayList<>();
