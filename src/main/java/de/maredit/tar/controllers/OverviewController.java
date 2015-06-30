@@ -46,7 +46,7 @@ public class OverviewController extends AbstractBaseController {
 
   @RequestMapping("/overview")
   public String overview(Model model, @RequestParam(value = "year", required = false) Integer year,
-                         @RequestParam(value = "employees", required = false) ArrayList<User> filteredUsers) {
+      @RequestParam(value = "employees", required = false) ArrayList<User> filteredUsers) {
     navigationBean.setActiveComponent(NavigationBean.OVERVIEW_PAGE);
 
     List<User> allUsers = userService.getSortedUserList();
@@ -73,7 +73,7 @@ public class OverviewController extends AbstractBaseController {
       UserVacationAccount calculationAccount = new UserVacationAccount();
       calculationAccount.setExpiryDate(userVacationAccount.getExpiryDate());
       calculationAccount.setPreviousYearOpenVacationDays(userVacationAccount
-                                                             .getPreviousYearOpenVacationDays());
+          .getPreviousYearOpenVacationDays());
       calculationAccount.setUser(userVacationAccount.getUser());
       calculationAccount.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
 
@@ -82,16 +82,15 @@ public class OverviewController extends AbstractBaseController {
       accountModel.setUser(userVacationAccount.getUser());
       accountModel.setAccount(userVacationAccount);
       accountModel.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
-      // accountModel.setPreviousYearOpenVacationDays(userVacationAccount.getPreviousYearOpenVacationDays()
-      // == null ? 0 : userVacationAccount.getPreviousYearOpenVacationDays());
-      accountModel.setPreviousYearOpenVacationDays(5);
+      accountModel.setPreviousYearOpenVacationDays(userVacationAccount
+          .getPreviousYearOpenVacationDays() == null ? 0 : userVacationAccount
+          .getPreviousYearOpenVacationDays());
       accountModel.setApprovedVacationDays(getApprovedVacationDays(userVacationAccount
-                                                                       .getVacations()));
+          .getVacations()));
       accountModel
           .setPendingVacationDays(getPendingVacationDays(userVacationAccount.getVacations()));
       accountModel.setOpenVacationDays(vacationService
-                                           .getRemainingVacationDays(userVacationAccount)
-                                           .getTotalDays());
+          .getRemainingVacationDays(userVacationAccount).getTotalDays());
       List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
       vacations.sort((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
       List<AccountEntry> entryList = new ArrayList<>();
@@ -111,7 +110,7 @@ public class OverviewController extends AbstractBaseController {
   }
 
   private void setEntryList(int selectedYear, UserVacationAccount calculationAccount,
-                            List<Vacation> vacations, List<AccountEntry> entryList) {
+      List<Vacation> vacations, List<AccountEntry> entryList) {
     for (Vacation vacation : vacations) {
       if (vacation.getFrom().getYear() >= selectedYear
           && vacation.getTo().getYear() <= selectedYear) {
@@ -120,7 +119,7 @@ public class OverviewController extends AbstractBaseController {
           calculationAccount.addVacation(vacation);
           AccountVactionEntry entry = new AccountVactionEntry(vacation);
           entry.setBalance(vacationService.getRemainingVacationDays(calculationAccount)
-                               .getTotalDays());
+              .getTotalDays());
           entryList.add(entry);
         }
       }
@@ -150,7 +149,7 @@ public class OverviewController extends AbstractBaseController {
         .stream()
         .filter(
             vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
-                        || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
+                || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
         .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
   }
 
