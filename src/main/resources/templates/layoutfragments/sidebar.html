@@ -13,6 +13,7 @@
                 <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).VACATION_PAGE ? 'active' : ''}"><a href="/"><span th:text="#{field.vacationPlanning}"></span></a></li>
                 <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).CALENDAR_PAGE ? 'active' : ''}"><a href="/calendar"><span th:text="#{field.calender}"></span></a></li>
                 <li th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).OVERVIEW_PAGE ? 'active' : ''}"><a href="/overview"><span th:text="#{field.overview}"></span></a></li>
+                <li th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}" th:class="${@navigationBean.getActiveComponent() == T(de.maredit.tar.beans.NavigationBean).BOOKING_PAGE ? 'active' : ''}"><a href="/booking"><span th:text="#{field.overview}"></span></a></li>
         </ul>
         <!-- /.sidebar-menu -->
         </section>
