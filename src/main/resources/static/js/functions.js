@@ -123,7 +123,7 @@
 }).call(this);
 
 (function() {
-  var activateToggle, initializeAjaxCalculation, initializeDatePicker, initializeLanguageSelect, refreshVacationDays, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
+  var activateToggle, initializeAjaxCalculation, initializeDatePicker, initializeLanguageSelect, refreshBookingForm, refreshVacationDays, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
 
   initializeLanguageSelect = function() {
     return $('#language').select2({
@@ -163,6 +163,16 @@
     initializeLanguageSelect();
     initializeAjaxCalculation();
     return toggleHalfDay();
+  };
+
+  refreshBookingForm = function(data) {
+    var $myForm;
+    $myForm = $('#booking-form-panel');
+    $myForm.html(data).hide().fadeIn(800);
+    $('.panel-default').matchHeight();
+    initializeDatePicker();
+    activateToggle();
+    return initializeLanguageSelect();
   };
 
   refreshVacationDays = function(data) {
@@ -256,6 +266,19 @@
         },
         success: function(data) {
           return refreshVacationForm(data);
+        }
+      });
+      return false;
+    });
+    $('.booking').click(function() {
+      $.ajax({
+        url: $(this).attr('href'),
+        dataType: "html",
+        error: function(jqXHR, textStatus, errorThrown) {
+          return console.log(textStatus);
+        },
+        success: function(data) {
+          return refreshBookingForm(data);
         }
       });
       return false;

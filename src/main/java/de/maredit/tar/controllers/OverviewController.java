@@ -10,13 +10,17 @@ import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.services.UserService;
 import de.maredit.tar.services.VacationService;
+import de.maredit.tar.services.mail.VacationCanceledMail;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
@@ -28,7 +32,7 @@ import java.util.Set;
  * Created by czillmann on 19.05.15.
  */
 @Controller
-public class OverviewController{
+public class OverviewController {
 
   private static final Logger LOG = LogManager.getLogger(OverviewController.class);
 
@@ -60,8 +64,7 @@ public class OverviewController{
     LOG.trace("selectedYear : {}", selectedYear);
 
     if (filteredUsers == null || filteredUsers.isEmpty()) {
-      userVacationAccounts =
-          userService.getUserVacationAccountsForYear(allUsers, selectedYear);
+      userVacationAccounts = userService.getUserVacationAccountsForYear(allUsers, selectedYear);
       filteredUsers = new ArrayList<User>();
     } else {
       userVacationAccounts =
@@ -107,6 +110,15 @@ public class OverviewController{
     model.addAttribute("year", selectedYear);
 
     return "application/overview";
+  }
+
+  @RequestMapping(value = "/booking", method = {RequestMethod.POST})
+  @PreAuthorize("hasRole('SUPERVISOR')")
+  public String booking(Model model,  @RequestParam(value = "booking") String booking) {
+
+    LOG.debug("BOOKING: {}", booking);
+
+    return "components/booking";
   }
 
   private void setEntryList(int selectedYear, UserVacationAccount calculationAccount,

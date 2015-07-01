@@ -33,6 +33,14 @@ refreshVacationForm = (data) ->
   initializeAjaxCalculation()
   toggleHalfDay()
   
+refreshBookingForm = (data) ->
+  $myForm = $('#booking-form-panel')
+  $myForm.html(data).hide().fadeIn( 800 )
+  $('.panel-default').matchHeight()
+  initializeDatePicker()
+  activateToggle()
+  initializeLanguageSelect()
+  
 refreshVacationDays = (data) ->
   $daysLabel = $('label.vacationDays')
   $remainingLabel = $('label.remainingDays')
@@ -109,6 +117,16 @@ initializeAjaxCalculation = () ->
         console.log(textStatus)
       success: (data) ->
         refreshVacationForm(data)
+    return false
+  
+  $('.booking').click ->
+    $.ajax
+      url: $(this).attr('href')
+      dataType: "html"
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log(textStatus)
+      success: (data) ->
+        refreshBookingForm(data)
     return false
     
   initializeAjaxCalculation()
