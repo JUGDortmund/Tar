@@ -1,102 +1,101 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="layout">
 
 <div layout:fragment="content">
-	<section class="content-header">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-xs-12">
-					<h1>
-						<th:block th:text="#{field.vacationmanagement}"/> <small><th:block
-							th:text="#{field.calendarView}"/></small>
-					</h1>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section class="content">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-xs-12 col-sm-8">
-					<p class="pull-right visible-xs info-toggle">
-						<button type="button"
-							class="btn btn-primary btn-xs offcanvas-toggle"
-							data-toggle="filter" th:text="#{field.info}"></button>
-					</p>
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<th:block th:text="#{field.calendar}"/>
-						</div>
-						<div class="panel-body">
-							<div id="calendar"  th:attr="data-lang=${#locale},data-dateformat=#{date.pattern}"></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-4 module offcanvas-filter" id="sidebar">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<th:block th:text="#{field.infoPanel}"/>
-						</div>
-						<div class="panel-body">
-							<div class="list-group module calendar-filter"
-								id="calendarFilter">
-								<h3 class="list-group-item">
-									<th:block th:text="#{field.statusFilter}"/>
-								</h3>
-								<div class="list-group-item checkbox filter-approved">
-									<label> <input type="checkbox" id="showApproved"
-										checked="checked" th:text="#{field.approvedVacations}" />
-									</label>
-								</div>
-								<div class="list-group-item checkbox filter-pending">
-									<label> <input type="checkbox" id="showPending"
-										th:text="#{field.pendingVacations}" />
-									</label>
-								</div>
-								<div class="list-group-item checkbox filter-cancelled">
-									<label> <input type="checkbox" id="showCanceled"
-										th:text="#{field.canceledVacations}" />
-									</label>
-								</div>
-								<div class="list-group-item checkbox filter-rejected">
-									<label> <input type="checkbox" id="showRejected"
-										th:text="#{field.rejectedVacations}" />
-									</label>
-								</div>
-							</div>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>
+                        <th:block th:text="#{field.vacationmanagement}"/> <small><th:block
+                            th:text="#{field.calendarView}"/></small>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-8">
+                    <p class="pull-right visible-xs info-toggle">
+                        <button type="button"
+                            class="btn btn-primary btn-xs offcanvas-toggle"
+                            data-toggle="filter" th:text="#{field.info}"></button>
+                    </p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <th:block th:text="#{field.calendar}"/>
+                        </div>
+                        <div class="panel-body">
+                            <div id="calendar"  th:attr="data-lang=${#locale},data-dateformat=#{date.pattern}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 module offcanvas-filter" id="sidebar">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <th:block th:text="#{field.infoPanel}"/>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group module calendar-filter"
+                                id="calendarFilter">
+                                <h3 class="list-group-item">
+                                    <th:block th:text="#{field.statusFilter}"/>
+                                </h3>
+                                <div class="list-group-item checkbox filter-approved">
+                                    <label> <input type="checkbox" id="showApproved"
+                                        checked="checked" th:text="#{field.approvedVacations}" />
+                                    </label>
+                                </div>
+                                <div class="list-group-item checkbox filter-pending">
+                                    <label> <input type="checkbox" id="showPending"
+                                        th:text="#{field.pendingVacations}" />
+                                    </label>
+                                </div>
+                                <div class="list-group-item checkbox filter-cancelled">
+                                    <label> <input type="checkbox" id="showCanceled"
+                                        th:text="#{field.canceledVacations}" />
+                                    </label>
+                                </div>
+                                <div class="list-group-item checkbox filter-rejected">
+                                    <label> <input type="checkbox" id="showRejected"
+                                        th:text="#{field.rejectedVacations}" />
+                                    </label>
+                                </div>
+                            </div>
 
-							<div class="
-												list-group" id="vacationDetail">
-								<h3 class="list-group-item"><th:block th:text="#{field.vacationDetails}"/></h3>
-								<div class="list-group-item module vacation-detail">
-									<ul>
-										<li><strong th:text="#{field.employee} + ':'"></strong></li>
-										<li class="user">Björn Prenger</li>
-										<li><strong th:text="#{field.type}"></strong></li>
-										<li><th:block th:text="#{field.possibleValues}"/></li>
-										<li><strong th:text="#{field.status}"></strong></li>
-										<li class="state"><th:block th:text="#{field.confirmed}"/></li>
-										<li><strong><th:block th:text="#{field.dateFrom} + ' - ' + #{field.dateTo}"/></strong></li>
-										<li class="time">01.04.2015 - 04.04.2015</li>
-										<li><strong><th:block th:text="#{field.substitute}"/></strong></li>
-										<li class="substitute"></li>
-										<li><strong><th:block th:text="#{field.manager}"/></strong></li>
-										<li class="manager"></li>
-									</ul>
-								</div>
-							</div>
+                            <div class="list-group" id="vacationDetail">
+                                <h3 class="list-group-item"><th:block th:text="#{field.vacationDetails}"/></h3>
+                                <div class="list-group-item module vacation-detail">
+                                    <ul>
+                                        <li><strong th:text="#{field.employee} + ':'"></strong></li>
+                                        <li class="user">Björn Prenger</li>
+                                        <li><strong th:text="#{field.type}"></strong></li>
+                                        <li class="vacation-type"><th:block th:text="#{field.possibleValues}"/></li>
+                                        <li><strong th:text="#{field.status}"></strong></li>
+                                        <li class="state"><th:block th:text="#{field.confirmed}"/></li>
+                                        <li><strong><th:block th:text="#{field.dateFrom} + ' - ' + #{field.dateTo}"/></strong></li>
+                                        <li class="time">01.04.2015 - 04.04.2015</li>
+                                        <li><strong><th:block th:text="#{field.substitute}"/></strong></li>
+                                        <li class="substitute"></li>
+                                        <li><strong><th:block th:text="#{field.manager}"/></strong></li>
+                                        <li class="manager"></li>
+                                    </ul>
+                                </div>
+                            </div>
 
-						</div>
-					</div>
-
+                        </div>
+                    </div>
 
 
-				</div>
-			</div>
-		</div>
-	</section>
+
+                </div>
+            </div>
+        </div>
+    </section>
 
 </div>
 

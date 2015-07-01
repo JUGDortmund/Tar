@@ -82,7 +82,8 @@
             }
             $vacationDetail.find('.manager').text(managerText);
             $vacationDetail.show();
-            return $('#sidebar').addClass('active');
+            $('#sidebar').addClass('active');
+            return $('.panel-default').matchHeight();
           } else {
             $vacationDetail = $('#vacationDetail');
             return $vacationDetail.hide();
