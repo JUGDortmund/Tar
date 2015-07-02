@@ -123,7 +123,7 @@
 }).call(this);
 
 (function() {
-  var activateToggle, initializeAjaxCalculation, initializeDatePicker, initializeLanguageSelect, refreshBookingForm, refreshVacationDays, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
+  var activateToggle, initializeAjaxCalculation, initializeDatePicker, initializeLanguageSelect, refreshVacationDays, refreshVacationForm, scrollToVacationForm, toggleHalfDay;
 
   initializeLanguageSelect = function() {
     return $('#language').select2({
@@ -163,16 +163,6 @@
     initializeLanguageSelect();
     initializeAjaxCalculation();
     return toggleHalfDay();
-  };
-
-  refreshBookingForm = function(data) {
-    var $myForm;
-    $myForm = $('#booking-form-panel');
-    $myForm.html(data).hide().fadeIn(800);
-    $('.panel-default').matchHeight();
-    initializeDatePicker();
-    activateToggle();
-    return initializeLanguageSelect();
   };
 
   refreshVacationDays = function(data) {
@@ -270,19 +260,6 @@
       });
       return false;
     });
-    $('.booking').click(function() {
-      $.ajax({
-        url: $(this).attr('href'),
-        dataType: "html",
-        error: function(jqXHR, textStatus, errorThrown) {
-          return console.log(textStatus);
-        },
-        success: function(data) {
-          return refreshBookingForm(data);
-        }
-      });
-      return false;
-    });
     initializeAjaxCalculation();
     return toggleHalfDay();
   })(jQuery);
@@ -290,6 +267,12 @@
 }).call(this);
 
 (function() {
+  var refreshManualEntryForm;
+
+  refreshManualEntryForm = function(data) {
+    return console.log('book it!');
+  };
+
   (function($) {
     $('[data-toggle="tooltip"]').tooltip();
     $('#employees').select2();
@@ -304,8 +287,21 @@
         e.preventDefault();
       }
     });
-    return $('#clear').on('click', function(e) {
+    $('#clear').on('click', function(e) {
       $('#employees').val(null).trigger('change');
+    });
+    return $('.manual-entry').click(function() {
+      $.ajax({
+        url: $(this).attr('href'),
+        dataType: "html",
+        error: function(jqXHR, textStatus, errorThrown) {
+          return console.log(textStatus);
+        },
+        success: function(data) {
+          return refreshManualEntryForm(data);
+        }
+      });
+      return false;
     });
   })(jQuery);
 

@@ -8,10 +8,12 @@ import de.maredit.tar.models.User;
 import de.maredit.tar.models.UserVacationAccount;
 import de.maredit.tar.models.Vacation;
 import de.maredit.tar.models.enums.State;
+import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.UserService;
 import de.maredit.tar.services.VacationService;
 import de.maredit.tar.services.mail.VacationCanceledMail;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +45,30 @@ public class OverviewController {
   private UserService userService;
 
   @Autowired
+  private UserRepository userRepository;
+
+  @Autowired
   private VacationService vacationService;
 
   @Autowired
   private NavigationBean navigationBean;
+
+
+  @ModelAttribute("user")
+  public User getUser(@RequestParam(value = "id", required = false) String id) {
+    if (StringUtils.isBlank(id)) {
+      return null;
+    }
+    return userRepository.findOne(id);
+  }
+
+  @ModelAttribute("account")
+  public AccountModel getAccount(@RequestParam(value = "id", required = false) String id) {
+    if (StringUtils.isBlank(id)) {
+      return null;
+    }
+    return null;
+  }
 
   @RequestMapping("/overview")
   public String overview(Model model, @RequestParam(value = "year", required = false) Integer year,
@@ -112,11 +134,13 @@ public class OverviewController {
     return "application/overview";
   }
 
-  @RequestMapping(value = "/booking", method = {RequestMethod.POST})
+  @RequestMapping(value = "/manualEntry")
   @PreAuthorize("hasRole('SUPERVISOR')")
-  public String booking(Model model,  @RequestParam(value = "booking") String booking) {
+  public String manualEntry(@RequestParam(value = "user") User user,
+                            @RequestParam(value = "account") AccountModel account) {
 
-    LOG.debug("BOOKING: {}", booking);
+    LOG.debug("user: {}", user);
+    LOG.debug("account: {}", account);
 
     return "components/booking";
   }

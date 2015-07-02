@@ -9,12 +9,14 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import de.maredit.tar.models.enums.HalfDayTimeFrame;
 import de.maredit.tar.models.enums.State;
 
+@Document
 public class Vacation {
 
   @Id

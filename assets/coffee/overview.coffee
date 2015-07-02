@@ -1,3 +1,7 @@
+
+refreshManualEntryForm = (data) ->
+    console.log 'book it!'
+
 # document ready
 (($) ->
    $('[data-toggle="tooltip"]').tooltip()
@@ -19,5 +23,16 @@
    $('#clear').on 'click', (e) ->
       $('#employees').val(null).trigger('change')
       return
+
+   $('.manual-entry').click ->
+     $.ajax
+       url: $(this).attr('href')
+       dataType: "html"
+       error: (jqXHR, textStatus, errorThrown) ->
+         console.log(textStatus)
+       success: (data) ->
+         refreshManualEntryForm(data)
+     return false
+
 
 )(jQuery);
