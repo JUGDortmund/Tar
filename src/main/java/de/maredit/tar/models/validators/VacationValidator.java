@@ -1,6 +1,6 @@
 package de.maredit.tar.models.validators;
 
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.Vacation;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

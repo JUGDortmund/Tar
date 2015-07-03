@@ -1,5 +1,7 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.HalfDayTimeFrame;
 import de.maredit.tar.models.enums.State;
 

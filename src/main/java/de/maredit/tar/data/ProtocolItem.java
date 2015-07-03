@@ -1,4 +1,6 @@
-package de.maredit.tar.models;
+package de.maredit.tar.data;
+
+import de.maredit.tar.models.TimelineItem;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 

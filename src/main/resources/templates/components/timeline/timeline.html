@@ -2,19 +2,19 @@
     <body th:fragment="timeline">
         <th:block th:switch="${timeLineItem.class.name}">
             <!-- Case State -->
-            <th:block th:case="de.maredit.tar.models.StateItem">
+            <th:block th:case="de.maredit.tar.data.StateItem">
                 <div th:replace="components/timeline/state :: state"/>
             </th:block>
             <!-- .Case State -->
 
             <!-- Case Protocol -->
-            <th:block th:case="de.maredit.tar.models.ProtocolItem">
+            <th:block th:case="de.maredit.tar.data.ProtocolItem">
                 <div th:replace="components/timeline/protocol :: protocol"/>
             </th:block>
             <!-- .Case Protocol -->
 
             <!-- Case Comment -->
-            <th:block th:case="de.maredit.tar.models.CommentItem">
+            <th:block th:case="de.maredit.tar.data.CommentItem">
                 <div th:replace="components/timeline/comment :: comment"/>
             </th:block>
         </th:block>

@@ -1,12 +1,15 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
+
 import java.time.LocalDateTime;
 
 public class AccountManualEntry implements AccountEntry {
 
   private String type;
   private String year;
-  private Vacation vacationReference;
+  private Vacation vacation;
   private double days;
   private String description;
 
@@ -26,12 +29,12 @@ public class AccountManualEntry implements AccountEntry {
     this.year = year;
   }
 
-  public Vacation getVacationReference() {
-    return vacationReference;
+  public Vacation getVacation() {
+    return vacation;
   }
 
-  public void setVacationReference(Vacation vacationReference) {
-    this.vacationReference = vacationReference;
+  public void setVacation(Vacation vacation) {
+    this.vacation = vacation;
   }
 
   public double getDays() {

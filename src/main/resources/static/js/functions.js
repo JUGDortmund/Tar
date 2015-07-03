@@ -245,7 +245,27 @@
     $('.panel-default').matchHeight();
     activateToggle();
     $('[data-toggle="filter"]').click(function() {
-      return $('.offcanvas-filter').toggleClass('active');
+      var $myFilter, $myForm;
+      $('.offcanvas-filter').toggleClass('active');
+      if ($('.offcanvas-filter').hasClass('active')) {
+        $myFilter = $('#filter-form-panel');
+        if ($myFilter !== null) {
+          $myFilter.hide().show();
+        }
+        $myForm = $('#entry-form-panel');
+        if ($myForm !== null) {
+          return $myForm.hide();
+        }
+      } else {
+        $myFilter = $('#filter-form-panel');
+        if ($myFilter !== null) {
+          $myFilter.hide();
+        }
+        $myForm = $('#entry-form-panel');
+        if ($myForm !== null) {
+          return $myForm.hide();
+        }
+      }
     });
     $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
       $.ajax({
@@ -267,13 +287,39 @@
 }).call(this);
 
 (function() {
-  var refreshManualEntryForm;
+  var hideManualEntryForm, scrollToVacationManualEntryForm, showManualEntryForm;
 
-  refreshManualEntryForm = function(data) {
-    return console.log('book it!');
+  scrollToVacationManualEntryForm = function() {
+    var clientWidth;
+    clientWidth = document.documentElement.clientWidth;
+    if (clientWidth < 761) {
+      return $('html, body').animate({
+        scrollTop: $('#entry-form-panel').offset().top - 20
+      }, 'slow');
+    }
+  };
+
+  showManualEntryForm = function(data) {
+    var $myFilter, $myForm;
+    console.log('book it!');
+    $myFilter = $('#filter-form-panel');
+    $myFilter.hide();
+    $myForm = $('#entry-form-panel');
+    $myForm.html(data).hide().show();
+    scrollToVacationManualEntryForm();
+    return $('.offcanvas-filter').show();
+  };
+
+  hideManualEntryForm = function(data) {
+    var $myFilter, $myForm;
+    $myForm = $('#entry-form-panel');
+    $myForm.hide();
+    $myFilter = $('#filter-form-panel');
+    return $myFilter.hide().show();
   };
 
   (function($) {
+    hideManualEntryForm();
     $('[data-toggle="tooltip"]').tooltip();
     $('#employees').select2();
     $('#employees').off('select2-opening');
@@ -298,7 +344,7 @@
           return console.log(textStatus);
         },
         success: function(data) {
-          return refreshManualEntryForm(data);
+          return showManualEntryForm(data);
         }
       });
       return false;

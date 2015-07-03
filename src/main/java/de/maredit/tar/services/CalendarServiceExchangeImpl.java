@@ -1,7 +1,7 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.models.CalendarEvent;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.properties.ExchangeProperties;
 import de.maredit.tar.services.calendar.CalendarItem;
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -48,7 +48,7 @@ public class CalendarServiceExchangeImpl implements CalendarService {
   private ExchangeProperties exchangeProperties;
 
   /* (non-Javadoc)
-   * @see de.maredit.tar.services.CalendarService#createAppointment(de.maredit.tar.models.Vacation)
+   * @see de.maredit.tar.services.CalendarService#createAppointment(de.maredit.tar.data.Vacation)
    */
   @Override
   public CalendarItem createAppointment(Vacation vacation) {
@@ -139,7 +139,7 @@ public class CalendarServiceExchangeImpl implements CalendarService {
   }
 
   /* (non-Javadoc)
-   * @see de.maredit.tar.services.CalendarService#deleteAppointment(de.maredit.tar.models.Vacation)
+   * @see de.maredit.tar.services.CalendarService#deleteAppointment(de.maredit.tar.data.Vacation)
    */
   @Override
   public void deleteAppointment(Vacation vacation) {
@@ -152,7 +152,7 @@ public class CalendarServiceExchangeImpl implements CalendarService {
   }
 
   /* (non-Javadoc)
-   * @see de.maredit.tar.services.CalendarService#modifiyAppointment(de.maredit.tar.models.Vacation)
+   * @see de.maredit.tar.services.CalendarService#modifiyAppointment(de.maredit.tar.data.Vacation)
    */
   @Override
   public void modifiyAppointment(Vacation vacation) {

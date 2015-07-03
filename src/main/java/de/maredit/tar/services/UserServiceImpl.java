@@ -1,9 +1,9 @@
 package de.maredit.tar.services;
 
 import com.unboundid.ldap.sdk.LDAPException;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.properties.VacationProperties;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.UserVacationAccountRepository;

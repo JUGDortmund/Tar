@@ -6,9 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import de.maredit.tar.Main;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.UserVacationAccountRepository;

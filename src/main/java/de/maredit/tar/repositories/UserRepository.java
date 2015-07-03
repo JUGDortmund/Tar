@@ -1,6 +1,6 @@
 package de.maredit.tar.repositories;
 
-import de.maredit.tar.models.User;
+import de.maredit.tar.data.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

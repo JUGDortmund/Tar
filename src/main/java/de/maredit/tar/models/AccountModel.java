@@ -1,5 +1,8 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+
 import java.util.List;
 
 public class AccountModel {

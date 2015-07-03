@@ -1,8 +1,8 @@
 package de.maredit.tar.services.mail;
 
 import de.maredit.tar.models.CalendarEvent;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.utils.ConversionUtils;
 import org.apache.commons.lang3.ArrayUtils;

@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import de.maredit.tar.Main;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 import org.junit.Before;
 import org.junit.Test;

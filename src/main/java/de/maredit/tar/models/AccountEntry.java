@@ -1,5 +1,7 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.data.User;
+
 import java.time.LocalDateTime;
 
 

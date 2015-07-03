@@ -1,8 +1,8 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

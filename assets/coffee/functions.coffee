@@ -100,6 +100,16 @@ initializeAjaxCalculation = () ->
 
   $('[data-toggle="filter"]').click ->
     $('.offcanvas-filter').toggleClass 'active'
+    if ($('.offcanvas-filter').hasClass 'active')
+        $myFilter = $('#filter-form-panel')
+        if $myFilter != null then $myFilter.hide().show()
+        $myForm = $('#entry-form-panel')
+        if $myForm != null then $myForm.hide( )
+    else
+        $myFilter = $('#filter-form-panel')
+        if $myFilter != null then $myFilter.hide()
+        $myForm = $('#entry-form-panel')
+        if $myForm != null then $myForm.hide( )
 
   $('.edit-vacation a, .approve-vacation a, #newVacation').click ->
     $.ajax

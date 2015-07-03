@@ -1,10 +1,12 @@
-package de.maredit.tar.models;
+package de.maredit.tar.data;
 
 import com.unboundid.util.Base64;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
+@Document
 public class User {
 
   @Id

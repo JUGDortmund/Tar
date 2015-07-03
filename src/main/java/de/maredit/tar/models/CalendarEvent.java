@@ -1,5 +1,6 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.CalendarEntryType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

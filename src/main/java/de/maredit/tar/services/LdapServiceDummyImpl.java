@@ -2,7 +2,7 @@ package de.maredit.tar.services;
 
 
 import com.unboundid.ldap.sdk.LDAPException;
-import de.maredit.tar.models.User;
+import de.maredit.tar.data.User;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;

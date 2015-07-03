@@ -1,10 +1,8 @@
 package de.maredit.tar.models.validators;
 
-import de.maredit.tar.models.AccountEntry;
-
 import de.maredit.tar.Main;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.HalfDayTimeFrame;
 import org.junit.Before;
 import org.junit.Test;

@@ -3,12 +3,12 @@ package de.maredit.tar.listeners;
 import de.maredit.tar.services.VacationService;
 
 import com.unboundid.ldap.sdk.LDAPException;
-import de.maredit.tar.models.CommentItem;
-import de.maredit.tar.models.ProtocolItem;
-import de.maredit.tar.models.StateItem;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.CommentItem;
+import de.maredit.tar.data.ProtocolItem;
+import de.maredit.tar.data.StateItem;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;

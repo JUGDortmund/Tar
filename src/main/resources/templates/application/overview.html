@@ -129,7 +129,7 @@
                                     <div>
                                         <th:block
                                             th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}">
-                                            <a th:href="@{/manualEntry(user=${account.user.id}, account=${account.id})}" class="manual-entry">
+                                            <a th:href="@{/manualEntry(user=${account.user.id}, year=${year})}" class="manual-entry">
                                                 <button type="button" name="account"
                                                     class="btn btn-default pull-right" th:text="#{field.manualEntry}"/>
                                             </a>
@@ -147,7 +147,7 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-4 module offcanvas-filter" id="sidebar">
-                    <div class="panel panel-default" id="booking-form-panel">
+                    <div class="panel panel-default" id="filter-form-panel">
                         <div class="panel-heading">
                             <th:block th:text="#{field.infoPanel}" />
                         </div>
@@ -180,6 +180,8 @@
                                     employeeFilter</div>
                             </div>
                         </form>
+                    </div>
+                    <div class="panel panel-default" id="entry-form-panel">
                     </div>
                 </div>
             </div>

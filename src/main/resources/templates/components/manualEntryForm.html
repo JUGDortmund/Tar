@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body th:fragment="manualEntryForm">
+    <div class="panel-heading">
+        Korrekturbuchung
+    </div>
+
+    <div class="panel-body">
+        <form th:action="@{/saveManualEntry}" method="post">
+
+            <div class="row">
+                <div class="col-xs-12 entry-description">
+                    Korrekturbuchung für xyz
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                     <!--th:classappend="${#fields.hasErrors('type')}? 'has-error'"> -->
+                    <label for="type">
+                        <th:block th:text="Buchungsart" />
+                        <span>*</span>
+                    </label>
+
+                    <select class="form-control" style="width: 100%;" name="type" id="type" > <!--th:field="*{manager}">-->
+                        <option value="" selected="selected">- <th:block th:text="Gutschriftsart"/> -</option>
+                        <option value="add"><th:block th:text="Gutschrift"/></option>
+                        <option value="subtract"><th:block th:text="Abzug"/></option>
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <!--th:classappend="${#fields.hasErrors('type')}? 'has-error'"> -->
+                    <label for="year">
+                        <th:block th:text="Jahr" />
+                        <span>*</span>
+                    </label>
+
+                    <select class="form-control" style="width: 100%;" name="year" id="year" > <!--th:field="*{manager}">-->
+                        <option value="" selected="selected">- <th:block th:text="choose"/> -</option>
+                        <option value="2015"><th:block th:text="2015"/></option>
+                        <option value="2014"><th:block th:text="2014"/></option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <label for="amount" th:text="Tage"></label>
+                    <input type="number" class="form-control" name="amount"
+                           id="amount" th:value="0"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <label for="description" th:text="Grund"></label>
+                    <input type="text" class="form-control" name="description"
+                              id="description" th:value="Grund"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 form-group">
+                    <!--th:classappend="${#fields.hasErrors('type')}? 'has-error'"> -->
+                    <label for="vacationReference">
+                        <th:block th:text="Urlaubsverknüpfung" />
+                    </label>
+
+                    <select class="form-control" style="width: 100%;" name="vacationReference" id="vacationReference" > <!--th:field="*{manager}">-->
+                        <option value="" selected="selected">- <th:block th:text="kein"/> -</option>
+                        <option value="2015"><th:block/>Urlaub xy</option>
+                        <option value="2014"><th:block/>Urlaub yz</option>
+                    </select>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

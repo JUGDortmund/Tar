@@ -5,8 +5,8 @@ import de.maredit.tar.models.Holiday;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import de.maredit.tar.models.VacationEntitlement;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 
 import java.time.DayOfWeek;

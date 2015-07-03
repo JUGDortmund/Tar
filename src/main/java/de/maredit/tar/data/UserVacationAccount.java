@@ -1,4 +1,7 @@
-package de.maredit.tar.models;
+package de.maredit.tar.data;
+
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;

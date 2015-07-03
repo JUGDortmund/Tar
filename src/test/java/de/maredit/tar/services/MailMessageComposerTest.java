@@ -1,12 +1,12 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.models.VacationEntitlement;
-import de.maredit.tar.models.UserVacationAccount;
+import de.maredit.tar.data.UserVacationAccount;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import de.maredit.tar.Main;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.services.mail.VacationCreateMail;
 import org.junit.Before;
 import org.junit.Test;

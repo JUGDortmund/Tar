@@ -1,11 +1,11 @@
 package de.maredit.tar.controllers;
 
 import de.maredit.tar.beans.NavigationBean;
-import de.maredit.tar.models.CommentItem;
+import de.maredit.tar.data.CommentItem;
 import de.maredit.tar.models.TimelineItem;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.models.enums.FormMode;
 import de.maredit.tar.models.enums.State;

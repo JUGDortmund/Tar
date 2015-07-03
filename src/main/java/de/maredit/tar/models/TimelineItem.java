@@ -1,5 +1,11 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.data.CommentItem;
+import de.maredit.tar.data.ProtocolItem;
+import de.maredit.tar.data.StateItem;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.Vacation;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +16,7 @@ import java.time.LocalTime;
 import javax.validation.constraints.NotNull;
 
 public class TimelineItem {
+
   @Id
   private String id;
 
@@ -57,19 +64,19 @@ public class TimelineItem {
     this.vacation = vacation;
   }
 
-  public CommentItem getCommentItem(){
-    return (CommentItem)this;
+  public CommentItem getCommentItem() {
+    return (CommentItem) this;
   }
 
-  public StateItem getStateItem(){
-    return (StateItem)this;
+  public StateItem getStateItem() {
+    return (StateItem) this;
   }
 
-  public ProtocolItem getProtocolItem(){
-    return (ProtocolItem)this;
+  public ProtocolItem getProtocolItem() {
+    return (ProtocolItem) this;
   }
 
-  public LocalTime getCreatedTime(){
+  public LocalTime getCreatedTime() {
     return this.created.toLocalTime();
   }
 }

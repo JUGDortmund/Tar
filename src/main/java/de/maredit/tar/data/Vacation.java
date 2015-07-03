@@ -1,10 +1,9 @@
-package de.maredit.tar.models;
+package de.maredit.tar.data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;

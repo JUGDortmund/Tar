@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.toList;
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Holiday;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.HolidayService;

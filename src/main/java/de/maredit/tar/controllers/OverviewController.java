@@ -4,27 +4,30 @@ import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.AccountEntry;
 import de.maredit.tar.models.AccountModel;
 import de.maredit.tar.models.AccountVactionEntry;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
+import de.maredit.tar.models.validators.VacationValidator;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.services.UserService;
 import de.maredit.tar.services.VacationService;
-import de.maredit.tar.services.mail.VacationCanceledMail;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,14 +63,6 @@ public class OverviewController {
       return null;
     }
     return userRepository.findOne(id);
-  }
-
-  @ModelAttribute("account")
-  public AccountModel getAccount(@RequestParam(value = "id", required = false) String id) {
-    if (StringUtils.isBlank(id)) {
-      return null;
-    }
-    return null;
   }
 
   @RequestMapping("/overview")
@@ -137,12 +132,12 @@ public class OverviewController {
   @RequestMapping(value = "/manualEntry")
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String manualEntry(@RequestParam(value = "user") User user,
-                            @RequestParam(value = "account") AccountModel account) {
+                            @RequestParam(value = "year") int year) {
 
     LOG.debug("user: {}", user);
-    LOG.debug("account: {}", account);
+    LOG.debug("year: {}", year);
 
-    return "components/booking";
+    return "components/manualEntryForm";
   }
 
   private void setEntryList(int selectedYear, UserVacationAccount calculationAccount,
