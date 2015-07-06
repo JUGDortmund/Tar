@@ -287,7 +287,7 @@
 }).call(this);
 
 (function() {
-  var hideManualEntryForm, scrollToVacationManualEntryForm, showManualEntryForm;
+  var hideManualEntryForm, scrollToVacationManualEntryForm, sendAjaxRequest, showManualEntryForm;
 
   scrollToVacationManualEntryForm = function() {
     var clientWidth;
@@ -308,7 +308,23 @@
     $myForm.html(data).hide().show();
     scrollToVacationManualEntryForm();
     $('.offcanvas-filter').show();
-    return $myForm.find('select').select2();
+    $myForm.find('select.strict').select2({
+      minimumResultsForSearch: Infinity
+    });
+    $myForm.find('select.searchable').select2();
+    $('#year').on('change', function() {
+      var form;
+      form = $(this).closest('form');
+      return sendAjaxRequest(form.attr("action"), form.serialize(), "POST");
+    });
+    $('#submitEntry').on('click', function() {
+      var form;
+      form = $(this).closest('form');
+      return sendAjaxRequest(form.attr("action"), form.serialize(), "POST");
+    });
+    return $('#saveManualEntry').submit(function(e) {
+      return e.preventDefault(e);
+    });
   };
 
   hideManualEntryForm = function(data) {
@@ -317,6 +333,23 @@
     $myForm.hide();
     $myFilter = $('#filter-form-panel');
     return $myFilter.hide().show();
+  };
+
+  sendAjaxRequest = function(url, data, method) {
+    $.ajax({
+      url: url,
+      data: data,
+      dataType: "html",
+      method: method,
+      error: function(jqXHR, textStatus, errorThrown) {
+        return console.log(textStatus);
+      },
+      success: function(data) {
+        console.log('successful');
+        return showManualEntryForm(data);
+      }
+    });
+    return false;
   };
 
   (function($) {
@@ -338,17 +371,7 @@
       $('#employees').val(null).trigger('change');
     });
     return $('.manual-entry').click(function() {
-      $.ajax({
-        url: $(this).attr('href'),
-        dataType: "html",
-        error: function(jqXHR, textStatus, errorThrown) {
-          return console.log(textStatus);
-        },
-        success: function(data) {
-          return showManualEntryForm(data);
-        }
-      });
-      return false;
+      return sendAjaxRequest($(this).attr('href'), null, "GET");
     });
   })(jQuery);
 

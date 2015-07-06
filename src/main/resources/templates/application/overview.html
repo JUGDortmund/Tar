@@ -129,7 +129,7 @@
                                     <div>
                                         <th:block
                                             th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}">
-                                            <a th:href="@{/manualEntry(user=${account.user.id}, year=${year})}" class="manual-entry">
+                                            <a th:href="@{/newManualEntry(user=${account.user.id}, year=${year})}" class="manual-entry">
                                                 <button type="button" name="account"
                                                     class="btn btn-default pull-right" th:text="#{field.manualEntry}"/>
                                             </a>

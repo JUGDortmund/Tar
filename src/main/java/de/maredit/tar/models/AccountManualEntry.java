@@ -2,22 +2,39 @@ package de.maredit.tar.models;
 
 import de.maredit.tar.data.User;
 import de.maredit.tar.data.Vacation;
+import de.maredit.tar.models.enums.ManualEntryType;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+
 public class AccountManualEntry implements AccountEntry {
 
-  private String type;
+  @NotNull
+  private ManualEntryType type;
+
+  @NotNull
   private String year;
+
   private Vacation vacation;
+
+  @DecimalMin("0.5")
   private double days;
+
+  @NotNull
   private String description;
 
-  public String getType() {
+  private User author;
+
+  private LocalDateTime created;
+
+
+  public ManualEntryType getType() {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(ManualEntryType type) {
     this.type = type;
   }
 
@@ -42,11 +59,19 @@ public class AccountManualEntry implements AccountEntry {
   }
 
   public LocalDateTime getCreated() {
-    return null;
+    return created;
+  }
+
+  public void setCreated(LocalDateTime created) {
+    this.created = created;
   }
 
   public User getAuthor() {
-    return null;
+    return author;
+  }
+
+  public void setAuthor(User author) {
+    this.author = author;
   }
 
   public void setDays(double days) {

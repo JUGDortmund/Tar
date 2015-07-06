@@ -11,13 +11,40 @@ showManualEntryForm = (data) ->
     $myForm.html(data).hide().show()
     scrollToVacationManualEntryForm()
     $('.offcanvas-filter').show()
-    $myForm.find('select').select2()
+    $myForm.find('select.strict').select2({
+      minimumResultsForSearch: Infinity
+    })
+    $myForm.find('select.searchable').select2()
+    $('#year').on 'change', ->
+        form = $(this).closest('form')
+        sendAjaxRequest(form.attr( "action" ), form.serialize() , "POST")
+
+    $('#submitEntry').on 'click', () ->
+        form = $(this).closest('form')
+        sendAjaxRequest(form.attr( "action" ), form.serialize(), "POST" )
+
+    $('#saveManualEntry').submit (e) ->
+        e.preventDefault(e)
 
 hideManualEntryForm = (data) ->
     $myForm = $('#entry-form-panel')
     $myForm.hide( )
     $myFilter = $('#filter-form-panel')
     $myFilter.hide().show()
+
+sendAjaxRequest = (url, data, method) ->
+    $.ajax
+        url: url
+        data: data
+        dataType: "html"
+        method: method
+        error: (jqXHR, textStatus, errorThrown) ->
+            console.log(textStatus)
+        success: (data) ->
+            console.log 'successful'
+            showManualEntryForm(data)
+    return false
+
 
 # document ready
 (($) ->
@@ -42,13 +69,6 @@ hideManualEntryForm = (data) ->
         return
 
     $('.manual-entry').click ->
-        $.ajax
-            url: $(this).attr('href')
-            dataType: "html"
-            error: (jqXHR, textStatus, errorThrown) ->
-                console.log(textStatus)
-            success: (data) ->
-                showManualEntryForm(data)
-        return false
+        sendAjaxRequest($(this).attr('href'), null, "GET")
 
 )(jQuery);
