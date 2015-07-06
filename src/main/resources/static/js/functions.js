@@ -307,7 +307,8 @@
     $myForm = $('#entry-form-panel');
     $myForm.html(data).hide().show();
     scrollToVacationManualEntryForm();
-    return $('.offcanvas-filter').show();
+    $('.offcanvas-filter').show();
+    return $myForm.find('select').select2();
   };
 
   hideManualEntryForm = function(data) {

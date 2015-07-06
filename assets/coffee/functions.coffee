@@ -77,7 +77,14 @@ initializeAjaxCalculation = () ->
       url: 'updateVacationForm'
       method: "POST"
       dataType: "json"
-      data: { "id" : $('form > input[id="id"][type="hidden"]').val(), "from": $('form input[id="dateFrom"]').val(), "to": $('form input[id="dateTo"]').val(), "halfDay": $('form input[id="halfDay"]').is(':checked'), "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(), "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()}
+      data: {
+        "id" : $('form > input[id="id"][type="hidden"]').val(),
+        "from": $('form input[id="dateFrom"]').val(),
+        "to": $('form input[id="dateTo"]').val(),
+        "halfDay": $('form input[id="halfDay"]').is(':checked'),
+        "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(),
+        "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()
+      }
       error: (jqXHR, textStatus, errorThrown) ->
         console.log(textStatus)
       success: (data) ->

@@ -50,14 +50,20 @@
             </div>
             <div class="row">
                 <div class="col-xs-12 form-group">
-                    <label for="amount" th:text="Tage"></label>
+                    <label for="amount">
+                        <th:block th:text="Tage" />
+                        <span>*</span>
+                    </label>
                     <input type="number" class="form-control" name="amount"
                            id="amount" th:value="0"/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12 form-group">
-                    <label for="description" th:text="Grund"></label>
+                    <label for="description">
+                        <th:block th:text="Grund" />
+                        <span>*</span>
+                    </label>
                     <input type="text" class="form-control" name="description"
                               id="description" th:value="Grund"/>
                 </div>

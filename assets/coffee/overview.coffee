@@ -11,7 +11,7 @@ showManualEntryForm = (data) ->
     $myForm.html(data).hide().show()
     scrollToVacationManualEntryForm()
     $('.offcanvas-filter').show()
-
+    $myForm.find('select').select2()
 
 hideManualEntryForm = (data) ->
     $myForm = $('#entry-form-panel')
