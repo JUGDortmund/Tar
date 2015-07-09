@@ -58,6 +58,9 @@ public class Vacation {
 
   private HalfDayTimeFrame timeframe;
 
+  @DBRef
+  private ManualEntry manualEntry;
+
   public Vacation() {
     this.created = LocalDateTime.now();
     this.state = State.WAITING_FOR_APPROVEMENT;
@@ -198,9 +201,17 @@ public class Vacation {
     this.timeframe = timeframe;
   }
 
+  public ManualEntry getManualEntry() {
+    return manualEntry;
+  }
+
+  public void setManualEntry(ManualEntry manualEntry) {
+    this.manualEntry = manualEntry;
+  }
+
   @Override
   public String toString() {
     return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
-        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", state=" + state + "]";
+        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", state=" + state + ", manualEntry=" + manualEntry + "]";
   }
 }

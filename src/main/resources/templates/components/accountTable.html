@@ -24,7 +24,7 @@
             <td />
             <td />
             <td th:text="${#numbers.formatDecimal(account.totalVacationDays,1,1)}" />
-            <td th:text="${#numbers.formatDecimal(completeBalance,1,1)}" />
+            <td th:text="${#numbers.formatDecimal(completeBalance,1,1)}" /><!-- DAS DARF NCIHT ACCOUNT SEIN!!!-->
         </tr>
         <tr th:each="entry, iterator : ${account.entries}">
             <td >

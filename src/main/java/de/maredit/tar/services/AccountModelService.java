@@ -7,6 +7,8 @@ import de.maredit.tar.models.AccountEntry;
 import de.maredit.tar.models.AccountManualEntry;
 import de.maredit.tar.models.AccountModel;
 import de.maredit.tar.models.AccountVacationEntry;
+import de.maredit.tar.models.VacationEntitlement;
+import de.maredit.tar.models.enums.ManualEntryType;
 import de.maredit.tar.models.enums.State;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,27 +30,37 @@ public class AccountModelService {
   @Autowired
   private VacationService vacationService;
 
-  public AccountModel createAccountModel(UserVacationAccount userVacationAccount){
-    List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
+  private double getTotalVacationDayForAccountModel(UserVacationAccount userVacationAccount){
     List<ManualEntry> manualEntries = new ArrayList<>(userVacationAccount.getManualEntries());
+    OptionalDouble optional = manualEntries.stream()
+        .filter(manualEntry -> manualEntry.getVacation() == null)
+        .mapToDouble((manualEntry) -> {
+          return
+              manualEntry.getType() == ManualEntryType.ADD ? manualEntry.getDays() : -manualEntry.getDays();
+        })
+        .reduce((manualEntry1, manualEntry2) -> manualEntry1 + manualEntry2);
+    double manualEntriesDays = optional.isPresent() ? optional.getAsDouble() : 0;
+    return userVacationAccount.getTotalVacationDays() + manualEntriesDays;
+  }
+
+  public AccountModel createAccountModel(UserVacationAccount userVacationAccount){
+    VacationEntitlement remainingVacationEntitlement = vacationService
+        .getRemainingVacationEntitlement(userVacationAccount);
 
     AccountModel accountModel = new AccountModel();
     accountModel.setId(userVacationAccount.getId());
     accountModel.setUser(userVacationAccount.getUser());
     accountModel.setAccount(userVacationAccount);
-    accountModel.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
-    accountModel.setPreviousYearOpenVacationDays(userVacationAccount
-                                                     .getPreviousYearOpenVacationDays() == null
-                                                 ? 0 : userVacationAccount
-                                                     .getPreviousYearOpenVacationDays());
+    accountModel.setTotalVacationDays(getTotalVacationDayForAccountModel(userVacationAccount));
+    accountModel.setPreviousYearOpenVacationDays(remainingVacationEntitlement.getDaysLastYear());
     accountModel.setApprovedVacationDays(vacationService.getApprovedVacationDays(userVacationAccount
                                                                                      .getVacations()));
     accountModel
         .setPendingVacationDays(vacationService.getPendingVacationDays(userVacationAccount.getVacations()));
-    accountModel.setOpenVacationDays(vacationService
-                                         .getRemainingVacationEntitlement(userVacationAccount)
-                                         .getTotalDays());
+    accountModel.setOpenVacationDays(remainingVacationEntitlement.getTotalDays());
 
+    List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
+    List<ManualEntry> manualEntries = new ArrayList<>(userVacationAccount.getManualEntries());
     List<AccountEntry> entryList = createEntryList(userVacationAccount.getYear(), userVacationAccount.getTotalVacationDays(), vacations, manualEntries);
     accountModel.setEntries(entryList);
     return accountModel;

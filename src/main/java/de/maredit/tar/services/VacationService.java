@@ -1,11 +1,13 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.data.CommentItem;
+import de.maredit.tar.data.ManualEntry;
 import de.maredit.tar.data.User;
 import de.maredit.tar.data.UserVacationAccount;
 import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.Holiday;
 import de.maredit.tar.models.VacationEntitlement;
+import de.maredit.tar.models.enums.ManualEntryType;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.VacationRepository;
@@ -13,7 +15,6 @@ import de.maredit.tar.repositories.VacationRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -21,8 +22,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.Valid;
 
 @Service
 public class VacationService {
@@ -36,7 +35,7 @@ public class VacationService {
   @Autowired
   private CommentItemRepository commentItemRepository;
 
-  public double getCountOfVacation(Vacation vacation) {
+  public double getValueOfVacation(Vacation vacation) {
     LocalDate startDate = vacation.getFrom();
     LocalDate endDate = vacation.getTo();
     double result = 0;
@@ -56,6 +55,9 @@ public class VacationService {
       }
     } else {
       result = calculateDays(startDate, endDate);
+    }
+    if (vacation.getManualEntry() != null){
+      result = result - vacation.getManualEntry().getDays();
     }
     return result;
   }
@@ -142,21 +144,21 @@ public class VacationService {
             .collect(Collectors.toList());
 
     for (Vacation vacation : vacations) {
-      double countOfVacation = getCountOfVacation(vacation);
+      double valueOfVacation = getValueOfVacation(vacation);
       if (vacation.getFrom().isBefore(expiryDate)) {
         if (vacation.getTo().isBefore(expiryDate)) {
 
           // Zuerst Resturlaub aufbrauchen
           if (result.getDaysLastYear() > 0) {
-            if (countOfVacation > result.getDaysLastYear()) {
-              double days = countOfVacation - result.getDaysLastYear();
+            if (valueOfVacation > result.getDaysLastYear()) {
+              double days = valueOfVacation - result.getDaysLastYear();
               result.reduceDaysLastYear(result.getDaysLastYear());
               result.reduceDays(days);
             } else {
-              result.reduceDaysLastYear(countOfVacation);
+              result.reduceDaysLastYear(valueOfVacation);
             }
           } else {
-            result.reduceDays(countOfVacation);
+            result.reduceDays(valueOfVacation);
           }
         } else {
 
@@ -176,7 +178,26 @@ public class VacationService {
         }
       } else {
         // normaler Abzug
-        result.reduceDays(countOfVacation);
+        result.reduceDays(valueOfVacation);
+      }
+    }
+
+    // Filtern und sortieren der Eingangsdaten
+    List<ManualEntry> manualEntries =
+        account
+            .getManualEntries()
+            .stream()
+            .filter(
+                manualEntry -> manualEntry.getVacation() == null)
+            .sorted((manualEntry1, manualEntry2) -> manualEntry1.getCreated().compareTo(
+                manualEntry2.getCreated()))
+            .collect(Collectors.toList());
+
+    for (ManualEntry manualEntry : manualEntries) {
+      if (manualEntry.getType() == ManualEntryType.ADD){
+        result.reduceDays(-manualEntry.getDays());
+      } else {
+        result.reduceDays(manualEntry.getDays());
       }
     }
     return result;

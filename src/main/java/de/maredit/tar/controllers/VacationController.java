@@ -301,7 +301,7 @@ public class VacationController {
       remainingAfter = vacationService.getRemainingVacationEntitlement(account);
 
       if (!bindingResult.hasErrors()) {
-        vacation.setDays(vacationService.getCountOfVacation(vacation));
+        vacation.setDays(vacationService.getValueOfVacation(vacation));
         if (remainingAfter.getDays() < 0) {
           bindingResult.reject("error.notEnoughRemaingDays",
                                "You have not enough days left for this vacation");
@@ -362,7 +362,7 @@ public class VacationController {
       model.addAttribute("formMode", newVacation ? FormMode.NEW : FormMode.EDIT);
       model.addAttribute("remaining", showRemainigAfter ? remainingAfter : remainingBefore);
       if (showRemainigAfter) {
-        model.addAttribute("vacationDays", vacationService.getCountOfVacation(vacation));
+        model.addAttribute("vacationDays", vacationService.getValueOfVacation(vacation));
       }
       model.addAttribute("comment", comment);
       return "application/index";
@@ -400,7 +400,7 @@ public class VacationController {
       calculatingAccount.setExpiryDate(account.getExpiryDate());
       calculatingAccount.setTotalVacationDays(account.getTotalVacationDays());
       calculatingAccount.setPreviousYearOpenVacationDays(account.getPreviousYearOpenVacationDays());
-      vacation.setDays(vacationService.getCountOfVacation(vacation));
+      vacation.setDays(vacationService.getValueOfVacation(vacation));
       calculatingAccount.setVacations(account.getVacations());
       calculatingAccount.addVacation(vacation);
 
@@ -417,7 +417,7 @@ public class VacationController {
     Map<String, Object> result = new HashMap<>();
     result.put("vacationDays",
                vacation == null ? ""
-                                : localFormat.format(vacationService.getCountOfVacation(vacation)));
+                                : localFormat.format(vacationService.getValueOfVacation(vacation)));
     VacationEntitlement remainingDays = vacationService.getRemainingVacationEntitlement(account);
     StringBuilder remainingBuilder = new StringBuilder(localFormat.format(remainingDays.getDays()));
     if (remainingDays.getDaysLastYear() > 0) {

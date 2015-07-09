@@ -49,6 +49,9 @@ public class UserServiceImpl implements UserService {
   private LdapService ldapService;
 
   @Autowired
+  private VacationService vacationService;
+
+  @Autowired
   private VacationProperties vacationProperties;
 
   @Override
@@ -95,8 +98,7 @@ public class UserServiceImpl implements UserService {
     UserVacationAccount previousVacationAccount =
         userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year - 1);
     if (previousVacationAccount != null) {
-      vacationAccount.setPreviousYearOpenVacationDays(previousVacationAccount
-          .getPreviousYearOpenVacationDays());
+      vacationAccount.setPreviousYearOpenVacationDays(vacationService.getRemainingVacationEntitlement(previousVacationAccount).getDays());
     }
     return vacationAccount;
   }
@@ -135,5 +137,11 @@ public class UserServiceImpl implements UserService {
     userVacationAccount.addManualEntry(manualEntry);
     manualEntryRepository.save(manualEntry);
     userVacationAccountRepository.save(userVacationAccount);
+
+    Vacation referencedVacation = manualEntry.getVacation();
+    if(referencedVacation != null){
+      referencedVacation.setManualEntry(manualEntry);
+      vacationRepository.save(referencedVacation);
+    }
   }
 }

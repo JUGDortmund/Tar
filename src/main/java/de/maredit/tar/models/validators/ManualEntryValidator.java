@@ -3,6 +3,7 @@ package de.maredit.tar.models.validators;
 import de.maredit.tar.data.ManualEntry;
 import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.ManualEntryType;
+import de.maredit.tar.models.enums.State;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -34,6 +35,9 @@ public class ManualEntryValidator implements Validator {
       }
       if(manualEntry.getType() == ManualEntryType.REDUCE){
         errors.rejectValue("type", "manualEntry.vacation.type", "Bei Bezug auf einen Urlaub kann eine Korrekturbuchung den Anspruch nicht reduzieren");
+      }
+      if(vacation.getState() != State.APPROVED){
+        errors.rejectValue("vacation", "manualEntry.vacation.state", "Korrekturbuchungen dürfen sich nur auf genehmigte Urlaube beziehen");
       }
     }
   }

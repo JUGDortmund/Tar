@@ -59,7 +59,7 @@ public class VacationServiceTest {
     Vacation vacation = new Vacation();
     vacation.setFrom(LocalDate.of(2015, Month.JUNE, 8));
     vacation.setTo(LocalDate.of(2015, Month.JUNE, 12));
-    Assert.assertEquals(5, vacationService.getCountOfVacation(vacation), 0);
+    Assert.assertEquals(5, vacationService.getValueOfVacation(vacation), 0);
   }
 
   @Test
@@ -67,7 +67,7 @@ public class VacationServiceTest {
     Vacation vacation = new Vacation();
     vacation.setFrom(LocalDate.of(2015, Month.JUNE, 8));
     vacation.setTo(LocalDate.of(2015, Month.JUNE, 16));
-    Assert.assertEquals(7, vacationService.getCountOfVacation(vacation), 0);
+    Assert.assertEquals(7, vacationService.getValueOfVacation(vacation), 0);
   }
 
   @Test
@@ -75,7 +75,7 @@ public class VacationServiceTest {
     Vacation vacation = new Vacation();
     vacation.setFrom(LocalDate.of(2015, Month.DECEMBER, 24));
     vacation.setTo(LocalDate.of(2015, Month.DECEMBER, 28));
-    Assert.assertEquals(1.5, vacationService.getCountOfVacation(vacation), 0);
+    Assert.assertEquals(1.5, vacationService.getValueOfVacation(vacation), 0);
   }
 
   
