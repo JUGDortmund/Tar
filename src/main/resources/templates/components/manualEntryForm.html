@@ -56,15 +56,14 @@
         <input type="hidden" name="author" th:value="*{author.id}"/>
 
         <div class="row">
-            <div class="col-xs-12 form-group">
-                <!--th:classappend="${#fields.hasErrors('type')}? 'has-error'"> -->
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('type')}? 'has-error'">
                 <label for="entryType">
                     <th:block th:text="Buchungsart"/>
                     <span>*</span>
                 </label>
 
                 <select class="form-control strict" style="width: 100%;" name="entryType" th:field="*{type}"
-                        id="entryType"> <!--th:field="*{manager}">-->
+                        id="entryType">
                     <option th:each="entryType : ${T(de.maredit.tar.models.enums.ManualEntryType).values()}"
                             th:value="${entryType}"
                             th:text="#{__${entryType.value}__}"
@@ -75,7 +74,7 @@
         </div>
 
         <div class="row">
-            <div class="col-xs-12 form-group">
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('days')}? 'has-error'">
                 <label for="days">
                     <th:block th:text="Tage"/>
                     <span>*</span>
@@ -85,7 +84,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 form-group">
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
                 <label for="description">
                     <th:block th:text="Grund"/>
                     <span>*</span>
@@ -95,8 +94,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 form-group">
-                <!--th:classappend="${#fields.hasErrors('vacation')}? 'has-error'"> -->
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('vacation')}? 'has-error'">
                 <label for="vacation">
                     <th:block th:text="Urlaubsverknüpfung"/>
                 </label>
@@ -118,7 +116,7 @@
         <div class="row">
             <div class="col-xs-12 form-group">
                 <button type="submit" id="submitEntry" class="btn btn-success pull-right">
-                    <th:block th:text="#{field.submit}"/>
+                    <th:block th:text="#{field.saveEntry}"/>
                 </button>
             </div>
         </div>

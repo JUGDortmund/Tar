@@ -92,12 +92,14 @@ public class VacationServiceTest {
     account.getVacations().add(vacation);
 
     
-    VacationEntitlement lastingVacationDays = vacationService.getRemainingVacationDays(account);
+    VacationEntitlement lastingVacationDays = vacationService.getRemainingVacationEntitlement(
+        account);
     Assert.assertEquals(24, lastingVacationDays.getDays(), 0);
     Assert.assertEquals(0, lastingVacationDays.getDaysLastYear(), 0);
 
     account.setPreviousYearOpenVacationDays(5d);
-    VacationEntitlement lastingVacationDays2 = vacationService.getRemainingVacationDays(account);
+    VacationEntitlement lastingVacationDays2 = vacationService.getRemainingVacationEntitlement(
+        account);
     Assert.assertEquals(29, lastingVacationDays2.getDays(), 0);
     Assert.assertEquals(0, lastingVacationDays2.getDaysLastYear(), 0);
   }

@@ -1,8 +1,10 @@
 package de.maredit.tar.services;
 
+import de.maredit.tar.data.ManualEntry;
 import de.maredit.tar.data.User;
 import de.maredit.tar.data.UserVacationAccount;
 import de.maredit.tar.data.Vacation;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,7 @@ import java.util.List;
 public interface UserService {
 
   /**
-   * returns a list of users, which is
-   * <li>sorted by lastname</li>
-   * <li>only active users</li>
+   * returns a list of users, which is <li>sorted by lastname</li> <li>only active users</li>
    *
    * @return the list of users
    */
@@ -56,4 +56,23 @@ public interface UserService {
    * @return the list of vacations
    */
   public List<Vacation> getVacationsForUserAndYear(User user, int year);
+
+  /**
+   * Adds a vacation to the selected users' datasets. This persists the vacation itself in db, as
+   * well as the userAccount is persisted.
+   *
+   * @param vacation the vacation to add
+   * @param user the user, the vacation belongs to
+   * @param year the year, where the vacation is taken into account
+   */
+  public void addVacationForUserAndYear(Vacation vacation, User user, int year);
+
+  /**
+   * Adds a manualEntry to the selected users' userVacationAccount. This persists the manualEntry itself in db, as
+   * well as the userAccount is persisted.
+   *
+   * @param manualEntry the vacation to add
+   * @param userVacationAccount the userVacationAvvount, the entry belongs to
+   */
+  public void addManualEntryToVacationAccout(ManualEntry manualEntry, UserVacationAccount userVacationAccount);
 }

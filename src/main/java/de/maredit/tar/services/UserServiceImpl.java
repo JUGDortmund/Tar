@@ -1,10 +1,13 @@
 package de.maredit.tar.services;
 
 import com.unboundid.ldap.sdk.LDAPException;
+
+import de.maredit.tar.data.ManualEntry;
 import de.maredit.tar.data.User;
 import de.maredit.tar.data.UserVacationAccount;
 import de.maredit.tar.data.Vacation;
 import de.maredit.tar.properties.VacationProperties;
+import de.maredit.tar.repositories.ManualEntryRepository;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.UserVacationAccountRepository;
 import de.maredit.tar.repositories.VacationRepository;
@@ -38,6 +41,9 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   private VacationRepository vacationRepository;
+
+  @Autowired
+  private ManualEntryRepository manualEntryRepository;
 
   @Autowired
   private LdapService ldapService;
@@ -76,7 +82,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserVacationAccount getUserVacationAccountForYear(User user, int year) {
-
     UserVacationAccount vacationAccount =
         userVacationAccountRepository.findUserVacationAccountByUserAndYear(user, year);
     if (vacationAccount == null) {
@@ -114,5 +119,21 @@ public class UserServiceImpl implements UserService {
 
     return this.vacationRepository.findVacationByUserAndFromBetweenOrUserAndToBetween(user,
         startOfYear, endOfYear, user, startOfYear, endOfYear);
+  }
+
+  @Override
+  public void addVacationForUserAndYear(Vacation vacation, User user, int year){
+    UserVacationAccount userVacationAccount = getUserVacationAccountForYear(user, year);
+    userVacationAccount.addVacation(vacation);
+
+    vacationRepository.save(vacation);
+    userVacationAccountRepository.save(userVacationAccount);
+  }
+
+  @Override
+  public void addManualEntryToVacationAccout(ManualEntry manualEntry, UserVacationAccount userVacationAccount) {
+    userVacationAccount.addManualEntry(manualEntry);
+    manualEntryRepository.save(manualEntry);
+    userVacationAccountRepository.save(userVacationAccount);
   }
 }

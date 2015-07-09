@@ -8,8 +8,8 @@ import de.maredit.tar.models.enums.State;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class AccountVactionEntry implements AccountEntry {
-  
+public class AccountVacationEntry implements AccountEntry {
+
   private String id;
   private double days;
   private LocalDateTime created;
@@ -19,29 +19,38 @@ public class AccountVactionEntry implements AccountEntry {
   private User author;
   private double balance;
   private State state;
+  private String displayText;
+  private boolean starred;
 
-  public AccountVactionEntry(Vacation vacation) {
+  public AccountVacationEntry(Vacation vacation, String displayText) {
     id = vacation.getId();
-    days = vacation.getDays();
+    days = -vacation.getDays();
     created = vacation.getCreated();
     from = vacation.getFrom();
     to = vacation.getTo();
     timeframe = vacation.getTimeframe();
     author = vacation.getAuthor();
     state = vacation.getState();
+    this.displayText = displayText;
+    this.starred = vacation.getState() != State.APPROVED;
   }
 
-  @Override
+  public void setStarred(boolean starred) {
+    this.starred = starred;
+  }
+
+  public boolean isStarred() {
+    return starred;
+  }
+
   public double getDays() {
     return days;
   }
 
-  @Override
   public LocalDateTime getCreated() {
     return created;
   }
 
-  @Override
   public User getAuthor() {
     return author;
   }
@@ -52,6 +61,14 @@ public class AccountVactionEntry implements AccountEntry {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public void setDisplayText(String displayText) {
+    this.displayText = displayText;
+  }
+
+  public String getDisplayText() {
+    return displayText;
   }
 
   public LocalDate getFrom() {

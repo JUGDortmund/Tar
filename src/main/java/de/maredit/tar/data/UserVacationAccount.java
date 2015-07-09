@@ -27,9 +27,12 @@ public class UserVacationAccount {
   private LocalDate expiryDate;
   @DBRef
   private Set<Vacation> vacations;
+  @DBRef
+  private Set<ManualEntry> manualEntries;
 
   public UserVacationAccount() {
     vacations = new HashSet<Vacation>();
+    manualEntries = new HashSet<ManualEntry>();
   }
   
   public User getUser() {
@@ -46,6 +49,14 @@ public class UserVacationAccount {
 
   public void setVacations(Set<Vacation> vacations) {
     this.vacations = vacations;
+  }
+
+  public Set<ManualEntry> getManualEntries() {
+    return manualEntries;
+  }
+
+  public void setManualEntries(Set<ManualEntry> manualEntries) {
+    this.manualEntries = manualEntries;
   }
 
   public Double getPreviousYearOpenVacationDays() {
@@ -95,6 +106,16 @@ public class UserVacationAccount {
     if (!vacations.add(vacation)) {
       vacations.remove(vacation);
       vacations.add(vacation);
+    }
+  }
+
+  public void addManualEntry(ManualEntry manualEntry) {
+    if (manualEntries == null) {
+      manualEntries = new HashSet<>();
+    }
+    if (!manualEntries.add(manualEntry)) {
+      manualEntries.remove(manualEntry);
+      manualEntries.add(manualEntry);
     }
   }
 }

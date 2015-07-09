@@ -287,7 +287,7 @@
 }).call(this);
 
 (function() {
-  var hideManualEntryForm, scrollToVacationManualEntryForm, sendAjaxRequest, showManualEntryForm;
+  var hideManualEntryForm, refreshActiveTable, scrollToVacationManualEntryForm, sendAjaxFormRequest, showManualEntryForm;
 
   scrollToVacationManualEntryForm = function() {
     var clientWidth;
@@ -301,7 +301,6 @@
 
   showManualEntryForm = function(data) {
     var $myFilter, $myForm;
-    console.log('book it!');
     $myFilter = $('#filter-form-panel');
     $myFilter.hide();
     $myForm = $('#entry-form-panel');
@@ -315,19 +314,38 @@
     $('#year').on('change', function() {
       var form;
       form = $(this).closest('form');
-      return sendAjaxRequest(form.attr("action"), form.serialize(), "POST");
+      return sendAjaxFormRequest(form.attr("action"), form.serialize(), "POST");
     });
     $('#submitEntry').on('click', function() {
       var form;
       form = $(this).closest('form');
-      return sendAjaxRequest(form.attr("action"), form.serialize(), "POST");
+      $.ajax({
+        url: form.attr("action"),
+        data: form.serialize(),
+        dataType: "html",
+        method: "POST",
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log(textStatus);
+          console.log(errorThrown);
+          console.log(jqXHR);
+          if (jqXHR.status === 500) {
+            return showManualEntryForm(jqXHR.responseText);
+          }
+        },
+        success: function(data) {
+          console.log('entry saved');
+          refreshActiveTable(data);
+          return hideManualEntryForm();
+        }
+      });
+      return false;
     });
     return $('#saveManualEntry').submit(function(e) {
       return e.preventDefault(e);
     });
   };
 
-  hideManualEntryForm = function(data) {
+  hideManualEntryForm = function() {
     var $myFilter, $myForm;
     $myForm = $('#entry-form-panel');
     $myForm.hide();
@@ -335,7 +353,15 @@
     return $myFilter.hide().show();
   };
 
-  sendAjaxRequest = function(url, data, method) {
+  refreshActiveTable = function(data) {
+    var panelToRefresh;
+    console.log("Tabellenrefresh");
+    panelToRefresh = $('.panel-collapse:visible').find("table");
+    console.log(panelToRefresh);
+    return panelToRefresh.replaceWith(data);
+  };
+
+  sendAjaxFormRequest = function(url, data, method) {
     $.ajax({
       url: url,
       data: data,
@@ -345,7 +371,6 @@
         return console.log(textStatus);
       },
       success: function(data) {
-        console.log('successful');
         return showManualEntryForm(data);
       }
     });
@@ -371,7 +396,7 @@
       $('#employees').val(null).trigger('change');
     });
     return $('.manual-entry').click(function() {
-      return sendAjaxRequest($(this).attr('href'), null, "GET");
+      return sendAjaxFormRequest($(this).attr('href'), null, "GET");
     });
   })(jQuery);
 

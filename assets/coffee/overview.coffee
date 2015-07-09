@@ -4,7 +4,6 @@ scrollToVacationManualEntryForm = ->
   if clientWidth < 761 then $('html, body').animate({ scrollTop: ($('#entry-form-panel').offset().top - 20)}, 'slow')
 
 showManualEntryForm = (data) ->
-    console.log 'book it!'
     $myFilter = $('#filter-form-panel')
     $myFilter.hide()
     $myForm = $('#entry-form-panel')
@@ -17,22 +16,44 @@ showManualEntryForm = (data) ->
     $myForm.find('select.searchable').select2()
     $('#year').on 'change', ->
         form = $(this).closest('form')
-        sendAjaxRequest(form.attr( "action" ), form.serialize() , "POST")
+        sendAjaxFormRequest(form.attr( "action" ), form.serialize() , "POST")
 
     $('#submitEntry').on 'click', () ->
         form = $(this).closest('form')
-        sendAjaxRequest(form.attr( "action" ), form.serialize(), "POST" )
+        $.ajax
+            url: form.attr( "action" )
+            data: form.serialize()
+            dataType: "html"
+            method: "POST"
+            error: (jqXHR, textStatus, errorThrown) ->
+                console.log(textStatus)
+                console.log(errorThrown)
+                console.log(jqXHR)
+                if(jqXHR.status == 500)
+                    showManualEntryForm(jqXHR.responseText)
+            success: (data) ->
+                console.log 'entry saved'
+                refreshActiveTable(data)
+                hideManualEntryForm()
+        return false
+
 
     $('#saveManualEntry').submit (e) ->
         e.preventDefault(e)
 
-hideManualEntryForm = (data) ->
+hideManualEntryForm = () ->
     $myForm = $('#entry-form-panel')
     $myForm.hide( )
     $myFilter = $('#filter-form-panel')
     $myFilter.hide().show()
 
-sendAjaxRequest = (url, data, method) ->
+refreshActiveTable = (data) ->
+    console.log "Tabellenrefresh"
+    panelToRefresh = $('.panel-collapse:visible').find( "table" )
+    console.log panelToRefresh
+    panelToRefresh.replaceWith(data)
+
+sendAjaxFormRequest = (url, data, method) ->
     $.ajax
         url: url
         data: data
@@ -41,10 +62,8 @@ sendAjaxRequest = (url, data, method) ->
         error: (jqXHR, textStatus, errorThrown) ->
             console.log(textStatus)
         success: (data) ->
-            console.log 'successful'
             showManualEntryForm(data)
     return false
-
 
 # document ready
 (($) ->
@@ -69,6 +88,6 @@ sendAjaxRequest = (url, data, method) ->
         return
 
     $('.manual-entry').click ->
-        sendAjaxRequest($(this).attr('href'), null, "GET")
+        sendAjaxFormRequest($(this).attr('href'), null, "GET")
 
 )(jQuery);

@@ -5,14 +5,12 @@ import de.maredit.tar.data.ManualEntry;
 import de.maredit.tar.data.User;
 import de.maredit.tar.data.UserVacationAccount;
 import de.maredit.tar.data.Vacation;
-import de.maredit.tar.models.AccountEntry;
 import de.maredit.tar.models.AccountModel;
-import de.maredit.tar.models.AccountVactionEntry;
-import de.maredit.tar.models.enums.FormMode;
-import de.maredit.tar.models.enums.State;
+import de.maredit.tar.models.validators.ManualEntryValidator;
 import de.maredit.tar.repositories.UserRepository;
+import de.maredit.tar.repositories.UserVacationAccountRepository;
+import de.maredit.tar.services.AccountModelService;
 import de.maredit.tar.services.UserService;
-import de.maredit.tar.services.VacationService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -22,17 +20,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -50,14 +49,17 @@ public class OverviewController {
   private UserService userService;
 
   @Autowired
+  private AccountModelService accountModelService;
+
+  @Autowired
   private UserRepository userRepository;
 
   @Autowired
-  private VacationService vacationService;
+  private UserVacationAccountRepository userVacationAccountRepository;
+
 
   @Autowired
   private NavigationBean navigationBean;
-
 
   @ModelAttribute("user")
   public User getUser(@RequestParam(value = "id", required = false) String id) {
@@ -65,6 +67,11 @@ public class OverviewController {
       return null;
     }
     return userRepository.findOne(id);
+  }
+
+  @InitBinder("manualEntry")
+  protected void initBinder(WebDataBinder binder) {
+    binder.addValidators(new ManualEntryValidator());
   }
 
   @RequestMapping("/overview")
@@ -76,7 +83,7 @@ public class OverviewController {
     List<UserVacationAccount> userVacationAccounts = null;
 
     int selectedYear = LocalDate.now().getYear();
-    if (year != null && year <= selectedYear) {
+    if (year != null && year <= selectedYear + 1) {
       selectedYear = year.intValue();
     }
     LOG.trace("Filtered users: {}", filteredUsers);
@@ -92,35 +99,7 @@ public class OverviewController {
 
     List<AccountModel> models = new ArrayList<>();
     for (UserVacationAccount userVacationAccount : userVacationAccounts) {
-      UserVacationAccount calculationAccount = new UserVacationAccount();
-      calculationAccount.setExpiryDate(userVacationAccount.getExpiryDate());
-      calculationAccount.setPreviousYearOpenVacationDays(userVacationAccount
-                                                             .getPreviousYearOpenVacationDays());
-      calculationAccount.setUser(userVacationAccount.getUser());
-      calculationAccount.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
-
-      AccountModel accountModel = new AccountModel();
-      accountModel.setId(userVacationAccount.getId());
-      accountModel.setUser(userVacationAccount.getUser());
-      accountModel.setAccount(userVacationAccount);
-      accountModel.setTotalVacationDays(userVacationAccount.getTotalVacationDays());
-      accountModel.setPreviousYearOpenVacationDays(userVacationAccount
-                                                       .getPreviousYearOpenVacationDays() == null
-                                                   ? 0 : userVacationAccount
-                                                       .getPreviousYearOpenVacationDays());
-      accountModel.setApprovedVacationDays(getApprovedVacationDays(userVacationAccount
-                                                                       .getVacations()));
-      accountModel
-          .setPendingVacationDays(getPendingVacationDays(userVacationAccount.getVacations()));
-      accountModel.setOpenVacationDays(vacationService
-                                           .getRemainingVacationDays(userVacationAccount)
-                                           .getTotalDays());
-      List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
-      vacations.sort((v1, v2) -> v1.getCreated().compareTo(v2.getCreated()));
-      List<AccountEntry> entryList = new ArrayList<>();
-
-      setEntryList(selectedYear, calculationAccount, vacations, entryList);
-      accountModel.setEntries(entryList);
+      AccountModel accountModel = accountModelService.createAccountModel(userVacationAccount);
       models.add(accountModel);
     }
 
@@ -133,14 +112,13 @@ public class OverviewController {
     return "application/overview";
   }
 
+
   @RequestMapping(value = "/newManualEntry")
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String newManualEntry(Model model, @ModelAttribute("manualEntry") ManualEntry manualEntry,
-                            @RequestParam(value = "user") User user,
-                            @RequestParam(value = "year") int year) {
+                               @RequestParam(value = "user") User user,
+                               @RequestParam(value = "year") int year) {
 
-    LOG.debug("user: {}", user);
-    LOG.debug("year: {}", year);
     manualEntry.setAuthor(applicationController.getConnectedUser());
     manualEntry.setUser(user);
     manualEntry.setYear(year);
@@ -156,65 +134,33 @@ public class OverviewController {
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String saveManualEntry(Model model,
                                 @ModelAttribute("manualEntry") @Valid ManualEntry manualEntry,
-                                BindingResult bindingResult) {
+                                BindingResult bindingResult, HttpServletResponse response) {
     LOG.debug("manualEntry: {}", manualEntry);
+    List<Vacation>
+        vacations =
+        new ArrayList<>(
+            userService.getVacationsForUserAndYear(manualEntry.getUser(), manualEntry.getYear()));
+    model.addAttribute("vacations", vacations);
 
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getDefaultMessage()));
-
-      List<Vacation> vacations = new ArrayList<>(userService.getVacationsForUserAndYear(manualEntry.getUser(), manualEntry.getYear()));
-      model.addAttribute("vacations", vacations);
       model.addAttribute("manualEntry", manualEntry);
-
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return "components/manualEntryForm";
     } else {
-      return "redirect:/overview";
+
+      int year = manualEntry.getYear();
+      User user = manualEntry.getUser();
+      UserVacationAccount userVacationAccount = userService.getUserVacationAccountForYear(user, year);
+      userService.addManualEntryToVacationAccout(manualEntry, userVacationAccount);
+      AccountModel accountModel = accountModelService.createAccountModel(userVacationAccount);
+
+      model.addAttribute("account", accountModel);
+      response.setStatus(HttpServletResponse.SC_CREATED);
+      return "components/accountTable";
     }
   }
 
-  private void setEntryList(int selectedYear, UserVacationAccount calculationAccount,
-                            List<Vacation> vacations, List<AccountEntry> entryList) {
-    for (Vacation vacation : vacations) {
-      if (vacation.getFrom().getYear() >= selectedYear
-          && vacation.getTo().getYear() <= selectedYear) {
-        if (!vacation.getState().equals(State.CANCELED)
-            && !vacation.getState().equals(State.REJECTED)) {
-          calculationAccount.addVacation(vacation);
-          AccountVactionEntry entry = new AccountVactionEntry(vacation);
-          entry.setBalance(vacationService.getRemainingVacationDays(calculationAccount)
-                               .getTotalDays());
-          entryList.add(entry);
-        }
-      }
-    }
-  }
-
-  /**
-   * Helper method to retrieve the amount of approved vacation days for a list of vacations.
-   *
-   * @param set the set to analyze
-   * @return the amount of approved vacation days
-   */
-  private double getApprovedVacationDays(Set<Vacation> set) {
-    return set != null ? set.stream().filter(vacation -> vacation.getState() == State.APPROVED)
-        .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
-  }
-
-  /**
-   * Helper method to retrieve the amount of pending vacation days (which are already planned but
-   * not accepted yet) for a list of vacations.
-   *
-   * @param set the set to analyze
-   * @return the amount of pending vacation days
-   */
-  private double getPendingVacationDays(Set<Vacation> set) {
-    return set != null ? set
-        .stream()
-        .filter(
-            vacation -> vacation.getState() == State.REQUESTED_SUBSTITUTE
-                        || vacation.getState() == State.WAITING_FOR_APPROVEMENT)
-        .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
-  }
 
 }

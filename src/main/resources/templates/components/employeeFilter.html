@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="employeeFilter">
-<div class="list-group module employee-filter" id="employee-filter">
-    <h3 class="list-group-item">
-       <th:block th:text="#{field.statusFilter}"/>
-    </h3>
+    <div class="box module employee-filter" id="employee-filter">
+        <div class="box-header with-border">
+            <h3 class="box-title" th:text="#{field.employeeFilter}"></h3>
+        </div>
+        <div class="box-body clearfix">
 
-    <select class="form-control tag-filter autosubmit" style="width: 100%;" multiple="multiple"
-            name="employees" id="employees" th:placeholder="#{field.employee}">
-        <option th:each="user : ${users}"
-                th:value="${user.id}"
-                th:text="${user.lastname +', '+ user.firstname}"
-                th:selected="${#lists.contains(filteredUsers, user)}">
-        </option>
-    </select>
-    <a href="" id="clear"><th:block th:text="#{field.clear.filter}"/></a>
-</div>
+            <select class="form-control tag-filter autosubmit" style="width: 100%;" multiple="multiple"
+                    name="employees" id="employees" th:placeholder="#{field.employee}">
+                <option th:each="user : ${users}"
+                        th:value="${user.id}"
+                        th:text="${user.lastname +', '+ user.firstname}"
+                        th:selected="${#lists.contains(filteredUsers, user)}">
+                </option>
+            </select>
+        </div>
+        <div class="box-footer clearfix">
+            <a href="" id="clear"><th:block th:text="#{field.clear.filter}"/></a>
+        </div>
+    </div>
 </body>
 </html>

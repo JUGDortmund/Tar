@@ -84,56 +84,16 @@
                             <div th:id="|collapse${iterator.index}|"
                                 class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    <table class="table table-hover table-condensed">
-                                        <tr>
-                                            <th th:text="#{field.entryText}">Buchungstext</th>
-                                            <th th:text="#{field.dateFrom}">von</th>
-                                            <th th:text="#{field.dateTo}">bis</th>
-                                            <th th:text="#{field.days}">Tage</th>
-                                            <th th:text="#{field.saldo}">Saldo</th>
-                                        </tr>
-                                        <tr
-                                            th:if="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1) != '0,0'}">
-                                            <td th:text="#{field.leftDaysLastYear}">Resturlaub
-                                                Vorjahr</td>
-                                            <td />
-                                            <td />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1)}" />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1)}" />
-                                        </tr>
-                                        <tr>
-                                            <td th:text="#{field.creditAnnualVacation}">Gutschrift</td>
-                                            <td />
-                                            <td />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.totalVacationDays,1,1)}" />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.totalVacationDays + account.previousYearOpenVacationDays,1,1)}" />
 
-                                        </tr>
-                                        <th:block th:each="entry, iterator : ${account.entries}">
-                                            <tr>
-                                                <td th:if="${{entry.state.toString() != 'APPROVED'}}"
-                                                    th:text="#{field.vacation} + '*'">Urlaub</td>
-                                                <td th:if="${{entry.state.toString() == 'APPROVED'}}"
-                                                    th:text="#{field.vacation}">Urlaub</td>
-                                                <td th:text="${{entry.from}}" />
-                                                <td th:text="${{entry.to}}" />
-                                                <td th:text="${#numbers.formatDecimal(entry.days,1,1)}" />
-                                                <td th:text="${#numbers.formatDecimal(entry.balance,1,1)}" />
-                                            </tr>
-                                        </th:block>
-                                    </table>
-                                    <div>
-                                        <th:block
-                                            th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}">
-                                            <a th:href="@{/newManualEntry(user=${account.user.id}, year=${year})}" class="manual-entry">
-                                                <button type="button" name="account"
-                                                    class="btn btn-default pull-right" th:text="#{field.manualEntry}"/>
-                                            </a>
-                                        </th:block>
+                                    <!-- accountTable fragment -->
+                                    <div th:replace="components/accountTable :: accountTable (${account})">
+                                        accountTable</div>
+
+                                    <div th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}">
+                                        <a th:href="@{/newManualEntry(user=${account.user.id}, year=${year})}"
+                                           class="manual-entry btn btn-default pull-right"
+                                           th:text="#{field.manualEntry}"> Korrekturbuchung
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -156,20 +116,29 @@
                                 <div class="box" id="year-filter">
                                     <div class="box-header with-border">
                                         <h3 class="box-title" th:text="#{overview.year}"></h3>
-                                        <div class="box-tools pull-right btn-group" role="group">
+                                    </div>
+                                    <div class="box-body clearfix">
+                                        <div class="btn-group btn-block" role="group">
                                             <button type="submit" class="btn btn-default" name="year"
                                                 th:value="${year - 1}">
-                                                <span aria-hidden="true">&laquo;</span>
+                                                <span th:utext="|&laquo; ${year - 1}|">prev</span>
                                             </button>
                                             <button type="submit" class="btn btn-default" name="year"
-                                                th:value="${#dates.year(#dates.createNow())}"
-                                                th:text="#{overview.currentYear}"></button>
+                                                th:value="${year}" disabled="disabled">
+                                                <span class="glyphicon glyphicon-eye-open" ></span>
+                                                <span th:utext="${year}" aria-hidden="true"></span>
+                                            </button>
                                             <button type="submit" class="btn btn-default" name="year"
                                                 th:value="${year + 1}"
-                                                th:disabled="${year == #dates.year(#dates.createNow())}">
-                                                <span aria-hidden="true">&raquo;</span>
+                                                th:disabled="${year - 1 == #dates.year(#dates.createNow())}">
+                                                <span th:utext="|${year + 1} &raquo;|">next</span>
                                             </button>
                                         </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <button type="submit" class="btn btn-xs pull-right" name="year"
+                                                th:value="${#dates.year(#dates.createNow())}"
+                                                th:text="#{overview.currentYear}"></button>
                                     </div>
                                 </div>
                             </div>

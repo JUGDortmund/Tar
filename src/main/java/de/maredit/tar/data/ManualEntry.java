@@ -33,11 +33,11 @@ public class ManualEntry {
   @DBRef
   private Vacation vacation;
 
-  @DecimalMin("0.5")
+  @DecimalMin(value = "0.5", message = "{manualEntry.days}")
   private double days;
 
-  @NotNull(message = "{manualEntry.description}")
-  @NotBlank
+  @NotNull
+  @NotBlank(message = "{manualEntry.description}")
   private String description;
 
   @DBRef
