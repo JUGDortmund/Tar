@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body th:fragment="userAccount (account, index)">
+
+<div class="panel">
+    <div class="panel-heading" th:id="|heading${index}|"
+         th:with="completeBalance=${account.totalVacationDays + account.previousYearOpenVacationDays}">
+        <div class="progress-group">
+            <a th:href="@{/userDetails(user=${account.user.id})}"
+               th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}"
+               class="progress-text"
+               th:text="${account.user.lastname + ', ' + account.user.firstname}">Username</a>
+            <span th:unless="${#authorization.expression('hasRole(''SUPERVISOR'')')}"
+                class="progress-text"
+                th:text="${account.user.lastname + ', ' + account.user.firstname}">Username</span>
+            <span class="progress-number">
+                <b>
+                    <span th:text="${{account.totalVacationDays}}"
+                        data-toggle="tooltip" data-placement="top"
+                        th:title="#{field.totalVacationsYear}">30</span>
+                    <span th:if="${account.previousYearOpenVacationDays > 0}"
+                        th:text="${{'(+'+account.previousYearOpenVacationDays+')'}}"
+                        data-toggle="tooltip" data-placement="top"
+                        th:title="#{field.leftDaysLastYear}">(+0)</span>
+                </b>
+                <span th:text="#{field.total}">Gesamt</span>
+                <a data-toggle="collapse" data-parent="#accordion" th:href="|#collapse${index}|">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                </a>
+            </span>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success"
+                     th:style="|width: ${completeBalance &lt;= 0 ? 0 : (account.approvedVacationDays / completeBalance * 100)}%;|"
+                     data-toggle="tooltip" data-placement="top"
+                     th:title="#{field.approvedVacations} + ': ' + ${{account.approvedVacationDays}}|">
+                    <span th:text="${{account.approvedVacationDays}}">genehmigte Urlaubstage</span>
+                </div>
+                <div
+                    class="progress-bar progress-bar-warning progress-bar-striped"
+                    th:style="|width: ${completeBalance &lt;= 0 ? 0 : account.pendingVacationDays / completeBalance * 100}%;|"
+                    data-toggle="tooltip" data-placement="top"
+                    th:title="#{field.pendingVacations} + ': ' + ${{account.pendingVacationDays}}|">
+                    <span th:text="${{account.pendingVacationDays}}">beantragte Urlaubstage</span>
+                </div>
+                <div class="progress-bar progress-bar-empty"
+                     th:style="|width: ${completeBalance &lt;= 0 ? 0 : account.openVacationDays / completeBalance * 100}%;|"
+                     data-toggle="tooltip" data-placement="top"
+                     th:title="#{field.openVacationDays} + ': ' + ${{account.openVacationDays}}|">
+                    <span th:text="${{account.openVacationDays}}">noch verfügbare Urlaubstage</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:id="|collapse${index}|" class="panel-collapse collapse">
+        <div class="panel-body">
+
+            <table class="table table-hover table-condensed" th:with="completeBalance=${account.totalVacationDays + account.previousYearOpenVacationDays}">
+                <tr>
+                    <th th:text="#{field.entryText}">Buchungstext</th>
+                    <th th:text="#{field.dateFrom}">von</th>
+                    <th th:text="#{field.dateTo}">bis</th>
+                    <th th:text="#{field.days}">Tage</th>
+                    <th th:text="#{field.saldo}">Saldo</th>
+                </tr>
+                <tr th:if="${account.previousYearOpenVacationDays != 0}">
+                    <td th:text="#{field.leftDaysLastYear}">Resturlaub
+                        Vorjahr</td>
+                    <td />
+                    <td />
+                    <td th:text="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1)}" />
+                    <td th:text="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1)}" />
+                </tr>
+                <tr>
+                    <td th:text="#{field.creditAnnualVacation}">Gutschrift</td>
+                    <td />
+                    <td />
+                    <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays,1,1)}" />
+                    <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays+account.previousYearOpenVacationDays,1,1)}" /><!-- DAS DARF NCIHT ACCOUNT SEIN!!!-->
+                </tr>
+                <tr th:each="entry : ${account.entries}">
+                    <td >
+                        <th:block th:text="${entry.displayText}"/>
+                        <span th:if="${entry.starred}">*</span>
+                    </td>
+                    <td th:text="${{entry.from}}" />
+                    <td th:text="${{entry.to}}" />
+                    <td th:text="${#numbers.formatDecimal(entry.days,1,1)}" />
+                    <td th:text="${#numbers.formatDecimal(entry.balance,1,1)}" />
+                </tr>
+            </table>
+
+            <div th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}">
+                <a th:href="@{/newManualEntry(user=${account.user.id}, year=${account.account.year}, index=${index})}"
+                   class="manual-entry btn btn-default pull-right"
+                   th:text="#{field.manualEntry}"> Korrekturbuchung
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- /.panel-body -->
+</div>
+
+
+</body>
+</html>

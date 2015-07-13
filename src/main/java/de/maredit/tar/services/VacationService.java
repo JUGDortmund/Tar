@@ -104,7 +104,13 @@ public class VacationService {
    */
   public double getApprovedVacationDays(Set<Vacation> set) {
     return set != null ? set.stream().filter(vacation -> vacation.getState() == State.APPROVED)
-        .mapToDouble(vacation -> vacation.getDays()).sum() : 0;
+        .mapToDouble(vacation -> {
+          if (vacation.getManualEntry() != null) {
+            return vacation.getDays() - vacation.getManualEntry().getDays();
+          } else {
+            return vacation.getDays();
+          }
+        }).sum() : 0;
   }
 
   /**
@@ -128,8 +134,7 @@ public class VacationService {
     VacationEntitlement
         result =
         new VacationEntitlement(account.getTotalVacationDays(),
-                                account.getPreviousYearOpenVacationDays() == null ? 0 : account
-                                    .getPreviousYearOpenVacationDays());
+                                account.getPreviousYearOpenVacationDays());
     LocalDate expiryDate = account.getExpiryDate();
 
     // Filtern und sortieren der Eingangsdaten

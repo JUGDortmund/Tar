@@ -1,8 +1,5 @@
 package de.maredit.tar.data;
 
-import de.maredit.tar.data.User;
-import de.maredit.tar.data.Vacation;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,7 +20,7 @@ public class UserVacationAccount {
   private User user;
   private Integer year;
   private double totalVacationDays;
-  private Double previousYearOpenVacationDays;
+  private double previousYearOpenVacationDays;
   private LocalDate expiryDate;
   @DBRef
   private Set<Vacation> vacations;
@@ -59,7 +56,7 @@ public class UserVacationAccount {
     this.manualEntries = manualEntries;
   }
 
-  public Double getPreviousYearOpenVacationDays() {
+  public double getPreviousYearOpenVacationDays() {
     return previousYearOpenVacationDays;
   }
 
@@ -95,7 +92,7 @@ public class UserVacationAccount {
     this.expiryDate = expiryDate;
   }
 
-  public void setPreviousYearOpenVacationDays(Double previousYearOpenVacationDays) {
+  public void setPreviousYearOpenVacationDays(double previousYearOpenVacationDays) {
     this.previousYearOpenVacationDays = previousYearOpenVacationDays;
   }
 

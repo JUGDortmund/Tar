@@ -20,6 +20,7 @@
             </ul>
         </div>
         <input type="hidden" name="user" th:value="*{user.id}"/>
+        <input type="hidden" name="index" th:value="${index}"/>
 
         <div class="row">
             <div class="col-xs-12 entry-description"
@@ -54,6 +55,7 @@
         <input type="hidden" name="year" th:value="*{year}"/>
         <input type="hidden" name="user" th:value="*{user.id}"/>
         <input type="hidden" name="author" th:value="*{author.id}"/>
+        <input type="hidden" name="index" th:value="${index}"/>
 
         <div class="row">
             <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('type')}? 'has-error'">

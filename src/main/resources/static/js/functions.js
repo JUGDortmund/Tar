@@ -325,15 +325,13 @@
         dataType: "html",
         method: "POST",
         error: function(jqXHR, textStatus, errorThrown) {
-          console.log(textStatus);
-          console.log(errorThrown);
-          console.log(jqXHR);
           if (jqXHR.status === 500) {
             return showManualEntryForm(jqXHR.responseText);
+          } else {
+            return console.log(errorThrown);
           }
         },
         success: function(data) {
-          console.log('entry saved');
           refreshActiveTable(data);
           return hideManualEntryForm();
         }
@@ -354,11 +352,14 @@
   };
 
   refreshActiveTable = function(data) {
-    var panelToRefresh;
-    console.log("Tabellenrefresh");
-    panelToRefresh = $('.panel-collapse:visible').find("table");
-    console.log(panelToRefresh);
-    return panelToRefresh.replaceWith(data);
+    var index, panelToRefresh;
+    panelToRefresh = $('.panel-collapse:visible').closest(".panel");
+    panelToRefresh.replaceWith(data);
+    index = $('input[name="index"]').val();
+    $('#collapse' + index).addClass("in");
+    return $('.manual-entry').click(function() {
+      return sendAjaxFormRequest($(this).attr('href'), null, "GET");
+    });
   };
 
   sendAjaxFormRequest = function(url, data, method) {

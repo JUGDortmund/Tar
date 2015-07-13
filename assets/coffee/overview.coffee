@@ -13,6 +13,7 @@ showManualEntryForm = (data) ->
     $myForm.find('select.strict').select2({
       minimumResultsForSearch: Infinity
     })
+
     $myForm.find('select.searchable').select2()
     $('#year').on 'change', ->
         form = $(this).closest('form')
@@ -26,13 +27,11 @@ showManualEntryForm = (data) ->
             dataType: "html"
             method: "POST"
             error: (jqXHR, textStatus, errorThrown) ->
-                console.log(textStatus)
-                console.log(errorThrown)
-                console.log(jqXHR)
                 if(jqXHR.status == 500)
                     showManualEntryForm(jqXHR.responseText)
+                else
+                    console.log(errorThrown)
             success: (data) ->
-                console.log 'entry saved'
                 refreshActiveTable(data)
                 hideManualEntryForm()
         return false
@@ -48,10 +47,12 @@ hideManualEntryForm = () ->
     $myFilter.hide().show()
 
 refreshActiveTable = (data) ->
-    console.log "Tabellenrefresh"
-    panelToRefresh = $('.panel-collapse:visible').find( "table" )
-    console.log panelToRefresh
+    panelToRefresh = $('.panel-collapse:visible').closest( ".panel" )
     panelToRefresh.replaceWith(data)
+    index = $('input[name="index"]').val()
+    $('#collapse'+index).addClass("in")
+    $('.manual-entry').click ->
+        sendAjaxFormRequest($(this).attr('href'), null, "GET")
 
 sendAjaxFormRequest = (url, data, method) ->
     $.ajax

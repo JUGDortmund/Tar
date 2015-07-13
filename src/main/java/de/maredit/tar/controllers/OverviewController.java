@@ -6,11 +6,13 @@ import de.maredit.tar.data.User;
 import de.maredit.tar.data.UserVacationAccount;
 import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.AccountModel;
+import de.maredit.tar.models.enums.ManualEntryType;
 import de.maredit.tar.models.validators.ManualEntryValidator;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.UserVacationAccountRepository;
 import de.maredit.tar.services.AccountModelService;
 import de.maredit.tar.services.UserService;
+import de.maredit.tar.services.VacationService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +49,9 @@ public class OverviewController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private VacationService vacationService;
 
   @Autowired
   private AccountModelService accountModelService;
@@ -117,7 +122,8 @@ public class OverviewController {
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String newManualEntry(Model model, @ModelAttribute("manualEntry") ManualEntry manualEntry,
                                @RequestParam(value = "user") User user,
-                               @RequestParam(value = "year") int year) {
+                               @RequestParam(value = "year") int year,
+                               @RequestParam(value = "index") int index) {
 
     manualEntry.setAuthor(applicationController.getConnectedUser());
     manualEntry.setUser(user);
@@ -126,6 +132,7 @@ public class OverviewController {
     List<Vacation> vacations = new ArrayList<>(userService.getVacationsForUserAndYear(user, year));
     model.addAttribute("vacations", vacations);
     model.addAttribute("manualEntry", manualEntry);
+    model.addAttribute("index", index);
 
     return "components/manualEntryForm";
   }
@@ -134,14 +141,16 @@ public class OverviewController {
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String saveManualEntry(Model model,
                                 @ModelAttribute("manualEntry") @Valid ManualEntry manualEntry,
-                                BindingResult bindingResult, HttpServletResponse response) {
+                                @RequestParam(value = "index") int index,
+                                BindingResult bindingResult,
+                                HttpServletResponse response) {
     LOG.debug("manualEntry: {}", manualEntry);
     List<Vacation>
         vacations =
         new ArrayList<>(
             userService.getVacationsForUserAndYear(manualEntry.getUser(), manualEntry.getYear()));
     model.addAttribute("vacations", vacations);
-
+    model.addAttribute("index", index);
     if (bindingResult.hasErrors()) {
       bindingResult.getFieldErrors().forEach(
           fieldError -> LOG.error(fieldError.getDefaultMessage()));
@@ -152,15 +161,24 @@ public class OverviewController {
 
       int year = manualEntry.getYear();
       User user = manualEntry.getUser();
-      UserVacationAccount userVacationAccount = userService.getUserVacationAccountForYear(user, year);
-      userService.addManualEntryToVacationAccout(manualEntry, userVacationAccount);
-      AccountModel accountModel = accountModelService.createAccountModel(userVacationAccount);
+      UserVacationAccount userVacationAccount = userService.getUserVacationAccountForYear(user,
+                                                                                          year);
+      double openDays =
+          vacationService.getRemainingVacationEntitlement(userVacationAccount).getTotalDays();
+      if (manualEntry.getType() == ManualEntryType.REDUCE && openDays < manualEntry.getDays()) {
+        model.addAttribute("manualEntry", manualEntry);
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        bindingResult.rejectValue("days", "manualEntry.vacation.tooMuchReduce",
+                                  "Anzahl der abgezogenen Tage ist höher als planbarer Urlaub");
+        return "components/manualEntryForm";
+      } else {
+        userService.addManualEntryToVacationAccout(manualEntry, userVacationAccount);
+        AccountModel accountModel = accountModelService.createAccountModel(userVacationAccount);
 
-      model.addAttribute("account", accountModel);
-      response.setStatus(HttpServletResponse.SC_CREATED);
-      return "components/accountTable";
+        model.addAttribute("account", accountModel);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        return "components/userAccount";
+      }
     }
   }
-
-
 }

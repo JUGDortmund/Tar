@@ -34,10 +34,7 @@ public class AccountModelService {
     List<ManualEntry> manualEntries = new ArrayList<>(userVacationAccount.getManualEntries());
     OptionalDouble optional = manualEntries.stream()
         .filter(manualEntry -> manualEntry.getVacation() == null)
-        .mapToDouble((manualEntry) -> {
-          return
-              manualEntry.getType() == ManualEntryType.ADD ? manualEntry.getDays() : -manualEntry.getDays();
-        })
+        .mapToDouble((manualEntry) -> manualEntry.getType() == ManualEntryType.ADD ? manualEntry.getDays() : -manualEntry.getDays())
         .reduce((manualEntry1, manualEntry2) -> manualEntry1 + manualEntry2);
     double manualEntriesDays = optional.isPresent() ? optional.getAsDouble() : 0;
     return userVacationAccount.getTotalVacationDays() + manualEntriesDays;
@@ -59,17 +56,15 @@ public class AccountModelService {
         .setPendingVacationDays(vacationService.getPendingVacationDays(userVacationAccount.getVacations()));
     accountModel.setOpenVacationDays(remainingVacationEntitlement.getTotalDays());
 
-    List<Vacation> vacations = new ArrayList<>(userVacationAccount.getVacations());
-    List<ManualEntry> manualEntries = new ArrayList<>(userVacationAccount.getManualEntries());
-    List<AccountEntry> entryList = createEntryList(userVacationAccount.getYear(), userVacationAccount.getTotalVacationDays(), vacations, manualEntries);
+    List<AccountEntry> entryList = createEntryList(userVacationAccount);
     accountModel.setEntries(entryList);
     return accountModel;
   }
 
-  private List<AccountEntry> createEntryList(int selectedYear, double totalVacationDays,
-                            List<Vacation> vacations, List<ManualEntry> manualEntries) {
+  private List<AccountEntry> createEntryList(UserVacationAccount account) {
     List<AccountEntry> entryList = new ArrayList<>();
-    for (Vacation vacation : vacations) {
+    int selectedYear = account.getYear();
+    for (Vacation vacation : account.getVacations()) {
       if (vacation.getFrom().getYear() >= selectedYear
           && vacation.getTo().getYear() <= selectedYear) {
         if (!vacation.getState().equals(State.CANCELED)
@@ -80,7 +75,7 @@ public class AccountModelService {
         }
       }
     }
-    for (ManualEntry manualEntry : manualEntries) {
+    for (ManualEntry manualEntry : account.getManualEntries()) {
       if(manualEntry.getYear() == selectedYear){
         AccountManualEntry entry = new AccountManualEntry(manualEntry);
         entryList.add(entry);
@@ -88,7 +83,7 @@ public class AccountModelService {
     }
     if(entryList != null){
       entryList.sort((e1, e2) -> e1.getCreated().compareTo(e2.getCreated()));
-      double balance = totalVacationDays;
+      double balance = account.getTotalVacationDays() + account.getPreviousYearOpenVacationDays();
       for (AccountEntry entry : entryList){
         balance = balance + entry.getDays();
         entry.setBalance(balance);
