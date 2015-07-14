@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 @Service
 public class VacationService {
@@ -56,8 +57,10 @@ public class VacationService {
     } else {
       result = calculateDays(startDate, endDate);
     }
-    if (vacation.getManualEntry() != null){
-      result = result - vacation.getManualEntry().getDays();
+    if (vacation.getManualEntries() != null && !vacation.getManualEntries().isEmpty()){
+      double manualEntryAmount = vacation.getManualEntries().stream().flatMapToDouble(
+          manualEntry -> DoubleStream.of(manualEntry.getDays())).sum();
+      result = result - manualEntryAmount;
     }
     return result;
   }
@@ -105,8 +108,10 @@ public class VacationService {
   public double getApprovedVacationDays(Set<Vacation> set) {
     return set != null ? set.stream().filter(vacation -> vacation.getState() == State.APPROVED)
         .mapToDouble(vacation -> {
-          if (vacation.getManualEntry() != null) {
-            return vacation.getDays() - vacation.getManualEntry().getDays();
+          if (vacation.getManualEntries() != null && !vacation.getManualEntries().isEmpty()) {
+            double manualEntryAmount = vacation.getManualEntries().stream().flatMapToDouble(
+                manualEntry -> DoubleStream.of(manualEntry.getDays())).sum();
+            return vacation.getDays() - manualEntryAmount;
           } else {
             return vacation.getDays();
           }

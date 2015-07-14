@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
 
     Vacation referencedVacation = manualEntry.getVacation();
     if(referencedVacation != null){
-      referencedVacation.setManualEntry(manualEntry);
+      referencedVacation.addManualEntry(manualEntry);
       vacationRepository.save(referencedVacation);
     }
   }

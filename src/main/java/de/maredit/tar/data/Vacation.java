@@ -1,10 +1,7 @@
 package de.maredit.tar.data;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
+import de.maredit.tar.models.enums.HalfDayTimeFrame;
+import de.maredit.tar.models.enums.State;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -12,8 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import de.maredit.tar.models.enums.HalfDayTimeFrame;
-import de.maredit.tar.models.enums.State;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
 
 @Document
 public class Vacation {
@@ -21,11 +23,11 @@ public class Vacation {
   @Id
   private String id;
 
-  @NotNull(message="{date.from}")
+  @NotNull(message = "{date.from}")
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate from;
 
-  @NotNull(message="{date.to}")
+  @NotNull(message = "{date.to}")
   @DateTimeFormat(iso = ISO.DATE, pattern = "dd.MM.yyyy")
   private LocalDate to;
 
@@ -41,7 +43,7 @@ public class Vacation {
   private User substitute;
 
   @DBRef
-  @NotNull(message="{manager.notnull}")
+  @NotNull(message = "{manager.notnull}")
   private User manager;
 
   private double days;
@@ -51,7 +53,7 @@ public class Vacation {
 
   @DBRef
   private User author;
-  
+
   private String appointmentId;
 
   private boolean halfDay;
@@ -59,7 +61,7 @@ public class Vacation {
   private HalfDayTimeFrame timeframe;
 
   @DBRef
-  private ManualEntry manualEntry;
+  private Set<ManualEntry> manualEntries;
 
   public Vacation() {
     this.created = LocalDateTime.now();
@@ -67,7 +69,7 @@ public class Vacation {
   }
 
   public Vacation(User user, LocalDate from, LocalDate to, User substitute, User manager,
-      double days) {
+                  double days) {
     this.user = user;
     this.from = from;
     this.to = to;
@@ -76,6 +78,7 @@ public class Vacation {
     this.days = days;
     this.state = substitute != null ? State.REQUESTED_SUBSTITUTE : State.WAITING_FOR_APPROVEMENT;
     this.created = LocalDateTime.now();
+    this.manualEntries = new HashSet<ManualEntry>();
   }
 
   public String getId() {
@@ -172,7 +175,7 @@ public class Vacation {
   public void setAuthor(User user) {
     this.author = user;
   }
-  
+
   public User getAuthor() {
     return author;
   }
@@ -201,17 +204,27 @@ public class Vacation {
     this.timeframe = timeframe;
   }
 
-  public ManualEntry getManualEntry() {
-    return manualEntry;
+  public Set<ManualEntry> getManualEntries() {
+    return manualEntries;
   }
 
-  public void setManualEntry(ManualEntry manualEntry) {
-    this.manualEntry = manualEntry;
+  public void setManualEntries(Set<ManualEntry> manualEntries) {
+    this.manualEntries = manualEntries;
   }
 
+  public void addManualEntry(ManualEntry manualEntry) {
+    if (manualEntries == null) {
+      manualEntries = new HashSet<>();
+    }
+    if (!manualEntries.add(manualEntry)) {
+      manualEntries.remove(manualEntry);
+      manualEntries.add(manualEntry);
+    }
+  }
   @Override
   public String toString() {
     return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
-        + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", state=" + state + ", manualEntry=" + manualEntry + "]";
+           + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", state="
+           + state + ", manualEntries=" + manualEntries + "]";
   }
 }
