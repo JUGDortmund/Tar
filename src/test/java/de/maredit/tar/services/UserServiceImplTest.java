@@ -143,7 +143,7 @@ public class UserServiceImplTest {
     Assert.notNull(account);
     Assert.notEmpty(account.getVacations());
     assertEquals(4, account.getVacations().size());
-    assertNull(account.getPreviousYearOpenVacationDays());
+    assertEquals(0, account.getPreviousYearOpenVacationDays(), 0.0);
   }
 
   @Test
@@ -154,7 +154,7 @@ public class UserServiceImplTest {
     Assert.notNull(account);
     assertNotNull(account.getVacations());
     assertEquals(0, account.getVacations().size());
-    assertNull(account.getPreviousYearOpenVacationDays());
+    assertEquals(0, account.getPreviousYearOpenVacationDays(), 0.0);
   }
 
   @Test

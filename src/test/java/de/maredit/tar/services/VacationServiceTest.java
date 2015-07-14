@@ -6,6 +6,8 @@ import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.properties.VacationProperties;
+import de.maredit.tar.repositories.VacationRepository;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,16 +46,15 @@ public class VacationServiceTest {
         return new HolidayServiceImpl();
     }
 
-    
-      @Bean
-      public VacationService vacationService() {
+    @Bean
+    public VacationService vacationService() {
           return new VacationService();
       }
   }
 
   @Autowired
   private VacationService vacationService;
-  
+
   @Test
   public void testCountofDays() {
     Vacation vacation = new Vacation();

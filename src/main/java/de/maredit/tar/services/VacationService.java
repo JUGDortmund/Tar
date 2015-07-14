@@ -29,10 +29,10 @@ public class VacationService {
   @Autowired
   private HolidayService holidayService;
 
-  @Autowired
+  @Autowired(required=false)
   private VacationRepository vacationRepository;
 
-  @Autowired
+  @Autowired(required=false)
   private CommentItemRepository commentItemRepository;
 
   public double getValueOfVacation(Vacation vacation) {
