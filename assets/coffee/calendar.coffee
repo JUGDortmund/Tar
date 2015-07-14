@@ -49,7 +49,8 @@
                     $vacationDetail = $('#vacationDetail')
                     $vacationDetail.find('.user').text( calEvent.userFirstName + ' ' + calEvent.userLastName )
                     $vacationDetail.find('.state').text( calEvent.state );
-
+                    #The type has to be set, as soon as vacations do have different types, like special leave (e.g.)
+                    #$vacationDetail.find('.vacation-type').text( calEvent.vacationType );
                     if calEvent.allDay
                       $vacationDetail.find('.time').text( calEvent.start.format('DD.MM.YYYY') + ' - ' + calEvent.displayedEnd.format('DD.MM.YYYY') )
                     else
@@ -65,10 +66,12 @@
 
                     $vacationDetail.show()
                     $('#sidebar').addClass('active')
+                    $('.panel-default').matchHeight()
                 else
                     $vacationDetail = $('#vacationDetail')
                     $vacationDetail.hide()
 
         $('#calendarFilter .checkbox input').on 'click', ->
             $('#calendar').fullCalendar( 'refetchEvents')
+
 )(jQuery);

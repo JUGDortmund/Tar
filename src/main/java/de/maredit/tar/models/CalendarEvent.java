@@ -18,6 +18,7 @@ public class CalendarEvent {
   public static final String END_HALF_DAY_HOLIDAY_MORNING = " 12:00:00";
   public static final String START_HALF_DAY_HOLIDAY_AFTERNOON = " 13:00:00";
   public static final String END_HALF_DAY_HOLIDAY_AFTERNOON = " 17:00:00";
+  public static final String VACATION_TYPE = "Urlaub";
 
   private String start;
   private String end;
@@ -33,6 +34,7 @@ public class CalendarEvent {
 
   private String managerFirstName;
   private String managerLastName;
+  private String vacationType;
 
   private CalendarEntryType type;
   private String state;
@@ -40,7 +42,7 @@ public class CalendarEvent {
 
   public CalendarEvent(Vacation vacation) {
     if (vacation.getUser() != null) {
-      this.setTitle("Urlaub " + vacation.getUser().getUsername().substring(0, 3));
+      this.setTitle(VACATION_TYPE + " "+ vacation.getUser().getUsername().substring(0, 3));
       this.setUserName(vacation.getUser().getUsername());
       this.setUserFirstName(vacation.getUser().getFirstname());
       this.setUserLastName(vacation.getUser().getLastname());
@@ -60,6 +62,7 @@ public class CalendarEvent {
       this.setSubstituteLastName(vacation.getSubstitute().getLastname());
     }
     this.setType(CalendarEntryType.VACATION);
+    this.setVacationType(VACATION_TYPE);
     this.allDay = !vacation.isHalfDay();
 
     String startTime = "";
@@ -205,5 +208,13 @@ public class CalendarEvent {
 
   public void setAllDay(Boolean allDay) {
     this.allDay = allDay;
+  }
+
+  public String getVacationType() {
+    return vacationType;
+  }
+
+  public void setVacationType(String vacationType) {
+    this.vacationType = vacationType;
   }
 }

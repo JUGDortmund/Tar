@@ -8,6 +8,7 @@ import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.AccountModel;
 import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.models.enums.ManualEntryType;
+import de.maredit.tar.models.enums.State;
 import de.maredit.tar.models.validators.ManualEntryValidator;
 import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.repositories.UserRepository;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -139,7 +141,7 @@ public class OverviewController {
     manualEntry.setUser(user);
     manualEntry.setYear(year);
 
-    List<Vacation> vacations = new ArrayList<>(userService.getVacationsForUserAndYear(user, year));
+    List<Vacation> vacations = getApprovedVacationsForUserAndYear(manualEntry.getUser(), manualEntry.getYear());
     model.addAttribute("vacations", vacations);
     model.addAttribute("manualEntry", manualEntry);
     model.addAttribute("index", index);
@@ -155,10 +157,8 @@ public class OverviewController {
                                 BindingResult bindingResult,
                                 HttpServletResponse response) {
     LOG.debug("manualEntry: {}", manualEntry);
-    List<Vacation>
-        vacations =
-        new ArrayList<>(
-            userService.getVacationsForUserAndYear(manualEntry.getUser(), manualEntry.getYear()));
+    List<Vacation> vacations = getApprovedVacationsForUserAndYear(manualEntry.getUser(), manualEntry.getYear());
+
     model.addAttribute("vacations", vacations);
     model.addAttribute("index", index);
     if (bindingResult.hasErrors()) {
@@ -193,5 +193,14 @@ public class OverviewController {
         return "components/userAccount";
       }
     }
+  }
+
+  private List<Vacation> getApprovedVacationsForUserAndYear(User user, int year){
+    List<Vacation>
+        vacations = new ArrayList<>(
+        userService.getVacationsForUserAndYear(user, year));
+    vacations = vacations.stream().filter(vacation -> vacation.getState() == State.APPROVED).collect(
+        Collectors.toList());
+    return vacations;
   }
 }
