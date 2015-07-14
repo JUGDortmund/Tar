@@ -6,13 +6,18 @@ import de.maredit.tar.data.User;
 import de.maredit.tar.data.UserVacationAccount;
 import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.AccountModel;
+import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.models.enums.ManualEntryType;
 import de.maredit.tar.models.validators.ManualEntryValidator;
+import de.maredit.tar.properties.CustomMailProperties;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.UserVacationAccountRepository;
 import de.maredit.tar.services.AccountModelService;
+import de.maredit.tar.services.MailService;
 import de.maredit.tar.services.UserService;
 import de.maredit.tar.services.VacationService;
+import de.maredit.tar.services.mail.ManualEntryCreateMail;
+import de.maredit.tar.services.mail.VacationCreateMail;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -57,11 +62,16 @@ public class OverviewController {
   private AccountModelService accountModelService;
 
   @Autowired
+  private MailService mailService;
+
+  @Autowired
   private UserRepository userRepository;
 
   @Autowired
   private UserVacationAccountRepository userVacationAccountRepository;
 
+  @Autowired
+  private CustomMailProperties customMailProperties;
 
   @Autowired
   private NavigationBean navigationBean;
@@ -173,8 +183,11 @@ public class OverviewController {
         return "components/manualEntryForm";
       } else {
         userService.addManualEntryToVacationAccout(manualEntry, userVacationAccount);
-        AccountModel accountModel = accountModelService.createAccountModel(userVacationAccount);
+        VacationEntitlement remainingEntitlement = vacationService.getRemainingVacationEntitlement(userVacationAccount);
+        this.mailService.sendMail(
+            new ManualEntryCreateMail(manualEntry, remainingEntitlement, customMailProperties.getUrlToOverview()));
 
+        AccountModel accountModel = accountModelService.createAccountModel(userVacationAccount);
         model.addAttribute("account", accountModel);
         response.setStatus(HttpServletResponse.SC_CREATED);
         return "components/userAccount";
