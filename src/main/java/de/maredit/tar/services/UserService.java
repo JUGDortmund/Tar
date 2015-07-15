@@ -74,5 +74,5 @@ public interface UserService {
    * @param manualEntry the vacation to add
    * @param userVacationAccount the userVacationAvvount, the entry belongs to
    */
-  public void addManualEntryToVacationAccout(ManualEntry manualEntry, UserVacationAccount userVacationAccount);
+  public UserVacationAccount addManualEntryToVacationAccout(ManualEntry manualEntry, UserVacationAccount userVacationAccount);
 }

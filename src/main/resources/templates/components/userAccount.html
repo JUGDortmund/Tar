@@ -51,7 +51,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div th:id="|collapse${index}|" class="panel-collapse collapse">
@@ -81,7 +80,8 @@
                     <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays+account.previousYearOpenVacationDays,1,1)}" /><!-- DAS DARF NCIHT ACCOUNT SEIN!!!-->
                 </tr>
                 <tr th:each="entry : ${account.entries}">
-                    <td >
+                    <td>
+                        <span th:if="${entry instanceof T(de.maredit.tar.models.AccountManualEntry)}" class="entry-info" th:inline="text" >[[#{field.manualEntry.info}]] <br/></span>
                         <th:block th:text="${entry.displayText}"/>
                         <span th:if="${entry.starred}">*</span>
                     </td>

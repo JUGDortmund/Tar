@@ -36,7 +36,6 @@ public class ManualEntry {
   @DecimalMin(value = "0.5", message = "{manualEntry.days}")
   private double days;
 
-  @NotNull
   @NotBlank(message = "{manualEntry.description}")
   private String description;
 
@@ -157,6 +156,6 @@ public class ManualEntry {
   @Override
   public String toString() {
     return "ManualEntry [user=" + user + ", year=" + year + ", days=" + days
-           + ", type=" + type + ", description=" + description + ", vacation=" + vacation + ", created=" + created + "author=" + author+"]";
+           + ", type=" + type.get() + ", description=" + description + ", created=" + created + "author=" + author+"]";
   }
 }

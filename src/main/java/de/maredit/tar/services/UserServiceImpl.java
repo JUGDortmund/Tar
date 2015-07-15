@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void addManualEntryToVacationAccout(ManualEntry manualEntry, UserVacationAccount userVacationAccount) {
+  public UserVacationAccount addManualEntryToVacationAccout(ManualEntry manualEntry, UserVacationAccount userVacationAccount) {
     userVacationAccount.addManualEntry(manualEntry);
     manualEntryRepository.save(manualEntry);
     userVacationAccountRepository.save(userVacationAccount);
@@ -143,5 +143,6 @@ public class UserServiceImpl implements UserService {
       referencedVacation.addManualEntry(manualEntry);
       vacationRepository.save(referencedVacation);
     }
+    return userVacationAccountRepository.findOne(userVacationAccount.getId());
   }
 }

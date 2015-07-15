@@ -132,7 +132,8 @@ public class OverviewController {
 
   @RequestMapping(value = "/newManualEntry")
   @PreAuthorize("hasRole('SUPERVISOR')")
-  public String newManualEntry(Model model, @ModelAttribute("manualEntry") ManualEntry manualEntry,
+  public String newManualEntry(Model model,
+                               @ModelAttribute("manualEntry") ManualEntry manualEntry,
                                @RequestParam(value = "user") User user,
                                @RequestParam(value = "year") int year,
                                @RequestParam(value = "index") int index) {
@@ -152,8 +153,8 @@ public class OverviewController {
   @RequestMapping(value = "/saveManualEntry", method = RequestMethod.POST)
   @PreAuthorize("hasRole('SUPERVISOR')")
   public String saveManualEntry(Model model,
+                                @RequestParam("index") int index,
                                 @ModelAttribute("manualEntry") @Valid ManualEntry manualEntry,
-                                @RequestParam(value = "index") int index,
                                 BindingResult bindingResult,
                                 HttpServletResponse response) {
     LOG.debug("manualEntry: {}", manualEntry);
@@ -182,7 +183,7 @@ public class OverviewController {
                                   "Anzahl der abgezogenen Tage ist höher als planbarer Urlaub");
         return "components/manualEntryForm";
       } else {
-        userService.addManualEntryToVacationAccout(manualEntry, userVacationAccount);
+        userVacationAccount = userService.addManualEntryToVacationAccout(manualEntry, userVacationAccount);
         VacationEntitlement remainingEntitlement = vacationService.getRemainingVacationEntitlement(userVacationAccount);
         this.mailService.sendMail(
             new ManualEntryCreateMail(manualEntry, remainingEntitlement, customMailProperties.getUrlToOverview()));

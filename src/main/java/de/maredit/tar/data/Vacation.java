@@ -225,6 +225,6 @@ public class Vacation {
   public String toString() {
     return "Vacation [from=" + from + ", to=" + to + ", created=" + created + ", user=" + user
            + ", substitute=" + substitute + ", manager=" + manager + ", days=" + days + ", state="
-           + state + ", manualEntries=" + manualEntries + "]";
+           + state.get() + "]";
   }
 }

@@ -36,7 +36,6 @@ showManualEntryForm = (data) ->
                 hideManualEntryForm()
         return false
 
-
     $('#saveManualEntry').submit (e) ->
         e.preventDefault(e)
 
