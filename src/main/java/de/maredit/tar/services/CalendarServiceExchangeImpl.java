@@ -71,8 +71,8 @@ public class CalendarServiceExchangeImpl implements CalendarService {
             endTime = CalendarEvent.END_HALF_DAY_HOLIDAY_AFTERNOON;
             break;
           case MORNING:
-            startTime = CalendarEvent.START_HALF_DAY_HOLIDAY_AFTERNOON;
-            endTime = CalendarEvent.END_HALF_DAY_HOLIDAY_AFTERNOON;
+            startTime = CalendarEvent.START_HALF_DAY_HOLIDAY_MORNING;
+            endTime = CalendarEvent.END_HALF_DAY_HOLIDAY_MORNING;
             break;
         }
 

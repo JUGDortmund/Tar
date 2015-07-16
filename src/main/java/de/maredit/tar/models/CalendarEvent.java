@@ -14,10 +14,10 @@ import java.time.format.DateTimeFormatter;
 public class CalendarEvent {
 
   public static final Logger LOG = LogManager.getLogger(CalendarEvent.class);
-  public static final String START_HALF_DAY_HOLIDAY_MORNING = " 08:00:00";
-  public static final String END_HALF_DAY_HOLIDAY_MORNING = " 12:00:00";
-  public static final String START_HALF_DAY_HOLIDAY_AFTERNOON = " 13:00:00";
-  public static final String END_HALF_DAY_HOLIDAY_AFTERNOON = " 17:00:00";
+  public static final String START_HALF_DAY_HOLIDAY_MORNING = "08:00:00";
+  public static final String END_HALF_DAY_HOLIDAY_MORNING = "12:00:00";
+  public static final String START_HALF_DAY_HOLIDAY_AFTERNOON = "13:00:00";
+  public static final String END_HALF_DAY_HOLIDAY_AFTERNOON = "17:00:00";
   public static final String VACATION_TYPE = "Urlaub";
 
   private String start;
@@ -84,8 +84,8 @@ public class CalendarEvent {
       }
     }
 
-    this.setStart(vacation.getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + startTime);
-    this.setEnd(vacation.getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + endTime);
+    this.setStart(vacation.getFrom().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +" "+ startTime);
+    this.setEnd(vacation.getTo().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) +" "+ endTime);
   }
 
   public CalendarEvent(Holiday holiday) {
