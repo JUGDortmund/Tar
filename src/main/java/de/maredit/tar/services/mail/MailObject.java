@@ -1,6 +1,6 @@
 package de.maredit.tar.services.mail;
 
-import de.maredit.tar.models.User;
+import de.maredit.tar.data.User;
 
 import java.util.Map;
 

@@ -24,6 +24,7 @@ spring:
     additionalRecipients:
       - mareditTarTest@dontsendmespam.de
     urlToVacation: http://localhost:8080
+    urlToOverview: http://localhost:8080/overview
 spring.profiles.include: dummyServices
 ---
 ##### Test configuration #####

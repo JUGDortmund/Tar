@@ -1,11 +1,13 @@
 package de.maredit.tar.services;
 
 import de.maredit.tar.models.UserHoliday;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.VacationEntitlement;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.properties.VacationProperties;
+import de.maredit.tar.repositories.VacationRepository;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,22 +46,21 @@ public class VacationServiceTest {
         return new HolidayServiceImpl();
     }
 
-    
-      @Bean
-      public VacationService vacationService() {
+    @Bean
+    public VacationService vacationService() {
           return new VacationService();
       }
   }
 
   @Autowired
   private VacationService vacationService;
-  
+
   @Test
   public void testCountofDays() {
     Vacation vacation = new Vacation();
     vacation.setFrom(LocalDate.of(2015, Month.JUNE, 8));
     vacation.setTo(LocalDate.of(2015, Month.JUNE, 12));
-    Assert.assertEquals(5, vacationService.getCountOfVacation(vacation), 0);
+    Assert.assertEquals(5, vacationService.getValueOfVacation(vacation), 0);
   }
 
   @Test
@@ -67,7 +68,7 @@ public class VacationServiceTest {
     Vacation vacation = new Vacation();
     vacation.setFrom(LocalDate.of(2015, Month.JUNE, 8));
     vacation.setTo(LocalDate.of(2015, Month.JUNE, 16));
-    Assert.assertEquals(7, vacationService.getCountOfVacation(vacation), 0);
+    Assert.assertEquals(7, vacationService.getValueOfVacation(vacation), 0);
   }
 
   @Test
@@ -75,7 +76,7 @@ public class VacationServiceTest {
     Vacation vacation = new Vacation();
     vacation.setFrom(LocalDate.of(2015, Month.DECEMBER, 24));
     vacation.setTo(LocalDate.of(2015, Month.DECEMBER, 28));
-    Assert.assertEquals(1.5, vacationService.getCountOfVacation(vacation), 0);
+    Assert.assertEquals(1.5, vacationService.getValueOfVacation(vacation), 0);
   }
 
   
@@ -92,12 +93,14 @@ public class VacationServiceTest {
     account.getVacations().add(vacation);
 
     
-    VacationEntitlement lastingVacationDays = vacationService.getRemainingVacationDays(account);
+    VacationEntitlement lastingVacationDays = vacationService.getRemainingVacationEntitlement(
+        account);
     Assert.assertEquals(24, lastingVacationDays.getDays(), 0);
     Assert.assertEquals(0, lastingVacationDays.getDaysLastYear(), 0);
 
     account.setPreviousYearOpenVacationDays(5d);
-    VacationEntitlement lastingVacationDays2 = vacationService.getRemainingVacationDays(account);
+    VacationEntitlement lastingVacationDays2 = vacationService.getRemainingVacationEntitlement(
+        account);
     Assert.assertEquals(29, lastingVacationDays2.getDays(), 0);
     Assert.assertEquals(0, lastingVacationDays2.getDaysLastYear(), 0);
   }

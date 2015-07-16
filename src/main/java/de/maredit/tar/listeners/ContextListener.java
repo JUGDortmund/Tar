@@ -3,12 +3,12 @@ package de.maredit.tar.listeners;
 import de.maredit.tar.services.VacationService;
 
 import com.unboundid.ldap.sdk.LDAPException;
-import de.maredit.tar.models.CommentItem;
-import de.maredit.tar.models.ProtocolItem;
-import de.maredit.tar.models.StateItem;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.CommentItem;
+import de.maredit.tar.data.ProtocolItem;
+import de.maredit.tar.data.StateItem;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.CommentItemRepository;
 import de.maredit.tar.repositories.ProtocolItemRepository;
@@ -70,8 +70,9 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         Vacation v1 =
             new Vacation(user, LocalDate.now().plusMonths(1), LocalDate.now().plusMonths(
                 1).plusDays(1), manager, manager, 0);
-        v1.setDays(vacationService.getCountOfVacation(v1));
+        v1.setDays(vacationService.getValueOfVacation(v1));
         v1.setState(State.WAITING_FOR_APPROVEMENT);
+        v1.setAuthor(manager);
         try {
           Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -80,8 +81,9 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
         Vacation v2 =
             new Vacation(user, LocalDate.now().plusDays(5), LocalDate.now().plusDays(8),
                          manager, manager, 4);
-        v2.setDays(vacationService.getCountOfVacation(v2));
+        v2.setDays(vacationService.getValueOfVacation(v2));
         v2.setState(State.REQUESTED_SUBSTITUTE);
+        v2.setAuthor(manager);
         try {
           Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -91,8 +93,10 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
             v3 =
             new Vacation(user, LocalDate.now().plusWeeks(2), LocalDate.now().plusWeeks(2).plusDays(
                 4), manager, manager, 5);
-        v3.setDays(vacationService.getCountOfVacation(v3));
+        v3.setDays(vacationService.getValueOfVacation(v3));
         v3.setState(State.APPROVED);
+        v3.setAuthor(manager);
+
         vacationRepository.save(v1);
         vacationRepository.save(v2);
         vacationRepository.save(v3);

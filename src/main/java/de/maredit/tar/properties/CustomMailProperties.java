@@ -7,14 +7,16 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "spring.mail")
 public class CustomMailProperties {
-  
+
   private String sender;
-  
+
   private String prefix;
 
   private String[] additionalRecipients;
 
   private String urlToVacation;
+
+  private String urlToOverview;
 
   public String[] getAdditionalRecipients() {
     return additionalRecipients;
@@ -46,5 +48,13 @@ public class CustomMailProperties {
 
   public void setUrlToVacation(String urlToVacation) {
     this.urlToVacation = urlToVacation;
+  }
+
+  public String getUrlToOverview() {
+    return urlToOverview;
+  }
+
+  public void setUrlToOverview(String urlToOverview) {
+    this.urlToOverview = urlToOverview;
   }
 }

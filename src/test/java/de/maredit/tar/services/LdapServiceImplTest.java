@@ -10,7 +10,7 @@ import com.unboundid.ldif.LDIFReader;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 import de.maredit.tar.Main;
-import de.maredit.tar.models.User;
+import de.maredit.tar.data.User;
 import de.svenkubiak.embeddedmongodb.EmbeddedMongo;
 import org.junit.AfterClass;
 import org.junit.Assert;

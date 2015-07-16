@@ -1,5 +1,8 @@
 package de.maredit.tar.models;
 
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+
 import java.util.List;
 
 public class AccountModel {
@@ -8,14 +11,14 @@ public class AccountModel {
   
   private User user;
   private Integer year;
-  private double totalVacationDays;
-  private double previousYearOpenVacationDays;
-  private double pendingVacationDays;
-  private double approvedVacationDays;
+  private double totalVacationDays; // alle ausser Vorjahresanspruch
+  private double previousYearOpenVacationDays; // Vorjahresanspruch
+  private double pendingVacationDays; // beantragt
+  private double approvedVacationDays; // genehmigt (bereits verbraucht)
+  private double openVacationDays; // noch planbar
   private List<? extends AccountEntry> entries;
   private UserVacationAccount account;
-  private double openVacationDays;
-  
+
   public String getId() {
     return id;
   }

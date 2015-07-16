@@ -1,6 +1,8 @@
-package de.maredit.tar.models;
+package de.maredit.tar.data;
 
+import de.maredit.tar.models.TimelineItem;
 import de.maredit.tar.models.enums.State;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document

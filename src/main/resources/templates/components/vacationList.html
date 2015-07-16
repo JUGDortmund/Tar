@@ -6,7 +6,7 @@
         <div class="panel-body">
             <form th:action="@{/}" role="form" method="post">
                 <div class="form-group">
-                    <label for="selectedEmployee" th:text="#{field.employee}"></label>
+                    <label for="selected" th:text="#{field.employee}"></label>
                     <select class="form-control autosubmit" style="width: 100%;" name="selected" id="selected">
                         <option th:each="user : ${users}"
                                 th:value="${user.username}"

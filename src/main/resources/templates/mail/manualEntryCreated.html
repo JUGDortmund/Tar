@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:remove="all">Template for Vacation Application</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p>
+        <th:block th:text="#{mail.salutation}"/> <span th:text="${employee}">Welt!</span>!<br />
+    </p>
+
+    <p>
+        <th:block th:text="#{mail.manualEntry.created}">Dein Urlaubsanspruch wurde durch eine Korrekturbuchung verändert.</th:block>
+    </p>
+
+    <p>
+        <b><th:block th:text="#{mail.manualEntry.author}"/></b><span th:text="${manager}">AUTHOR</span>
+    </p>
+    <p>
+        <b><th:block th:text="#{mail.manualEntry.type}"/></b><span th:text="#{__${manualEntryType}__}">Gutschrift</span>
+    </p>
+    <p>
+        <b><th:block th:text="#{mail.manualEntry.reference}"/></b>
+        <th:block th:if="${isVacationReference}">
+            <span th:text="#{mail.manualEntry.vacation}">Urlaub</span><span th:text="${' ('+ fromDate + ' - '+ toDate +')'}">Urlaub</span>
+        </th:block>
+        <th:block th:if="${not isVacationReference}">
+            <span th:text="#{mail.manualEntry.year}">Jahresanspruch</span> <span th:text="${year}">2015</span>
+        </th:block>
+    </p>
+    <p>
+        <b><th:block th:text="#{mail.manualEntry.daysBooked}"/></b> <span th:text="${entryDays}">42</span>
+    </p>
+
+    <p> <b><th:block th:text="#{mail.manualEntry.description}"/></b><br/>
+        <span th:text="${comment}">KOMMENTAR</span>
+    </p>
+
+
+    <p>
+        &lt;<a th:href="@{${urlToOverview}}"><th:block th:text="#{mail.urlToOverview}"/></a>
+        <th:block th:text="#{mail.urlToOverviewText}"/>
+    </p>
+
+    <p> <th:block th:text="#{mail.signature.employee}"/> <em> <th:block th:text="#{mail.signature.yourTeam}"/> <span th:text="${manager}">Welt</span>) </em> </p>
+</body>
+</html>

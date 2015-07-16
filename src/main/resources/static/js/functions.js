@@ -246,7 +246,27 @@
     $('.panel-default').matchHeight();
     activateToggle();
     $('[data-toggle="filter"]').click(function() {
-      return $('.offcanvas-filter').toggleClass('active');
+      var $myFilter, $myForm;
+      $('.offcanvas-filter').toggleClass('active');
+      if ($('.offcanvas-filter').hasClass('active')) {
+        $myFilter = $('#filter-form-panel');
+        if ($myFilter !== null) {
+          $myFilter.hide().show();
+        }
+        $myForm = $('#entry-form-panel');
+        if ($myForm !== null) {
+          return $myForm.hide();
+        }
+      } else {
+        $myFilter = $('#filter-form-panel');
+        if ($myFilter !== null) {
+          $myFilter.hide();
+        }
+        $myForm = $('#entry-form-panel');
+        if ($myForm !== null) {
+          return $myForm.hide();
+        }
+      }
     });
     $('.edit-vacation a, .approve-vacation a, #newVacation').click(function() {
       $.ajax({
@@ -268,7 +288,99 @@
 }).call(this);
 
 (function() {
+  var hideManualEntryForm, refreshActiveTable, scrollToVacationManualEntryForm, sendAjaxFormRequest, showManualEntryForm;
+
+  scrollToVacationManualEntryForm = function() {
+    var clientWidth;
+    clientWidth = document.documentElement.clientWidth;
+    if (clientWidth < 761) {
+      return $('html, body').animate({
+        scrollTop: $('#entry-form-panel').offset().top - 20
+      }, 'slow');
+    }
+  };
+
+  showManualEntryForm = function(data) {
+    var $myFilter, $myForm;
+    $myFilter = $('#filter-form-panel');
+    $myFilter.hide();
+    $myForm = $('#entry-form-panel');
+    $myForm.html(data).hide().show();
+    scrollToVacationManualEntryForm();
+    $('.offcanvas-filter').show();
+    $myForm.find('select.strict').select2({
+      minimumResultsForSearch: Infinity
+    });
+    $myForm.find('select.searchable').select2();
+    $('#year').on('change', function() {
+      var form;
+      form = $(this).closest('form');
+      return sendAjaxFormRequest(form.attr("action"), form.serialize(), "POST");
+    });
+    $('#submitEntry').on('click', function() {
+      var form;
+      form = $(this).closest('form');
+      $.ajax({
+        url: form.attr("action"),
+        data: form.serialize(),
+        dataType: "html",
+        method: "POST",
+        error: function(jqXHR, textStatus, errorThrown) {
+          if (jqXHR.status === 500) {
+            return showManualEntryForm(jqXHR.responseText);
+          } else {
+            return console.log(errorThrown);
+          }
+        },
+        success: function(data) {
+          refreshActiveTable(data);
+          return hideManualEntryForm();
+        }
+      });
+      return false;
+    });
+    return $('#saveManualEntry').submit(function(e) {
+      return e.preventDefault(e);
+    });
+  };
+
+  hideManualEntryForm = function() {
+    var $myFilter, $myForm;
+    $myForm = $('#entry-form-panel');
+    $myForm.hide();
+    $myFilter = $('#filter-form-panel');
+    return $myFilter.hide().show();
+  };
+
+  refreshActiveTable = function(data) {
+    var index, panelToRefresh;
+    panelToRefresh = $('.panel-collapse:visible').closest(".panel");
+    panelToRefresh.replaceWith(data);
+    index = $('input[name="index"]').val();
+    $('#collapse' + index).addClass("in");
+    return $('.manual-entry').click(function() {
+      return sendAjaxFormRequest($(this).attr('href'), null, "GET");
+    });
+  };
+
+  sendAjaxFormRequest = function(url, data, method) {
+    $.ajax({
+      url: url,
+      data: data,
+      dataType: "html",
+      method: method,
+      error: function(jqXHR, textStatus, errorThrown) {
+        return console.log(textStatus);
+      },
+      success: function(data) {
+        return showManualEntryForm(data);
+      }
+    });
+    return false;
+  };
+
   (function($) {
+    hideManualEntryForm();
     $('[data-toggle="tooltip"]').tooltip();
     $('#employees').select2();
     $('#employees').off('select2-opening');
@@ -282,8 +394,11 @@
         e.preventDefault();
       }
     });
-    return $('#clear').on('click', function(e) {
+    $('#clear').on('click', function(e) {
       $('#employees').val(null).trigger('change');
+    });
+    return $('.manual-entry').click(function() {
+      return sendAjaxFormRequest($(this).attr('href'), null, "GET");
     });
   })(jQuery);
 

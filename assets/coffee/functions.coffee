@@ -32,7 +32,7 @@ refreshVacationForm = (data) ->
   initializeLanguageSelect()
   initializeAjaxCalculation()
   toggleHalfDay()
-  
+
 refreshVacationDays = (data) ->
   $daysLabel = $('label.vacationDays')
   $remainingLabel = $('label.remainingDays')
@@ -77,7 +77,14 @@ initializeAjaxCalculation = () ->
       url: 'updateVacationForm'
       method: "POST"
       dataType: "json"
-      data: { "id" : $('form > input[id="id"][type="hidden"]').val(), "from": $('form input[id="dateFrom"]').val(), "to": $('form input[id="dateTo"]').val(), "halfDay": $('form input[id="halfDay"]').is(':checked'), "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(), "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()}
+      data: {
+        "id" : $('form > input[id="id"][type="hidden"]').val(),
+        "from": $('form input[id="dateFrom"]').val(),
+        "to": $('form input[id="dateTo"]').val(),
+        "halfDay": $('form input[id="halfDay"]').is(':checked'),
+        "_csrf": $('form.vacationForm > input[name="_csrf"][type="hidden"]').val(),
+        "user": $('form.vacationForm input[id="user"], form.vacationForm select > option[selected="selected"]').val()
+      }
       error: (jqXHR, textStatus, errorThrown) ->
         console.log(textStatus)
       success: (data) ->
@@ -100,6 +107,16 @@ initializeAjaxCalculation = () ->
 
   $('[data-toggle="filter"]').click ->
     $('.offcanvas-filter').toggleClass 'active'
+    if ($('.offcanvas-filter').hasClass 'active')
+        $myFilter = $('#filter-form-panel')
+        if $myFilter != null then $myFilter.hide().show()
+        $myForm = $('#entry-form-panel')
+        if $myForm != null then $myForm.hide( )
+    else
+        $myFilter = $('#filter-form-panel')
+        if $myFilter != null then $myFilter.hide()
+        $myForm = $('#entry-form-panel')
+        if $myForm != null then $myForm.hide( )
 
   $('.edit-vacation a, .approve-vacation a, #newVacation').click ->
     $.ajax

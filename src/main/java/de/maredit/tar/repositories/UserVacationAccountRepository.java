@@ -1,8 +1,8 @@
 package de.maredit.tar.repositories;
 
-import de.maredit.tar.models.UserVacationAccount;
+import de.maredit.tar.data.UserVacationAccount;
 
-import de.maredit.tar.models.User;
+import de.maredit.tar.data.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserVacationAccountRepository extends MongoRepository<UserVacationAccount, String> {

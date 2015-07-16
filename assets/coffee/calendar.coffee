@@ -73,4 +73,5 @@
 
         $('#calendarFilter .checkbox input').on 'click', ->
             $('#calendar').fullCalendar( 'refetchEvents')
+
 )(jQuery);

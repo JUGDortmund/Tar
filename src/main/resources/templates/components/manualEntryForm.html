@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body th:fragment="manualEntryForm">
+<div class="panel-heading">
+    Korrekturbuchung
+</div>
+
+<div class="panel-body">
+
+
+    <form th:action="@{/newManualEntry}" th:object="${manualEntry}" role="form" >
+
+        <!-- Error-handling: show alert box, when validation fails  -->
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('*')}">
+            <ul>
+                <li th:each="err : ${#fields.detailedErrors()}"
+                    th:text="${err.message}">Input is incorrect
+                </li>
+            </ul>
+        </div>
+        <input type="hidden" name="user" th:value="*{user.id}"/>
+        <input type="hidden" name="index" th:value="${index}"/>
+
+        <div class="row">
+            <div class="col-xs-12 entry-description"
+                 th:text="${'Korrekturbuchung für '+manualEntry.user.fullname}">
+                Korrekturbuchung für Max Mustermann
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 form-group">
+                <label for="year">
+                    <th:block th:text="Jahr"/>
+                    <span>*</span>
+                </label>
+                <select class="form-control strict" style="width: 100%;" name="year" id="year" th:field="*{year}"
+                        th:with="yearNow=${#dates.year(#dates.createNow())}">
+                    <option th:value="${yearNow-1}" th:selected="${yearNow-1 == year}">
+                        <th:block th:text="${yearNow-1}"/>
+                    </option>
+                    <option th:value="${yearNow}" th:selected="${yearNow == year}">
+                        <th:block th:text="${yearNow}"/>
+                    </option>
+                    <option th:value="${yearNow+1}" th:selected="${yearNow+1 == year}">
+                        <th:block th:text="${yearNow+1}"/>
+                    </option>
+                </select>
+
+            </div>
+        </div>
+    </form>
+    <form id="saveManualEntry" th:action="@{/saveManualEntry}" method="post" th:object="${manualEntry}" role="form">
+        <input type="hidden" name="year" th:value="*{year}"/>
+        <input type="hidden" name="user" th:value="*{user.id}"/>
+        <input type="hidden" name="author" th:value="*{author.id}"/>
+        <input type="hidden" name="index" th:value="${index}"/>
+
+        <div class="row">
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('type')}? 'has-error'">
+                <label for="entryType">
+                    <th:block th:text="Buchungsart"/>
+                    <span>*</span>
+                </label>
+
+                <select class="form-control strict" style="width: 100%;" name="entryType" th:field="*{type}"
+                        id="entryType">
+                    <option th:each="entryType : ${T(de.maredit.tar.models.enums.ManualEntryType).values()}"
+                            th:value="${entryType}"
+                            th:text="#{__${entryType.value}__}"
+                            th:selected="${entryType == T(de.maredit.tar.models.enums.ManualEntryType).ADD}"></option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('days')}? 'has-error'">
+                <label for="days">
+                    <th:block th:text="Tage"/>
+                    <span>*</span>
+                </label>
+                <input type="number" class="form-control" step="0.5" min="0" th:field="*{days}"
+                       id="days" th:value="0"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('description')}? 'has-error'">
+                <label for="description">
+                    <th:block th:text="Grund"/>
+                    <span>*</span>
+                </label>
+                <input type="text" class="form-control" th:field="*{description}"
+                       id="description" th:value="Grund"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 form-group" th:classappend="${#fields.hasErrors('vacation')}? 'has-error'">
+                <label for="vacation">
+                    <th:block th:text="Urlaubsverknüpfung"/>
+                </label>
+
+                <select class="form-control searchable" style="width: 100%;"
+                       id="vacation" th:field="*{vacation}"
+                        >
+                    <option value="" selected="selected">-
+                        <th:block th:text="kein"/>
+                        -
+                    </option>
+                    <option th:each="vacation : ${vacations}"
+                            th:value="${vacation.id}"
+                            th:text="${vacation.from +' - '+ vacation.to}">
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 form-group">
+                <button type="submit" id="submitEntry" class="btn btn-success pull-right">
+                    <th:block th:text="#{field.saveEntry}"/>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

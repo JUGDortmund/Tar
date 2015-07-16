@@ -1,6 +1,6 @@
 package de.maredit.tar.services;
 
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.services.calendar.CalendarItem;
 
 import de.maredit.tar.models.CalendarEvent;

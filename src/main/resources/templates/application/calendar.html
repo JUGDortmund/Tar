@@ -40,11 +40,12 @@
 							<th:block th:text="#{field.infoPanel}"/>
 						</div>
 						<div class="panel-body">
-							<div class="list-group module calendar-filter"
-								id="calendarFilter">
-								<h3 class="list-group-item">
-									<th:block th:text="#{field.statusFilter}"/>
-								</h3>
+                            <div class="box module calendar-filter" id="calendarFilter">
+
+                                <div class="box-header with-border">
+                                    <h3 class="box-title" th:text="#{field.statusFilter}"></h3>
+
+                                </div>
 								<div class="list-group-item checkbox filter-approved">
 									<label> <input type="checkbox" id="showApproved"
 										checked="checked" th:text="#{field.approvedVacations}" />
@@ -67,9 +68,12 @@
 								</div>
 							</div>
 
-                            <div class="list-group" id="vacationDetail">
-								<h3 class="list-group-item"><th:block th:text="#{field.vacationDetails}"/></h3>
-								<div class="list-group-item module vacation-detail">
+                            <div class="box list-group" id="vacationDetail">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title" th:text="#{field.vacationDetails}"></h3>
+                                </div>
+
+                                <div class="box-body module vacation-detail">
 									<ul>
 										<li><strong th:text="#{field.employee}"></strong></li>
 										<li class="user">Björn Prenger</li>
@@ -89,8 +93,6 @@
 
 						</div>
 					</div>
-
-
 
 				</div>
 			</div>

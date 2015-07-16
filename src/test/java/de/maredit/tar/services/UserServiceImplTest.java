@@ -6,9 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import de.maredit.tar.Main;
-import de.maredit.tar.models.User;
-import de.maredit.tar.models.UserVacationAccount;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.User;
+import de.maredit.tar.data.UserVacationAccount;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.UserRepository;
 import de.maredit.tar.repositories.UserVacationAccountRepository;
@@ -143,7 +143,7 @@ public class UserServiceImplTest {
     Assert.notNull(account);
     Assert.notEmpty(account.getVacations());
     assertEquals(4, account.getVacations().size());
-    assertNull(account.getPreviousYearOpenVacationDays());
+    assertEquals(0, account.getPreviousYearOpenVacationDays(), 0.0);
   }
 
   @Test
@@ -154,7 +154,7 @@ public class UserServiceImplTest {
     Assert.notNull(account);
     assertNotNull(account.getVacations());
     assertEquals(0, account.getVacations().size());
-    assertNull(account.getPreviousYearOpenVacationDays());
+    assertEquals(0, account.getPreviousYearOpenVacationDays(), 0.0);
   }
 
   @Test

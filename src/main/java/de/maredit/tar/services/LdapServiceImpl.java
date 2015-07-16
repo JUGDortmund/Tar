@@ -12,7 +12,7 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
-import de.maredit.tar.models.User;
+import de.maredit.tar.data.User;
 import de.maredit.tar.properties.LdapProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

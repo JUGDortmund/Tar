@@ -1,47 +1,46 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="layout">
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="layout">
 
 <div layout:fragment="content">
-	<section class="content-header">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-xs-12">
-					<h1>
-						<th:block th:text="#{field.vacationPlanning}"/> <small><th:block
-							th:text="#{field.applications}"/></small>
-					</h1>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section class="content">
-		<div class="vacation-button">
-			<a class="btn btn-info" id="newVacation" href="/newVacation"><th:block
-				th:text="#{field.newVacation}"/></a>
-		</div>
-		<div class="container-fluid">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1>
+                        <th:block th:text="#{field.vacationPlanning}"/> <small><th:block
+                            th:text="#{field.applications}"/></small>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="vacation-button">
+            <a class="btn btn-info" id="newVacation" href="/newVacation"><th:block
+                th:text="#{field.newVacation}"/></a>
+        </div>
+        <div class="container-fluid">
 
-			<div class="row"
-				th:with="colClass=${ ( substitutesForApproval.size() + approvals.size() ) > 0} ? col-md-4 : col-md-6">
+            <div class="row"
+                th:with="colClass=${ ( substitutesForApproval.size() + approvals.size() ) > 0} ? col-md-4 : col-md-6">
 
-				<div class="col-md-4" th:include="components/taskList :: taskList"
-					th:if="${ ( substitutesForApproval.size() + approvals.size() ) > 0}">
-					taskList</div>
+                <div class="col-md-4" th:include="components/taskList :: taskList"
+                    th:if="${ ( substitutesForApproval.size() + approvals.size() ) > 0}">
+                    taskList</div>
 
-				<div th:class="${colClass}"
-					th:include="components/vacationList :: vacationList">
-					vacationList</div>
+                <div th:class="${colClass}"
+                    th:include="components/vacationList :: vacationList">
+                    vacationList</div>
 
-				<div th:class="${colClass}" id="vacation-form-panel"
-					th:include="components/vacationForm :: vacationForm">
-					vacationForm</div>
+                <div th:class="${colClass}" id="vacation-form-panel"
+                    th:include="components/vacationForm :: vacationForm">
+                    vacationForm</div>
 
-			</div>
+            </div>
+        </div>
 
-		</div>
-
-	</section>
+    </section>
 </div>
 </html>

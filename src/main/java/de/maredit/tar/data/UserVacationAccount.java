@@ -1,4 +1,4 @@
-package de.maredit.tar.models;
+package de.maredit.tar.data;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -20,13 +20,16 @@ public class UserVacationAccount {
   private User user;
   private Integer year;
   private double totalVacationDays;
-  private Double previousYearOpenVacationDays;
+  private double previousYearOpenVacationDays;
   private LocalDate expiryDate;
   @DBRef
   private Set<Vacation> vacations;
+  @DBRef
+  private Set<ManualEntry> manualEntries;
 
   public UserVacationAccount() {
     vacations = new HashSet<Vacation>();
+    manualEntries = new HashSet<ManualEntry>();
   }
   
   public User getUser() {
@@ -45,7 +48,15 @@ public class UserVacationAccount {
     this.vacations = vacations;
   }
 
-  public Double getPreviousYearOpenVacationDays() {
+  public Set<ManualEntry> getManualEntries() {
+    return manualEntries;
+  }
+
+  public void setManualEntries(Set<ManualEntry> manualEntries) {
+    this.manualEntries = manualEntries;
+  }
+
+  public double getPreviousYearOpenVacationDays() {
     return previousYearOpenVacationDays;
   }
 
@@ -81,7 +92,7 @@ public class UserVacationAccount {
     this.expiryDate = expiryDate;
   }
 
-  public void setPreviousYearOpenVacationDays(Double previousYearOpenVacationDays) {
+  public void setPreviousYearOpenVacationDays(double previousYearOpenVacationDays) {
     this.previousYearOpenVacationDays = previousYearOpenVacationDays;
   }
 
@@ -92,6 +103,16 @@ public class UserVacationAccount {
     if (!vacations.add(vacation)) {
       vacations.remove(vacation);
       vacations.add(vacation);
+    }
+  }
+
+  public void addManualEntry(ManualEntry manualEntry) {
+    if (manualEntries == null) {
+      manualEntries = new HashSet<>();
+    }
+    if (!manualEntries.add(manualEntry)) {
+      manualEntries.remove(manualEntry);
+      manualEntries.add(manualEntry);
     }
   }
 }

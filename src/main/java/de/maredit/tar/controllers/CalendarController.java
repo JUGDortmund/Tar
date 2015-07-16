@@ -1,14 +1,14 @@
 package de.maredit.tar.controllers;
 
 import static java.util.stream.Collectors.toList;
-
 import de.maredit.tar.beans.NavigationBean;
 import de.maredit.tar.models.CalendarEvent;
 import de.maredit.tar.models.Holiday;
-import de.maredit.tar.models.Vacation;
+import de.maredit.tar.data.Vacation;
 import de.maredit.tar.models.enums.State;
 import de.maredit.tar.repositories.VacationRepository;
 import de.maredit.tar.services.HolidayService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +58,7 @@ public class CalendarController{
 
     return "application/calendar";
   }
-
+  
   @RequestMapping(value = "/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public List<CalendarEvent> getCalendarElements(@RequestParam(value = "start") String start,

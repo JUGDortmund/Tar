@@ -9,8 +9,8 @@
             <div class="row">
                 <div class="col-xs-12">
                     <h1 th:inline="text">
-                        <th:block th:text="#{field.overview}"/>
-                        <th:block th:text="${year}"/>
+                        <th:block th:text="#{field.overview}" />
+                        <th:block th:text="${year}" />
                     </h1>
                 </div>
             </div>
@@ -28,108 +28,14 @@
 
                     <div class="panel-group" id="accordion" role="tablist">
                         <!-- ein mitarbeiter -->
-                        <div class="panel" th:each="account, iterator : ${accounts}">
+                        <th:block  th:each="account, iterator : ${accounts}">
 
-                            <div class="panel-heading" th:id="|heading${iterator.index}|">
-                                <div class="progress-group">
-                                    <a th:href="@{/userDetails(user=${account.user.id})}"
-                                        th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}"
-                                        class="progress-text"
-                                        th:text="${account.user.lastname + ', ' + account.user.firstname}">Username</a>
-                                    <span
-                                        th:unless="${#authorization.expression('hasRole(''SUPERVISOR'')')}"
-                                        class="progress-text"
-                                        th:text="${account.user.lastname + ', ' + account.user.firstname}">Username</span>
-                                    <span class="progress-number"> <b> <span
-                                            th:text="${{account.totalVacationDays}}"
-                                            data-toggle="tooltip" data-placement="top"
-                                            th:title="#{field.totalVacationsYear}">30</span> <span
-                                            th:if="${account.previousYearOpenVacationDays > 0}"
-                                            th:text="${{'(+'+account.previousYearOpenVacationDays+')'}}"
-                                            data-toggle="tooltip" data-placement="top"
-                                            th:title="#{field.leftDaysLastYear}">(+0)</span>
-                                    </b> <span th:text="#{field.total}">Gesamt</span> <a
-                                        data-toggle="collapse" data-parent="#accordion"
-                                        th:href="|#collapse${iterator.index}|"> <span
-                                            class="glyphicon glyphicon-info-sign"></span>
-                                    </a>
-                                    </span>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-success"
-                                            th:style="|width: ${account.totalVacationDays &lt;= 0 ? 0 : account.approvedVacationDays/(account.totalVacationDays + account.previousYearOpenVacationDays) * 100}%;|"
-                                            data-toggle="tooltip" data-placement="top"
-                                            th:title="#{field.approvedVacations} + ': ' + ${{account.approvedVacationDays}}|">
-                                            <span th:text="${{account.approvedVacationDays}}">genehmigte
-                                                Urlaubstage</span>
-                                        </div>
-                                        <div
-                                            class="progress-bar progress-bar-warning progress-bar-striped"
-                                            th:style="|width: ${account.totalVacationDays &lt;= 0 ? 0 : account.pendingVacationDays/(account.totalVacationDays + account.previousYearOpenVacationDays) * 100}%;|"
-                                            data-toggle="tooltip" data-placement="top"
-                                            th:title="#{field.pendingVacations} + ': ' + ${{account.pendingVacationDays}}|">
-                                            <span th:text="${{account.pendingVacationDays}}">beantragte
-                                                Urlaubstage</span>
-                                        </div>
-                                        <div class="progress-bar progress-bar-empty"
-                                            th:style="|width: ${account.totalVacationDays &lt;= 0 ? 0 : account.openVacationDays/(account.totalVacationDays + account.previousYearOpenVacationDays) * 100}%;|"
-                                            data-toggle="tooltip" data-placement="top"
-                                            th:title="#{field.openVacationDays} + ': ' + ${{account.openVacationDays}}|">
-                                            <span th:text="${{account.openVacationDays}}">noch
-                                                verfügbare Urlaubstage</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <!-- userAccount fragment -->
+                            <div th:replace="components/userAccount :: userAccount (${account}, ${iterator.index})">
+                                accountTable
                             </div>
 
-                            <div th:id="|collapse${iterator.index}|"
-                                class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <table class="table table-hover table-condensed">
-                                        <tr>
-                                            <th th:text="#{field.entryText}">Buchungstext</th>
-                                            <th th:text="#{field.dateFrom}">von</th>
-                                            <th th:text="#{field.dateTo}">bis</th>
-                                            <th th:text="#{field.days}">Tage</th>
-                                            <th th:text="#{field.saldo}">Saldo</th>
-                                        </tr>
-                                        <tr
-                                            th:if="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1) != '0,0'}">
-                                            <td th:text="#{field.leftDaysLastYear}">Resturlaub
-                                                Vorjahr</td>
-                                            <td />
-                                            <td />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1)}" />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1)}" />
-                                        </tr>
-                                        <tr>
-                                            <td th:text="#{field.creditAnnualVacation}">Gutschrift</td>
-                                            <td />
-                                            <td />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.totalVacationDays,1,1)}" />
-                                            <td
-                                                th:text="${#numbers.formatDecimal(account.totalVacationDays + account.previousYearOpenVacationDays,1,1)}" />
-
-                                        </tr>
-                                        <th:block th:each="entry, iterator : ${account.entries}">
-                                            <tr> 
-                                                <td th:if="${{entry.state.toString() != 'APPROVED'}}" th:text="#{field.vacation} + '*'">Urlaub</td>
-                                                <td th:if="${{entry.state.toString() == 'APPROVED'}}" th:text="#{field.vacation}">Urlaub</td>
-                                                <td th:text="${{entry.from}}" />
-                                                <td th:text="${{entry.to}}" />
-                                                <td th:text="${#numbers.formatDecimal(entry.days,1,1)}" />
-                                                <td th:text="${#numbers.formatDecimal(entry.balance,1,1)}" />
-                                            </tr>
-                                        </th:block>
-                                    </table>
-
-                                </div>
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-
+                        </th:block>
                         <!-- /ein mitarbeiter -->
 
                     </div>
@@ -137,39 +43,52 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-4 module offcanvas-filter" id="sidebar">
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" id="filter-form-panel">
                         <div class="panel-heading">
-                        	<th:block th:text="#{field.infoPanel}"/>
+                            <th:block th:text="#{field.infoPanel}" />
                         </div>
-                       	 <form th:action="@{/overview}" method="post">
+                        <form th:action="@{/overview}" method="post">
                             <div class="panel-body">
                                 <div class="box" id="year-filter">
                                     <div class="box-header with-border">
                                         <h3 class="box-title" th:text="#{overview.year}"></h3>
-                                        <div class="box-tools pull-right btn-group" role="group">
-                                            <button type="submit" class="btn btn-default"
-                                                    name="year" th:value="${year - 1}">
-                                                <span aria-hidden="true">&laquo;</span>
+                                    </div>
+                                    <div class="box-body clearfix">
+                                        <div class="btn-group btn-block" role="group">
+                                            <button type="submit" class="btn btn-default" name="year"
+                                                th:value="${year - 1}">
+                                                <span th:utext="|&laquo; ${year - 1}|">prev</span>
                                             </button>
-                                            <button type="submit" class="btn btn-default"
-                                                    name="year" th:value="${#dates.year(#dates.createNow())}"
-                                                    th:text="#{overview.currentYear}"></button>
-                                            <button type="submit" class="btn btn-default"
-                                                    name="year" th:value="${year + 1}" th:disabled="${year == #dates.year(#dates.createNow())}" >
-                                                <span aria-hidden="true">&raquo;</span>
+                                            <button type="submit" class="btn btn-default" name="year"
+                                                th:value="${year}">
+                                                <span class="glyphicon glyphicon-eye-open" ></span>
+                                                <span th:utext="${year}" aria-hidden="true"></span>
+                                            </button>
+                                            <button type="submit" class="btn btn-default" name="year"
+                                                th:value="${year + 1}"
+                                                th:disabled="${year - 1 == #dates.year(#dates.createNow())}">
+                                                <span th:utext="|${year + 1} &raquo;|">next</span>
                                             </button>
                                         </div>
+                                    </div>
+                                    <div class="box-footer clearfix">
+                                        <button type="submit" class="btn btn-xs pull-right" name="year"
+                                                th:value="${#dates.year(#dates.createNow())}"
+                                                th:text="#{overview.currentYear}"></button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="panel-body">
+                            <div class="panel-body filter-panel">
                                 <input type="hidden" name="year" th:value="${year}" />
                                 <div th:include="components/employeeFilter :: employeeFilter">
                                     employeeFilter</div>
                             </div>
                         </form>
-                </div></div>
+                    </div>
+                    <div class="panel panel-default" id="entry-form-panel">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
