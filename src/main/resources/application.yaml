@@ -18,7 +18,7 @@ spring:
       host: localhost
       port: 28018
       embedded: true
-      preload: false
+      preload: true
       database: tar-dev
   mail:
     additionalRecipients:
