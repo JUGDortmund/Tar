@@ -55,16 +55,20 @@
 
     <div th:id="|collapse${index}|" class="panel-collapse collapse">
         <div class="panel-body">
-
+            <h4 th:text="#{userAccount.title} +' '+ ${account.account.year}"> test</h4>
             <table class="table table-hover table-condensed" th:with="completeBalance=${account.totalVacationDays + account.previousYearOpenVacationDays}">
                 <tr>
-                    <th th:text="#{field.entryText}">Buchungstext</th>
-                    <th th:text="#{field.dateFrom}">von</th>
-                    <th th:text="#{field.dateTo}">bis</th>
-                    <th th:text="#{field.days}">Tage</th>
-                    <th th:text="#{field.saldo}">Saldo</th>
+                    <th th:text="#{userAccount.author}">Autor</th>
+                    <th th:text="#{userAccount.created}">Erstellungsdatum</th>
+                    <th th:text="#{userAccount.entryText}">Buchungstext</th>
+                    <th th:text="#{userAccount.dateFrom}">von</th>
+                    <th th:text="#{userAccount.dateTo}">bis</th>
+                    <th th:text="#{userAccount.days}">Tage</th>
+                    <th th:text="#{userAccount.saldo}">Saldo</th>
                 </tr>
                 <tr th:if="${account.previousYearOpenVacationDays != 0}">
+                    <td />
+                    <td />
                     <td th:text="#{field.leftDaysLastYear}">Resturlaub
                         Vorjahr</td>
                     <td />
@@ -73,6 +77,8 @@
                     <td th:text="${#numbers.formatDecimal(account.previousYearOpenVacationDays,1,1)}" />
                 </tr>
                 <tr>
+                    <td />
+                    <td />
                     <td th:text="#{field.creditAnnualVacation}">Gutschrift</td>
                     <td />
                     <td />
@@ -80,8 +86,10 @@
                     <td th:text="${#numbers.formatDecimal(account.account.totalVacationDays+account.previousYearOpenVacationDays,1,1)}" /><!-- DAS DARF NCIHT ACCOUNT SEIN!!!-->
                 </tr>
                 <tr th:each="entry : ${account.entries}">
+                    <td th:text="${entry.author.lastname + ', ' + entry.author.firstname}" />
+                    <td th:text="${{entry.created}}" />
                     <td>
-                        <span th:if="${entry instanceof T(de.maredit.tar.models.AccountManualEntry)}" class="entry-info" th:inline="text" >[[#{field.manualEntry.info}]] <br/></span>
+                        <span th:if="${entry instanceof T(de.maredit.tar.models.AccountManualEntry)}" class="entry-info" th:inline="text" >[[#{userAccount.manualEntry.infoLabel}]] <br/></span>
                         <th:block th:text="${entry.displayText}"/>
                         <span th:if="${entry.starred}">*</span>
                     </td>
@@ -95,7 +103,7 @@
             <div th:if="${#authorization.expression('hasRole(''SUPERVISOR'')')}">
                 <a th:href="@{/newManualEntry(user=${account.user.id}, year=${account.account.year}, index=${index})}"
                    class="manual-entry btn btn-default pull-right"
-                   th:text="#{field.manualEntry}"> Korrekturbuchung
+                   th:text="#{userAccount.manualEntry.button}"> Korrekturbuchung
                 </a>
             </div>
         </div>

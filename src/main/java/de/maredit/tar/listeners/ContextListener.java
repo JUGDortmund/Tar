@@ -72,6 +72,7 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
                 1).plusDays(1), manager, manager, 0);
         v1.setDays(vacationService.getValueOfVacation(v1));
         v1.setState(State.WAITING_FOR_APPROVEMENT);
+        v1.setAuthor(manager);
         try {
           Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -82,6 +83,7 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
                          manager, manager, 4);
         v2.setDays(vacationService.getValueOfVacation(v2));
         v2.setState(State.REQUESTED_SUBSTITUTE);
+        v2.setAuthor(manager);
         try {
           Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -93,6 +95,8 @@ public class ContextListener implements ApplicationListener<ContextRefreshedEven
                 4), manager, manager, 5);
         v3.setDays(vacationService.getValueOfVacation(v3));
         v3.setState(State.APPROVED);
+        v3.setAuthor(manager);
+
         vacationRepository.save(v1);
         vacationRepository.save(v2);
         vacationRepository.save(v3);
